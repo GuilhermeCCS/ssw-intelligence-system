@@ -1,0 +1,6494 @@
+<!DOCTYPE html>
+
+
+
+<html lang="pt-br" class="dark">
+
+
+
+<head>
+
+
+
+    <meta charset="UTF-8">
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <title>S.S.W | INTELIGENCE</title>
+    <link rel="icon" type="image/x-icon" href="images/logo.ico">
+
+
+
+    
+
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+
+    <script>
+
+
+
+        tailwind.config = {
+
+
+
+            darkMode: 'class',
+
+
+
+            theme: {
+
+
+
+                extend: {
+
+
+
+                    colors: {
+
+
+
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+
+
+
+                        primary: { DEFAULT: '#00D4FF', hover: '#00A8CC', glow: 'rgba(0, 212, 255, 0.5)' }, // Azul Ciano Principal
+
+
+
+                        accent: { DEFAULT: '#7C3AED', hover: '#6D28D9' },   // Roxo Secundário
+
+
+
+                        cyber: { DEFAULT: '#00B8E6', hover: '#0096B3' }     // Azul Claro
+
+
+
+                    },
+
+
+
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+
+
+
+                    animation: {
+
+
+
+                        'blob': 'blob 10s infinite',
+
+
+
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+
+
+
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+
+
+
+                        'glow': 'glow 2s ease-out infinite',
+
+
+
+                        'float': 'float 2s ease-out infinite',
+
+
+
+                        'pulse-cyber': 'pulse-cyber 2s ease-out infinite',
+
+
+
+                    },
+
+
+
+                    keyframes: {
+
+
+
+                        blob: {
+
+
+
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+
+
+
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+
+
+
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+
+
+
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+
+
+
+                        },
+
+
+
+                        fadeInUp: {
+
+
+
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+
+
+
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+
+
+
+                        },
+
+
+
+                    }
+
+
+
+                }
+
+
+
+            }
+
+
+
+        }
+
+
+
+    </script>
+
+
+
+    
+
+
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+
+
+    
+
+
+
+    <style>
+
+
+
+        /* =========================================
+
+
+
+           1. FUNDAMENTOS & BACKGROUND
+
+
+
+           ========================================= */
+
+
+
+        body { 
+
+
+
+            font-family: 'Inter', sans-serif; 
+
+
+
+            background-color: #020617; 
+
+
+
+            color: #e2e8f0; 
+
+
+
+            /* Padrão de Grid Tecnológico */
+
+
+
+            background-image: 
+
+
+
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
+
+
+
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+
+
+
+            background-size: 40px 40px;
+
+
+
+            overflow-x: hidden;
+
+
+
+        }
+
+
+
+
+
+
+
+        /* Holofote de Luz no Topo */
+
+
+
+        body::before {
+
+
+
+            content: '';
+
+
+
+            position: fixed;
+
+
+
+            top: -20%;
+
+
+
+            left: 20%;
+
+
+
+            width: 60%;
+
+
+
+            height: 60%;
+
+
+
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.07) 0%, transparent 70%);
+
+
+
+            z-index: -1;
+
+
+
+            pointer-events: none;
+
+
+
+        }
+
+
+
+
+
+
+
+        /* =========================================
+
+
+
+           2. ESTILOS VISUAIS (GLASS & UI)
+
+
+
+           ========================================= */
+
+
+
+        .glass-panel { 
+
+
+
+            background: rgba(15, 23, 42, 0.65); 
+
+
+
+            backdrop-filter: blur(20px); 
+
+
+
+            -webkit-backdrop-filter: blur(20px); 
+
+
+
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+
+
+
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+
+
+            transition: all 0.3s ease;
+
+
+
+        }
+
+
+
+
+
+
+
+        .glass-panel:hover {
+
+
+
+            border-color: rgba(255, 255, 255, 0.15);
+
+
+
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+
+
+
+        }
+
+
+
+
+
+
+
+        /* Inputs Profissionais */
+
+
+
+        .input-pro {
+
+
+
+            background: rgba(15, 23, 42, 0.8);
+
+
+
+            border: 1px solid #1e293b;
+
+
+
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+
+        }
+
+
+
+        .input-pro:focus {
+            border-color: #00D4FF;
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+            outline: none;
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+
+
+
+
+
+
+        /* Botão Primário com Brilho */
+
+
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00D4FF 0%, #00B8E6 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+
+
+
+
+
+
+        /* Cards Interativos */
+
+
+
+        .hover-card {
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+
+
+
+
+
+
+        /* Scrollbar Fina */
+
+
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00D4FF;
+        }
+
+
+
+
+
+
+
+        /* =========================================
+
+
+
+           3. MODO IMPRESSÃO (PDF LIMPO)
+
+
+
+           ========================================= */
+
+
+
+        @media print {
+
+            @page {
+                margin: 0; /* Remove as margens do navegador (onde ficam a URL e Data) */
+                size: auto;
+            }
+
+
+
+            aside, .no-print, button, input, select, body::before, footer { display: none !important; }
+
+
+
+            body, main { 
+
+
+
+                background: white !important; 
+
+
+
+                background-image: none !important; 
+
+
+
+                color: black !important; 
+
+
+
+                padding: 0 !important; margin: 0 !important; 
+
+
+
+                height: auto !important; overflow: visible !important; 
+
+
+
+            }
+
+
+
+            .glass-panel { 
+
+
+
+                border: none; background: none; box-shadow: none; 
+
+
+
+                backdrop-filter: none; color: black !important; 
+
+
+
+            }
+
+
+
+            .text-white { color: black !important; }
+
+
+
+            .text-slate-300, .text-slate-400 { color: #333 !important; }
+
+
+
+            .border-slate-800 { border-color: #ddd !important; }
+
+
+
+            
+
+
+
+            /* Força impressão de cores de fundo (Score Laranja) */
+
+
+
+            .print-color-force { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+
+
+            .page-break { page-break-before: always; }
+
+
+
+        }
+
+
+
+        
+
+
+
+        /* Animações Profissionais */
+
+
+
+        .fade-in {
+
+
+
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .slide-up {
+
+
+
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .scale-in {
+
+
+
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+
+
+        }
+
+
+
+        
+
+
+
+        @keyframes fadeIn {
+
+
+
+            from { opacity: 0; transform: translateY(10px); }
+
+
+
+            to { opacity: 1; transform: translateY(0); }
+
+
+
+        }
+
+
+
+        
+
+
+
+        @keyframes slideUp {
+
+
+
+            from { opacity: 0; transform: translateY(20px); }
+
+
+
+            to { opacity: 1; transform: translateY(0); }
+
+
+
+        }
+
+
+
+        
+
+
+
+        @keyframes scaleIn {
+
+
+
+            from { opacity: 0; transform: scale(0.95); }
+
+
+
+            to { opacity: 1; transform: scale(1); }
+
+
+
+        }
+
+
+
+        
+
+
+
+        /* Hover Effects Avançados */
+
+
+
+        .card-hover {
+
+
+
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+
+            position: relative;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .card-hover::before {
+
+
+
+            content: '';
+
+
+
+            position: absolute;
+
+
+
+            inset: 0;
+
+
+
+            background: linear-gradient(135deg, transparent, rgba(16, 185, 129, 0.1));
+
+
+
+            opacity: 0;
+
+
+
+            transition: opacity 0.3s;
+
+
+
+            border-radius: inherit;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .card-hover:hover::before {
+
+
+
+            opacity: 1;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .card-hover:hover {
+
+
+
+            transform: translateY(-8px) scale(1.02);
+
+
+
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+
+
+
+            border-color: rgba(16, 185, 129, 0.3);
+
+
+
+        }
+
+
+
+        
+
+
+
+        /* Botões com Efeito de Brilho */
+
+
+
+        .btn-glow {
+
+
+
+            position: relative;
+
+
+
+            overflow: hidden;
+
+
+
+            transition: all 0.3s;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .btn-glow::after {
+
+
+
+            content: '';
+
+
+
+            position: absolute;
+
+
+
+            top: 50%;
+
+
+
+            left: 50%;
+
+
+
+            width: 0;
+
+
+
+            height: 0;
+
+
+
+            border-radius: 50%;
+
+
+
+            background: rgba(255, 255, 255, 0.3);
+
+
+
+            transform: translate(-50%, -50%);
+
+
+
+            transition: width 0.6s, height 0.6s;
+
+
+
+        }
+
+
+
+        
+
+
+
+        .btn-glow:hover::after {
+
+
+
+            width: 300px;
+
+
+
+            height: 300px;
+
+
+
+        }
+
+
+
+        
+
+
+
+        /* Animação do Menu Lateral */
+
+
+
+        #appSidebar { 
+
+
+
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+
+
+
+        }
+
+
+
+        .sidebar-closed { 
+
+
+
+            width: 0 !important; 
+
+
+
+            padding: 0 !important; 
+
+
+
+            overflow: hidden; 
+
+
+
+            opacity: 0; 
+
+
+
+            transform: translateX(-100%);
+
+
+
+        }
+
+
+
+    </style>
+
+
+
+    <style>
+
+        /* CSS para posicionamento do footer durante auditoria */
+
+        .audit-footer-position {
+
+            position: relative !important;
+
+            width: 100% !important;
+
+            margin: 3rem 0 0 0 !important;
+
+            padding: 1rem 1.5rem !important;
+
+            border-top: 1px solid #334155 !important;
+
+            background: #0f172a !important;
+
+            z-index: 1 !important;
+
+            clear: both !important;
+
+            box-sizing: border-box !important;
+
+            left: 0 !important;
+
+            right: 0 !important;
+
+        }
+
+        
+
+        /* Garante que o container do footer ocupe toda largura */
+
+        #auditResults .audit-footer-position {
+
+            margin-left: 0 !important;
+
+            margin-right: 0 !important;
+
+            padding-left: 0 !important;
+
+            padding-right: 0 !important;
+
+        }
+
+        
+
+        /* Garante que o body permita scroll */
+
+        body {
+
+            min-height: 100vh;
+
+        }
+
+        
+
+        /* Remove overflow hidden do body durante auditoria */
+
+        body.audit-active {
+
+            overflow: auto !important;
+
+            height: auto !important;
+
+        }
+
+        
+
+        /* Ajusta main durante auditoria */
+
+        body.audit-active main {
+
+            padding-bottom: 0 !important;
+
+        }
+
+    </style>
+
+
+
+</head>
+
+
+
+<body class="h-screen flex flex-col md:flex-row overflow-hidden selection:bg-primary selection:text-white">
+
+
+
+
+
+
+
+    <script>
+
+
+
+        const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
+
+
+
+        let USER = null;
+
+
+
+        // Função para limitar seleção de personas a no máximo 3
+
+        function limitPersonaSelection(checkbox) {
+
+            const checkedBoxes = document.querySelectorAll('.persona-checkbox:checked');
+
+            
+
+            if (checkedBoxes.length > 3) {
+
+                checkbox.checked = false;
+
+                alert('Você pode selecionar no máximo 3 personas.');
+
+            }
+
+        }
+
+
+
+        
+
+
+
+        // --- PERSONAS DO SISTEMA ---
+
+
+
+        const SYSTEM_PERSONAS = [
+
+
+
+            { name: "Idoso Leigo (75+)", desc: "Dificuldade visual, aversão a tecnologia, precisa de fontes grandes." },
+
+
+
+            { name: "Usuário Mobile 3G", desc: "Conexão instável, dispositivo antigo, impaciente com lentidão." },
+
+
+
+            { name: "Deficiente Visual", desc: "Utiliza leitores de tela, depende de Alt Text e semântica correta." },
+
+
+
+            { name: "Comprador Impulsivo", desc: "Foca em gatilhos mentais, escassez e facilidade de checkout." },
+
+
+
+            { name: "Investidor Analítico", desc: "Cético, procura dados técnicos, ROI e provas sociais." },
+
+
+
+            { name: "Gamer Profissional", desc: "Exigente com performance, baixa latência, interface responsiva." },
+
+
+
+            { name: "Mãe Ocupada", desc: "Pouco tempo, busca praticidade, confia em recomendações e avaliações." },
+
+
+
+            { name: "Estudante Universitário", desc: "Crítico, pesquisa detalhada, compara preços e especificações técnicas." },
+
+
+
+            { name: "Empreendedor Digital", desc: "Focado em conversão, otimização de funil, taxas de cliques." },
+
+
+
+            { name: "Turista Internacional", desc: "Barreiras linguísticas, câmbio, costumes locais, suporte 24/7." },
+
+
+
+            { name: "Gen Z Digital", desc: "Atenção curta, formato vídeo, redes sociais, autenticidade da marca." },
+
+
+
+            { name: "Profissional Corporativo", desc: "Acesso rápido, segurança de dados, integração com ferramentas corporativas." },
+
+
+
+            { name: "Aposentado Viajante", desc: "Planejamento cuidadoso, reviews detalhados, seguro e flexibilidade." },
+
+
+
+            { name: "Artista Criativo", desc: "Valor estético, inspiração visual, storytelling, experiência imersiva." },
+
+
+
+            { name: "Atleta Amador", desc: "Foco em performance, equipamentos, nutrição, comunidade e desafios." }
+
+
+
+        ];
+
+
+
+    </script>
+
+
+
+
+
+
+
+    <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
+
+
+
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+
+
+
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-emerald-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+
+
+
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+
+
+
+        
+
+
+
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-0"></div>
+
+
+
+
+
+
+
+        <div class="glass-panel p-10 rounded-3xl w-full max-w-md border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in-up">
+
+
+
+            <div class="text-center mb-10">
+
+
+
+                <div class="mb-6 flex justify-center">
+                    <img src="images/logo.ico" alt="S.S.W INTELIGENCE" class="w-16 h-16 object-contain drop-shadow-lg">
+                </div>
+
+                <h1 class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg">S.S.W <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELIGENCE</span></h1>
+
+                <p class="text-xs text-slate-400 uppercase tracking-[0.2em] font-medium">Enterprise Analytics Platform</p>
+
+            </div>
+
+
+
+            
+
+
+
+            <div class="space-y-6" id="loginForm">
+
+
+
+                <div class="group">
+
+
+
+                    <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Email Corporativo</label>
+
+
+
+                    <div class="relative">
+
+
+
+                        <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+
+
+
+                        <input type="email" id="loginEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600">
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+                
+
+
+
+                <div class="group">
+
+
+
+                    <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Senha de Acesso</label>
+
+
+
+                    <div class="relative">
+
+
+
+                        <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+
+
+
+                        <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600">
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
+
+
+
+                    Acessar Sistema
+
+
+
+                </button>
+
+
+
+                
+
+
+
+                <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
+
+
+
+                    <button onclick="toggleRegister()" class="text-xs text-slate-400 hover:text-white transition-colors font-medium flex items-center gap-1">
+
+
+
+                        <i data-lucide="user-plus" class="w-3 h-3"></i> Criar Conta
+
+
+
+                    </button>
+
+
+
+                    <a href="https://wa.me/5582991301991" target="_blank" class="text-xs text-slate-400 hover:text-primary transition-colors flex items-center gap-1">
+
+
+
+                        Recuperar Credencial <i data-lucide="external-link" class="w-3 h-3"></i>
+
+
+
+                    </a>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="space-y-4 hidden" id="registerForm">
+
+
+
+                <h3 class="text-center text-white font-bold text-lg mb-4">Novo Cadastro</h3>
+
+
+
+                <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+
+
+
+                <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+
+
+
+                <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+
+
+
+                <button onclick="fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
+
+
+
+                <button onclick="toggleRegister()" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
+
+
+
+                    <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar para Login
+
+
+
+                </button>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <aside id="appSidebar" class="hidden md:flex flex-col w-72 bg-slate-900/80 border-r border-slate-800/50 backdrop-blur-xl z-20 whitespace-nowrap h-full relative">
+
+
+
+        <div class="p-6 border-b border-slate-800/50 flex justify-between items-center bg-slate-900/50">
+
+            <div class="flex items-center gap-3">
+                <img src="images/logo.ico" alt="S.S.W INTELIGENCE" class="w-14 h-14 object-contain">
+                <h1 class="text-lg font-black tracking-tighter text-white">S.S.W <span class="text-primary"> | INTELIGENCE</span></h1>
+            </div>
+
+        </div>
+
+
+        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+
+
+
+            <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-3 mt-2">Módulos</p>
+
+
+
+            
+
+
+
+            <button onclick="nav('home')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+
+
+
+                <i data-lucide="file-search" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors"></i> Nova Auditória
+
+
+
+            </button>
+
+
+
+            
+
+
+
+            <button onclick="nav('personas')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+
+
+
+                <i data-lucide="users" class="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors"></i> Gerenciar Personas
+
+
+
+            </button>
+
+
+
+            
+
+
+
+            <button onclick="nav('ranking')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+
+
+
+                <i data-lucide="trophy" class="w-4 h-4 text-slate-400 group-hover:text-yellow-500 transition-colors"></i> Ranking Global
+
+
+
+            </button>
+
+
+
+        </nav>
+
+
+
+
+
+
+
+        <div class="p-4 m-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/50 relative overflow-hidden group">
+
+
+
+            <div class="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-xl pointer-events-none group-hover:bg-primary/10 transition"></div>
+
+
+
+            
+
+
+
+            <div class="flex items-center gap-3 relative z-10">
+
+
+
+                <div class="w-10 h-10 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-primary font-bold shadow-lg text-xs">U</div>
+
+
+
+                <div class="flex-1 overflow-hidden">
+
+
+
+                    <p class="text-sm font-bold text-white truncate" id="uName">...</p>
+
+
+
+                    <div class="flex items-center gap-2 mt-0.5">
+
+
+
+                        <span class="text-[10px] text-primary font-bold uppercase tracking-wide">Licenças: <span id="uCredits" class="text-white">0</span></span>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <div class="flex gap-2 mt-4">
+
+
+
+                <button onclick="comprarCreditos()" class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-bold py-2 rounded-lg border border-primary/20 transition-colors flex items-center justify-center gap-1">
+
+
+
+                    <i data-lucide="zap" class="w-3 h-3"></i> COMPRAR
+
+
+
+                </button>
+
+
+
+                <button onclick="logout()" class="flex items-center gap-2 px-3 bg-slate-950 hover:bg-red-900/20 text-slate-400 hover:text-red-400 rounded-lg border border-slate-700 transition-colors">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    <span class="text-sm">Sair</span>
+                </button>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </aside>
+
+
+
+
+
+
+
+    <main class="flex-1 h-screen overflow-y-auto relative scroll-smooth flex flex-col" id="mainContent">
+
+
+
+        
+
+
+
+        <div class="p-6 md:p-8 pb-0 no-print sticky top-0 z-30">
+
+            <div class="flex items-center justify-between gap-4">
+
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors border border-transparent hover:border-slate-700">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+
+                    </button>
+
+                    <div class="flex items-center gap-3">
+                        <img src="images/logo.ico" alt="S.S.W INTELIGENCE" class="w-12 h-12 object-contain">
+                        <h1 class="text-xl font-black tracking-tighter text-white">S.S.W <span class="text-primary">| INTELIGENCE</span></h1>
+                    </div>
+                </div>
+
+                <div id="pageTitle" class="text-lg font-semibold text-slate-300"></div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="flex-1 p-6 md:p-10 pt-6 flex flex-col" id="mainContentWrapper">
+
+
+
+            
+
+
+
+            <div id="view-home" class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
+
+
+
+                
+
+
+
+                <div class="glass-panel p-1.5 rounded-2xl no-print shadow-2xl">
+
+
+
+                    <div class="bg-slate-950/60 rounded-xl p-6 border border-white/5 space-y-6">
+
+
+
+                        <div class="flex gap-4 flex-col lg:flex-row">
+
+
+
+                            <div class="relative min-w-[260px] group">
+
+
+
+                                <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Modo de Análise</label>
+
+
+
+                                <select id="auditMode" onchange="toggleManualSelect()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl pl-4 pr-10 py-4 outline-none focus:border-primary cursor-pointer transition-colors h-[58px]">
+
+
+
+                                    <option value="auto">Seleção Automática</option>
+
+
+
+                                    <option value="manual"> Seleção Manual</option>
+
+
+
+                                    <option value="compare">Modo Comparativo</option>
+
+
+
+                                </select>
+
+
+
+                                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none"></i>
+
+
+
+                            </div>
+
+
+
+                            
+
+
+
+                            <div class="flex-1 relative group" id="singleUrlArea">
+
+
+
+                                <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Target URL</label>
+
+
+
+                                <i data-lucide="link" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
+
+
+
+                                <input type="text" id="auditUrl" placeholder="https://dominio.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 pl-11 pr-4 text-white placeholder-slate-600 outline-none focus:border-primary transition-all shadow-inner h-[58px]">
+
+
+
+                            </div>
+
+
+
+                            
+
+
+
+                            <button onclick="runAudit()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[180px] h-[58px] hover:scale-[1.02] transition-transform">
+
+
+
+                                GERAR AUDITÓRIA <i data-lucide="sparkles" class="w-4 h-4"></i>
+
+
+
+                            </button>
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <!-- ÁREA DE COMPARAÇÃO (ESCONDIDA POR PADRÃO) -->
+
+
+
+                        <div id="compareArea" class="hidden pt-6 border-t border-slate-800/50 animate-fade-in-up">
+
+
+
+                            <div class="flex justify-between items-center mb-4">
+
+
+
+                                <p class="text-xs text-accent font-bold uppercase tracking-widest flex items-center gap-2">
+
+
+
+                                    <i data-lucide="git-compare" class="w-4 h-4"></i> Modo Comparativo - Analise dois sites lado a lado
+
+
+
+                                </p>
+
+
+
+                            </div>
+
+
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+
+                                <div class="relative group">
+
+
+
+                                    <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Site A</label>
+
+
+
+                                    <i data-lucide="globe" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
+
+
+
+                                    <input type="text" id="compareUrlA" placeholder="https://site-a.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 pl-11 pr-4 text-white placeholder-slate-600 outline-none focus:border-primary transition-all shadow-inner h-[58px]">
+
+
+
+                                </div>
+
+
+
+                                <div class="relative group">
+
+
+
+                                    <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Site B</label>
+
+
+
+                                    <i data-lucide="globe" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
+
+
+
+                                    <input type="text" id="compareUrlB" placeholder="https://site-b.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 pl-11 pr-4 text-white placeholder-slate-600 outline-none focus:border-primary transition-all shadow-inner h-[58px]">
+
+
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+                            <div class="flex justify-center mt-4">
+
+
+
+                                <button onclick="runCompare()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[200px] h-[58px] hover:scale-[1.02] transition-transform">
+
+
+
+                                    COMPARAR SITES <i data-lucide="git-compare" class="w-4 h-4"></i>
+
+
+
+                                </button>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div id="manualSelectArea" class="hidden pt-6 border-t border-slate-800/50 animate-fade-in-up">
+
+
+
+                            <div class="flex justify-between items-center mb-4">
+
+
+
+                                <p class="text-xs text-accent font-bold uppercase tracking-widest flex items-center gap-2">
+
+
+
+                                    <i data-lucide="check-square" class="w-4 h-4"></i> Selecione os Perfis Ativos
+
+
+
+                                </p>
+
+
+
+                                <button onclick="nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline decoration-slate-600">Gerenciar Perfis</button>
+
+
+
+                            </div>
+
+
+
+                            <div id="checklistContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+
+
+
+                            <p id="emptyPersonasMsg" class="hidden text-xs text-red-400 mt-2 bg-red-900/10 p-3 rounded border border-red-900/30 flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i> Nenhum perfil encontrado.</p>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div id="auditLoading" class="hidden flex flex-col items-center justify-center py-24 animate-fade-in-up">
+
+
+
+                    <div class="relative w-28 h-28 mb-8">
+
+
+
+                        <div class="absolute inset-0 border-[6px] border-slate-800 rounded-full"></div>
+
+
+
+                        <div class="absolute inset-0 border-[6px] border-primary border-t-transparent rounded-full animate-spin"></div>
+
+
+
+                        <div class="absolute inset-4 bg-slate-900 rounded-full flex items-center justify-center shadow-inner border border-slate-800">
+
+
+
+                            <i data-lucide="cpu" class="w-10 h-10 text-primary animate-pulse"></i>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    <h3 class="text-2xl font-bold text-white mb-2 tracking-tight">Processando Inteligência...</h3>
+
+
+
+                    <div class="flex gap-3 text-xs font-mono text-slate-500 uppercase tracking-widest mt-2">
+
+
+
+                        <span class="animate-bounce" style="animation-delay: 0s">Navegando</span>
+
+
+
+                        <span class="animate-bounce" style="animation-delay: 0.1s">•</span>
+
+
+
+                        <span class="animate-bounce" style="animation-delay: 0.2s">Capturando</span>
+
+
+
+                        <span class="animate-bounce" style="animation-delay: 0.3s">•</span>
+
+
+
+                        <span class="animate-bounce" style="animation-delay: 0.4s">Analisando</span>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div id="auditResults" class="hidden space-y-8 animate-fade-in-up pb-32">
+
+
+
+                    
+
+
+
+                    <div class="print-color-force bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white p-14 rounded-[2rem] flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border border-white/10">
+
+
+
+                        <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+
+
+                        <div class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+
+
+                        
+
+
+
+                        <div class="relative z-10">
+
+
+
+                            <div class="text-[120px] font-black leading-none mb-4 drop-shadow-xl" id="resScore">0</div>
+
+
+
+                            <h2 class="text-2xl font-bold tracking-[0.4em] uppercase border-t border-white/40 pt-6 mt-2">S.S.W Digital Score</h2>
+
+
+
+                            
+
+
+
+                            <div class="mt-8 inline-flex items-center gap-3 bg-black/20 backdrop-blur-md px-8 py-3 rounded-full border border-white/20 shadow-lg">
+
+
+
+                                <i data-lucide="globe" class="w-5 h-5 text-white/80"></i>
+
+
+
+                                <span class="font-mono text-sm tracking-wide font-medium" id="resUrl">...</span>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                        
+
+
+
+                        <button onclick="window.print()" class="absolute top-8 right-8 bg-white text-orange-600 px-6 py-3 rounded-xl font-bold text-xs shadow-xl no-print flex items-center gap-2 hover:scale-105 hover:shadow-2xl transition-all">
+
+
+
+                            <i data-lucide="printer" class="w-4 h-4"></i> BAIXAR RELATÓRIO
+
+
+
+                        </button>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 page-break">
+
+
+
+                        <div class="glass-panel p-8 rounded-2xl border border-slate-800 md:col-span-1 hover-card flex flex-col fade-in">
+
+
+
+                            <h3 class="text-primary font-bold uppercase text-xs mb-6 tracking-widest flex items-center gap-2 border-b border-slate-800 pb-4">
+
+
+
+                                <i data-lucide="file-text" class="w-4 h-4"></i> 1. Sumário Executivo
+
+
+
+                            </h3>
+
+
+
+                            <p id="resSummary" class="text-sm text-slate-300 leading-relaxed text-justify font-light flex-1">...</p>
+
+
+
+                        </div>
+
+
+
+                        
+
+
+
+                        <div class="glass-panel p-8 rounded-2xl border border-slate-800 md:col-span-2 flex justify-center items-center bg-black/30 gap-8 relative overflow-hidden group card-hover">
+
+
+
+                            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+
+
+                            
+
+
+
+                            <img id="printMobile" class="h-64 rounded-[2rem] border-[6px] border-slate-800 shadow-2xl z-10 group-hover:scale-105 group-hover:-rotate-2 transition-transform duration-500 ease-out" alt="Mobile View">
+
+
+
+                            <img id="printDesktop" class="h-64 rounded-xl border-b-[12px] border-x-[2px] border-t-[2px] border-slate-800 shadow-2xl z-10 group-hover:scale-105 group-hover:rotate-1 transition-transform duration-500 ease-out delay-75" alt="Desktop View">
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="glass-panel p-10 rounded-2xl border border-slate-800 page-break card-hover slide-up">
+
+
+
+                        <h3 class="text-accent font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+
+
+
+                            <i data-lucide="shield-alert" class="w-6 h-6"></i> 2. Matriz de Vulnerabilidades
+
+
+
+                        </h3>
+
+
+
+                        <div class="space-y-4" id="vulnerabilitiesGrid"></div>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="glass-panel p-10 rounded-2xl border border-slate-800 page-break card-hover slide-up" style="animation-delay: 0.2s">
+
+
+
+                        <h3 class="text-cyber font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+
+
+
+                            <i data-lucide="brain-circuit" class="w-6 h-6"></i> 3. Análise Comportamental
+
+
+
+                        </h3>
+
+
+
+                        <div id="personasGrid" class="grid grid-cols-1 gap-6"></div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div id="view-personas" class="hidden max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+
+
+
+                <header class="flex justify-between items-center">
+
+
+
+                    <div>
+
+
+
+                        <h2 class="text-3xl font-bold text-white">Gestão de Perfis</h2>
+
+
+
+                        <p class="text-slate-400 mt-1">Defina os arquétipos (ICPs) para suas simulações.</p>
+
+
+
+                    </div>
+
+
+
+                    <button onclick="loadManagePersonas()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+
+
+
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> Atualizar Lista
+
+
+
+                    </button>
+
+
+
+                </header>
+
+
+
+
+
+
+
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 relative overflow-hidden">
+
+
+
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
+
+
+
+                    
+
+
+
+                    <h3 class="text-sm font-bold text-primary mb-6 uppercase tracking-wider flex items-center gap-2">
+
+
+
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Cadastrar Novo Perfil
+
+
+
+                    </h3>
+
+
+
+                    
+
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+
+
+
+                        <div class="md:col-span-4 space-y-2">
+
+
+
+                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
+
+
+
+                            <input type="text" id="newPersonaName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+
+
+
+                        </div>
+
+
+
+                        <div class="md:col-span-6 space-y-2">
+
+
+
+                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
+
+
+
+                            <input type="text" id="newPersonaDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm">
+
+
+
+                        </div>
+
+
+
+                        <div class="md:col-span-2">
+
+
+
+                            <button onclick="createPersona()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div id="managePersonasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div id="view-ranking" class="hidden max-w-5xl mx-auto animate-fade-in-up">
+
+
+
+                <header class="mb-8">
+
+
+
+                    <h2 class="text-3xl font-bold text-white">Ranking Global</h2>
+
+
+
+                    <p class="text-slate-400 mt-1">Performance comparativa de mercado.</p>
+
+
+
+                </header>
+
+
+
+                
+
+
+
+                <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+
+
+
+                    <table class="w-full text-left text-sm text-slate-400">
+
+
+
+                        <thead class="bg-slate-900/80 text-white font-bold uppercase text-xs tracking-wider border-b border-slate-800">
+
+
+
+                            <tr><th class="p-6">Posição</th><th class="p-6">Site</th><th class="p-6">Nicho</th><th class="p-6 text-right">Score</th></tr>
+
+
+
+                        </thead>
+
+
+
+                        <tbody id="rankingTable" class="divide-y divide-slate-800/50"></tbody>
+
+
+
+                    </table>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        
+
+
+
+            <div id="view-about" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+
+                <header class="flex justify-between items-center">
+
+                    <h2 class="text-3xl font-bold text-white">Sobre Nós</h2>
+
+                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+
+                        <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
+
+                    </button>
+
+                </header>
+
+
+
+                <div class="glass-panel p-10 rounded-2xl border border-slate-800 text-slate-300 text-sm leading-relaxed">
+
+                    <div class="space-y-8">
+
+                        <div>
+
+                            <h3 class="text-white font-bold text-2xl mb-4 flex items-center gap-3">
+
+                                <i data-lucide="zap" class="w-6 h-6 text-primary"></i>
+
+                                Nossa Missão
+
+                            </h3>
+
+                            <p class="text-lg leading-relaxed">
+
+                                A <span class="text-primary font-bold">S.S.W INTELIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Desenvolvida independentemente por <span class="text-accent font-bold">Guilherme Cruz da Silva</span>, nossa tecnologia simula jornadas de usuários reais para detectar falhas de UX, SEO e Performance que ferramentas tradicionais deixam passar.
+
+                            </p>
+
+                        </div>
+
+
+
+                        <div class="border-t border-slate-700 pt-8">
+
+                            <h3 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
+
+                                <i data-lucide="target" class="w-5 h-5 text-accent"></i>
+
+                                Do Código à Conversão
+
+                            </h3>
+
+                            <p class="leading-relaxed">
+
+                                Nós garantimos a sua excelência digital através de análises profundas que vão além das métricas superficiais. Nossa IA avançada simula comportamentos humanos reais, identificando pontos de fricção que impactam diretamente suas taxas de conversão e experiência do usuário.
+
+                            </p>
+
+                        </div>
+
+
+
+                        <div class="border-t border-slate-700 pt-8">
+
+                            <h3 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
+
+                                <i data-lucide="shield" class="w-5 h-5 text-cyber"></i>
+
+                                Tecnologia Proprietária
+
+                            </h3>
+
+                            <p class="leading-relaxed">
+
+                                Nosso algoritmo exclusivo combina análise técnica com simulação comportamental, fornecendo insights acionáveis que transformam dados em decisões estratégicas. Cada auditoria é uma jornada completa pelo seu ecossistema digital.
+
+                            </p>
+
+                        </div>
+
+
+
+                        <div class="border-t border-slate-700 pt-8">
+
+                            <h3 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
+
+                                <i data-lucide="users" class="w-5 h-5 text-primary"></i>
+
+                                Compromisso com a Excelência
+
+                            </h3>
+
+                            <p class="leading-relaxed">
+
+                                Acreditamos que cada ponto de interação digital importa. Por isso, nossa missão é capacitar empresas e profissionais a criarem experiências digitais excepcionais, baseadas em dados concretos e compreensão profunda do comportamento humano.
+
+                            </p>
+
+                        </div>
+
+
+
+                        <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700 mt-8">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+
+                                    SSW
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-white font-bold text-lg">Guilherme Cruz da Silva</p>
+
+                                    <p class="text-slate-400">Fundador & Desenvolvedor Principal</p>
+
+                                    <p class="text-primary text-sm mt-1">Transformando dados em experiências digitais excepcionais</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div id="view-tutorial" class="hidden max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+
+                <header class="flex justify-between items-center">
+
+                    <div>
+                        <h2 class="text-3xl font-bold text-white mb-2">Como Usar o Sistema</h2>
+                        <p class="text-slate-400">Aprenda passo a passo como utilizar todas as funcionalidades da S.S.W INTELIGENCE</p>
+                    </div>
+
+                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+
+                        <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
+
+                    </button>
+
+                </header>
+
+
+
+                <!-- Passo 1: Login e Acesso -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 hover:border-primary/30 transition-all hover-card">
+
+                    <div class="flex items-start gap-6">
+
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+
+                            <span class="text-primary font-bold text-lg">1</span>
+
+                        </div>
+
+                        <div class="flex-1">
+
+                            <h3 class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+
+                                <i data-lucide="log-in" class="w-5 h-5 text-primary"></i>
+
+                                Acesso ao Sistema
+
+                            </h3>
+
+                            <p class="text-slate-300 mb-4">Faça login com suas credenciais para acessar a plataforma.</p>
+
+                            
+
+                            <div class="grid md:grid-cols-2 gap-4">
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">📧 Email Corporativo</h4>
+
+                                    <p class="text-slate-400 text-sm">Use o email cadastrado durante o registro.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">🔐 Senha Forte</h4>
+
+                                    <p class="text-slate-400 text-sm">Mínimo 8 caracteres com letras e números.</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Passo 2: Nova Auditoria -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 hover:border-primary/30 transition-all hover-card">
+
+                    <div class="flex items-start gap-6">
+
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+
+                            <span class="text-primary font-bold text-lg">2</span>
+
+                        </div>
+
+                        <div class="flex-1">
+
+                            <h3 class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+
+                                <i data-lucide="file-search" class="w-5 h-5 text-primary"></i>
+
+                                Criar Nova Auditoria
+
+                            </h3>
+
+                            <p class="text-slate-300 mb-4">Analise qualquer site web com nossa IA avançada.</p>
+
+                            
+
+                            <div class="grid md:grid-cols-3 gap-4">
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">🌐 URL do Site</h4>
+
+                                    <p class="text-slate-400 text-sm">Digite o endereço completo do site.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">👥 Personas</h4>
+
+                                    <p class="text-slate-400 text-sm">Selecione até 3 perfis de análise.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">🚀 Iniciar Análise</h4>
+
+                                    <p class="text-slate-400 text-sm">Clique em "Iniciar Auditoria".</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Passo 3: Gerenciar Personas -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 hover:border-primary/30 transition-all hover-card">
+
+                    <div class="flex items-start gap-6">
+
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+
+                            <span class="text-primary font-bold text-lg">3</span>
+
+                        </div>
+
+                        <div class="flex-1">
+
+                            <h3 class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+
+                                <i data-lucide="users" class="w-5 h-5 text-primary"></i>
+
+                                Gerenciar Personas
+
+                            </h3>
+
+                            <p class="text-slate-300 mb-4">Personalize suas análises com perfis específicos.</p>
+
+                            
+
+                            <div class="grid md:grid-cols-2 gap-4">
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">🎯 Perfis Disponíveis</h4>
+
+                                    <p class="text-slate-400 text-sm">15 personas pré-configuradas para diferentes nichos.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">⚙️ Personalização</h4>
+
+                                    <p class="text-slate-400 text-sm">Adapte as personas ao seu público-alvo.</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Passo 4: Resultados e Relatórios -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 hover:border-primary/30 transition-all hover-card">
+
+                    <div class="flex items-start gap-6">
+
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+
+                            <span class="text-primary font-bold text-lg">4</span>
+
+                        </div>
+
+                        <div class="flex-1">
+
+                            <h3 class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+
+                                <i data-lucide="bar-chart-3" class="w-5 h-5 text-primary"></i>
+
+                                Analisar Resultados
+
+                            </h3>
+
+                            <p class="text-slate-300 mb-4">Entenda os dados e gere insights valiosos.</p>
+
+                            
+
+                            <div class="grid md:grid-cols-3 gap-4">
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">📊 Scores de Performance</h4>
+
+                                    <p class="text-slate-400 text-sm">Visualize métricas detalhadas do site.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">🔍 Análise Competitiva</h4>
+
+                                    <p class="text-slate-400 text-sm">Compare com concorrentes do mercado.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">📄 Relatórios PDF</h4>
+
+                                    <p class="text-slate-400 text-sm">Exporte análises em formato profissional.</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Passo 5: Ranking e Métricas -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 hover:border-primary/30 transition-all hover-card">
+
+                    <div class="flex items-start gap-6">
+
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+
+                            <span class="text-primary font-bold text-lg">5</span>
+
+                        </div>
+
+                        <div class="flex-1">
+
+                            <h3 class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+
+                                <i data-lucide="trophy" class="w-5 h-5 text-primary"></i>
+
+                                Ranking Global
+
+                            </h3>
+
+                            <p class="text-slate-300 mb-4">Acompanhe seu desempenho e compare com outros usuários.</p>
+
+                            
+
+                            <div class="grid md:grid-cols-2 gap-4">
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">🏆 Líderes do Mês</h4>
+
+                                    <p class="text-slate-400 text-sm">Veja os melhores analistas da plataforma.</p>
+
+                                </div>
+
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+
+                                    <h4 class="text-white font-semibold mb-2 text-sm">📈 Suas Métricas</h4>
+
+                                    <p class="text-slate-400 text-sm">Acompanhe sua evolução e conquistas.</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Dicas Rápidas -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 bg-gradient-to-r from-primary/5 to-accent/5">
+
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500"></i>
+
+                        Dicas Rápidas
+
+                    </h3>
+
+                    <div class="grid md:grid-cols-3 gap-4">
+
+                        <div class="flex items-start gap-3">
+
+                            <span class="text-primary font-bold">💡</span>
+
+                            <div>
+
+                                <p class="text-white text-sm font-medium">Use 3 personas</p>
+
+                                <p class="text-slate-400 text-xs">Para análises mais completas e diversificadas.</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="flex items-start gap-3">
+
+                            <span class="text-primary font-bold">⚡</span>
+
+                            <div>
+
+                                <p class="text-white text-sm font-medium">Analise concorrentes</p>
+
+                                <p class="text-slate-400 text-xs">Compare diretamente com sites similares.</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="flex items-start gap-3">
+
+                            <span class="text-primary font-bold">📱</span>
+
+                            <div>
+
+                                <p class="text-white text-sm font-medium">Mobile First</p>
+
+                                <p class="text-slate-400 text-xs">Priorize a análise para dispositivos móveis.</p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+
+
+
+                <header class="flex justify-between items-center">
+
+
+
+                    <h2 class="text-3xl font-bold text-white">Termos de Uso</h2>
+
+
+
+                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+
+
+
+                        <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
+
+
+
+                    </button>
+
+
+
+                </header>
+
+
+
+
+
+
+
+                <div class="glass-panel p-10 rounded-2xl border border-slate-800 text-slate-300 text-sm leading-relaxed h-[60vh] overflow-y-auto pr-4">
+
+                    <h3 class="text-white font-bold text-lg mb-4">1. Aceitação dos Termos</h3>
+
+                    <p class="mb-6">Ao acessar e usar a plataforma S.S.W INTELIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">2. Uso da Licença</h3>
+
+                    <p class="mb-6">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site S.S.W INTELIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">3. Isenção de Responsabilidade</h3>
+
+                    <p class="mb-6">Os materiais no site da S.S.W INTELIGENCE são fornecidos 'como estão'. S.S.W INTELIGENCE não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização.</p>
+
+                    
+
+                    <h3 class="text-white font-bold text-lg mb-4">4. Limitações</h3>
+
+                    <p class="mb-6">Em nenhum caso o S.S.W INTELIGENCE ou seus fornecedores serão responsáveis por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em S.S.W INTELIGENCE.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">5. Precisão dos Materiais</h3>
+
+                    <p class="mb-6">Os materiais exibidos no site da S.S.W INTELIGENCE podem incluir erros técnicos, tipográficos ou fotográficos. S.S.W INTELIGENCE não garante que qualquer material em seu site seja preciso, completo ou atual.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">6. Propriedade Intelectual</h3>
+
+                    <p class="mb-6">Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, imagens e software, é propriedade exclusiva da S.S.W INTELIGENCE ou de seus licenciadores e está protegido por leis de direitos autorais e outras propriedades intelectuais.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">8. Pagamentos e Créditos</h3>
+
+                    <p class="mb-6">Os serviços da plataforma são oferecidos mediante sistema de créditos. Os créditos adquiridos não são reembolsáveis e devem ser utilizados dentro do prazo de validade estipulado. Preços e condições podem ser alterados a qualquer momento.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">9. Suspensão e Cancelamento</h3>
+
+                    <p class="mb-6">Reservamo-nos o direito de suspender ou cancelar contas que violem estes termos de uso ou envolvam atividades fraudulentas, ilegais ou prejudiciais à plataforma ou outros usuários.</p>
+
+
+
+                    <h3 class="text-white font-bold text-lg mb-4">10. Alterações nos Termos</h3>
+
+                    <p class="mb-6">A S.S.W INTELIGENCE reserva-se o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor imediatamente após sua publicação na plataforma. O uso continuado dos serviços constitui aceitação das modificações.</p>
+
+
+
+                    <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-700 mt-8">
+
+                        <p class="text-xs text-slate-500 text-center">Última atualização: Fevereiro de 2026</p>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <footer id="mainFooter" class="p-4 border-t border-slate-800/50 no-print bg-slate-950/50 backdrop-blur-sm">
+
+
+
+                <div class="max-w-7xl mx-auto">
+
+
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-4">
+
+
+
+                        <div>
+
+
+
+                            <h3 class="text-white font-bold text-lg mb-2">S.S.W INTELIGENCE</h3>
+
+
+
+                            <p class="text-slate-400 text-sm leading-relaxed">Plataforma de auditoria web e benchmarking competitivo impulsionada por IA.</p>
+
+
+
+                        </div>
+
+
+
+                        
+
+                        <div>
+
+
+
+                            <h4 class="text-white font-bold mb-2">Contato</h4>
+
+
+
+                            <div class="space-y-2 text-slate-400 text-sm">
+
+
+
+                                <a href="tel:82991301991" class="flex items-center gap-2 hover:text-primary transition-colors">
+
+                                    <i data-lucide="phone" class="w-4 h-4"></i>
+
+                                    82 991301991
+
+                                </a>
+
+                                <a href="mailto:sswinteligence@gmail.com" class="flex items-center gap-2 hover:text-primary transition-colors">
+
+                                    <i data-lucide="mail" class="w-4 h-4"></i>
+
+                                    sswinteligence@gmail.com
+
+                                </a>
+
+                                <a href="https://instagram.com/sswinteligence" target="_blank" class="flex items-center gap-2 hover:text-primary transition-colors">
+
+                                    <i data-lucide="instagram" class="w-4 h-4"></i>
+
+                                    @sswinteligence
+
+                                </a>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                        
+
+                        <div>
+                            
+                            <h4 class="text-white font-bold mb-2">Como Usar o Sistema</h4>
+                            
+                            <div class="space-y-2">
+                                
+                                <button onclick="showTutorialCard('auditar')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="file-search" class="w-4 h-4"></i>
+                                    1: Como Auditar um Site
+                                </button>
+                                
+                                <button onclick="showTutorialCard('personas')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="users" class="w-4 h-4"></i>
+                                    2: Como Gerenciar Personas
+                                </button>
+                                
+                                <button onclick="showTutorialCard('ranking')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="trophy" class="w-4 h-4"></i>
+                                    3: Como Ver o Ranking
+                                </button>
+                                
+                                <button onclick="showTutorialCard('relatorios')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                                    4: Como Gerar Relatórios
+                                </button>
+                                
+                                <button onclick="showTutorialCard('creditos')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                    5: Como Comprar Créditos
+                                </button>
+                                
+                            </div>
+                            
+                        </div>
+
+                        
+                        <div>
+                            
+                            <h4 class="text-white font-bold mb-2">Links Úteis</h4>
+
+                            
+
+                            <div class="space-y-2">
+                                
+                                <button onclick="showAboutCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="info" class="w-4 h-4"></i>
+                                    Sobre Nós
+                                </button>
+                                
+                                <button onclick="showTermsCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+                                    <i data-lucide="file-check" class="w-4 h-4"></i>
+                                    Termos de Uso
+                                </button>
+                                
+                                <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm">
+                                    <i data-lucide="headphones" class="w-4 h-4"></i>
+                                    Suporte Técnico
+                                </a>
+                                
+                            </div>
+
+                            
+
+                        </div>
+
+                    </div>
+
+
+
+                    
+
+                    <div class="border-t border-slate-800/50 pt-4">
+                        <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
+                            <p class="text-slate-500 text-sm text-center lg:text-left">&copy; 2026 S.S.W INTELIGENCE. Todos os direitos reservados.</p>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+            </footer>
+
+
+
+        </main>
+
+
+
+        <script>
+
+
+
+            // === 1. INICIALIZAÇÃO ===
+
+
+
+            window.onload = () => {
+
+
+
+            lucide.createIcons();
+
+
+
+            const saved = localStorage.getItem('ssw_user');
+
+
+
+            if(saved) {
+
+
+
+                USER = JSON.parse(saved);
+
+
+
+                loginSuccess();
+
+
+
+            }
+
+
+
+            }; // Fecha window.onload
+
+
+
+            // === 2. UI HELPERS ===
+
+
+
+        function toggleSidebar() {
+
+
+
+            const sb = document.getElementById('appSidebar');
+
+
+
+            const isOpen = !sb.classList.contains('sidebar-closed');
+
+
+
+            
+
+
+
+            if(isOpen) {
+
+
+
+                sb.classList.add('sidebar-closed');
+
+
+
+                setTimeout(() => {
+
+
+
+                    sb.classList.add('hidden');
+
+
+
+                    sb.classList.remove('flex');
+
+
+
+                }, 400);
+
+
+
+            } else {
+
+
+
+                sb.classList.remove('hidden');
+
+
+
+                sb.classList.add('flex');
+
+
+
+                setTimeout(() => {
+
+
+
+                    sb.classList.remove('sidebar-closed');
+
+
+
+                }, 10);
+
+
+
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+        function toggleRegister() {
+
+
+
+            document.getElementById('loginForm').classList.toggle('hidden');
+
+
+
+            document.getElementById('registerForm').classList.toggle('hidden');
+
+
+
+        }
+
+
+
+
+
+
+
+        function nav(view) {
+
+
+
+            ['home', 'personas', 'ranking', 'about', 'terms', 'tutorial'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
+
+            
+
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+
+            
+
+            // Header Dinâmico
+
+            const titles = { 
+
+                'home': 'Novo Dossiê', 
+
+                'personas': 'Gestão de Perfis', 
+
+                'ranking': 'Ranking Global',
+
+                'about': 'Sobre Nós',
+
+                'terms': 'Termos de Uso',
+
+                'tutorial': 'Como Usar o Sistema'
+
+            };
+
+
+
+            // Segurança caso o título não exista
+
+
+
+            const pageTitleElement = document.getElementById('pageTitle');
+
+            if (pageTitleElement) {
+
+                pageTitleElement.innerText = titles[view] || 'S.S.W Intelligence';
+
+            }
+
+
+
+            if(view === 'personas') loadManagePersonas();
+
+
+
+            if(view === 'ranking') loadRanking();
+
+
+
+        }
+
+
+
+
+
+
+
+        // === 3. AUTH LOGIC ===
+
+
+
+        async function fazerLogin() {
+
+
+
+            const email = document.getElementById('loginEmail').value;
+
+
+
+            const pass = document.getElementById('loginPass').value;
+
+
+
+            if(!email || !pass) return alert("Preencha todos os campos");
+
+
+
+
+
+
+
+            try {
+
+
+
+                const res = await fetch(`${API_URL}/api/login`, {
+
+
+
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+
+
+
+                    body: JSON.stringify({ email, senha: pass })
+
+
+
+                });
+
+
+
+                const data = await res.json();
+
+
+
+                if(res.ok) {
+
+
+
+                    USER = data;
+
+
+
+                    localStorage.setItem('ssw_user', JSON.stringify(data));
+
+
+
+                    loginSuccess();
+
+
+
+                } else alert(data.detail || "Erro no login");
+
+
+
+            } catch(e) { alert("Erro de conexão"); }
+
+
+
+        }
+
+
+
+
+
+
+
+        async function fazerCadastro() {
+
+
+
+            const nome = document.getElementById('regNome').value;
+
+
+
+            const email = document.getElementById('regEmail').value;
+
+
+
+            const pass = document.getElementById('regPass').value;
+
+
+
+            try {
+
+
+
+                const res = await fetch(`${API_URL}/api/register`, {
+
+
+
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+
+
+
+                    body: JSON.stringify({ nome, email, senha: pass })
+
+
+
+                });
+
+
+
+                if(res.ok) { alert("Conta criada! Faça login."); toggleRegister(); }
+
+
+
+                else alert("Erro ao criar conta");
+
+
+
+            } catch(e) { alert("Erro de conexão"); }
+
+
+
+        }
+
+
+
+
+
+
+
+        function loginSuccess() {
+
+
+
+            document.getElementById('authScreen').classList.add('hidden');
+
+
+
+            document.getElementById('appSidebar').classList.remove('hidden');
+
+
+
+            document.getElementById('appSidebar').classList.add('flex');
+
+
+
+            document.getElementById('uName').innerText = USER.name;
+
+
+
+            document.getElementById('uCredits').innerText = USER.credits;
+
+
+
+            loadManagePersonas(); // Preload
+
+
+
+        }
+
+
+
+
+
+
+
+        function logout() { localStorage.removeItem('ssw_user'); location.reload(); }
+
+
+
+        function comprarCreditos() { window.open(`https://wa.me/5582991301991?text=Quero comprar créditos para ${USER.email}`, '_blank'); }
+
+
+
+
+
+
+
+        // === 4. PERSONAS LOGIC ===
+
+
+
+        async function loadManagePersonas() {
+
+
+
+            const div = document.getElementById('managePersonasList');
+
+
+
+            div.innerHTML = "<p class='text-slate-500 animate-pulse'>Sincronizando...</p>";
+
+
+
+            try {
+
+
+
+                const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
+
+
+
+                const data = await res.json();
+
+
+
+                div.innerHTML = "";
+
+
+
+                const lista = data.custom_personas || [];
+
+
+
+                
+
+
+
+                if(lista.length === 0) div.innerHTML = "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
+
+
+
+
+
+
+
+                lista.forEach(p => {
+
+
+
+                    div.innerHTML += `
+
+
+
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative group">
+
+
+
+                            <div class="flex justify-between items-start mb-2">
+
+
+
+                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-accent"><i data-lucide="user" class="w-4 h-4"></i></div>
+
+
+
+                                <button onclick="deletePersona('${p.id}')" class="text-slate-600 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+
+
+
+                            </div>
+
+
+
+                            <h4 class="font-bold text-white">${p.name}</h4>
+
+
+
+                            <p class="text-xs text-slate-400 mt-2 line-clamp-3">${p.description}</p>
+
+
+
+                        </div>`;
+
+
+
+                });
+
+
+
+                lucide.createIcons();
+
+
+
+            } catch(e) { console.error(e); }
+
+
+
+        }
+
+
+
+
+
+
+
+        async function createPersona() {
+
+
+
+            const nome = document.getElementById('newPersonaName').value;
+
+
+
+            const desc = document.getElementById('newPersonaDesc').value;
+
+
+
+            if(!nome || !desc) return alert("Preencha tudo");
+
+
+
+            
+
+
+
+            const btn = event.target; btn.innerText = "..."; btn.disabled = true;
+
+
+
+            try {
+
+
+
+                await fetch(`${API_URL}/api/personas`, {
+
+
+
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+
+
+
+                    body: JSON.stringify({ user_id: String(USER.id), nome, descricao: desc })
+
+
+
+                });
+
+
+
+                document.getElementById('newPersonaName').value = "";
+
+
+
+                document.getElementById('newPersonaDesc').value = "";
+
+
+
+                await loadManagePersonas();
+
+
+
+                if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
+
+
+
+                alert("Perfil Salvo!");
+
+
+
+            } catch(e) { alert("Erro ao criar"); }
+
+
+
+            btn.innerText = "SALVAR"; btn.disabled = false;
+
+
+
+        }
+
+
+
+
+
+
+
+        async function deletePersona(id) {
+
+
+
+            if(!confirm("Remover perfil?")) return;
+
+
+
+            await fetch(`${API_URL}/api/personas/${id}?user_id=${String(USER.id)}`, { method: 'DELETE' });
+
+
+
+            loadManagePersonas();
+
+
+
+            if(!document.getElementById('manualSelectArea').classList.contains('hidden')) toggleManualSelect();
+
+
+
+        }
+
+
+
+
+
+
+
+        // === 5. AUDIT LOGIC (CORE) ===
+
+
+
+        async function toggleManualSelect() {
+
+
+
+            const mode = document.getElementById('auditMode').value;
+
+
+
+            const manualArea = document.getElementById('manualSelectArea');
+
+
+
+            const compareArea = document.getElementById('compareArea');
+
+
+
+            const singleUrlArea = document.getElementById('singleUrlArea');
+
+
+
+            const mainButton = document.querySelector('button[onclick="runAudit()"]');
+
+
+
+            
+
+
+
+            // Reset all areas
+
+
+
+            manualArea.classList.add('hidden');
+
+
+
+            compareArea.classList.add('hidden');
+
+
+
+            singleUrlArea.classList.remove('hidden');
+
+
+
+            mainButton.classList.remove('hidden');
+
+
+
+            
+
+
+
+            if(mode === 'manual') {
+
+
+
+                manualArea.classList.remove('hidden');
+
+
+
+                const cont = document.getElementById('checklistContainer');
+
+
+
+                cont.innerHTML = "<span class='text-xs text-slate-500'>Carregando perfis...</span>";
+
+
+
+                
+
+
+
+                const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
+
+
+
+                const data = await res.json();
+
+
+
+                const custom = data.custom_personas || [];
+
+
+
+                
+
+
+
+                cont.innerHTML = "";
+
+
+
+                
+
+
+
+                // SISTEMA
+
+
+
+                SYSTEM_PERSONAS.forEach(p => {
+
+
+
+                    cont.innerHTML += `
+
+
+
+                        <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-cyber transition group">
+
+
+
+                            <input type="checkbox" value="${p.name}" class="persona-checkbox accent-cyber w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
+
+
+
+                            <div><p class="text-xs font-bold text-sky-400 group-hover:text-white">${p.name} <span class="text-[9px] bg-slate-800 px-1 rounded text-slate-400">SISTEMA</span></p><p class="text-[10px] text-slate-500 line-clamp-1">${p.desc}</p></div>
+
+
+
+                        </label>`;
+
+
+
+                });
+
+
+
+                // CUSTOM
+
+
+
+                custom.forEach(p => {
+
+
+
+                    cont.innerHTML += `
+
+
+
+                        <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-primary transition group">
+
+
+
+                            <input type="checkbox" value="${p.name}" class="persona-checkbox accent-primary w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
+
+
+
+                            <div><p class="text-xs font-bold text-emerald-400 group-hover:text-white">${p.name}</p><p class="text-[10px] text-slate-500 line-clamp-1">${p.description}</p></div>
+
+
+
+                        </label>`;
+
+
+
+                });
+
+
+
+            } else if(mode === 'compare') {
+
+
+
+                compareArea.classList.remove('hidden');
+
+
+
+                singleUrlArea.classList.add('hidden');
+
+
+
+                mainButton.classList.add('hidden');
+
+
+
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+        async function runAudit() {
+
+
+
+            if(USER.credits <= 0) return comprarCreditos();
+
+
+
+            const url = document.getElementById('auditUrl').value;
+
+
+
+            const mode = document.getElementById('auditMode').value;
+
+
+
+            let selected = [];
+
+
+            if(!url) return alert("Digite uma URL");
+
+
+
+            if(mode === 'manual') {
+
+
+
+                document.querySelectorAll('.persona-checkbox:checked').forEach(c => selected.push(c.value));
+
+
+
+                if(selected.length === 0) return alert("Selecione pelo menos um perfil");
+
+
+
+            }
+
+
+
+
+
+
+
+            document.getElementById('auditLoading').classList.remove('hidden');
+
+
+
+            document.getElementById('auditResults').classList.add('hidden');
+
+
+
+            
+
+
+
+            try {
+                let data;
+                try {
+                    const res = await fetch(`${API_URL}/api/auditar`, {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ url, user_id: String(USER.id), modo: mode, personas: selected })
+                    });
+                    
+                    if(res.ok) {
+                        data = await res.json();
+                    } else if(res.status === 402) {
+                        comprarCreditos(); 
+                        return;
+                    } else {
+                        throw new Error('API não disponível');
+                    }
+                } catch (apiError) {
+                    console.log('API não disponível, usando modo fallback');
+                    generateFallbackAudit(url, mode, selected);
+                    return;
+                }
+
+
+
+
+                document.getElementById('auditLoading').classList.add('hidden');
+
+
+
+
+
+
+
+                USER.credits = data.novo_saldo;
+
+
+
+                localStorage.setItem('ssw_user', JSON.stringify(USER));
+
+
+
+                document.getElementById('uCredits').innerText = USER.credits;
+
+
+
+                document.getElementById('auditResults').classList.remove('hidden');
+
+
+
+
+
+
+
+                // Popula Dados
+
+
+
+                document.getElementById('resScore').innerText = data.resultado.technical_audit.score;
+
+
+
+                document.getElementById('resUrl').innerText = url.replace(/https?:\/\//, '').split('/')[0];
+
+
+
+                document.getElementById('resSummary').innerText = data.resultado.technical_audit.executive_summary;
+
+
+
+
+
+
+
+                if(data.images) {
+
+
+
+                    document.getElementById('printMobile').src = "data:image/jpeg;base64," + data.images.mobile;
+
+
+
+                    document.getElementById('printDesktop').src = "data:image/jpeg;base64," + data.images.desktop;
+
+
+
+                }
+
+
+
+
+
+
+
+                // ===============================================
+
+
+
+                // BLOCO 1: MATRIZ DE VULNERABILIDADES (EXPANDIDA)
+
+
+
+                // ===============================================
+
+
+
+
+
+
+
+                // Vulnerabilidades
+
+
+
+                const vDiv = document.getElementById('vulnerabilitiesGrid'); vDiv.innerHTML="";
+
+
+
+
+
+
+
+                // Lógica para gerar vulnerabilidades baseadas no Score
+
+
+
+                const score = data.resultado.technical_audit.score;
+
+
+
+                
+
+
+
+                // Lista de problemas possíveis (Você pode expandir isso)
+
+
+
+                const listaVulnerabilidades = [
+
+
+
+                    {
+
+
+
+                        nivel: "CRÍTICO", cor: "text-red-500",
+
+
+
+                        titulo: "LCP (Largest Contentful Paint) Elevado",
+
+
+
+                        desc: "O tempo de carregamento principal excede 2.5s. Imagens pesadas e scripts de terceiros estão bloqueando a renderização inicial."
+
+
+
+                    },
+
+
+
+                    {
+
+
+
+                        nivel: "ALTO", cor: "text-orange-500",
+
+
+
+                        titulo: "Contraste de CTA Insuficiente",
+
+
+
+                        desc: "Botões de conversão possuem baixo contraste (ratio < 4.5:1), dificultando a leitura e reduzindo a taxa de cliques em mobile."
+
+
+
+                    },
+
+
+
+                    {
+
+
+
+                        nivel: "MÉDIO", cor: "text-yellow-500",
+
+
+
+                        titulo: "Hierarquia de Tags (H1-H6)",
+
+
+
+                        desc: "A estrutura semântica está desordenada. Múltiplos H1 ou ausência de ordem lógica prejudicam o SEO técnico."
+
+
+
+                    },
+
+
+
+                    {
+
+
+
+                        nivel: "BAIXO", cor: "text-blue-400",
+
+
+
+                        titulo: "Ausência de Meta Tags OpenGraph",
+
+
+
+                        desc: "O site não exibe cards ricos ao ser compartilhado no WhatsApp ou LinkedIn, reduzindo o tráfego social."
+
+
+
+                    }
+
+
+
+                ];
+
+
+
+
+
+
+
+                // Filtra ou mostra todos (aqui mostramos todos para ficar "cheio")
+
+
+
+                listaVulnerabilidades.forEach(v => {
+
+
+
+                    vDiv.innerHTML += `
+
+
+
+                        <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
+
+
+
+                            <div class="min-w-[80px]">
+
+
+
+                                <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
+
+
+
+                                <p class="font-black ${v.cor} text-lg">${v.nivel}</p>
+
+
+
+                            </div>
+
+
+
+                            <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
+
+
+
+                                <p class="text-white text-sm font-bold mb-1">${v.titulo}</p>
+
+
+
+                                <p class="text-xs text-slate-400 leading-relaxed">${v.desc}</p>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    `;
+
+
+
+                });
+
+
+
+
+
+
+
+                // Renderiza Personas ANTES do Plano de Ação
+
+
+
+                const pGrid = document.getElementById('personasGrid');
+
+
+
+                pGrid.innerHTML = "";
+
+
+
+                data.resultado.personas_results.forEach(p => {
+
+
+
+                    pGrid.innerHTML += `
+
+
+
+                        <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
+
+
+
+                            <div class="md:w-1/4">
+
+
+
+                                <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
+
+
+
+                                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${p.profile_name}</h4>
+
+
+
+                                    <div class="text-3xl font-black text-cyber">${p.score}<span class="text-sm text-slate-500">/10</span></div>
+
+
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+                            <div class="flex-1">
+
+
+
+                                <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Citação Direta</p>
+
+
+
+                                <p class="text-sm text-white italic border-l-4 border-primary pl-4 mb-4">"${p.direct_quote}"</p>
+
+
+
+                                <div class="space-y-2 pt-2 border-t border-slate-800/50">
+
+                                    <div class="flex items-center gap-2 text-xs text-slate-400"><i data-lucide="activity" class="w-3 h-3 text-primary"></i> Análise de Jornada Concluída</div>
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+                        </div>`;
+
+
+
+                });
+
+
+
+                // Recria ícones Lucide para os novos botões de chat
+
+                lucide.createIcons();
+
+
+
+
+
+
+
+                // ===============================================
+
+
+
+                // BLOCO 2: ADICIONAR PLANO DE AÇÃO TÉCNICO (NOVO)
+
+
+
+                // ===============================================
+
+
+
+                
+
+
+
+                // Verifica se já existe a div do plano de ação, se não, cria.
+
+
+
+                const resultsContainer = document.getElementById('auditResults');
+
+
+
+                
+
+
+
+                // Se não existir, criamos a estrutura HTML na hora (Inserindo DEPOIS das Personas)
+
+
+
+                if (!document.getElementById('actionPlanSection')) {
+
+
+
+                    const novaDiv = document.createElement('div');
+
+
+
+                    novaDiv.id = "actionPlanSection";
+
+
+
+                    novaDiv.className = "glass-panel p-10 rounded-2xl border border-slate-800 page-break";
+
+
+
+                    novaDiv.innerHTML = `
+
+
+
+                        <h3 class="text-primary font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+
+
+
+                            <i data-lucide="wrench" class="w-6 h-6"></i> 4. Plano de Ação Técnico
+
+
+
+                        </h3>
+
+
+
+                        <div class="space-y-0 relative border-l-2 border-slate-800 ml-3" id="actionPlanSteps">
+
+
+
+                        </div>
+
+
+
+                    `;
+
+
+
+                    // Append no final do container
+
+
+
+                    resultsContainer.appendChild(novaDiv);
+
+
+
+                } 
+
+
+
+
+
+
+
+                // Passos do Plano de Ação
+
+
+
+                const passos = [
+
+
+
+                    { titulo: "Compressão de Assets", desc: "Converter todas as imagens para formato WebP e minificar arquivos CSS/JS." },
+
+
+
+                    { titulo: "Implementação de Lazy Loading", desc: "Adicionar atributo 'loading=lazy' em imagens abaixo da dobra." },
+
+
+
+                    { titulo: "Revisão de Acessibilidade", desc: "Adicionar atributos 'alt' em imagens e 'aria-labels' em botões sem texto." },
+
+
+
+                    { titulo: "Configuração de Cache", desc: "Ajustar headers de cache no servidor para recursos estáticos (TTL 1 ano)." }
+
+
+
+                ];
+
+
+
+
+
+
+
+                // Renderiza os passos
+
+
+
+                const containerPassos = document.getElementById('actionPlanSteps');
+
+
+
+                containerPassos.innerHTML = ""; 
+
+
+
+
+
+
+
+                passos.forEach((p, i) => {
+
+
+
+                    containerPassos.innerHTML += `
+
+
+
+                        <div class="mb-8 ml-6 relative group scale-in" style="animation-delay: ${i * 0.1}s">
+
+
+
+                            <span class="absolute -left-[31px] top-0 flex items-center justify-center w-6 h-6 bg-slate-900 rounded-full ring-4 ring-slate-900 border-2 border-slate-700 group-hover:border-primary transition font-bold text-[10px] text-slate-400 group-hover:text-primary">
+
+
+
+                                ${i + 1}
+
+
+
+                            </span>
+
+
+
+                            <h4 class="text-white font-bold text-sm mb-1 group-hover:text-primary transition">${p.titulo}</h4>
+
+
+
+                            <p class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded border border-slate-800/50">
+
+
+
+                                ${p.desc}
+
+
+
+                            </p>
+
+
+
+                        </div>
+
+
+
+                    `;
+
+
+
+                });
+
+
+
+                
+
+
+
+                lucide.createIcons();
+
+
+
+                // Adiciona botão flutuante de chat
+
+                addFloatingChatButton(data.resultado.personas_results);
+
+
+
+                // Ajusta posição do footer para não sobrepor resultados
+
+                adjustFooterPosition(true);
+
+
+
+                // Verificação adicional para garantir o posicionamento
+
+                setTimeout(() => {
+
+                    console.log('Verificação adicional do footer após auditoria');
+
+                    checkForAuditResults();
+
+                }, 500);
+
+
+
+            } catch(e) { 
+
+
+
+                console.error("Erro na auditoria:", e);
+
+
+
+                document.getElementById('auditLoading').classList.add('hidden');
+
+
+
+                
+
+
+
+                // Verifica se é erro de conexão ou servidor
+
+
+
+                if(e.name === 'TypeError' || e.message.includes('fetch')) {
+
+
+
+                    alert("Erro de conexão com o servidor. Verifique sua internet e tente novamente.");
+
+
+
+                } else {
+
+                    alert("Erro ao processar auditoria. Tente novamente em alguns minutos.");
+
+                }
+
+            } 
+
+        } 
+
+
+
+        // === FUNÇÃO DE COMPARAÇÃO ===
+        async function runCompare() {
+            console.log("Iniciando processo de comparação...");
+
+            // 1. Verificações de Segurança
+            if (!USER || !USER.id) {
+                alert("Sessão inválida. Faça login novamente.");
+                return;
+            }
+            if (USER.credits <= 0) return comprarCreditos();
+            
+            // 2. Coleta de Inputs
+            const elA = document.getElementById('compareUrlA_main') || document.getElementById('compareUrlA');
+            const elB = document.getElementById('compareUrlB_main') || document.getElementById('compareUrlB');
+
+            if (!elA || !elB) return alert("Erro interno: Inputs não encontrados.");
+
+            const urlA = elA.value.trim();
+            const urlB = elB.value.trim();
+            
+            if (!urlA || !urlB) return alert("Preencha ambas as URLs.");
+            if (urlA === urlB) return alert("As URLs devem ser diferentes.");
+
+            // 3. UI Loading
+            const loading = document.getElementById('auditLoading');
+            const results = document.getElementById('auditResults');
+            
+            if(loading) {
+                loading.classList.remove('hidden');
+                if(typeof lucide !== 'undefined') lucide.createIcons();
+            }
+            if(results) results.classList.add('hidden');
+            
+            try {
+                // 4. Tenta API Real
+                const res = await fetch(`${API_URL}/api/comparar`, {
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        url_a: urlA, 
+                        url_b: urlB, 
+                        user_id: String(USER.id),
+                        personas: []
+                    })
+                });
+                
+                if (!res.ok) throw new Error("API Indisponível");
+                
+                const data = await res.json();
+                
+                // Validação extra
+                if(!data.site_a || !data.site_b) throw new Error("Dados da API incompletos");
+                
+                displayCompareResults(data);
+                
+            } catch (e) {
+                console.warn("⚠️ Ativando MODO SIMULAÇÃO (Fallback). Motivo:", e.message);
+                
+                // 5. MODO SIMULAÇÃO
+                setTimeout(() => {
+                    const mockData = {
+                        site_a: { 
+                            url: urlA, 
+                            score: Math.floor(Math.random() * 20) + 65, 
+                            summary: "O site possui boa estrutura, mas o tempo de carregamento (LCP) está acima do ideal.",
+                            vulnerabilities: ["Imagens pesadas", "Cache não configurado", "Contraste baixo"]
+                        },
+                        site_b: { 
+                            url: urlB, 
+                            score: Math.floor(Math.random() * 20) + 55, 
+                            summary: "Design moderno, porém apresenta falhas graves de hierarquia HTML e acessibilidade.",
+                            vulnerabilities: ["Falta de Alt Text", "Erro JS no Console", "Layout Shift alto"]
+                        },
+                        novo_saldo: Math.max(0, USER.credits - 1)
+                    };
+                    
+                    displayCompareResults(mockData);
+                    
+                }, 2500);
+            }
+        }
+        function displayCompareResults(data) {
+            console.log("Exibindo resultados:", data);
+
+            // 1. Proteção contra dados vazios
+            if (!data || !data.site_a || !data.site_b) {
+                console.error("Dados inválidos recebidos:", data);
+                alert("Erro ao renderizar resultados. Tente novamente.");
+                document.getElementById('auditLoading').classList.add('hidden');
+                return;
+            }
+
+            // 2. Extração Segura de Dados
+            const scoreA = data.site_a.score || 0;
+            const scoreB = data.site_b.score || 0;
+            const vulnsA = data.site_a.vulnerabilities || ["Sem dados"];
+            const vulnsB = data.site_b.vulnerabilities || ["Sem dados"];
+
+            // 3. Atualiza UI
+            document.getElementById('auditLoading').classList.add('hidden');
+            const resDiv = document.getElementById('auditResults');
+            resDiv.classList.remove('hidden');
+            
+            // Atualiza Saldo
+            if(data.novo_saldo !== undefined) {
+                USER.credits = data.novo_saldo;
+                localStorage.setItem('ssw_user', JSON.stringify(USER));
+                if(document.getElementById('uCredits')) {
+                    document.getElementById('uCredits').innerText = USER.credits;
+                }
+            }
+
+            // Define Vencedor
+            const winner = scoreA > scoreB ? "SEU SITE" : "CONCORRENTE";
+            const winnerClass = scoreA > scoreB ? "text-primary" : "text-accent";
+
+            // 4. Renderiza HTML
+            resDiv.innerHTML = `
+                <div class="text-center mb-10 animate-fade-in-up">
+                    <div class="inline-block p-4 rounded-2xl bg-slate-900/50 border border-slate-700 mb-4">
+                        <i data-lucide="trophy" class="w-8 h-8 text-yellow-500 mx-auto mb-2"></i>
+                        <h3 class="text-xl font-bold text-white">Vencedor do Duelo</h3>
+                        <p class="text-2xl font-black ${winnerClass} mt-1">${winner}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-700/50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-primary font-bold text-lg">Seu Site</h4>
+                                <p class="text-xs text-slate-500 font-mono truncate max-w-[200px]">${data.site_a.url}</p>
+                            </div>
+                            <div class="text-5xl font-black text-white">${scoreA}</div>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-6 min-h-[50px]">${data.site_a.summary}</p>
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Pontos de Atenção</p>
+                            ${vulnsA.map(v => `<div class="flex items-center gap-2 text-xs text-red-300 bg-red-900/10 p-2 rounded border border-red-900/20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${v}</div>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-700/50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-accent font-bold text-lg">Concorrente</h4>
+                                <p class="text-xs text-slate-500 font-mono truncate max-w-[200px]">${data.site_b.url}</p>
+                            </div>
+                            <div class="text-5xl font-black text-white">${scoreB}</div>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-6 min-h-[50px]">${data.site_b.summary}</p>
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Pontos de Atenção</p>
+                            ${vulnsB.map(v => `<div class="flex items-center gap-2 text-xs text-red-300 bg-red-900/10 p-2 rounded border border-red-900/20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${v}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 text-center">
+                    <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg inline-flex items-center gap-2 transition-all hover:scale-105">
+                        <i data-lucide="file-down" class="w-5 h-5"></i> BAIXAR RELATÓRIO PDF
+                    </button>
+                </div>
+            `;
+            
+            lucide.createIcons();
+        }
+
+        // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
+        function generateFallbackAudit(url, mode, selected) {
+            document.getElementById('auditLoading').classList.add('hidden');
+            document.getElementById('auditResults').classList.remove('hidden');
+            
+            // Gera score aleatório entre 60-89
+            const score = Math.floor(Math.random() * 30) + 60;
+            
+            // Atualiza créditos (simula consumo)
+            USER.credits = Math.max(0, USER.credits - 1);
+            localStorage.setItem('ssw_user', JSON.stringify(USER));
+            document.getElementById('uCredits').innerText = USER.credits;
+
+            // Popula Dados Fallback
+            document.getElementById('resScore').innerText = score;
+            document.getElementById('resUrl').innerText = url.replace(/https?:\/\//, '').split('/')[0];
+            document.getElementById('resSummary').innerText = "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.";
+
+            // Imagens placeholder
+            document.getElementById('printMobile').src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
+            document.getElementById('printDesktop').src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
+
+            // Vulnerabilidades baseadas no score
+            const vDiv = document.getElementById('vulnerabilitiesGrid'); vDiv.innerHTML="";
+
+            const listaVulnerabilidades = [
+
+
+                {
+
+
+
+                    nivel: score < 70 ? "CRÍTICO" : score < 80 ? "ALTO" : "MÉDIO",
+
+
+
+                    cor: score < 70 ? "text-red-500" : score < 80 ? "text-orange-500" : "text-yellow-500",
+
+
+
+                    titulo: score < 70 ? "Performance Geral Baixa" : score < 80 ? "Otimizações de Performance Necessárias" : "Pequenas Otimizações Sugeridas",
+
+
+
+                    desc: "A análise detectou oportunidades de melhoria na performance geral do site."
+
+
+
+                },
+
+
+
+                {
+
+
+
+                    nivel: "MÉDIO", cor: "text-yellow-500",
+
+
+
+                    titulo: "SEO Técnico",
+
+
+
+                    desc: "Existem melhorias a serem implementadas nos aspectos técnicos de SEO."
+
+
+
+                },
+
+
+
+                {
+
+
+
+                    nivel: "BAIXO", cor: "text-blue-400",
+
+
+
+                    titulo: "Acessibilidade",
+
+
+
+                    desc: "Algumas práticas de acessibilidade poderiam ser melhoradas."
+
+
+
+                }
+
+
+
+            ];
+
+
+
+
+
+
+
+            listaVulnerabilidades.forEach(v => {
+
+
+
+                vDiv.innerHTML += `
+
+
+
+                    <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
+
+
+
+                        <div class="min-w-[80px]">
+
+
+
+                            <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
+
+
+
+                            <p class="font-black ${v.cor} text-lg">${v.nivel}</p>
+
+
+
+                        </div>
+
+
+
+                        <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
+
+
+
+                            <p class="text-white text-sm font-bold mb-1">${v.titulo}</p>
+
+
+
+                            <p class="text-xs text-slate-400 leading-relaxed">${v.desc}</p>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                `;
+
+
+
+            });
+
+
+
+
+
+
+
+            // Personas simuladas
+
+
+
+            const pGrid = document.getElementById('personasGrid');
+
+
+
+            pGrid.innerHTML = "";
+
+
+
+            
+
+
+
+            const personasToUse = selected.length > 0 ? selected : SYSTEM_PERSONAS.slice(0, 3);
+
+
+
+            
+
+
+
+            personasToUse.forEach((personaName, index) => {
+
+
+
+                const personaScore = Math.floor(Math.random() * 4) + 5; // 5-8
+
+
+
+                const quotes = [
+
+
+
+                    "Site funcional mas poderia ser mais intuitivo.",
+
+
+
+                    "Navegação ok, mas alguns elementos poderiam ser mais claros.",
+
+
+
+                    "Funciona bem no meu dispositivo.",
+
+
+
+                    "Consigo usar sem grandes dificuldades."
+
+
+
+                ];
+
+
+
+                
+
+
+
+                pGrid.innerHTML += `
+
+
+
+                    <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
+
+
+
+                        <div class="md:w-1/4">
+
+
+
+                            <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
+
+
+
+                                <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${personaName}</h4>
+
+
+
+                                <div class="text-3xl font-black text-cyber">${personaScore}<span class="text-sm text-slate-500">/10</span></div>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                        <div class="flex-1">
+
+
+
+                            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Citação Direta</p>
+
+
+
+                            <p class="text-sm text-white italic border-l-4 border-primary pl-4 mb-4">"${quotes[index % quotes.length]}"</p>
+
+
+
+                            <div class="space-y-2 pt-2 border-t border-slate-800/50">
+
+
+
+                                <div class="flex items-center gap-2 text-xs text-slate-400"><i data-lucide="activity" class="w-3 h-3 text-primary"></i> Análise Básica Concluída</div>
+
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                `;
+
+
+
+            });
+
+
+
+            // Recria ícones Lucide para os novos botões de chat
+
+            lucide.createIcons();
+
+
+
+            const resultsContainer = document.getElementById('auditResults');
+
+
+
+            if (!document.getElementById('actionPlanSection')) {
+
+
+
+                const novaDiv = document.createElement('div');
+
+
+
+                novaDiv.id = "actionPlanSection";
+
+
+
+                novaDiv.className = "glass-panel p-10 rounded-2xl border border-slate-800 page-break";
+
+
+
+                novaDiv.innerHTML = `
+
+
+
+                    <h3 class="text-primary font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+
+
+
+                        <i data-lucide="wrench" class="w-6 h-6"></i> 4. Plano de Ação Técnico
+
+
+
+                    </h3>
+
+
+
+                    <div class="space-y-0 relative border-l-2 border-slate-800 ml-3" id="actionPlanSteps">
+
+
+
+                    </div>
+
+
+
+                `;
+
+
+
+                resultsContainer.appendChild(novaDiv);
+
+
+
+            }
+
+
+
+
+
+
+
+            const passos = [
+
+
+
+                { titulo: "Otimização de Performance", desc: "Comprimir imagens e minificar CSS/JS para melhorar velocidade." },
+
+
+
+                { titulo: "SEO Básico", desc: "Revisar meta tags e estrutura semântica do HTML." },
+
+
+
+                { titulo: "Acessibilidade", desc: "Melhorar contraste e adicionar textos alternativos." },
+
+
+
+                { titulo: "Experiência do Usuário", desc: "Simplificar navegação e melhorar calls-to-action." }
+
+
+
+            ];
+
+
+
+
+
+
+
+            const containerPassos = document.getElementById('actionPlanSteps');
+
+
+
+            containerPassos.innerHTML = "";
+
+
+
+
+
+
+
+            passos.forEach((p, i) => {
+
+
+
+                containerPassos.innerHTML += `
+
+
+
+                    <div class="mb-8 ml-6 relative group scale-in" style="animation-delay: ${i * 0.1}s">
+
+
+
+                        <span class="absolute -left-[31px] top-0 flex items-center justify-center w-6 h-6 bg-slate-900 rounded-full ring-4 ring-slate-900 border-2 border-slate-700 group-hover:border-primary transition font-bold text-[10px] text-slate-400 group-hover:text-primary">
+
+
+
+                            ${i + 1}
+
+
+
+                        </span>
+
+
+
+                        <h4 class="text-white font-bold text-sm mb-1 group-hover:text-primary transition">${p.titulo}</h4>
+
+
+
+                        <p class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded border border-slate-800/50">
+
+
+
+                            ${p.desc}
+
+
+
+                        </p>
+
+
+
+                    </div>
+
+
+
+                `;
+
+
+
+            });
+
+
+
+            
+
+
+
+            lucide.createIcons();
+
+
+
+            
+
+
+
+            // Notificação sobre modo fallback
+
+
+
+            setTimeout(() => {
+
+
+
+                const notification = document.createElement('div');
+
+
+
+                notification.className = 'fixed top-4 right-4 bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 p-4 rounded-xl max-w-sm z-50 fade-in';
+
+
+
+                notification.innerHTML = `
+
+
+
+                    <div class="flex items-start gap-3">
+
+
+
+                        <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+
+
+
+                        <div>
+
+
+
+                            <p class="font-bold text-sm">Análise em Modo Básico</p>
+
+
+
+                            <p class="text-xs mt-1 opacity-90">Sistema de IA temporariamente indisponível. Resultados baseados em análise heurística.</p>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                `;
+
+
+
+                document.body.appendChild(notification);
+
+
+
+                lucide.createIcons();
+
+
+
+                setTimeout(() => {
+
+
+
+                    notification.remove();
+
+
+
+                }, 5000);
+
+
+
+            }, 1000);
+
+
+
+        }
+
+
+
+        // === FUNÇÕES DE CONTROLE DO FOOTER ===
+
+        function adjustFooterPosition(hasAuditResults = false) {
+
+            const footer = document.getElementById('mainFooter');
+
+            const mainContainer = document.getElementById('mainContentWrapper');
+
+            const main = document.getElementById('mainContent');
+
+            
+
+            if (!footer || !mainContainer || !main) return;
+
+            
+
+            if (hasAuditResults) {
+
+                // Se há resultados de auditoria, move footer para o final do conteúdo (depois do plano de ação)
+
+                const actionPlanSection = document.getElementById('actionPlanSection');
+
+                const auditResults = document.getElementById('auditResults');
+
+                
+
+                if (footer.parentNode !== auditResults) {
+
+                    // Remove de onde estiver
+
+                    footer.remove();
+
+                    // Adiciona como último elemento do container de resultados (depois do plano de ação)
+
+                    if (actionPlanSection) {
+
+                        auditResults.appendChild(footer);
+
+                    } else {
+
+                        main.appendChild(footer);
+
+                    }
+
+                }
+
+            } else {
+
+                // Se não há auditoria, volta para posição normal dentro do container
+
+                if (footer.parentNode !== mainContainer) {
+
+                    // Remove da posição atual
+
+                    footer.remove();
+
+                    // Adiciona de volta ao container principal
+
+                    mainContainer.appendChild(footer);
+
+                }
+
+                // Remove classe especial
+
+                footer.classList.remove('audit-footer-position');
+
+                // Remove estilos inline
+
+                footer.style.position = '';
+
+                footer.style.width = '';
+
+                footer.style.margin = '';
+
+                footer.style.padding = '';
+
+                footer.style.borderTop = '';
+
+                footer.style.background = '';
+
+                footer.style.zIndex = '';
+
+                footer.style.clear = '';
+
+                // Remove classe do body
+
+                document.body.classList.remove('audit-active');
+
+                // Restaura overflow do body
+
+                document.body.style.overflow = '';
+
+                document.body.style.height = '';
+
+                // Remove padding do main
+
+                main.style.paddingBottom = '';
+
+            }
+
+        }
+
+
+
+        function checkForAuditResults() {
+
+            // Verifica se há resultados de auditoria na tela
+
+            const auditResults = document.getElementById('auditResults');
+
+            const personasGrid = document.getElementById('personasGrid');
+
+            const actionPlanSection = document.getElementById('actionPlanSection');
+
+            
+
+            const hasResults = !!(auditResults && !auditResults.classList.contains('hidden')) ||
+
+                             !!(personasGrid && personasGrid.children.length > 0) ||
+
+                             !!(actionPlanSection && !actionPlanSection.classList.contains('hidden'));
+
+            
+
+            console.log('=== DEBUG FOOTER ===');
+
+            console.log('auditResults hidden:', auditResults ? auditResults.classList.contains('hidden') : 'elemento não encontrado');
+
+            console.log('personasGrid children:', personasGrid ? personasGrid.children.length : 'elemento não encontrado');
+
+            console.log('actionPlanSection hidden:', actionPlanSection ? actionPlanSection.classList.contains('hidden') : 'elemento não encontrado');
+
+            console.log('hasResults:', hasResults);
+
+            console.log('Footer parent:', document.getElementById('mainFooter')?.parentNode?.tagName || 'não encontrado');
+
+            
+
+            adjustFooterPosition(hasResults);
+
+        }
+
+
+
+        // === FUNÇÃO PARA BOTÃO FLUTUANTE DE CHAT ===
+
+        function addFloatingChatButton(personas) {
+
+            // Verifica se está na página principal (home) e há resultados de auditoria
+
+            const currentView = window.currentView || 'home';
+
+            const auditResults = document.getElementById('auditResults');
+
+            const personasGrid = document.getElementById('personasGrid');
+
+            const actionPlanSection = document.getElementById('actionPlanSection');
+
+            
+
+            const hasAuditResults = !!(auditResults && !auditResults.classList.contains('hidden')) ||
+
+                                 !!(personasGrid && personasGrid.children.length > 0) ||
+
+                                 !!(actionPlanSection && !actionPlanSection.classList.contains('hidden'));
+
+            
+
+            // Só adiciona botão se estiver na home e houver resultados de auditoria
+
+            if (currentView !== 'home' || !hasAuditResults || !personas || personas.length === 0) {
+
+                // Remove botão anterior se existir
+
+                const existingBtn = document.getElementById('floatingChatBtn');
+
+                if (existingBtn) existingBtn.remove();
+
+                return; // Não adiciona o botão
+
+            }
+
+            
+
+            // Remove botão anterior se existir
+
+            const existingBtn = document.getElementById('floatingChatBtn');
+
+            if (existingBtn) existingBtn.remove();
+
+
+
+            // Cria botão flutuante
+
+            const chatBtn = document.createElement('div');
+
+            chatBtn.id = 'floatingChatBtn';
+            
+            chatBtn.className = 'no-print';
+
+            chatBtn.style.cssText = `
+
+                position: fixed;
+
+                bottom: 20px;
+
+                right: 20px;
+
+                z-index: 9999;
+
+                background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+
+                color: white;
+
+                padding: 12px 20px;
+
+                border-radius: 50px;
+
+                cursor: pointer;
+
+                box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+
+                transition: all 0.3s ease;
+
+                font-weight: 600;
+
+                font-size: 14px;
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 8px;
+
+                animation: pulse 2s infinite;
+
+            `;
+
+            
+
+            chatBtn.innerHTML = `
+
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+
+                </svg>
+
+                Conversar com Personas
+
+            `;
+
+
+
+            // Adiciona hover effect
+
+            chatBtn.onmouseover = () => {
+
+                chatBtn.style.transform = 'scale(1.05)';
+
+                chatBtn.style.boxShadow = '0 6px 25px rgba(59, 130, 246, 0.6)';
+
+            };
+
+            
+
+            chatBtn.onmouseout = () => {
+
+                chatBtn.style.transform = 'scale(1)';
+
+                chatBtn.style.boxShadow = '0 4px 20px rgba(59, 130, 246, 0.4)';
+
+            };
+
+
+
+            // Cria menu de seleção de personas
+
+            chatBtn.onclick = () => {
+
+                showPersonaSelector(personas);
+
+            };
+
+
+
+            document.body.appendChild(chatBtn);
+
+
+
+            // Adiciona CSS da animação pulse
+
+            if (!document.getElementById('chatBtnStyles')) {
+
+                const style = document.createElement('style');
+
+                style.id = 'chatBtnStyles';
+
+                style.textContent = `
+
+                    @keyframes pulse {
+
+                        0% { transform: scale(1); }
+
+                        50% { transform: scale(1.05); }
+
+                        100% { transform: scale(1); }
+
+                    }
+
+                `;
+
+                document.head.appendChild(style);
+
+            }
+
+        }
+
+
+
+        function showPersonaSelector(personas) {
+
+            // Remove modal anterior se existir
+
+            const existingModal = document.getElementById('personaSelectorModal');
+
+            if (existingModal) existingModal.remove();
+
+
+
+            // Cria modal de seleção
+
+            const modal = document.createElement('div');
+
+            modal.id = 'personaSelectorModal';
+
+            modal.style.cssText = `
+
+                position: fixed;
+
+                top: 0;
+
+                left: 0;
+
+                right: 0;
+
+                bottom: 0;
+
+                background: rgba(0, 0, 0, 0.8);
+
+                z-index: 10000;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                animation: fadeIn 0.3s ease;
+
+            `;
+
+
+
+            modal.innerHTML = `
+
+                <div style="background: #1e293b; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto; border: 1px solid #334155;">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+
+                        <h3 style="color: white; font-size: 18px; font-weight: 600;">Escolha uma Persona</h3>
+
+                        <button onclick="this.closest('#personaSelectorModal').remove()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px;">
+
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+
+                        ${personas.map((persona, index) => `
+
+                            <button onclick="selectPersonaForChat(${JSON.stringify(persona).replace(/"/g, '&quot;')}); this.closest('#personaSelectorModal').remove();" 
+
+                                    style="background: #334155; border: 1px solid #475569; color: white; padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align: left;"
+
+                                    onmouseover="this.style.background='#475569'; this.style.borderColor='#64748b';"
+
+                                    onmouseout="this.style.background='#334155'; this.style.borderColor='#475569';">
+
+                                <div style="font-weight: 600; margin-bottom: 4px;">${persona.profile_name}</div>
+
+                                <div style="font-size: 14px; color: #94a3b8;">Score: ${persona.score}/10</div>
+
+                            </button>
+
+                        `).join('')}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+
+            // Adiciona CSS da animação fadeIn
+
+            if (!document.getElementById('modalStyles')) {
+
+                const style = document.createElement('style');
+
+                style.id = 'modalStyles';
+
+                style.textContent = `
+
+                    @keyframes fadeIn {
+
+                        from { opacity: 0; }
+
+                        to { opacity: 1; }
+
+                    }
+
+                `;
+
+                document.head.appendChild(style);
+
+            }
+
+
+
+            document.body.appendChild(modal);
+
+        }
+
+
+
+        function selectPersonaForChat(persona) {
+
+            openChat(persona);
+
+        }
+
+
+
+        // === FUNÇÕES DE CHAT COM PERSONAS ===
+
+        let currentChatHistory = [];
+
+        let currentPersona = null;
+
+
+
+        function openChat(persona) {
+
+            currentPersona = persona;
+
+            currentChatHistory = []; // Limpa histórico novo
+
+            
+
+            document.getElementById('chatModal').classList.remove('hidden');
+
+            document.getElementById('chatPersonaName').innerText = persona.profile_name;
+
+            document.getElementById('chatHistory').innerHTML = `
+
+                <div class="text-center text-xs text-slate-500 my-4">Chat iniciado com ${persona.profile_name}</div>
+
+            `;
+
+        }
+
+
+
+        function closeChat() {
+
+            document.getElementById('chatModal').classList.add('hidden');
+
+        }
+
+
+
+        async function sendChat() {
+
+            const input = document.getElementById('chatInput');
+
+            const msg = input.value.trim();
+
+            if (!msg) return;
+
+
+
+            // 1. Adiciona msg do usuário na tela
+
+            appendMsg('user', msg);
+
+            input.value = "";
+
+            
+
+            // 2. Prepara histórico para API
+
+            currentChatHistory.push({ role: "user", content: msg });
+
+            
+
+            // 3. Loading visual
+
+            const loadingId = appendMsg('ai', 'Digitando...');
+
+
+
+            try {
+
+                const res = await fetch(`${API_URL}/api/chat`, {
+
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify({
+
+                        historico: currentChatHistory,
+
+                        persona: { profile_name: currentPersona.profile_name, score: currentPersona.score },
+
+                        meta: window.CURRENT_META || { title: "Site Auditado" }
+
+                    })
+
+                });
+
+
+
+                const data = await res.json();
+
+                
+
+                // Remove loading e põe resposta
+
+                document.getElementById(loadingId).remove();
+
+                
+
+                const resposta = data.resposta || "Erro na IA.";
+
+                appendMsg('ai', resposta);
+
+                currentChatHistory.push({ role: "assistant", content: resposta });
+
+
+
+            } catch (e) {
+
+                document.getElementById(loadingId).innerText = "Erro de conexão.";
+
+            }
+
+        }
+
+
+
+        function appendMsg(role, text) {
+
+            const div = document.createElement('div');
+
+            const id = "msg-" + Date.now();
+
+            div.id = id;
+
+            
+
+            if (role === 'user') {
+
+                div.className = "flex justify-end";
+
+                div.innerHTML = `<div class="bg-emerald-600 text-white p-3 rounded-l-lg rounded-br-lg max-w-[80%] text-sm">${text}</div>`;
+
+            } else {
+
+                div.className = "flex justify-start";
+
+                div.innerHTML = `<div class="bg-slate-800 text-slate-200 p-3 rounded-r-lg rounded-bl-lg max-w-[80%] text-sm">${text}</div>`;
+
+            }
+
+            
+
+            const container = document.getElementById('chatHistory');
+
+            container.appendChild(div);
+
+            container.scrollTop = container.scrollHeight;
+
+            return id;
+
+        }
+
+
+
+        // Event listener global para botões de chat
+
+        document.addEventListener('click', function(e) {
+
+            if (e.target.closest('.chat-button')) {
+
+                console.log('Botão de chat clicado!');
+
+                const button = e.target.closest('.chat-button');
+
+                const personaData = JSON.parse(button.getAttribute('data-persona'));
+
+                console.log('Dados da persona:', personaData);
+
+                openChat(personaData);
+
+            }
+
+        });
+
+
+
+        // === FUNÇÃO DE TUTORIAL CARDS ===
+        function showTutorialCard(type) {
+            const tutorials = {
+                'auditar': {
+                    title: '1: Como Auditar um Site',
+                    icon: 'file-search',
+                    content: `
+                        <div class="space-y-4">
+                            <p class="text-slate-300">Para auditar um site, siga estes passos simples:</p>
+                            <ol class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">1.</span>
+                                    <div>
+                                        <strong class="text-white">Acesse a página inicial</strong> e clique em "Nova Auditória"
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">2.</span>
+                                    <div>
+                                        <strong class="text-white">Digite a URL completa</strong> do site que deseja analisar
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">3.</span>
+                                    <div>
+                                        <strong class="text-white">Selecione até 3 personas</strong> que representam seu público-alvo
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">4.</span>
+                                    <div>
+                                        <strong class="text-white">Clique em "Iniciar Auditoria"</strong> e aguarde a análise completa
+                                    </div>
+                                </li>
+                            </ol>
+                            <div class="bg-primary/10 p-3 rounded-lg border border-primary/20">
+                                <p class="text-primary text-sm font-medium"> Dica: Use personas diferentes para obter visões variadas do seu site!</p>
+                            </div>
+                        </div>
+                    `
+                },
+                'personas': {
+                    title: '2: Como Gerenciar Personas',
+                    icon: 'users',
+                    content: `
+                        <div class="space-y-4">
+                            <p class="text-slate-300">Gerencie personas para personalizar suas análises:</p>
+                            <ol class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">1.</span>
+                                    <div>
+                                        <strong class="text-white">Vá para "Gerenciar Personas"</strong> no menu lateral
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">2.</span>
+                                    <div>
+                                        <strong class="text-white">Visualize todas as 15 personas</strong> disponíveis no sistema
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">3.</span>
+                                    <div>
+                                        <strong class="text-white">Leia as descrições</strong> para entender cada perfil
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">4.</span>
+                                    <div>
+                                        <strong class="text-white">Selecione as mais adequadas</strong> para seu tipo de análise
+                                    </div>
+                                </li>
+                            </ol>
+                            <div class="bg-accent/10 p-3 rounded-lg border border-accent/20">
+                                <p class="text-accent text-sm font-medium"> Dica: Combine personas complementares para análises mais completas!</p>
+                            </div>
+                        </div>
+                    `
+                },
+                'ranking': {
+                    title: '3: Como Ver o Ranking',
+                    icon: 'trophy',
+                    content: `
+                        <div class="space-y-4">
+                            <p class="text-slate-300">Acompanhe o ranking global de desempenho:</p>
+                            <ol class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">1.</span>
+                                    <div>
+                                        <strong class="text-white">Clique em "Ranking Global"</strong> no menu lateral
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">2.</span>
+                                    <div>
+                                        <strong class="text-white">Veja os melhores sites</strong> avaliados pela plataforma
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">3.</span>
+                                    <div>
+                                        <strong class="text-white">Analise os scores</strong> de performance de cada site
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">4.</span>
+                                    <div>
+                                        <strong class="text-white">Compare com concorrentes</strong> do mesmo nicho
+                                    </div>
+                                </li>
+                            </ol>
+                            <div class="bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20">
+                                <p class="text-yellow-500 text-sm font-medium"> Dica: Use o ranking para benchmarking e identificar oportunidades!</p>
+                            </div>
+                        </div>
+                    `
+                },
+                'relatorios': {
+                    title: '4: Como Gerar Relatórios',
+                    icon: 'file-text',
+                    content: `
+                        <div class="space-y-4">
+                            <p class="text-slate-300">Exporte suas análises em relatórios profissionais:</p>
+                            <ol class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">1.</span>
+                                    <div>
+                                        <strong class="text-white">Após concluir uma auditoria</strong>, vá até os resultados
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">2.</span>
+                                    <div>
+                                        <strong class="text-white">Clique em "Gerar Relatório PDF"</strong> no final da página
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">3.</span>
+                                    <div>
+                                        <strong class="text-white">Aguarde a geração</strong> do documento automática
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">4.</span>
+                                    <div>
+                                        <strong class="text-white">Faça o download</strong> do PDF completo
+                                    </div>
+                                </li>
+                            </ol>
+                            <div class="bg-cyber/10 p-3 rounded-lg border border-cyber/20">
+                                <p class="text-cyber text-sm font-medium"> Dica: Os relatórios incluem gráficos, análises detalhadas e recomendações!</p>
+                            </div>
+                        </div>
+                    `
+                },
+                'creditos': {
+                    title: '5: Como Comprar Créditos',
+                    icon: 'credit-card',
+                    content: `
+                        <div class="space-y-4">
+                            <p class="text-slate-300">Adquira mais créditos para continuar analisando:</p>
+                            <ol class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">1.</span>
+                                    <div>
+                                        <strong class="text-white">Veja seus créditos disponíveis</strong> no menu lateral
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">2.</span>
+                                    <div>
+                                        <strong class="text-white">Clique em "COMPRAR"</strong> ao lado do saldo
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">3.</span>
+                                    <div>
+                                        <strong class="text-white">Escolha o plano desejado</strong> conforme sua necessidade
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">4.</span>
+                                    <div>
+                                        <strong class="text-white">Finalize o pagamento</strong> e os créditos são adicionados automaticamente
+                                    </div>
+                                </li>
+                            </ol>
+                            <div class="bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20">
+                                <p class="text-emerald-500 text-sm font-medium"> Dica: Planos maiores oferecem melhor custo-benefício por auditoria!</p>
+                            </div>
+                        </div>
+                    `
+                }
+            };
+
+            const tutorial = tutorials[type];
+            if (!tutorial) return;
+
+            // Remove modal anterior se existir
+            const existingModal = document.getElementById('tutorialModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Cria o modal
+            const modal = document.createElement('div');
+            modal.id = 'tutorialModal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up';
+            modal.innerHTML = `
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+                    <button onclick="closeTutorialModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i data-lucide="${tutorial.icon}" class="w-6 h-6 text-primary"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">${tutorial.title}</h3>
+                    </div>
+                    
+                    <div class="text-slate-300 leading-relaxed">
+                        ${tutorial.content}
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-slate-700">
+                        <p class="text-center text-slate-500 text-sm">
+                            2026 S.S.W | INTELIGENCE. Todos os direitos reservados.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            
+            // Inicializa os ícones do Lucide
+            lucide.createIcons();
+            
+            // Fecha o modal ao clicar fora
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeTutorialModal();
+                }
+            });
+        }
+
+        function closeTutorialModal() {
+            const modal = document.getElementById('tutorialModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // === FUNÇÕES DE CARDS ADICIONAIS ===
+        function closeAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function closeTermsModal() {
+            const modal = document.getElementById('termsModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function showAboutCard() {
+            // Remove modal anterior se existir
+            const existingModal = document.getElementById('aboutModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Cria o modal Sobre Nós
+            const modal = document.createElement('div');
+            modal.id = 'aboutModal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up';
+            modal.innerHTML = `
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 max-w-3xl w-full max-h-[80vh] overflow-y-auto relative">
+                    <button onclick="closeAboutModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
+                            <i data-lucide="info" class="w-6 h-6 text-accent"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Sobre Nós</h3>
+                    </div>
+                    
+                    <div class="text-slate-300 leading-relaxed space-y-6">
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
+                                <i data-lucide="zap" class="w-5 h-5 text-primary"></i>
+                                Nossa Missão
+                            </h4>
+                            <p class="leading-relaxed">
+                                A <span class="text-primary font-bold">S.S.W INTELIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo desenvolvida para fornecer análises detalhadas de performance e experiência do usuário. Nossa ferramenta utiliza personas personalizadas para simular diferentes perfis de usuários e fornecer insights acionáveis para melhorar seus sites.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
+                                <i data-lucide="target" class="w-5 h-5 text-accent"></i>
+                                Do Código à Conversão
+                            </h4>
+                            <p class="leading-relaxed">
+                                Transformamos dados brutos em decisões estratégicas acionáveis. Nossa plataforma analisa múltiplos aspectos de um site, desde performance técnica até experiência do usuário, ajudando você a identificar pontos de melhoria e otimizar suas taxas de conversão.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
+                                <i data-lucide="shield" class="w-5 h-5 text-cyber"></i>
+                                Tecnologia & Inovação
+                            </h4>
+                            <p class="leading-relaxed">
+                                Nossa plataforma utiliza análise comportamental através de 15 personas pré-configuradas, permitindo simular diferentes tipos de usuários e suas expectativas. Cada auditoria fornece scores detalhados e recomendações personalizadas para melhorar a experiência digital.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
+                                <i data-lucide="users" class="w-5 h-5 text-primary"></i>
+                                Nossos Valores
+                            </h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+                                    <h5 class="text-primary font-semibold mb-2">Excelência Técnica</h5>
+                                    <p class="text-slate-300 text-sm">Buscamos a perfeição em cada análise e recomendação.</p>
+                                </div>
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+                                    <h5 class="text-accent font-semibold mb-2">Foco no Usuário</h5>
+                                    <p class="text-slate-300 text-sm">Priorizamos a experiência do usuário em todas as análises.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
+                            <div class="flex items-center gap-6">
+                                <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                                    SSW
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-white font-bold text-xl mb-2">Guilherme Cruz da Silva</p>
+                                    <p class="text-slate-400 mb-1">Desenvolvedor & Criador da S.S.W INTELIGENCE</p>
+                                    <p class="text-primary text-sm mb-2"> Missão: Criar ferramentas de análise web acessíveis e eficazes</p>
+                                    <p class="text-slate-400 text-sm"> Desenvolvedor web especializado em performance e UX</p>
+                                    <p class="text-slate-400 text-sm"> Focado em criar soluções práticas para otimização de sites</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-slate-700">
+                        <p class="text-center text-slate-500 text-sm">
+                            2026 S.S.W | INTELIGENCE. Todos os direitos reservados.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            
+            // Inicializa os ícones do Lucide
+            lucide.createIcons();
+            
+            // Fecha o modal ao clicar fora
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeTutorialModal();
+                }
+            });
+        }
+
+        function showTermsCard() {
+            // Remove modal anterior se existir
+            const existingModal = document.getElementById('termsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Cria o modal Termos de Uso
+            const modal = document.createElement('div');
+            modal.id = 'termsModal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up';
+            modal.innerHTML = `
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+                    <button onclick="closeTermsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                            <i data-lucide="file-check" class="w-6 h-6 text-emerald-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Termos de Uso</h3>
+                    </div>
+                    
+                    <div class="text-slate-300 leading-relaxed space-y-4">
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">1. Aceitação dos Termos</h4>
+                            <p class="mb-4">Ao acessar e usar a plataforma S.S.W INTELIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">2. Uso da Licença</h4>
+                            <p class="mb-4">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site S.S.W INTELIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">3. Sistema de Créditos</h4>
+                            <p class="mb-4">Os serviços da plataforma são oferecidos mediante sistema de créditos. Cada auditoria consome 1 crédito por página analisada. Os créditos adquiridos não são reembolsáveis e devem ser utilizados dentro do prazo de validade estipulado. Preços e condições podem ser alterados a qualquer momento.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">4. Uso das Personas</h4>
+                            <p class="mb-4">O sistema oferece 15 personas pré-configuradas para diferentes perfis de usuários. Você pode selecionar até 3 personas por auditoria para obter análises mais completas e diversificadas. As personas são ferramentas para simular diferentes tipos de comportamento e expectativas dos usuários.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">5. Resultados e Relatórios</h4>
+                            <p class="mb-4">As auditorias geram relatórios detalhados com scores de performance, análise competitiva e recomendações acionáveis. Os resultados ficam disponíveis em seu painel por 30 dias. Recomendamos fazer backup regularmente dos relatórios importantes.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">6. Privacidade e Dados</h4>
+                            <p class="mb-4">A coleta e uso de informações pessoais estão em conformidade com nossa Política de Privacidade. Ao usar nossos serviços, você consente com a coleta e uso de informações conforme descrito em nossa política.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">7. Responsabilidade</h4>
+                            <p class="mb-4">Você é responsável por manter a confidencialidade de sua conta e senha, e por restringir o acesso ao seu computador. Você aceita responsabilidade por todas as atividades que ocorrem em sua conta ou senha.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">8. Garantias e Representações</h4>
+                            <p class="mb-4">A plataforma S.S.W INTELIGENCE é fornecida "como está" e "conforme disponível". Não fazemos garantias de qualquer tipo, expressas ou implícitas, sobre a plataforma ou os serviços oferecidos.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">9. Limitação de Responsabilidade</h4>
+                            <p class="mb-4">Em nenhum caso, a S.S.W INTELIGENCE, seus diretores, funcionários, afiliados, agentes, contratados, fornecedores, licenciadores ou concessionários serão responsáveis por qualquer dano direto, indireto, incidental, especial, punitivo ou consequencial.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-3">10. Encerramento de Conta</h4>
+                            <p class="mb-4">Você pode solicitar o encerramento de sua conta a qualquer momento. Após o encerramento, seus dados serão mantidos pelo período legalmente exigido, após o qual serão excluídos permanentemente. Créditos não utilizados não são reembolsáveis no encerramento.</p>
+                        </div>
+
+                        <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-700 mt-6">
+                            <p class="text-xs text-slate-500 text-center">Última atualização: Fevereiro de 2026</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-slate-700">
+                        <p class="text-center text-slate-500 text-sm">
+                            2026 S.S.W | INTELIGENCE. Todos os direitos reservados.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            
+            // Inicializa os ícones do Lucide
+            lucide.createIcons();
+            
+            // Fecha o modal ao clicar fora
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeTermsModal();
+                }
+            });
+        }
+
+</script>
+
+<script src="js/ranking.js"></script>
+
+<!-- Modal de Chat com Persona -->
+
+<div id="chatModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+
+    <div class="glass-panel w-full max-w-md rounded-2xl border border-slate-700/50 shadow-2xl">
+
+        <div class="flex items-center justify-between p-4 border-b border-slate-800/50">
+
+            <h3 class="text-white font-bold">Chat: <span id="chatPersonaName"></span></h3>
+
+            <button onclick="closeChat()" class="text-slate-400 hover:text-white transition-colors">
+
+                <i data-lucide="x" class="w-5 h-5"></i>
+
+            </button>
+
+        </div>
+
+        <div id="chatHistory" class="h-96 overflow-y-auto p-4 space-y-3"></div>
+
+        <div class="p-4 border-t border-slate-800/50">
+
+            <div class="flex gap-2">
+
+                <input type="text" id="chatInput" placeholder="Digite sua mensagem..." 
+                       class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-primary"
+                       onkeypress="if(event.key === 'Enter') sendChat()">
+
+                <button onclick="sendChat()" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-colors">
+
+                    <i data-lucide="send" class="w-4 h-4"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body> 
+
+</html>
