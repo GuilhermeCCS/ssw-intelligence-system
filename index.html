@@ -1638,31 +1638,23 @@
 
 
 
-        <div class="p-6 md:p-8 pb-0 no-print sticky top-0 z-30">
-
-            <div class="flex items-center justify-between gap-4">
-
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors border border-transparent hover:border-slate-700">
-
+        <div class="p-4 md:p-8 pb-0 no-print sticky top-0 z-30 bg-slate-950/95 backdrop-blur-sm">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+                    <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors border border-transparent hover:border-slate-700 flex-shrink-0">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="3" y1="6" x2="21" y2="6"></line>
                             <line x1="3" y1="12" x2="21" y2="12"></line>
                             <line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg>
-
                     </button>
-
-                    <div class="flex items-center gap-3">
-                        <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-12 h-12 object-contain">
-                        <h1 class="text-xl font-black tracking-tighter text-white">S.S.W <span class="text-primary">| INTELLIGENCE</span></h1>
+                    <div class="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                        <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-8 h-8 md:w-12 md:h-12 object-contain flex-shrink-0">
+                        <h1 class="text-sm md:text-xl font-black tracking-tighter text-white truncate">S.S.W <span class="text-primary">| INTELLIGENCE</span></h1>
                     </div>
                 </div>
-
-                <div id="pageTitle" class="text-lg font-semibold text-slate-300"></div>
-
+                <div id="pageTitle" class="text-sm md:text-lg font-semibold text-slate-300 truncate hidden md:block"></div>
             </div>
-
         </div>
 
 
@@ -1671,7 +1663,7 @@
 
 
 
-        <div class="flex-1 p-6 md:p-10 pt-6 flex flex-col" id="mainContentWrapper">
+        <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper">
 
 
 
@@ -1687,11 +1679,8 @@
 
 
 
-                <div class="glass-panel p-1.5 rounded-2xl no-print shadow-2xl">
-
-
-
-                    <div class="bg-slate-950/60 rounded-xl p-6 border border-white/5 space-y-6">
+                <div class="glass-panel p-3 md:p-6 rounded-2xl no-print shadow-2xl">
+                    <div class="bg-slate-950/60 rounded-xl p-4 md:p-6 border border-white/5 space-y-4 md:space-y-6">
 
 
 
@@ -2095,7 +2084,7 @@
 
 
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 page-break">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 page-break">
 
 
 
@@ -2664,7 +2653,7 @@
 
                             
 
-                            <div class="grid md:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
                                 <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
 
@@ -2778,7 +2767,7 @@
 
                             
 
-                            <div class="grid md:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
                                 <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
 
@@ -2868,7 +2857,7 @@
 
 
                 <!-- Dicas Rápidas -->
-                <div class="glass-panel p-6 rounded-2xl border border-slate-800 bg-gradient-to-r from-primary/5 to-accent/5">
+                <div class="glass-panel p-4 md:p-6 rounded-2xl border border-slate-800 bg-gradient-to-r from-primary/5 to-accent/5">
 
                     <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 
@@ -2878,7 +2867,7 @@
 
                     </h3>
 
-                    <div class="grid md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                         <div class="flex items-start gap-3">
 
@@ -3034,9 +3023,7 @@
 
 
 
-            <footer id="mainFooter" class="p-4 border-t border-slate-800/50 no-print bg-slate-950/50 backdrop-blur-sm">
-
-
+            <footer id="mainFooter" class="p-4 border-t border-slate-800/50 no-print bg-slate-950/50 backdrop-blur-sm mt-auto">
 
                 <div class="max-w-7xl mx-auto">
 
