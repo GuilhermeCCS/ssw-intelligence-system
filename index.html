@@ -18,7 +18,7 @@
 
 
 
-    <title>S.S.W | INTELIGENCE</title>
+    <title>S.S.W | INTELLIGENCE</title>
     <link rel="icon" type="image/x-icon" href="images/logo.ico">
 
 
@@ -1055,6 +1055,76 @@
 
         let USER = null;
 
+        let isAuthenticated = false;
+
+
+
+        // Função para mostrar tela de autenticação
+
+        function showAuthScreen() {
+
+            document.getElementById('authScreen').classList.remove('hidden');
+
+            document.getElementById('mainContent').style.opacity = '0.3';
+
+            document.getElementById('appSidebar').style.opacity = '0.3';
+
+        }
+
+
+
+        // Função para esconder tela de autenticação
+
+        function hideAuthScreen() {
+
+            document.getElementById('authScreen').classList.add('hidden');
+
+            document.getElementById('mainContent').style.opacity = '1';
+
+            document.getElementById('appSidebar').style.opacity = '1';
+
+        }
+
+
+
+        // Verificar se clique foi em botão que não é do footer
+
+        function handleButtonClick(event) {
+
+            const button = event.target.closest('button');
+
+            const link = event.target.closest('a');
+
+            const element = button || link;
+            
+            if (!element) return;
+            
+            // Verificar se está no footer
+
+            const footer = document.getElementById('mainFooter');
+
+            const isInFooter = footer && footer.contains(element);
+            
+            // Se não estiver no footer e não estiver autenticado, mostrar tela de login
+
+            if (!isInFooter && !isAuthenticated) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                showAuthScreen();
+
+            }
+
+        }
+
+
+
+        // Adicionar listener global para cliques
+
+        document.addEventListener('click', handleButtonClick);
+
 
 
         // Função para limitar seleção de personas a no máximo 3
@@ -1161,7 +1231,7 @@
 
 
 
-    <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
+    <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
 
 
 
@@ -1198,10 +1268,10 @@
 
 
                 <div class="mb-6 flex justify-center">
-                    <img src="images/logo.ico" alt="S.S.W INTELIGENCE" class="w-16 h-16 object-contain drop-shadow-lg">
+                    <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg">
                 </div>
 
-                <h1 class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg">S.S.W <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELIGENCE</span></h1>
+                <h1 class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg">S.S.W <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELLIGENCE</span></h1>
 
                 <p class="text-xs text-slate-400 uppercase tracking-[0.2em] font-medium">Enterprise Analytics Platform</p>
 
@@ -1313,7 +1383,7 @@
 
 
 
-                    <a href="https://wa.me/5582991301991" target="_blank" class="text-xs text-slate-400 hover:text-primary transition-colors flex items-center gap-1">
+                    <a href="https://wa.me/5582991301991?text=Preciso%20recuperar%20minha%20senha" target="_blank" class="text-xs text-slate-400 hover:text-primary transition-colors flex items-center gap-1">
 
 
 
@@ -1389,19 +1459,24 @@
 
 
 
-    <aside id="appSidebar" class="hidden md:flex flex-col w-72 bg-slate-900/80 border-r border-slate-800/50 backdrop-blur-xl z-20 whitespace-nowrap h-full relative">
-
-
-
-        <div class="p-6 border-b border-slate-800/50 flex justify-between items-center bg-slate-900/50">
-
-            <div class="flex items-center gap-3">
-                <img src="images/logo.ico" alt="S.S.W INTELIGENCE" class="w-14 h-14 object-contain">
-                <h1 class="text-lg font-black tracking-tighter text-white">S.S.W <span class="text-primary"> | INTELIGENCE</span></h1>
-            </div>
-
+    <aside id="appSidebar" class="fixed md:relative md:flex flex-col w-72 bg-slate-900/80 border-r border-slate-800/50 backdrop-blur-xl z-40 whitespace-nowrap h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out h-screen md:h-auto">
+        
+        <!-- Botão de fechar menu mobile -->
+        <div class="md:hidden flex justify-end p-4 border-b border-slate-800/50">
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
 
+        <div class="p-6 border-b border-slate-800/50 flex justify-between items-center bg-slate-900/50">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-14 h-14 object-contain">
+                <h1 class="text-lg font-black tracking-tighter text-white">S.S.W <span class="text-primary"> | INTELLIGENCE</span></h1>
+            </div>
+        </div>
 
         <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
 
@@ -1419,7 +1494,7 @@
 
 
 
-                <i data-lucide="file-search" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors"></i> Nova Auditória
+                <i data-lucide="file-search" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors"></i> Nova Auditoria
 
 
 
@@ -1552,7 +1627,8 @@
 
 
 
-
+    <!-- Overlay para menu mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden hidden" onclick="toggleSidebar()"></div>
 
     <main class="flex-1 h-screen overflow-y-auto relative scroll-smooth flex flex-col" id="mainContent">
 
@@ -1578,8 +1654,8 @@
                     </button>
 
                     <div class="flex items-center gap-3">
-                        <img src="images/logo.ico" alt="S.S.W INTELIGENCE" class="w-12 h-12 object-contain">
-                        <h1 class="text-xl font-black tracking-tighter text-white">S.S.W <span class="text-primary">| INTELIGENCE</span></h1>
+                        <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-12 h-12 object-contain">
+                        <h1 class="text-xl font-black tracking-tighter text-white">S.S.W <span class="text-primary">| INTELLIGENCE</span></h1>
                     </div>
                 </div>
 
@@ -1623,7 +1699,7 @@
 
 
 
-                            <div class="relative min-w-[260px] group">
+                            <div class="relative min-w-[260px] group flex-1 lg:flex-initial">
 
 
 
@@ -1663,7 +1739,7 @@
 
 
 
-                            <div class="flex-1 relative group" id="singleUrlArea">
+                            <div class="relative group flex-1" id="singleUrlArea">
 
 
 
@@ -1687,11 +1763,11 @@
 
 
 
-                            <button onclick="runAudit()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[180px] h-[58px] hover:scale-[1.02] transition-transform">
+                            <button onclick="runAudit()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[180px] h-[58px] hover:scale-[1.02] transition-transform w-full lg:w-auto">
 
 
 
-                                GERAR AUDITÓRIA <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                GERAR AUDITORIA <i data-lucide="sparkles" class="w-4 h-4"></i>
 
 
 
@@ -2391,7 +2467,7 @@
 
                             <p class="text-lg leading-relaxed">
 
-                                A <span class="text-primary font-bold">S.S.W INTELIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Desenvolvida independentemente por <span class="text-accent font-bold">Guilherme Cruz da Silva</span>, nossa tecnologia simula jornadas de usuários reais para detectar falhas de UX, SEO e Performance que ferramentas tradicionais deixam passar.
+                                A <span class="text-primary font-bold">S.S.W INTELLIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Desenvolvida independentemente por <span class="text-accent font-bold">Guilherme Cruz da Silva</span>, nossa tecnologia simula jornadas de usuários reais para detectar falhas de UX, SEO e Performance que ferramentas tradicionais deixam passar.
 
                             </p>
 
@@ -2497,7 +2573,7 @@
 
                     <div>
                         <h2 class="text-3xl font-bold text-white mb-2">Como Usar o Sistema</h2>
-                        <p class="text-slate-400">Aprenda passo a passo como utilizar todas as funcionalidades da S.S.W INTELIGENCE</p>
+                        <p class="text-slate-400">Aprenda passo a passo como utilizar todas as funcionalidades da S.S.W INTELLIGENCE</p>
                     </div>
 
                     <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
@@ -2892,37 +2968,37 @@
 
                     <h3 class="text-white font-bold text-lg mb-4">1. Aceitação dos Termos</h3>
 
-                    <p class="mb-6">Ao acessar e usar a plataforma S.S.W INTELIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+                    <p class="mb-6">Ao acessar e usar a plataforma S.S.W INTELLIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
 
 
 
                     <h3 class="text-white font-bold text-lg mb-4">2. Uso da Licença</h3>
 
-                    <p class="mb-6">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site S.S.W INTELIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
+                    <p class="mb-6">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site S.S.W INTELLIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
 
 
 
                     <h3 class="text-white font-bold text-lg mb-4">3. Isenção de Responsabilidade</h3>
 
-                    <p class="mb-6">Os materiais no site da S.S.W INTELIGENCE são fornecidos 'como estão'. S.S.W INTELIGENCE não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização.</p>
+                    <p class="mb-6">Os materiais no site da S.S.W INTELLIGENCE são fornecidos 'como estão'. S.S.W INTELLIGENCE não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização.</p>
 
                     
 
                     <h3 class="text-white font-bold text-lg mb-4">4. Limitações</h3>
 
-                    <p class="mb-6">Em nenhum caso o S.S.W INTELIGENCE ou seus fornecedores serão responsáveis por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em S.S.W INTELIGENCE.</p>
+                    <p class="mb-6">Em nenhum caso o S.S.W INTELLIGENCE ou seus fornecedores serão responsáveis por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em S.S.W INTELLIGENCE.</p>
 
 
 
                     <h3 class="text-white font-bold text-lg mb-4">5. Precisão dos Materiais</h3>
 
-                    <p class="mb-6">Os materiais exibidos no site da S.S.W INTELIGENCE podem incluir erros técnicos, tipográficos ou fotográficos. S.S.W INTELIGENCE não garante que qualquer material em seu site seja preciso, completo ou atual.</p>
+                    <p class="mb-6">Os materiais exibidos no site da S.S.W INTELLIGENCE podem incluir erros técnicos, tipográficos ou fotográficos. S.S.W INTELLIGENCE não garante que qualquer material em seu site seja preciso, completo ou atual.</p>
 
 
 
                     <h3 class="text-white font-bold text-lg mb-4">6. Propriedade Intelectual</h3>
 
-                    <p class="mb-6">Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, imagens e software, é propriedade exclusiva da S.S.W INTELIGENCE ou de seus licenciadores e está protegido por leis de direitos autorais e outras propriedades intelectuais.</p>
+                    <p class="mb-6">Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, imagens e software, é propriedade exclusiva da S.S.W INTELLIGENCE ou de seus licenciadores e está protegido por leis de direitos autorais e outras propriedades intelectuais.</p>
 
 
 
@@ -2940,7 +3016,7 @@
 
                     <h3 class="text-white font-bold text-lg mb-4">10. Alterações nos Termos</h3>
 
-                    <p class="mb-6">A S.S.W INTELIGENCE reserva-se o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor imediatamente após sua publicação na plataforma. O uso continuado dos serviços constitui aceitação das modificações.</p>
+                    <p class="mb-6">A S.S.W INTELLIGENCE reserva-se o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor imediatamente após sua publicação na plataforma. O uso continuado dos serviços constitui aceitação das modificações.</p>
 
 
 
@@ -2970,35 +3046,21 @@
 
 
 
-                        <div>
+                        <div class="col-span-1 sm:col-span-2 lg:col-span-1">
 
-
-
-                            <h3 class="text-white font-bold text-lg mb-2">S.S.W INTELIGENCE</h3>
-
-
+                            <h3 class="text-white font-bold text-lg mb-2">S.S.W INTELLIGENCE</h3>
 
                             <p class="text-slate-400 text-sm leading-relaxed">Plataforma de auditoria web e benchmarking competitivo impulsionada por IA.</p>
 
-
-
                         </div>
-
-
 
                         
 
                         <div>
 
-
-
                             <h4 class="text-white font-bold mb-2">Contato</h4>
 
-
-
                             <div class="space-y-2 text-slate-400 text-sm">
-
-
 
                                 <a href="tel:82991301991" class="flex items-center gap-2 hover:text-primary transition-colors">
 
@@ -3024,80 +3086,93 @@
 
                                 </a>
 
-
-
                             </div>
-
-
 
                         </div>
 
-
-
                         
+                        <div class="col-span-1 sm:col-span-2 lg:col-span-1">
 
-                        <div>
-                            
                             <h4 class="text-white font-bold mb-2">Como Usar o Sistema</h4>
-                            
-                            <div class="space-y-2">
-                                
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+
                                 <button onclick="showTutorialCard('auditar')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
                                     <i data-lucide="file-search" class="w-4 h-4"></i>
-                                    1: Como Auditar um Site
+
+                                    1: Como Auditar
+
                                 </button>
-                                
+
                                 <button onclick="showTutorialCard('personas')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
                                     <i data-lucide="users" class="w-4 h-4"></i>
-                                    2: Como Gerenciar Personas
+
+                                    2: Personas
+
                                 </button>
-                                
+
                                 <button onclick="showTutorialCard('ranking')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
                                     <i data-lucide="trophy" class="w-4 h-4"></i>
-                                    3: Como Ver o Ranking
+
+                                    3: Ranking
+
                                 </button>
-                                
+
                                 <button onclick="showTutorialCard('relatorios')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
                                     <i data-lucide="file-text" class="w-4 h-4"></i>
-                                    4: Como Gerar Relatórios
+
+                                    4: Relatórios
+
                                 </button>
-                                
+
                                 <button onclick="showTutorialCard('creditos')" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
                                     <i data-lucide="credit-card" class="w-4 h-4"></i>
-                                    5: Como Comprar Créditos
+
+                                    5: Créditos
+
                                 </button>
-                                
+
                             </div>
-                            
+
                         </div>
 
                         
                         <div>
-                            
+
                             <h4 class="text-white font-bold mb-2">Links Úteis</h4>
 
-                            
-
                             <div class="space-y-2">
-                                
-                                <button onclick="showAboutCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
-                                    <i data-lucide="info" class="w-4 h-4"></i>
-                                    Sobre Nós
-                                </button>
-                                
-                                <button onclick="showTermsCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
-                                    <i data-lucide="file-check" class="w-4 h-4"></i>
-                                    Termos de Uso
-                                </button>
-                                
-                                <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm">
-                                    <i data-lucide="headphones" class="w-4 h-4"></i>
-                                    Suporte Técnico
-                                </a>
-                                
-                            </div>
 
-                            
+                                <button onclick="showAboutCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
+                                    <i data-lucide="info" class="w-4 h-4"></i>
+
+                                    Sobre Nós
+
+                                </button>
+
+                                <button onclick="showTermsCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
+
+                                    <i data-lucide="file-check" class="w-4 h-4"></i>
+
+                                    Termos de Uso
+
+                                </button>
+
+                                <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm">
+
+                                    <i data-lucide="headphones" class="w-4 h-4"></i>
+
+                                    Suporte Técnico
+
+                                </a>
+
+                            </div>
 
                         </div>
 
@@ -3109,7 +3184,7 @@
 
                     <div class="border-t border-slate-800/50 pt-4">
                         <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
-                            <p class="text-slate-500 text-sm text-center lg:text-left">&copy; 2026 S.S.W INTELIGENCE. Todos os direitos reservados.</p>
+                            <p class="text-slate-500 text-sm text-center lg:text-left">&copy; 2026 S.S.W INTELLIGENCE. Todos os direitos reservados.</p>
                         </div>
                     </div>
 
@@ -3172,73 +3247,21 @@
 
 
         function toggleSidebar() {
-
-
-
             const sb = document.getElementById('appSidebar');
-
-
-
-            const isOpen = !sb.classList.contains('sidebar-closed');
-
-
-
+            const overlay = document.getElementById('sidebarOverlay');
             
-
-
-
-            if(isOpen) {
-
-
-
-                sb.classList.add('sidebar-closed');
-
-
-
-                setTimeout(() => {
-
-
-
-                    sb.classList.add('hidden');
-
-
-
-                    sb.classList.remove('flex');
-
-
-
-                }, 400);
-
-
-
+            // Verifica se está aberto no mobile
+            const isOpenMobile = !sb.classList.contains('-translate-x-full');
+            
+            if(isOpenMobile) {
+                // Fecha menu mobile
+                sb.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
             } else {
-
-
-
-                sb.classList.remove('hidden');
-
-
-
-                sb.classList.add('flex');
-
-
-
-                setTimeout(() => {
-
-
-
-                    sb.classList.remove('sidebar-closed');
-
-
-
-                }, 10);
-
-
-
+                // Abre menu mobile
+                sb.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
             }
-
-
-
         }
 
 
@@ -3282,8 +3305,6 @@
             // Header Dinâmico
 
             const titles = { 
-
-                'home': 'Novo Dossiê', 
 
                 'personas': 'Gestão de Perfis', 
 
@@ -3427,277 +3448,78 @@
 
             try {
 
-
-
                 const res = await fetch(`${API_URL}/api/register`, {
-
-
-
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-
-
-
                     body: JSON.stringify({ nome, email, senha: pass })
-
-
-
                 });
 
-
-
                 if(res.ok) { alert("Conta criada! Faça login."); toggleRegister(); }
-
-
-
                 else alert("Erro ao criar conta");
-
-
-
             } catch(e) { alert("Erro de conexão"); }
-
-
-
         }
-
-
-
-
-
-
 
         function loginSuccess() {
-
-
-
+            isAuthenticated = true;
             document.getElementById('authScreen').classList.add('hidden');
-
-
-
             document.getElementById('appSidebar').classList.remove('hidden');
-
-
-
             document.getElementById('appSidebar').classList.add('flex');
-
-
-
             document.getElementById('uName').innerText = USER.name;
-
-
-
             document.getElementById('uCredits').innerText = USER.credits;
-
-
-
             loadManagePersonas(); // Preload
-
-
-
         }
-
-
-
-
-
-
 
         function logout() { localStorage.removeItem('ssw_user'); location.reload(); }
 
-
-
         function comprarCreditos() { window.open(`https://wa.me/5582991301991?text=Quero comprar créditos para ${USER.email}`, '_blank'); }
-
-
-
-
-
-
 
         // === 4. PERSONAS LOGIC ===
 
-
-
         async function loadManagePersonas() {
-
-
-
             const div = document.getElementById('managePersonasList');
-
-
-
             div.innerHTML = "<p class='text-slate-500 animate-pulse'>Sincronizando...</p>";
-
-
-
             try {
-
-
-
                 const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
-
-
-
                 const data = await res.json();
-
-
-
-                div.innerHTML = "";
-
-
-
-                const lista = data.custom_personas || [];
-
-
-
                 
-
-
-
+                const lista = data.custom_personas || [];
+                
                 if(lista.length === 0) div.innerHTML = "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
 
-
-
-
-
-
-
                 lista.forEach(p => {
-
-
-
                     div.innerHTML += `
-
-
-
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative group">
-
-
-
                             <div class="flex justify-between items-start mb-2">
-
-
-
                                 <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-accent"><i data-lucide="user" class="w-4 h-4"></i></div>
-
-
-
                                 <button onclick="deletePersona('${p.id}')" class="text-slate-600 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-
-
-
                             </div>
-
-
-
                             <h4 class="font-bold text-white">${p.name}</h4>
-
-
-
                             <p class="text-xs text-slate-400 mt-2 line-clamp-3">${p.description}</p>
-
-
-
                         </div>`;
-
-
-
                 });
-
-
-
                 lucide.createIcons();
-
-
-
             } catch(e) { console.error(e); }
-
-
-
         }
-
-
-
-
-
-
 
         async function createPersona() {
-
-
-
             const nome = document.getElementById('newPersonaName').value;
-
-
-
             const desc = document.getElementById('newPersonaDesc').value;
-
-
-
             if(!nome || !desc) return alert("Preencha tudo");
-
-
-
             
-
-
-
             const btn = event.target; btn.innerText = "..."; btn.disabled = true;
-
-
-
             try {
-
-
-
                 await fetch(`${API_URL}/api/personas`, {
-
-
-
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-
-
-
                     body: JSON.stringify({ user_id: String(USER.id), nome, descricao: desc })
-
-
-
                 });
 
-
-
                 document.getElementById('newPersonaName').value = "";
-
-
-
                 document.getElementById('newPersonaDesc').value = "";
-
-
-
                 await loadManagePersonas();
-
-
-
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
-
-
-
                 alert("Perfil Salvo!");
-
-
-
             } catch(e) { alert("Erro ao criar"); }
-
-
-
             btn.innerText = "SALVAR"; btn.disabled = false;
-
-
-
         }
-
-
-
-
 
 
 
@@ -5978,7 +5800,7 @@
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">1.</span>
                                     <div>
-                                        <strong class="text-white">Acesse a página inicial</strong> e clique em "Nova Auditória"
+                                        <strong class="text-white">Acesse a página inicial</strong> e clique em "Nova Auditoria"
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -6192,7 +6014,7 @@
                     
                     <div class="mt-6 pt-6 border-t border-slate-700">
                         <p class="text-center text-slate-500 text-sm">
-                            2026 S.S.W | INTELIGENCE. Todos os direitos reservados.
+                            2026 S.S.W | INTELLIGENCE. Todos os direitos reservados.
                         </p>
                     </div>
                 </div>
@@ -6264,7 +6086,7 @@
                                 Nossa Missão
                             </h4>
                             <p class="leading-relaxed">
-                                A <span class="text-primary font-bold">S.S.W INTELIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo desenvolvida para fornecer análises detalhadas de performance e experiência do usuário. Nossa ferramenta utiliza personas personalizadas para simular diferentes perfis de usuários e fornecer insights acionáveis para melhorar seus sites.
+                                A <span class="text-primary font-bold">S.S.W INTELLIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo desenvolvida para fornecer análises detalhadas de performance e experiência do usuário. Nossa ferramenta utiliza personas personalizadas para simular diferentes perfis de usuários e fornecer insights acionáveis para melhorar seus sites.
                             </p>
                         </div>
 
@@ -6312,7 +6134,7 @@
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-white font-bold text-xl mb-2">Guilherme Cruz da Silva</p>
-                                    <p class="text-slate-400 mb-1">Desenvolvedor & Criador da S.S.W INTELIGENCE</p>
+                                    <p class="text-slate-400 mb-1">Desenvolvedor & Criador da S.S.W INTELLIGENCE</p>
                                     <p class="text-primary text-sm mb-2"> Missão: Criar ferramentas de análise web acessíveis e eficazes</p>
                                     <p class="text-slate-400 text-sm"> Desenvolvedor web especializado em performance e UX</p>
                                     <p class="text-slate-400 text-sm"> Focado em criar soluções práticas para otimização de sites</p>
@@ -6323,7 +6145,7 @@
                     
                     <div class="mt-6 pt-6 border-t border-slate-700">
                         <p class="text-center text-slate-500 text-sm">
-                            2026 S.S.W | INTELIGENCE. Todos os direitos reservados.
+                            2026 S.S.W | INTELLIGENCE. Todos os direitos reservados.
                         </p>
                     </div>
                 </div>
@@ -6369,12 +6191,12 @@
                     <div class="text-slate-300 leading-relaxed space-y-4">
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">1. Aceitação dos Termos</h4>
-                            <p class="mb-4">Ao acessar e usar a plataforma S.S.W INTELIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+                            <p class="mb-4">Ao acessar e usar a plataforma S.S.W INTELLIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
                         </div>
 
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">2. Uso da Licença</h4>
-                            <p class="mb-4">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site S.S.W INTELIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
+                            <p class="mb-4">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site S.S.W INTELLIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
                         </div>
 
                         <div>
@@ -6404,12 +6226,12 @@
 
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">8. Garantias e Representações</h4>
-                            <p class="mb-4">A plataforma S.S.W INTELIGENCE é fornecida "como está" e "conforme disponível". Não fazemos garantias de qualquer tipo, expressas ou implícitas, sobre a plataforma ou os serviços oferecidos.</p>
+                            <p class="mb-4">A plataforma S.S.W INTELLIGENCE é fornecida "como está" e "conforme disponível". Não fazemos garantias de qualquer tipo, expressas ou implícitas, sobre a plataforma ou os serviços oferecidos.</p>
                         </div>
 
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">9. Limitação de Responsabilidade</h4>
-                            <p class="mb-4">Em nenhum caso, a S.S.W INTELIGENCE, seus diretores, funcionários, afiliados, agentes, contratados, fornecedores, licenciadores ou concessionários serão responsáveis por qualquer dano direto, indireto, incidental, especial, punitivo ou consequencial.</p>
+                            <p class="mb-4">Em nenhum caso, a S.S.W INTELLIGENCE, seus diretores, funcionários, afiliados, agentes, contratados, fornecedores, licenciadores ou concessionários serão responsáveis por qualquer dano direto, indireto, incidental, especial, punitivo ou consequencial.</p>
                         </div>
 
                         <div>
@@ -6424,7 +6246,7 @@
                     
                     <div class="mt-6 pt-6 border-t border-slate-700">
                         <p class="text-center text-slate-500 text-sm">
-                            2026 S.S.W | INTELIGENCE. Todos os direitos reservados.
+                            2026 S.S.W | INTELLIGENCE. Todos os direitos reservados.
                         </p>
                     </div>
                 </div>
