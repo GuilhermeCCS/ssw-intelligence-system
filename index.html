@@ -1320,24 +1320,9 @@
 
 
 
-
-
-
                 <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
-
-
-
                     Acessar Sistema
-
-
-
                 </button>
-
-
-
-                
-
-
 
                 <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
 
@@ -3317,7 +3302,24 @@
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ nome, email, senha: pass })
                 });
-                if(res.ok) { alert("Conta criada! Faça login."); toggleRegister(); }
+                if(res.ok) { 
+                    alert("Conta criada! Um código de verificação foi enviado para seu e-mail.");
+                    
+                    // Limpa formulário
+                    document.getElementById('regNome').value = "";
+                    document.getElementById('regEmail').value = "";
+                    document.getElementById('regPass').value = "";
+                    
+                    // Esconde formulário de cadastro
+                    document.getElementById('registerForm').classList.add('hidden');
+                    
+                    // Mostra tela de verificação diretamente
+                    document.getElementById('verifyModal').classList.remove('hidden');
+                    lucide.createIcons();
+                    
+                    // Inicia a contagem de reenvio
+                    iniciarContagemReenvio();
+                }
                 else alert("Erro ao criar conta");
             } catch(e) { alert("Erro de conexão"); }
         }
@@ -3332,6 +3334,7 @@
                 // Mostra o Modal de Bloqueio
                 document.getElementById('verifyModal').classList.remove('hidden');
                 lucide.createIcons(); // Garante que os ícones do modal apareçam
+                iniciarContagemReenvio(); // <--- ADICIONE ESTA LINHA
                 return; // PARA AQUI. Não carrega o resto do site.
             }
 
@@ -6295,6 +6298,13 @@
                 <button onclick="confirmarCodigoAPI()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2">
                     <i data-lucide="unlock" class="w-4 h-4"></i> LIBERAR ACESSO
                 </button>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-xs text-slate-500">Não recebeu?</p>
+                    <a href="#" id="linkReenviar" onclick="reenviarCodigo()" class="text-sm font-bold text-slate-400 pointer-events-none opacity-50 transition-colors">
+                        Reenviar código em <span id="timerReenvio">30</span>s
+                    </a>
+                </div>
             </div>
 
             <div class="mt-6 pt-6 border-t border-slate-800/50">
@@ -6305,6 +6315,69 @@
         </div>
     </div>
 </div>
+
+<script>
+// Variável global para o timer
+let intervaloReenvio;
+
+function iniciarContagemReenvio() {
+    let tempo = 30;
+    const link = document.getElementById('linkReenviar');
+    const span = document.getElementById('timerReenvio');
+    
+    // Reseta estado visual (desabilitado)
+    link.classList.add('pointer-events-none', 'opacity-50');
+    link.classList.remove('text-primary', 'hover:underline');
+    link.classList.add('text-slate-400');
+    
+    // Limpa intervalo anterior se existir
+    if (intervaloReenvio) clearInterval(intervaloReenvio);
+
+    // Inicia contagem
+    intervaloReenvio = setInterval(() => {
+        tempo--;
+        span.innerText = tempo;
+
+        if (tempo <= 0) {
+            clearInterval(intervaloReenvio);
+            // Habilita o link
+            link.innerHTML = "Reenviar código agora";
+            link.classList.remove('pointer-events-none', 'opacity-50', 'text-slate-400');
+            link.classList.add('text-primary', 'hover:underline');
+        }
+    }, 1000);
+}
+
+async function reenviarCodigo() {
+    const link = document.getElementById('linkReenviar');
+    
+    // Efeito visual de "Enviando..."
+    link.innerHTML = "Enviando...";
+    link.classList.add('pointer-events-none', 'opacity-50');
+
+    try {
+        const res = await fetch(`${API_URL}/api/reenviar_codigo`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email: USER.email })
+        });
+
+        if (res.ok) {
+            alert("Novo código enviado! Verifique seu e-mail.");
+            // Reinicia a contagem de 30s
+            link.innerHTML = 'Reenviar código em <span id="timerReenvio">30</span>s';
+            iniciarContagemReenvio();
+        } else {
+            alert("Erro ao reenviar. Tente novamente.");
+            link.innerHTML = "Tentar novamente";
+            link.classList.remove('pointer-events-none', 'opacity-50');
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Erro de conexão.");
+    }
+}
+</script>
 
 </body> 
 
