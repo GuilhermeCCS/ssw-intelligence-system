@@ -1674,7 +1674,7 @@
 
 
 
-                                <select id="auditMode" onchange="toggleManualSelect()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl pl-4 pr-10 py-4 outline-none focus:border-primary cursor-pointer transition-colors h-[58px]">
+                                <select id="auditMode" onchange="console.log('Select mudou'); toggleManualSelect()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl pl-4 pr-10 py-4 outline-none focus:border-primary cursor-pointer transition-colors h-[58px]">
 
 
 
@@ -3520,196 +3520,84 @@
 
 
         async function toggleManualSelect() {
-
-
-
+            console.log("toggleManualSelect chamada");
             const mode = document.getElementById('auditMode').value;
-
-
+            console.log("Modo selecionado:", mode);
 
             const manualArea = document.getElementById('manualSelectArea');
-
-
-
             const compareArea = document.getElementById('compareArea');
-
-
-
             const singleUrlArea = document.getElementById('singleUrlArea');
-
-
-
             const mainButton = document.querySelector('button[onclick="runAudit()"]');
-
-
-
             
-
-
+            console.log("Elementos encontrados:", { manualArea, compareArea, singleUrlArea, mainButton });
 
             // Reset all areas
-
-
-
-            manualArea.classList.add('hidden');
-
-
-
-            compareArea.classList.add('hidden');
-
-
-
-            singleUrlArea.classList.remove('hidden');
-
-
-
-            mainButton.classList.remove('hidden');
-
-
-
-            
-
-
+            if (manualArea) manualArea.classList.add('hidden');
+            if (compareArea) compareArea.classList.add('hidden');
+            if (singleUrlArea) singleUrlArea.classList.remove('hidden');
+            if (mainButton) mainButton.classList.remove('hidden');
 
             if(mode === 'manual') {
-
-
-
-                manualArea.classList.remove('hidden');
-
-
+                console.log("Entrando no modo manual");
+                if (manualArea) manualArea.classList.remove('hidden');
 
                 const cont = document.getElementById('checklistContainer');
-
-
-
-                cont.innerHTML = "<span class='text-xs text-slate-500'>Carregando perfis...</span>";
-
-
-
+                console.log("Container encontrado:", cont);
                 
-
-
-
-                const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
-
-
-
-                const data = await res.json();
-
-
-
-                const custom = data.custom_personas || [];
-
-
-
-                
-
-
-
-                cont.innerHTML = "";
-
-
-
-                
-
-
-
-                // SISTEMA
-
-
-
-                SYSTEM_PERSONAS.forEach(p => {
-
-
-
-                    cont.innerHTML += `
-
-
-
-                        <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-cyber transition group">
-
-
-
-                            <input type="checkbox" value="${p.name}" class="persona-checkbox accent-cyber w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
-
-
-
-                            <div><p class="text-xs font-bold text-sky-400 group-hover:text-white">${p.name} <span class="text-[9px] bg-slate-800 px-1 rounded text-slate-400">SISTEMA</span></p><p class="text-[10px] text-slate-500 line-clamp-1">${p.desc}</p></div>
-
-
-
-                        </label>`;
-
-
-
-                });
-
-
-
-                // CUSTOM
-
-
-
-                custom.forEach(p => {
-
-
-
-                    cont.innerHTML += `
-
-
-
-                        <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-primary transition group">
-
-
-
-                            <input type="checkbox" value="${p.name}" class="persona-checkbox accent-primary w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
-
-
-
-                            <div><p class="text-xs font-bold text-emerald-400 group-hover:text-white">${p.name}</p><p class="text-[10px] text-slate-500 line-clamp-1">${p.description}</p></div>
-
-
-
-                        </label>`;
-
-
-
-                });
-
-
+                if (cont) {
+                    cont.innerHTML = "<span class='text-xs text-slate-500'>Carregando perfis...</span>";
+
+                    try {
+                        let custom = [];
+                        
+                        // Carrega personas customizadas apenas se usuário estiver logado
+                        if (USER && USER.id) {
+                            try {
+                                const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
+                                const data = await res.json();
+                                custom = data.custom_personas || [];
+                            } catch (e) {
+                                console.log("Erro ao carregar personas customizadas:", e);
+                            }
+                        }
+                        
+                        cont.innerHTML = "";
+                        console.log("SYSTEM_PERSONAS:", SYSTEM_PERSONAS);
+
+                        // SISTEMA - Sempre carrega
+                        SYSTEM_PERSONAS.forEach(p => {
+                            cont.innerHTML += `
+                                <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-cyber transition group">
+                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-cyber w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
+                                    <div><p class="text-xs font-bold text-sky-400 group-hover:text-white">${p.name} <span class="text-[9px] bg-slate-800 px-1 rounded text-slate-400">SISTEMA</span></p><p class="text-[10px] text-slate-500 line-clamp-1">${p.desc}</p></div>
+                                </label>`;
+                        });
+
+                        // CUSTOM - Apenas se logado
+                        custom.forEach(p => {
+                            cont.innerHTML += `
+                                <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-primary transition group">
+                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-primary w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
+                                    <div><p class="text-xs font-bold text-emerald-400 group-hover:text-white">${p.name}</p><p class="text-[10px] text-slate-500 line-clamp-1">${p.description}</p></div>
+                                </label>`;
+                        });
+                        
+                        console.log("HTML gerado:", cont.innerHTML);
+                    } catch (e) {
+                        console.error(e);
+                        cont.innerHTML = "<span class='text-xs text-red-400'>Erro ao carregar perfis</span>";
+                    }
+                }
 
             } else if(mode === 'compare') {
-
-
-
-                compareArea.classList.remove('hidden');
-
-
-
-                singleUrlArea.classList.add('hidden');
-
-
-
-                mainButton.classList.add('hidden');
-
-
-
+                console.log("Entrando no modo comparativo");
+                if (compareArea) compareArea.classList.remove('hidden');
+                if (singleUrlArea) singleUrlArea.classList.add('hidden');
+                if (mainButton) mainButton.classList.add('hidden');
             }
-
-
-
         }
 
-
-
-
-
-
-
         async function runAudit() {
-
-
 
             if(USER.credits <= 0) return comprarCreditos();
 
