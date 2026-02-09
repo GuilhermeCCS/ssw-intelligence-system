@@ -3189,17 +3189,33 @@
             const sb = document.getElementById('appSidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
-            // Verifica se está aberto no mobile (sem a classe -translate-x-full)
-            const isOpenMobile = !sb.classList.contains('-translate-x-full');
+            // Verifica se está em desktop ou mobile
+            const isDesktop = window.innerWidth >= 768;
             
-            if(isOpenMobile) {
-                // Fecha menu mobile
-                sb.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
+            if(isDesktop) {
+                // Comportamento desktop: usa classe sidebar-closed
+                const isClosed = sb.classList.contains('sidebar-closed');
+                
+                if(isClosed) {
+                    // Abre menu desktop
+                    sb.classList.remove('sidebar-closed');
+                } else {
+                    // Fecha menu desktop
+                    sb.classList.add('sidebar-closed');
+                }
             } else {
-                // Abre menu mobile
-                sb.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
+                // Comportamento mobile: usa translate-x-full
+                const isOpenMobile = !sb.classList.contains('-translate-x-full');
+                
+                if(isOpenMobile) {
+                    // Fecha menu mobile
+                    sb.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                } else {
+                    // Abre menu mobile
+                    sb.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                }
             }
         }
 
