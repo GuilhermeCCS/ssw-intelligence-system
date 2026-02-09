@@ -79,19 +79,19 @@
 
 
 
-                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+                        slate: { 950: '#0a0a0f', 900: '#1a1a2e', 800: '#2d2d44', 700: '#404055' },
 
 
 
-                        primary: { DEFAULT: '#00D4FF', hover: '#00A8CC', glow: 'rgba(0, 212, 255, 0.5)' }, // Azul Ciano Principal
+                        primary: { DEFAULT: '#4A90E2', hover: '#357ABD', glow: 'rgba(74, 144, 226, 0.5)' }, 
 
 
 
-                        accent: { DEFAULT: '#7C3AED', hover: '#6D28D9' },   // Roxo Secundário
+                        accent: { DEFAULT: '#C0C0C0', hover: '#A8A8A8' }, 
 
 
 
-                        cyber: { DEFAULT: '#00B8E6', hover: '#0096B3' }     // Azul Claro
+                        cyber: { DEFAULT: '#6B7280', hover: '#4B5563' } 
 
 
 
@@ -239,7 +239,7 @@
 
 
 
-            background-color: #020617; 
+            background-color: #0a0a0f; 
 
 
 
@@ -311,7 +311,7 @@
 
 
 
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.07) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.07) 0%, transparent 70%);
 
 
 
@@ -347,7 +347,7 @@
 
 
 
-            background: rgba(15, 23, 42, 0.65); 
+            background: rgba(26, 26, 46, 0.75); 
 
 
 
@@ -359,38 +359,17 @@
 
 
 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border: 1px solid rgba(192, 192, 192, 0.08); 
 
 
 
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-
-
-
             transition: all 0.3s ease;
-
-
-
         }
 
-
-
-
-
-
-
         .glass-panel:hover {
-
-
-
-            border-color: rgba(255, 255, 255, 0.15);
-
-
-
+            border-color: rgba(192, 192, 192, 0.15);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-
-
-
         }
 
 
@@ -404,30 +383,16 @@
 
 
         .input-pro {
-
-
-
-            background: rgba(15, 23, 42, 0.8);
-
-
-
-            border: 1px solid #1e293b;
-
-
-
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid #404055;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-
-
         }
 
-
-
         .input-pro:focus {
-            border-color: #00D4FF;
-            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
             outline: none;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(26, 26, 46, 0.95);
         }
 
 
@@ -441,7 +406,7 @@
 
 
         .btn-primary {
-            background: linear-gradient(135deg, #00D4FF 0%, #00B8E6 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
             position: relative;
             overflow: hidden;
             transition: all 0.3s;
@@ -449,7 +414,7 @@
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.4);
             filter: brightness(1.1);
         }
 
@@ -469,7 +434,7 @@
 
         .hover-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(0, 212, 255, 0.3);
+            border-color: rgba(74, 144, 226, 0.3);
         }
 
 
@@ -492,12 +457,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: #4A90E2;
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #00D4FF;
+            background: #4A90E2;
         }
 
 
@@ -1514,7 +1479,7 @@
 
 
 
-            <button onclick="nav('home')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="requireAuth() || nav('home')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
@@ -1530,7 +1495,7 @@
 
 
 
-            <button onclick="nav('personas')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="requireAuth() || nav('personas')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
@@ -1546,11 +1511,11 @@
 
 
 
-            <button onclick="nav('ranking')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="requireAuth() || nav('ranking')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
-                <i data-lucide="trophy" class="w-4 h-4 text-slate-400 group-hover:text-yellow-500 transition-colors"></i> Ranking Global
+                <i data-lucide="trophy" class="w-4 h-4 text-slate-400 group-hover:text-yellow-400 transition-colors"></i> Ranking Global
 
 
 
@@ -1558,18 +1523,18 @@
 
 
 
-            <button onclick="nav('precos')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="requireAuth() || nav('precos')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
-                <i data-lucide="credit-card" class="w-4 h-4 text-slate-400 group-hover:text-green-500 transition-colors"></i> Preços
+                <i data-lucide="credit-card" class="w-4 h-4 text-slate-400 group-hover:text-green-400 transition-colors"></i> Planos e Preços
 
 
 
             </button>
 
             
-            <button onclick="nav('tutorial')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="requireAuth() || nav('tutorial')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
                 <i data-lucide="book-open" class="w-4 h-4 text-slate-400 group-hover:text-cyber transition-colors"></i> Como Usar o Sistema
 
@@ -1597,7 +1562,7 @@
 
 
 
-                <div class="w-10 h-10 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-primary font-bold shadow-lg text-xs">U</div>
+                <div class="w-10 h-10 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-primary font-bold shadow-lg text-xs" id="userAvatar">U</div>
 
 
 
@@ -1937,7 +1902,7 @@
 
 
 
-                                <button onclick="nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline decoration-slate-600">Gerenciar Perfis</button>
+                                <button onclick="requireAuth() || nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline decoration-slate-600">Gerenciar Perfis</button>
 
 
 
@@ -2471,7 +2436,7 @@
                         <h2 class="text-3xl font-bold text-white">Planos e Preços</h2>
                         <p class="text-slate-400 mt-1">Escolha o plano ideal para suas necessidades</p>
                     </div>
-                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+                    <button onclick="requireAuth() || nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
                         <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
                     </button>
                 </header>
@@ -3246,6 +3211,8 @@
 
 
         function nav(view) {
+            // Verifica se usuário está autenticado, senão mostra cadastro
+            if (!requireAuth()) return;
             
             ['home', 'personas', 'ranking', 'precos', 'about', 'terms', 'tutorial'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
             
@@ -3269,7 +3236,6 @@
 
             if(view === 'personas') loadManagePersonas();
             if(view === 'ranking') loadRanking();
-
         }
 
 
@@ -3359,48 +3325,111 @@
 
 
         async function fazerCadastro() {
-
-
-
             const nome = document.getElementById('regNome').value;
-
-
-
             const email = document.getElementById('regEmail').value;
-
-
-
             const pass = document.getElementById('regPass').value;
-
-
-
+            
             try {
-
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ nome, email, senha: pass })
                 });
-
                 if(res.ok) { alert("Conta criada! Faça login."); toggleRegister(); }
                 else alert("Erro ao criar conta");
             } catch(e) { alert("Erro de conexão"); }
         }
 
         function loginSuccess() {
-            isAuthenticated = true;
+            // 1. Esconde tela de login
             document.getElementById('authScreen').classList.add('hidden');
+            
+            // 2. VERIFICAÇÃO DE SEGURANÇA (NOVO)
+            // Se o usuário não tiver a flag 'verificado' ou ela for falsa/0
+            if (!USER.verificado || USER.verificado === 0 || USER.verificado === 'false') {
+                // Mostra o Modal de Bloqueio
+                document.getElementById('verifyModal').classList.remove('hidden');
+                lucide.createIcons(); // Garante que os ícones do modal apareçam
+                return; // PARA AQUI. Não carrega o resto do site.
+            }
+
+            // 3. Se estiver verificado, segue o fluxo normal
+            document.getElementById('verifyModal').classList.add('hidden'); // Garante que sumiu
             document.getElementById('appSidebar').classList.remove('hidden');
             document.getElementById('appSidebar').classList.add('flex');
+            
             document.getElementById('uName').innerText = USER.name;
+            document.getElementById('userAvatar').innerText = USER.name.charAt(0).toUpperCase();
             document.getElementById('uCredits').innerText = USER.credits;
-            loadManagePersonas(); // Preload
+            
+            loadManagePersonas(); 
         }
 
         function logout() { localStorage.removeItem('ssw_user'); location.reload(); }
 
         function comprarCreditos() { window.open(`https://wa.me/5582991301991?text=Quero comprar créditos para ${USER.email}`, '_blank'); }
 
-        // === 4. PERSONAS LOGIC ===
+        function requireAuth() {
+            if (!USER || !USER.email) {
+                // Mostra tela de cadastro em vez de login
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('authScreen').classList.remove('hidden');
+                return false;
+            }
+            return true;
+        }
+
+        async function confirmarCodigoAPI() {
+            const codigoInput = document.getElementById('inputVerifyCode');
+            const codigo = codigoInput.value.trim();
+            const btn = event.target; // O botão clicado
+
+            if (codigo.length < 4) return alert("Digite o código de 4 números.");
+
+            // Efeito visual de carregando
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = "Verificando...";
+            btn.disabled = true;
+
+            try {
+                // Chama sua API no Replit
+                const res = await fetch(`${API_URL}/api/verificar`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: USER.email, // Pega o email do usuário logado
+                        codigo: codigo
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // SUCESSO!
+                    alert("Conta verificada com sucesso! Bem-vindo.");
+                    
+                    // Atualiza o usuário local para verificado
+                    USER.verificado = true; 
+                    localStorage.setItem('ssw_user', JSON.stringify(USER));
+                    
+                    // Recarrega a tela para liberar o acesso
+                    loginSuccess(); 
+                } else {
+                    // ERRO (Código errado)
+                    alert(data.detail || "Código incorreto. Tente novamente.");
+                    codigoInput.value = ""; // Limpa campo
+                    codigoInput.focus();
+                }
+
+            } catch (e) {
+                console.error(e);
+                alert("Erro de conexão com o servidor.");
+            }
+
+            // Restaura o botão
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
+        }
 
         async function loadManagePersonas() {
             const div = document.getElementById('managePersonasList');
@@ -3449,33 +3478,15 @@
             btn.innerText = "SALVAR"; btn.disabled = false;
         }
 
-
-
         async function deletePersona(id) {
-
-
-
             if(!confirm("Remover perfil?")) return;
-
-
 
             await fetch(`${API_URL}/api/personas/${id}?user_id=${String(USER.id)}`, { method: 'DELETE' });
 
-
-
             loadManagePersonas();
 
-
-
             if(!document.getElementById('manualSelectArea').classList.contains('hidden')) toggleManualSelect();
-
-
-
         }
-
-
-
-
 
 
 
@@ -6237,6 +6248,40 @@
 
     </div>
 
+</div>
+
+<!-- Modal de Verificação de Segurança -->
+<div id="verifyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="glass-panel p-8 rounded-2xl border border-slate-700 w-full max-w-md text-center relative overflow-hidden">
+        
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10">
+            <div class="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700 shadow-lg">
+                <i data-lucide="lock" class="w-8 h-8 text-primary animate-pulse"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-2">Verificação de Segurança</h3>
+            <p class="text-slate-400 text-sm mb-6">
+                Para liberar sua <span class="text-primary font-bold">conta</span>, digite o código de 4 dígitos enviado para o seu e-mail.
+            </p>
+
+            <div class="space-y-4">
+                <input type="text" id="inputVerifyCode" placeholder="0000" maxlength="4" 
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 text-center text-3xl font-mono text-white tracking-[1em] outline-none focus:border-primary transition-all placeholder-slate-800">
+                
+                <button onclick="confirmarCodigoAPI()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="unlock" class="w-4 h-4"></i> LIBERAR ACESSO
+                </button>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-slate-800/50">
+                <button onclick="logout()" class="text-xs text-slate-500 hover:text-red-400 transition-colors">
+                    Sair / Entrar com outra conta
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body> 
