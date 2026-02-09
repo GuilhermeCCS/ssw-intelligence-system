@@ -1462,7 +1462,7 @@
 
 
 
-            <button onclick="requireAuth() || nav('home')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="nav('home')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
@@ -1478,7 +1478,7 @@
 
 
 
-            <button onclick="requireAuth() || nav('personas')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="nav('personas')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
@@ -1494,7 +1494,7 @@
 
 
 
-            <button onclick="requireAuth() || nav('ranking')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="nav('ranking')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
@@ -1506,7 +1506,7 @@
 
 
 
-            <button onclick="requireAuth() || nav('precos')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="nav('precos')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
 
 
@@ -1517,10 +1517,14 @@
             </button>
 
             
-            <button onclick="requireAuth() || nav('tutorial')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+            <button onclick="nav('tutorial')" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
 
                 <i data-lucide="book-open" class="w-4 h-4 text-slate-400 group-hover:text-cyber transition-colors"></i> Como Usar o Sistema
 
+            </button>
+            
+            <button onclick="showAuthScreen()" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+                <i data-lucide="user-plus" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors"></i> Realizar Cadastro/Login
             </button>
 
         </nav>
@@ -1581,7 +1585,7 @@
 
 
 
-                <button onclick="comprarCreditos()" class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-bold py-2 rounded-lg border border-primary/20 transition-colors flex items-center justify-center gap-1">
+                <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}comprarCreditos()" class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-bold py-2 rounded-lg border border-primary/20 transition-colors flex items-center justify-center gap-1">
 
 
 
@@ -1593,9 +1597,9 @@
 
 
 
-                <button onclick="logout()" class="flex items-center gap-2 px-3 bg-slate-950 hover:bg-red-900/20 text-slate-400 hover:text-red-400 rounded-lg border border-slate-700 transition-colors">
-                    <i data-lucide="log-out" class="w-4 h-4"></i>
-                    <span class="text-sm">Sair</span>
+                <button id="loginLogoutBtn" onclick="handleLoginLogout()" class="flex items-center gap-2 px-3 bg-slate-950 hover:bg-primary/20 text-slate-400 hover:text-primary rounded-lg border border-slate-700 transition-colors">
+                    <i data-lucide="log-in" class="w-4 h-4" id="loginLogoutIcon"></i>
+                    <span class="text-sm" id="loginLogoutText">Login</span>
                 </button>
 
 
@@ -1741,7 +1745,7 @@
 
 
 
-                            <button onclick="runAudit()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[180px] h-[58px] hover:scale-[1.02] transition-transform w-full lg:w-auto">
+                            <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}runAudit()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[180px] h-[58px] hover:scale-[1.02] transition-transform w-full lg:w-auto">
 
 
 
@@ -1841,7 +1845,7 @@
 
 
 
-                                <button onclick="runCompare()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[200px] h-[58px] hover:scale-[1.02] transition-transform">
+                                <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}runCompare()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[200px] h-[58px] hover:scale-[1.02] transition-transform">
 
 
 
@@ -1885,7 +1889,7 @@
 
 
 
-                                <button onclick="requireAuth() || nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline decoration-slate-600">Gerenciar Perfis</button>
+                                <button onclick="nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline decoration-slate-600">Gerenciar Perfis</button>
 
 
 
@@ -2225,7 +2229,7 @@
 
 
 
-                    <button onclick="loadManagePersonas()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+                    <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}loadManagePersonas()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
 
 
 
@@ -2313,7 +2317,7 @@
 
 
 
-                            <button onclick="createPersona()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
+                            <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createPersona()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
 
 
 
@@ -2419,7 +2423,7 @@
                         <h2 class="text-3xl font-bold text-white">Planos e Preços</h2>
                         <p class="text-slate-400 mt-1">Escolha o plano ideal para suas necessidades</p>
                     </div>
-                    <button onclick="requireAuth() || nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
                         <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
                     </button>
                 </header>
@@ -3109,12 +3113,23 @@
                 loginSuccess();
 
             }
+            
+            // Atualiza o botão Login/Sair
+            updateLoginLogoutButton();
 
             }; // Fecha window.onload
 
 
 
-            // === 2. UI HELPERS ===
+            // Função para mostrar tela de autenticação
+        function showAuthScreen() {
+            // Mostra tela de cadastro em vez de login
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+        }
+        
+        // === 2. UI HELPERS ===
 
 
 
@@ -3179,7 +3194,7 @@
 
 
         function nav(view) {
-            // Verifica se usuário está autenticado, senão mostra cadastro
+            // Verifica se usuário está autenticado, senão mostra cadastro e não navega
             if (!requireAuth()) return;
             
             ['home', 'personas', 'ranking', 'precos', 'about', 'terms', 'tutorial'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
@@ -3329,7 +3344,46 @@
             document.getElementById('userAvatar').innerText = USER.name.charAt(0).toUpperCase();
             document.getElementById('uCredits').innerText = USER.credits;
             
-            loadManagePersonas(); 
+            loadManagePersonas();
+            
+            // Atualiza o botão Login/Sair
+            updateLoginLogoutButton();
+        }
+        
+        // Função para alternar Login/Sair
+        function handleLoginLogout() {
+            if (!USER || !USER.email) {
+                // Mostra tela de cadastro em vez de login
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('authScreen').classList.remove('hidden');
+            } else {
+                // Faz logout
+                logout();
+            }
+        }
+        
+        // Função para atualizar o estado do botão Login/Sair
+        function updateLoginLogoutButton() {
+            const btn = document.getElementById('loginLogoutBtn');
+            const icon = document.getElementById('loginLogoutIcon');
+            const text = document.getElementById('loginLogoutText');
+            
+            if (!USER || !USER.email) {
+                // Estado: Não logado
+                icon.setAttribute('data-lucide', 'log-in');
+                text.textContent = 'Login';
+                btn.classList.remove('hover:bg-red-900/20', 'hover:text-red-400');
+                btn.classList.add('hover:bg-primary/20', 'hover:text-primary');
+            } else {
+                // Estado: Logado
+                icon.setAttribute('data-lucide', 'log-out');
+                text.textContent = 'Sair';
+                btn.classList.remove('hover:bg-primary/20', 'hover:text-primary');
+                btn.classList.add('hover:bg-red-900/20', 'hover:text-red-400');
+            }
+            // Recriar ícones Lucide
+            lucide.createIcons();
         }
 
         function logout() { localStorage.removeItem('ssw_user'); location.reload(); }
