@@ -3189,20 +3189,17 @@
             const sb = document.getElementById('appSidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
-            // Verifica se o menu está visível
-            const isVisible = !sb.classList.contains('sidebar-closed');
+            // Verifica se está aberto no mobile (sem a classe -translate-x-full)
+            const isOpenMobile = !sb.classList.contains('-translate-x-full');
             
-            if(isVisible) {
-                // Fecha menu
-                sb.classList.add('sidebar-closed');
+            if(isOpenMobile) {
+                // Fecha menu mobile
+                sb.classList.add('-translate-x-full');
                 overlay.classList.add('hidden');
             } else {
-                // Abre menu
-                sb.classList.remove('sidebar-closed');
-                // Só mostra overlay em mobile
-                if (window.innerWidth < 768) {
-                    overlay.classList.remove('hidden');
-                }
+                // Abre menu mobile
+                sb.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
             }
         }
 
