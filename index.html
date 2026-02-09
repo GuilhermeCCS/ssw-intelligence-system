@@ -1041,13 +1041,6 @@
         const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
 
 
-
-        let USER = null;
-
-        let isAuthenticated = false;
-
-
-
         // Função para mostrar tela de autenticação
 
         function showAuthScreen() {
@@ -1095,8 +1088,7 @@
             const isInFooter = footer && footer.contains(element);
             
             // Se não estiver no footer e não estiver autenticado, mostrar tela de login
-
-            if (!isInFooter && !isAuthenticated) {
+            if (!isInFooter && !USER) {
 
                 event.preventDefault();
 
@@ -1105,16 +1097,7 @@
                 showAuthScreen();
 
             }
-
         }
-
-
-
-        // Adicionar listener global para cliques
-
-        document.addEventListener('click', handleButtonClick);
-
-
 
         // Função para limitar seleção de personas a no máximo 3
 
@@ -3107,40 +3090,25 @@
 
 
         <script>
-
-
-
-            // === 1. INICIALIZAÇÃO ===
-
-
+        
+        // Variável global de usuário
+        let USER = null;
+        
+        // === 1. INICIALIZAÇÃO ===
 
             window.onload = () => {
 
-
-
             lucide.createIcons();
-
-
 
             const saved = localStorage.getItem('ssw_user');
 
-
-
             if(saved) {
-
-
 
                 USER = JSON.parse(saved);
 
-
-
                 loginSuccess();
 
-
-
             }
-
-
 
             }; // Fecha window.onload
 
