@@ -10,7 +10,7 @@
 [![Status](https://img.shields.io/badge/status-Active-green.svg)](https://seu-dominio-aqui.com)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/GuilhermeCCS/ssw-intelligence-system)
 
-[Visitar Site](https://seu-dominio-aqui.com) • [Relatar Bug](https://wa.me/5582991301991) • [Suporte](https://wa.me/5582991301991)
+[Visitar Site](https://seu-dominio-aqui.com) • [Relatar Bug](https://github.com/GuilhermeCCS/ssw-intelligence-system/issues)
 
 </div>
 
@@ -347,26 +347,6 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICEN
 - ⚠️ Incluir a licença
 - ⚠️ Manter o aviso de copyright
 
-## 📞 Suporte e Contato
-
-### Canais de Suporte
-
-- **WhatsApp**: +55 82 99130-1991
-- **Email**: suporte@ssw-intelligence.com
-- **Site**: https://seu-dominio-aqui.com
-
-### Horário de Atendimento
-
-- **Segunda a Sexta**: 9h às 18h (UTC-3)
-- **Sábado**: 9h às 12h (UTC-3)
-- **Domingo**: Fechado
-
-### Tipos de Suporte
-
-- 🐛 **Report de Bugs**: Problemas técnicos e erros
-- 💡 **Sugestões**: Ideias para melhorias
-- 📚 **Documentação**: Dúvidas sobre uso
-- 🔧 **Suporte Técnico**: Ajuda com configuração
 
 ---
 
