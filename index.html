@@ -3760,186 +3760,45 @@
 
 
                 // Vulnerabilidades
-
-
-
                 const vDiv = document.getElementById('vulnerabilitiesGrid'); vDiv.innerHTML="";
 
-
-
-
-
-
-
-                // Lógica para gerar vulnerabilidades baseadas no Score
-
-
-
-                const score = data.resultado.technical_audit.score;
-
-
-
-                
-
-
-
-                // Lista de problemas possíveis (Você pode expandir isso)
-
-
-
-                const listaVulnerabilidades = [
-
-
-
-                    {
-
-
-
-                        nivel: "CRÍTICO", cor: "text-red-500",
-
-
-
-                        titulo: "LCP (Largest Contentful Paint) Elevado",
-
-
-
-                        desc: "O tempo de carregamento principal excede 2.5s. Imagens pesadas e scripts de terceiros estão bloqueando a renderização inicial."
-
-
-
-                    },
-
-
-
-                    {
-
-
-
-                        nivel: "ALTO", cor: "text-orange-500",
-
-
-
-                        titulo: "Contraste de CTA Insuficiente",
-
-
-
-                        desc: "Botões de conversão possuem baixo contraste (ratio < 4.5:1), dificultando a leitura e reduzindo a taxa de cliques em mobile."
-
-
-
-                    },
-
-
-
-                    {
-
-
-
-                        nivel: "MÉDIO", cor: "text-yellow-500",
-
-
-
-                        titulo: "Hierarquia de Tags (H1-H6)",
-
-
-
-                        desc: "A estrutura semântica está desordenada. Múltiplos H1 ou ausência de ordem lógica prejudicam o SEO técnico."
-
-
-
-                    },
-
-
-
-                    {
-
-
-
-                        nivel: "BAIXO", cor: "text-blue-400",
-
-
-
-                        titulo: "Ausência de Meta Tags OpenGraph",
-
-
-
-                        desc: "O site não exibe cards ricos ao ser compartilhado no WhatsApp ou LinkedIn, reduzindo o tráfego social."
-
-
-
-                    }
-
-
-
-                ];
-
-
-
-
-
-
+                // Dados reais da API - usa vulnerabilidades do backend
+                const vulnerabilities = data.resultado.technical_audit.vulnerabilities || [];
+                console.log("Vulnerabilidades da API:", vulnerabilities);
 
                 // Filtra ou mostra todos (aqui mostramos todos para ficar "cheio")
-
-
-
-                listaVulnerabilidades.forEach(v => {
-
-
+                vulnerabilities.forEach((v, index) => {
+                    console.log(`Vulnerabilidade ${index}:`, v);
+                    
+                    // Lógica de cores dinâmica baseada na severidade
+                    let corClasse = "text-blue-400"; // padrão azul
+                    
+                    if (v.severity) {
+                        const severity = v.severity.toUpperCase();
+                        if (severity.includes("CRÍTICO") || severity.includes("CRITICAL")) {
+                            corClasse = "text-red-500";
+                        } else if (severity.includes("ALTO") || severity.includes("HIGH")) {
+                            corClasse = "text-orange-500";
+                        } else if (severity.includes("MÉDIO") || severity.includes("MEDIUM")) {
+                            corClasse = "text-yellow-500";
+                        }
+                    }
+                    
+                    console.log(`Severity: "${v.severity}" - Cor: ${corClasse}`);
 
                     vDiv.innerHTML += `
-
-
-
                         <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
-
-
-
                             <div class="min-w-[80px]">
-
-
-
                                 <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
-
-
-
-                                <p class="font-black ${v.cor} text-lg">${v.nivel}</p>
-
-
-
+                                <p class="font-black ${corClasse} text-lg">${v.severity || 'N/A'}</p>
                             </div>
-
-
-
                             <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
-
-
-
-                                <p class="text-white text-sm font-bold mb-1">${v.titulo}</p>
-
-
-
-                                <p class="text-xs text-slate-400 leading-relaxed">${v.desc}</p>
-
-
-
+                                <p class="text-white text-sm font-bold mb-1">${v.title || 'Sem título'}</p>
+                                <p class="text-xs text-slate-400 leading-relaxed">${v.description || 'Sem descrição'}</p>
                             </div>
-
-
-
                         </div>
-
-
-
                     `;
-
-
-
                 });
-
-
-
-
 
 
 
@@ -4125,107 +3984,38 @@
 
 
 
-                // Passos do Plano de Ação
-
-
-
-                const passos = [
-
-
-
-                    { titulo: "Compressão de Assets", desc: "Converter todas as imagens para formato WebP e minificar arquivos CSS/JS." },
-
-
-
-                    { titulo: "Implementação de Lazy Loading", desc: "Adicionar atributo 'loading=lazy' em imagens abaixo da dobra." },
-
-
-
-                    { titulo: "Revisão de Acessibilidade", desc: "Adicionar atributos 'alt' em imagens e 'aria-labels' em botões sem texto." },
-
-
-
-                    { titulo: "Configuração de Cache", desc: "Ajustar headers de cache no servidor para recursos estáticos (TTL 1 ano)." }
-
-
-
-                ];
-
-
-
-
-
-
+                // Dados reais da API - usa action_plan do backend
+                const actionPlan = data.resultado.technical_audit.action_plan || {};
+                console.log("Action Plan da API:", actionPlan);
+                
+                // Combina todos os períodos (week_1, month_1, etc) em uma única lista
+                const realSteps = [];
+                Object.keys(actionPlan).forEach(period => {
+                    if (Array.isArray(actionPlan[period])) {
+                        realSteps.push(...actionPlan[period]);
+                    }
+                });
+                console.log("Steps combinados:", realSteps);
 
                 // Renderiza os passos
-
-
-
                 const containerPassos = document.getElementById('actionPlanSteps');
-
-
-
                 containerPassos.innerHTML = ""; 
 
-
-
-
-
-
-
-                passos.forEach((p, i) => {
-
-
-
+                realSteps.forEach((stepText, i) => {
                     containerPassos.innerHTML += `
-
-
-
                         <div class="mb-8 ml-6 relative group scale-in" style="animation-delay: ${i * 0.1}s">
-
-
-
                             <span class="absolute -left-[31px] top-0 flex items-center justify-center w-6 h-6 bg-slate-900 rounded-full ring-4 ring-slate-900 border-2 border-slate-700 group-hover:border-primary transition font-bold text-[10px] text-slate-400 group-hover:text-primary">
-
-
-
                                 ${i + 1}
-
-
-
                             </span>
-
-
-
-                            <h4 class="text-white font-bold text-sm mb-1 group-hover:text-primary transition">${p.titulo}</h4>
-
-
-
+                            <h4 class="text-white font-bold text-sm mb-1 group-hover:text-primary transition">Ação Recomendada</h4>
                             <p class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded border border-slate-800/50">
-
-
-
-                                ${p.desc}
-
-
-
+                                ${stepText}
                             </p>
-
-
-
                         </div>
-
-
-
                     `;
-
-
-
                 });
 
 
-
-                
 
 
 
