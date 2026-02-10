@@ -6,11 +6,11 @@
 
 **Plataforma de Auditoria Web e Benchmarking Competitivo**
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-Active-green.svg)](https://seu-dominio-aqui.com)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/GuilhermeCCS/ssw-intelligence-system/blob/main/README.md#-licena)
+[![Status](https://img.shields.io/badge/status-Active-green.svg)](https://ssw-intelligence.vercel.app)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/GuilhermeCCS/ssw-intelligence-system)
 
-[Visitar Site](https://seu-dominio-aqui.com) • [Relatar Bug](https://github.com/GuilhermeCCS/ssw-intelligence-system/issues)
+[Visitar Site](https://ssw-intelligence.vercel.app) • [Relatar Bug](https://github.com/GuilhermeCCS/ssw-intelligence-system/issues)
 
 </div>
 
@@ -145,7 +145,7 @@ ssw-intelligence-system/
 
 3. **Configure o Domínio**
    - Abra `index.html`
-   - Substitua `https://seu-dominio-aqui.com` pelo seu domínio real nas meta tags Open Graph
+   - Substitua `https://seu-dominio-aqui.com` pelo seu domínio real nas meta tags Open Graph (ex: https://ssw-intelligence.vercel.app)
 
 4. **Inicie um servidor local**
    ```bash
@@ -332,7 +332,7 @@ Contribuições são bem-vindas! Por favor, siga estas diretrizes:
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está licenciado sob a Licença MIT.
 
 ### O que a Licença MIT Permite
 
