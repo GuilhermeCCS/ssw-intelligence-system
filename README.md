@@ -23,8 +23,7 @@
 - [🔧 Instalação e Configuração](#-instalação-e-configuração)
 - [🚀 Deploy](#-deploy)
 - [📖 Documentação da API](#-documentação-da-api)
-- [👥 Personas do Sistema](#-personas-do-sistema)
-- [🔐 Segurança](#-segurança)
+- [ Segurança](#-segurança)
 - [🤝 Contribuição](#-contribuição)
 - [📄 Licença](#-licença)
 
@@ -35,34 +34,20 @@ O **S.S.W | INTELLIGENCE** é uma plataforma enterprise de auditoria web e bench
 ### Principais Objetivos
 
 - **Análise Técnica**: Auditoria completa de sites com foco em performance, SEO e acessibilidade
-- **Benchmarking Competitivo**: Comparação direta entre sites para identificar oportunidades de melhoria
-- **Análise Comportamental**: Avaliação sob diferentes personas de usuário para garantir experiência inclusiva
+- **Ranking Competitivo**: Classificação e comparação de sites no mercado
 - **Geração de Insights**: Relatórios detalhados com recomendações acionáveis
 
 ## 🚀 Funcionalidades
 
 ### 🎯 Módulos Principais
 
-#### 1. **Auditoria Técnica**
+#### 1. **Auditoria e Análise**
 - Análise automatizada de performance e SEO
 - Geração de scores de qualidade
 - Captura de screenshots (mobile e desktop)
 - Relatórios imprimíveis em PDF
-- Modo automático e manual de análise
 
-#### 2. **Benchmarking Competitivo**
-- Comparação lado a lado entre sites
-- Análise competitiva detalhada
-- Identificação de gaps de performance
-- Insights estratégicos para posicionamento
-
-#### 3. **Gestão de Personas**
-- Criação de perfis de usuário personalizados
-- 15 personas pré-definidas (Idoso, Gamer, Mãe Ocupada, etc.)
-- Análise sob diferentes perspectivas
-- Entrevistas em tempo real com personas
-
-#### 4. **Ranking Global**
+#### 2. **Ranking Global**
 - Classificação de sites por nicho e performance
 - Dashboard competitivo em tempo real
 - Métricas comparativas do mercado
@@ -73,7 +58,6 @@ O **S.S.W | INTELLIGENCE** é uma plataforma enterprise de auditoria web e bench
 - **Gestão de Licenças**: Sistema de créditos para análises
 - **Interface Responsiva**: Design adaptativo para todos os dispositivos
 - **Relatórios em PDF**: Exportação profissional dos resultados
-- **Chat Inteligente**: Interface de conversação com personas
 - **Open Graph**: Compartilhamento otimizado em redes sociais
 
 ## 🛠️ Tecnologias Utilizadas
@@ -102,18 +86,13 @@ ssw-intelligence-system/
 ├── 📁 CSS/
 │   └── 📄 style.css              # Estilos personalizados
 ├── 📁 js/
-│   ├── 📄 audit.js               # Lógica de auditoria
 │   ├── 📄 auth.js                # Sistema de autenticação
-│   ├── 📄 chat.js                # Interface de chat
-│   ├── 📄 compare.js             # Módulo de benchmarking
-│   ├── 📄 personas.js            # Gestão de personas
 │   ├── 📄 ranking.js             # Sistema de ranking
 │   └── 📄 config.js              # Configurações globais
 ├── 📁 images/
 │   ├── 🖼️ logo.ico               # Logo do sistema
 │   └── 🖼️ og-image.svg           # Imagem para redes sociais
-├── 📄 index.html                 # Página principal (login)
-├── 📄 dashboard.html             # Painel de controle
+├── 📄 index.html                 # Aplicação principal
 ├── 📄 og-image-generator.html    # Gerador de imagens OG
 ├── 📄 OPEN_GRAPH_SETUP.md        # Documentação OG
 ├── 📄 .gitignore                 # Arquivos ignorados pelo Git
@@ -219,12 +198,6 @@ Base URL: https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.rep
 - `GET /audit/{id}` - Resultados da auditoria
 - `GET /audit/history` - Histórico de auditorias
 
-#### Personas
-- `GET /personas` - Listar personas
-- `POST /personas` - Criar nova persona
-- `PUT /personas/{id}` - Atualizar persona
-- `DELETE /personas/{id}` - Excluir persona
-
 #### Benchmarking
 - `POST /compare` - Comparar sites
 - `GET /compare/{id}` - Resultados da comparação
@@ -246,36 +219,13 @@ Base URL: https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.rep
       "mobile": "url",
       "desktop": "url"
     },
-    "personas": [...],
     "recommendations": [...]
   },
   "message": "Análise concluída com sucesso"
 }
 ```
 
-## 👥 Personas do Sistema
-
-O sistema inclui 15 personas pré-definidas para análise comportamental:
-
-| Persona | Descrição | Foco Principal |
-|---------|-----------|----------------|
-| 🧓 Idoso Leigo (75+) | Dificuldade visual, aversão a tecnologia | Acessibilidade e simplicidade |
-| 📱 Usuário Mobile 3G | Conexão instável, dispositivo antigo | Performance e otimização |
-| 👁️ Deficiente Visual | Usa leitores de tela | Semântica e Alt Text |
-| 🛒 Comprador Impulsivo | Foco em gatilhos mentais | Conversão e UX |
-| 📊 Investidor Analítico | Procura dados técnicos | Credibilidade e ROI |
-| 🎮 Gamer Profissional | Exigente com performance | Velocidade e responsividade |
-| 👩‍👧 Mãe Ocupada | Pouco tempo, busca praticidade | Eficiência e confiança |
-| 🎓 Estudante Universitário | Crítico, pesquisa detalhada | Informação e comparação |
-| 💼 Empreendedor Digital | Focado em conversão | Funil e métricas |
-| ✈️ Turista Internacional | Barreiras linguísticas | Internacionalização |
-| 📱 Gen Z Digital | Atenção curta, formato vídeo | Redes sociais e autenticidade |
-| 👔 Profissional Corporativo | Segurança de dados | Integração corporativa |
-| 🌍 Aposentado Viajante | Planejamento cuidadoso | Reviews e flexibilidade |
-| 🎨 Artista Criativo | Valor estético | Storytelling visual |
-| 🏃 Atleta Amador | Foco em performance | Comunidade e desafios |
-
-## 🔐 Segurança
+##  Segurança
 
 ### Medidas Implementadas
 
