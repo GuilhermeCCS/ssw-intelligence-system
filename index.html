@@ -208,6 +208,9 @@
 
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Cyber/SaaS Theme -->
+    <link rel="stylesheet" href="css/cyber-theme.css">
 
 
 
@@ -239,31 +242,11 @@
 
 
 
-            background-color: #0a0a0f; 
+            background-color: #020817; 
 
 
 
             color: #e2e8f0; 
-
-
-
-            /* Padrão de Grid Tecnológico */
-
-
-
-            background-image: 
-
-
-
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
-
-
-
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-
-
-
-            background-size: 40px 40px;
 
 
 
@@ -873,65 +856,21 @@
 
 
         .btn-glow:hover::after {
-
-
-
             width: 300px;
-
-
-
-            height: 300px;
-
-
-
         }
 
 
 
+        #appSidebar {
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
         
-
-
-
-        /* Animação do Menu Lateral */
-
-
-
-        #appSidebar { 
-
-
-
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-
-
-
-        }
-
-
-
         .sidebar-closed { 
-
-
-
             width: 0 !important; 
-
-
-
             padding: 0 !important; 
-
-
-
             overflow: hidden; 
-
-
-
             opacity: 0; 
-
-
-
             transform: translateX(-100%);
-
-
-
         }
 
 
@@ -1001,42 +940,77 @@
         /* Remove overflow hidden do body durante auditoria */
 
         body.audit-active {
-
             overflow: auto !important;
-
             height: auto !important;
-
         }
 
-        
-
         /* Ajusta main durante auditoria */
-
         body.audit-active main {
-
             padding-bottom: 0 !important;
+        }
 
+        /* Rolagem horizontal para planos em telas pequenas */
+        @media (max-width: 767px) {
+            #view-precos .grid {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                min-width: fit-content;
+            }
+            
+            #view-precos .grid > * {
+                min-width: 280px;
+                flex-shrink: 0;
+            }
         }
 
     </style>
 
 
 
-</head>
+    <body class="min-h-screen flex flex-col md:flex-row selection:bg-primary selection:text-white">
 
+    <!-- Ambient Glow Background Effects -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
 
-
-<body class="h-screen flex flex-col md:flex-row overflow-hidden selection:bg-primary selection:text-white">
-
-
-
-
-
-
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
 
     <script>
+        // Toast Notification System - Substitui window.alert()
+        const Toast = {
+            show(message, type = 'info', duration = 4000) {
+                const container = document.getElementById('toastContainer');
+                const icons = { success: 'check-circle', error: 'x-circle', warning: 'alert-triangle', info: 'info' };
+                const colors = { success: '#10B981', error: '#EF4444', warning: '#F59E0B', info: '#3B82F6' };
+                
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `
+                    <i data-lucide="${icons[type]}" style="width:20px;height:20px;color:${colors[type]};flex-shrink:0;"></i>
+                    <div style="flex:1;"><p style="margin:0;font-size:14px;font-weight:500;color:white;">${message}</p></div>
+                    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#94a3b8;cursor:pointer;padding:4px;">
+                        <i data-lucide="x" style="width:16px;height:16px;"></i>
+                    </button>
+                `;
+                
+                container.appendChild(toast);
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                
+                setTimeout(() => {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+        };
+        Toast.success = (m, d) => Toast.show(m, 'success', d);
+        Toast.error = (m, d) => Toast.show(m, 'error', d);
+        Toast.warning = (m, d) => Toast.show(m, 'warning', d);
+        Toast.info = (m, d) => Toast.show(m, 'info', d);
+    </script>
 
-
+    <script>
 
         const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
 
@@ -1111,7 +1085,7 @@
 
                 checkbox.checked = false;
 
-                alert('Você pode selecionar no máximo 3 personas.');
+                Toast.warning('Você pode selecionar no máximo 3 personas.');
 
             }
 
@@ -1275,7 +1249,7 @@
 
 
 
-                        <input type="email" id="loginEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600">
+                        <input type="email" id="loginEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
 
 
 
@@ -1307,7 +1281,7 @@
 
 
 
-                        <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600">
+                        <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
 
 
 
@@ -1372,15 +1346,15 @@
 
 
 
-                <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
 
 
 
-                <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
 
 
 
-                <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
 
 
 
@@ -1428,10 +1402,11 @@
             </button>
         </div>
 
-        <div class="p-6 border-b border-slate-800/50 flex justify-between items-center bg-slate-900/50">
+        <!-- Header - Logo e Nome do Sistema -->
+        <div class="p-4 border-b border-slate-800/50 flex items-center bg-slate-950/60 backdrop-blur-md">
             <div class="flex items-center gap-3">
-                <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-14 h-14 object-contain">
-                <h1 class="text-lg font-black tracking-tighter text-white">S.S.W <span class="text-primary"> | INTELLIGENCE</span></h1>
+                <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-10 h-10 object-contain">
+                <h1 class="text-lg font-black tracking-tighter text-white">S.S.W <span class="text-primary">| INTELLIGENCE</span></h1>
             </div>
         </div>
 
@@ -1508,8 +1483,9 @@
 
             </button>
             
-            <button onclick="showAuthScreen()" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
-                <i data-lucide="user-plus" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors"></i> Realizar Cadastro/Login
+            <button id="authButton" onclick="handleAuthButton()" class="group w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all border border-transparent hover:border-slate-700/50">
+                <i data-lucide="user-plus" class="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" id="authButtonIcon"></i> 
+                <span id="authButtonText">Realizar Cadastro/Login</span>
             </button>
 
         </nav>
@@ -1608,40 +1584,21 @@
     <!-- Overlay para menu mobile -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden hidden" onclick="toggleSidebar()"></div>
 
-    <main class="flex-1 h-screen overflow-y-auto relative scroll-smooth flex flex-col" id="mainContent">
+    <main class="flex-1 md:h-screen overflow-y-auto relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;">
 
-
-
-        
-
-
-
-        <div class="p-4 md:p-8 pb-0 no-print sticky top-0 z-30 bg-slate-950/95 backdrop-blur-sm">
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
-                    <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors border border-transparent hover:border-slate-700 flex-shrink-0">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </button>
-                    <div class="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
-                        <img src="images/logo.ico" alt="S.S.W INTELLIGENCE" class="w-8 h-8 md:w-12 md:h-12 object-contain flex-shrink-0">
-                        <h1 class="text-sm md:text-xl font-black tracking-tighter text-white truncate">S.S.W <span class="text-primary">| INTELLIGENCE</span></h1>
-                    </div>
-                </div>
-                <div id="pageTitle" class="text-sm md:text-lg font-semibold text-slate-300 truncate hidden md:block"></div>
-            </div>
+        <!-- Barra superior fixa com botão de menu (fora da sidebar) -->
+        <div class="sticky top-0 z-30 px-4 py-2 flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors flex-shrink-0" title="Mostrar/Esconder Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <span id="pageTitle" class="text-sm md:text-lg font-semibold text-slate-300 truncate"></span>
         </div>
 
-
-
-
-
-
-
-        <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper">
+        <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper" style="background: transparent !important;">
 
 
 
@@ -1649,538 +1606,205 @@
 
 
 
-            <div id="view-home" class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-
-
-
+            <div id="view-home" class="command-center max-w-6xl mx-auto space-y-8 animate-fade-in-up">
                 
-
-
-
-                <div class="glass-panel p-3 md:p-6 rounded-2xl no-print shadow-2xl">
-                    <div class="bg-slate-950/60 rounded-xl p-4 md:p-6 border border-white/5 space-y-4 md:space-y-6">
-
-
-
-                        <div class="flex gap-4 flex-col lg:flex-row">
-
-
-
-                            <div class="relative min-w-[260px] group flex-1 lg:flex-initial">
-
-
-
-                                <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Modo de Análise</label>
-
-
-
-                                <select id="auditMode" onchange="console.log('Select mudou'); toggleManualSelect()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl pl-4 pr-10 py-4 outline-none focus:border-primary cursor-pointer transition-colors h-[58px]">
-
-
-
-                                    <option value="auto">Seleção Automática</option>
-
-
-
-                                    <option value="manual"> Seleção Manual</option>
-
-
-
-                                    <option value="compare">Modo Comparativo</option>
-
-
-
-                                </select>
-
-
-
-                                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none"></i>
-
-
-
-                            </div>
-
-
-
-                            
-
-
-
-                            <div class="relative group flex-1" id="singleUrlArea">
-
-
-
-                                <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">LINK DO SITE</label>
-
-
-
-                                <i data-lucide="link" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
-
-
-
-                                <input type="text" id="auditUrl" placeholder="https://dominio.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 pl-11 pr-4 text-white placeholder-slate-600 outline-none focus:border-primary transition-all shadow-inner h-[58px]">
-
-
-
-                            </div>
-
-
-
-                            
-
-
-
-                            <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}runAudit()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[180px] h-[58px] hover:scale-[1.02] transition-transform w-full lg:w-auto">
-
-
-
-                                ANALISAR <i data-lucide="sparkles" class="w-4 h-4"></i>
-
-
-
-                            </button>
-
-
-
-                        </div>
-
-
-
-
-
-
-
-                        <!-- ÁREA DE COMPARAÇÃO (ESCONDIDA POR PADRÃO) -->
-
-
-
-                        <div id="compareArea" class="hidden pt-6 border-t border-slate-800/50 animate-fade-in-up">
-
-
-
-                            <div class="flex justify-between items-center mb-4">
-
-
-
-                                <p class="text-xs text-accent font-bold uppercase tracking-widest flex items-center gap-2">
-
-
-
-                                    <i data-lucide="git-compare" class="w-4 h-4"></i> Modo Comparativo - Analise dois sites lado a lado
-
-
-
-                                </p>
-
-
-
-                            </div>
-
-
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-
-
-                                <div class="relative group">
-
-
-
-                                    <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Site A</label>
-
-
-
-                                    <i data-lucide="globe" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
-
-
-
-                                    <input type="text" id="compareUrlA" placeholder="https://site-a.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 pl-11 pr-4 text-white placeholder-slate-600 outline-none focus:border-primary transition-all shadow-inner h-[58px]">
-
-
-
-                                </div>
-
-
-
-                                <div class="relative group">
-
-
-
-                                    <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">Site B</label>
-
-
-
-                                    <i data-lucide="globe" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
-
-
-
-                                    <input type="text" id="compareUrlB" placeholder="https://site-b.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 pl-11 pr-4 text-white placeholder-slate-600 outline-none focus:border-primary transition-all shadow-inner h-[58px]">
-
-
-
-                                </div>
-
-
-
-                            </div>
-
-
-
-                            <div class="flex justify-center mt-4">
-
-
-
-                                <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}runCompare()" class="btn-primary btn-glow text-white px-8 py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 min-w-[200px] h-[58px] hover:scale-[1.02] transition-transform">
-
-
-
-                                    COMPARAR SITES <i data-lucide="git-compare" class="w-4 h-4"></i>
-
-
-
-                                </button>
-
-
-
-                            </div>
-
-
-
-                        </div>
-
-
-
-
-
-
-
-                        <div id="manualSelectArea" class="hidden pt-6 border-t border-slate-800/50 animate-fade-in-up">
-
-
-
-                            <div class="flex justify-between items-center mb-4">
-
-
-
-                                <p class="text-xs text-accent font-bold uppercase tracking-widest flex items-center gap-2">
-
-
-
-                                    <i data-lucide="check-square" class="w-4 h-4"></i> Selecione os Perfis Ativos
-
-
-
-                                </p>
-
-
-
-                                <button onclick="nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline decoration-slate-600">Gerenciar Perfis</button>
-
-
-
-                            </div>
-
-
-
-                            <div id="checklistContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-
-
-
-                            <p id="emptyPersonasMsg" class="hidden text-xs text-red-400 mt-2 bg-red-900/10 p-3 rounded border border-red-900/30 flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i> Nenhum perfil encontrado.</p>
-
-
-
-                        </div>
-
-
-
+                <!-- HERO SECTION PREMIUM -->
+                <div class="hero-section-premium">
+                    <!-- Título Principal com Efeito -->
+                    <div class="hero-title-container">
+                        <h1 class="hero-title-premium">
+                            <span class="title-line">Simule a experiência de um</span>
+                            <span class="title-highlight">usuário real no seu site</span>
+                        </h1>
+                        <div class="title-glow"></div>
                     </div>
-
-
-
-                </div>
-
-
-
-
-
-
-
-                <div id="auditLoading" class="hidden flex flex-col items-center justify-center py-24 animate-fade-in-up">
-
-
-
-                    <div class="relative w-28 h-28 mb-8">
-
-
-
-                        <div class="absolute inset-0 border-[6px] border-slate-800 rounded-full"></div>
-
-
-
-                        <div class="absolute inset-0 border-[6px] border-primary border-t-transparent rounded-full animate-spin"></div>
-
-
-
-                        <div class="absolute inset-4 bg-slate-900 rounded-full flex items-center justify-center shadow-inner border border-slate-800">
-
-
-
-                            <i data-lucide="cpu" class="w-10 h-10 text-primary animate-pulse"></i>
-
-
-
-                        </div>
-
-
-
-                    </div>
-
-
-
-                    <h3 class="text-2xl font-bold text-white mb-2 tracking-tight">Processando Inteligência...</h3>
-
-
-
-                    <div class="flex gap-3 text-xs font-mono text-slate-500 uppercase tracking-widest mt-2">
-
-
-
-                        <span class="animate-bounce" style="animation-delay: 0s">Navegando</span>
-
-
-
-                        <span class="animate-bounce" style="animation-delay: 0.1s">•</span>
-
-
-
-                        <span class="animate-bounce" style="animation-delay: 0.2s">Capturando</span>
-
-
-
-                        <span class="animate-bounce" style="animation-delay: 0.3s">•</span>
-
-
-
-                        <span class="animate-bounce" style="animation-delay: 0.4s">Analisando</span>
-
-
-
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-
-
-                <div id="auditResults" class="hidden space-y-8 animate-fade-in-up pb-32">
-
-
-
                     
-
-
-
-                    <div class="print-color-force bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 text-white p-14 rounded-[2rem] flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border border-white/10">
-
-
-
-                        <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-
-
-                        <div class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-
-
-
-                        
-
-
-
-                        <div class="relative z-10">
-
-
-
-                            <div class="text-[120px] font-black leading-none mb-4 drop-shadow-xl" id="resScore">0</div>
-
-
-
-                            <h2 class="text-2xl font-bold tracking-[0.4em] uppercase border-t border-white/40 pt-6 mt-2">S.S.W Digital Score</h2>
-
-
-
-                            
-
-
-
-                            <div class="mt-8 inline-flex items-center gap-3 bg-black/20 backdrop-blur-md px-8 py-3 rounded-full border border-white/20 shadow-lg">
-
-
-
-                                <i data-lucide="globe" class="w-5 h-5 text-white/80"></i>
-
-
-
-                                <span class="font-mono text-sm tracking-wide font-medium" id="resUrl">...</span>
-
-
-
+                    <!-- Subtítulo com Design Premium -->
+                    <div class="hero-subtitle-container">
+                        <p class="hero-subtitle-premium">
+                            Identifique falhas de UX, gargalos de performance e vulnerabilidades de segurança que números frios não mostram
+                        </p>
+                    </div>
+                    
+                    <!-- Stats Cards Redesign -->
+                    <div class="stats-container-premium">
+                        <div class="stat-card-premium">
+                            <div class="stat-icon-premium">
+                                <i data-lucide="users" class="w-5 h-5"></i>
                             </div>
-
-
-
+                            <div class="stat-content">
+                                <div class="stat-value-premium">15+</div>
+                                <div class="stat-label-premium">Personas</div>
+                            </div>
                         </div>
-
-
-
                         
-
-
-
-                        <button onclick="window.print()" class="absolute top-8 right-8 bg-white text-orange-600 px-6 py-3 rounded-xl font-bold text-xs shadow-xl no-print flex items-center gap-2 hover:scale-105 hover:shadow-2xl transition-all">
-
-
-
-                            <i data-lucide="printer" class="w-4 h-4"></i> BAIXAR RELATÓRIO
-
-
-
-                        </button>
-
-
-
-                    </div>
-
-
-
-
-
-
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 page-break">
-
-
-
-                        <div class="glass-panel p-8 rounded-2xl border border-slate-800 md:col-span-1 hover-card flex flex-col fade-in">
-
-
-
-                            <h3 class="text-primary font-bold uppercase text-xs mb-6 tracking-widest flex items-center gap-2 border-b border-slate-800 pb-4">
-
-
-
-                                <i data-lucide="file-text" class="w-4 h-4"></i> 1. Sumário Executivo
-
-
-
-                            </h3>
-
-
-
-                            <p id="resSummary" class="text-sm text-slate-300 leading-relaxed text-justify font-light flex-1">...</p>
-
-
-
+                        <div class="stat-card-premium">
+                            <div class="stat-icon-premium">
+                                <i data-lucide="activity" class="w-5 h-5"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value-premium">50+</div>
+                                <div class="stat-label-premium">Métricas</div>
+                            </div>
                         </div>
-
-
-
                         
-
-
-
-                        <div class="glass-panel p-8 rounded-2xl border border-slate-800 md:col-span-2 flex justify-center items-center bg-black/30 gap-8 relative overflow-hidden group card-hover">
-
-
-
-                            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-
-
-
-                            
-
-
-
-                            <img id="printMobile" class="h-64 rounded-[2rem] border-[6px] border-slate-800 shadow-2xl z-10 group-hover:scale-105 group-hover:-rotate-2 transition-transform duration-500 ease-out" alt="Mobile View">
-
-
-
-                            <img id="printDesktop" class="h-64 rounded-xl border-b-[12px] border-x-[2px] border-t-[2px] border-slate-800 shadow-2xl z-10 group-hover:scale-105 group-hover:rotate-1 transition-transform duration-500 ease-out delay-75" alt="Desktop View">
-
-
-
+                        <div class="stat-card-premium">
+                            <div class="stat-icon-premium">
+                                <i data-lucide="brain" class="w-5 h-5"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value-premium">AI</div>
+                                <div class="stat-label-premium">Powered</div>
+                            </div>
                         </div>
-
-
-
+                        
+                        <div class="stat-card-premium">
+                            <div class="stat-icon-premium">
+                                <i data-lucide="zap" class="w-5 h-5"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value-premium">&lt;30s</div>
+                                <div class="stat-label-premium">Análise</div>
+                            </div>
+                        </div>
                     </div>
-
-
-
-
-
-
-
-                    <div class="glass-panel p-10 rounded-2xl border border-slate-800 page-break card-hover slide-up">
-
-
-
-                        <h3 class="text-accent font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-
-
-
-                            <i data-lucide="shield-alert" class="w-6 h-6"></i> 2. Matriz de Vulnerabilidades
-
-
-
-                        </h3>
-
-
-
-                        <div class="space-y-4" id="vulnerabilitiesGrid"></div>
-
-
-
+                    
+                    <!-- Search Bar Hero -->
+                    <div class="search-container">
+                        <!-- Modo Normal (Auto/Manual) -->
+                        <div id="normalSearchBar" class="search-bar-hero">
+                            <div class="search-input-wrapper">
+                                <i data-lucide="search" class="w-5 h-5 search-icon"></i>
+                                <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
+                            </div>
+                            <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
+                                <i data-lucide="zap" class="w-4 h-4"></i>
+                                Analisar
+                            </button>
+                        </div>
+                        
+                        <!-- Modo Comparativo -->
+                        <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
+                            <div class="flex-1 flex items-center gap-2 px-4">
+                                <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                                <input type="text" id="compareUrlA" placeholder="Site A - https://site-a.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('compareUrlB').focus();}">
+                            </div>
+                            <div class="w-px h-8 bg-slate-600"></div>
+                            <div class="flex-1 flex items-center gap-2 px-4">
+                                <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                                <input type="text" id="compareUrlB" placeholder="Site B - https://site-b.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runCompare();}">
+                            </div>
+                            <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runCompare()" class="search-button">
+                                <i data-lucide="git-compare" class="w-4 h-4"></i>
+                                Comparar
+                            </button>
+                        </div>
+                        
+                        <!-- Audit Mode Selector -->
+                        <div class="flex items-center justify-center gap-4 mt-4">
+                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
+                                <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
+                                <span>Automático</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
+                                <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
+                                <span>Manual</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
+                                <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
+                                <span>Comparativo</span>
+                            </label>
+                        </div>
+                        <select id="auditMode" class="hidden">
+                            <option value="auto">Seleção Automática</option>
+                            <option value="manual">Seleção Manual</option>
+                            <option value="compare">Modo Comparativo</option>
+                        </select>
                     </div>
-
-
-
-
-
-
-
-                    <div class="glass-panel p-10 rounded-2xl border border-slate-800 page-break card-hover slide-up" style="animation-delay: 0.2s">
-
-
-
-                        <h3 class="text-cyber font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-
-
-
-                            <i data-lucide="brain-circuit" class="w-6 h-6"></i> 3. Análise Comportamental
-
-
-
-                        </h3>
-
-
-
-                        <div id="personasGrid" class="grid grid-cols-1 gap-6"></div>
-
-
-
-                    </div>
-
-
-
                 </div>
 
+                <!-- Manual Selection Area -->
+                <div id="manualSelectArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="text-xs text-accent font-bold uppercase tracking-widest flex items-center gap-2">
+                            <i data-lucide="check-square" class="w-4 h-4"></i> Selecione os Perfis Ativos (máx 3)
+                        </p>
+                        <button onclick="nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline">Gerenciar Perfis</button>
+                    </div>
+                    <div id="checklistContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                </div>
 
+                <!-- Compare Area -->
+                <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
+                    <div class="flex items-center gap-2 mb-4 text-accent">
+                        <i data-lucide="git-compare" class="w-5 h-5"></i>
+                        <span class="text-sm font-bold uppercase tracking-wider">Modo Comparativo</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="relative">
+                            <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase">Site A</label>
+                            <input type="text" id="compareUrlA" placeholder="https://site-a.com" class="input-pro w-full rounded-xl p-4 text-white">
+                        </div>
+                        <div class="relative">
+                            <label class="absolute -top-2.5 left-4 bg-slate-900 px-2 text-[10px] font-bold text-slate-400 uppercase">Site B</label>
+                            <input type="text" id="compareUrlB" placeholder="https://site-b.com" class="input-pro w-full rounded-xl p-4 text-white">
+                        </div>
+                    </div>
+                    <button onclick="runCompare()" class="btn-primary w-full text-white font-bold py-4 rounded-xl">
+                        <i data-lucide="git-compare" class="w-4 h-4 inline mr-2"></i> Comparar Sites
+                    </button>
+                </div>
+
+                <!-- Empty State Cards - Quick Actions -->
+                <div id="emptyStateCards" class="empty-state-grid">
+                    <div class="empty-state-card" onclick="showTutorialCard('primeira')">
+                        <div class="empty-state-icon">
+                            <i data-lucide="play-circle" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="empty-state-title">Primeira Análise</h3>
+                        <p class="empty-state-desc">Aprenda como fazer sua primeira auditoria completa em poucos passos</p>
+                    </div>
+                    
+                    <div class="empty-state-card" onclick="nav('personas')">
+                        <div class="empty-state-icon">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="empty-state-title">Gerenciar Personas</h3>
+                        <p class="empty-state-desc">Configure perfis personalizados para análises mais precisas</p>
+                    </div>
+                    
+                    <div class="empty-state-card" onclick="nav('ranking')">
+                        <div class="empty-state-icon">
+                            <i data-lucide="trophy" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="empty-state-title">Ranking Global</h3>
+                        <p class="empty-state-desc">Veja os sites com melhor performance e compare com concorrentes</p>
+                    </div>
+                    
+                    <div class="empty-state-card" onclick="showAboutCard()">
+                        <div class="empty-state-icon">
+                            <i data-lucide="info" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="empty-state-title">Sobre a Plataforma</h3>
+                        <p class="empty-state-desc">Conheça os recursos e tecnologias por trás do S.S.W Intelligence</p>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="auditLoading" class="hidden">
+                    <div class="relative w-24 h-24 mb-6">
+                        <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
+                        <div class="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i data-lucide="cpu" class="w-8 h-8 text-primary animate-pulse"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Analisando...</h3>
+                    <p class="text-sm text-slate-400">Isso pode levar alguns segundos</p>
+                </div>
+
+                <!-- Results Area -->
+                <div id="auditResults" class="hidden space-y-6"></div>
 
             </div>
 
@@ -2274,7 +1898,7 @@
 
 
 
-                            <input type="text" id="newPersonaName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                            <input type="text" id="newPersonaName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newPersonaDesc').focus();}">
 
 
 
@@ -2290,7 +1914,7 @@
 
 
 
-                            <input type="text" id="newPersonaDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                            <input type="text" id="newPersonaDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createPersona();}">
 
 
 
@@ -2496,7 +2120,7 @@
             <p class="text-slate-400">Sem compromisso. Compre licenças avulsas quando precisar.</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 min-w-[320px]">
             <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50 hover:border-primary/30 transition-all text-center group">
                 <p class="text-2xl font-black text-primary mb-1">R$49,99</p>
                 <p class="text-sm text-slate-300 mb-4">10 Licenças</p>
@@ -2538,118 +2162,104 @@
 
                 </header>
 
-
-
-                <div class="glass-panel p-10 rounded-2xl border border-slate-800 text-slate-300 text-sm leading-relaxed">
-
-                    <div class="space-y-8">
-
-                        <div>
-
-                            <h3 class="text-white font-bold text-2xl mb-4 flex items-center gap-3">
-
+                <!-- Main About Section -->
+                <div class="glass-panel p-12 rounded-2xl border border-slate-800/50 mb-12">
+                    <div class="max-w-3xl">
+                        <div class="flex items-start gap-4 mb-8">
+                            <div class="p-3 rounded-xl bg-primary/10 border border-primary/20">
                                 <i data-lucide="zap" class="w-6 h-6 text-primary"></i>
-
-                                Nossa Missão
-
-                            </h3>
-
-                            <p class="text-lg leading-relaxed">
-
-                                A <span class="text-primary font-bold">S.S.W INTELLIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Desenvolvida independentemente por <span class="text-accent font-bold">Guilherme Cruz da Silva</span>, nossa tecnologia simula jornadas de usuários reais para detectar falhas de UX, SEO e Performance que ferramentas tradicionais deixam passar.
-
-                            </p>
-
-                        </div>
-
-
-
-                        <div class="border-t border-slate-700 pt-8">
-
-                            <h3 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
-
-                                <i data-lucide="target" class="w-5 h-5 text-accent"></i>
-
-                                Do Código à Conversão
-
-                            </h3>
-
-                            <p class="leading-relaxed">
-
-                                Nós garantimos a sua excelência digital através de análises profundas que vão além das métricas superficiais. Nossa IA avançada simula comportamentos humanos reais, identificando pontos de fricção que impactam diretamente suas taxas de conversão e experiência do usuário.
-
-                            </p>
-
-                        </div>
-
-
-
-                        <div class="border-t border-slate-700 pt-8">
-
-                            <h3 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
-
-                                <i data-lucide="shield" class="w-5 h-5 text-cyber"></i>
-
-                                Tecnologia Proprietária
-
-                            </h3>
-
-                            <p class="leading-relaxed">
-
-                                Nosso algoritmo exclusivo combina análise técnica com simulação comportamental, fornecendo insights acionáveis que transformam dados em decisões estratégicas. Cada auditoria é uma jornada completa pelo seu ecossistema digital.
-
-                            </p>
-
-                        </div>
-
-
-
-                        <div class="border-t border-slate-700 pt-8">
-
-                            <h3 class="text-white font-bold text-xl mb-4 flex items-center gap-3">
-
-                                <i data-lucide="users" class="w-5 h-5 text-primary"></i>
-
-                                Compromisso com a Excelência
-
-                            </h3>
-
-                            <p class="leading-relaxed">
-
-                                Acreditamos que cada ponto de interação digital importa. Por isso, nossa missão é capacitar empresas e profissionais a criarem experiências digitais excepcionais, baseadas em dados concretos e compreensão profunda do comportamento humano.
-
-                            </p>
-
-                        </div>
-
-
-
-                        <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700 mt-8">
-
-                            <div class="flex items-center gap-4">
-
-                                <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-
-                                    SSW
-
-                                </div>
-
-                                <div>
-
-                                    <p class="text-white font-bold text-lg">Guilherme Cruz da Silva</p>
-
-                                    <p class="text-slate-400">Fundador & Desenvolvedor Principal</p>
-
-                                    <p class="text-primary text-sm mt-1">Transformando dados em experiências digitais excepcionais</p>
-
-                                </div>
-
                             </div>
-
+                            <div>
+                                <h3 class="text-white font-bold text-2xl mb-3">Nossa Missão</h3>
+                                <p class="text-slate-300 text-base leading-relaxed">
+                                    A <span class="text-primary font-bold">S.S.W INTELLIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo desenvolvida para fornecer análises detalhadas de performance e experiência do usuário. Nossa ferramenta utiliza personas personalizadas para simular diferentes perfis de usuários e fornecer insights acionáveis para melhorar seus sites.
+                                </p>
+                            </div>
                         </div>
+                    </div>
+                </div>
 
+                <!-- Values Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <!-- Card 1 -->
+                    <div class="group glass-panel p-8 rounded-2xl border border-slate-800/50 hover:border-primary/30 transition-all hover:bg-slate-900/40">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                                <i data-lucide="target" class="w-5 h-5 text-primary"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-lg">Do Código à Conversão</h4>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Transformamos dados brutos em decisões estratégicas acionáveis. Nossa plataforma analisa múltiplos aspectos de um site, desde performance técnica até experiência do usuário, ajudando você a identificar pontos de melhoria e otimizar suas taxas de conversão.
+                        </p>
                     </div>
 
+                    <!-- Card 2 -->
+                    <div class="group glass-panel p-8 rounded-2xl border border-slate-800/50 hover:border-accent/30 transition-all hover:bg-slate-900/40">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                                <i data-lucide="shield" class="w-5 h-5 text-accent"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-lg">Tecnologia & Inovação</h4>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Nossa plataforma utiliza análise comportamental através de 15 personas pré-configuradas, permitindo simular diferentes tipos de usuários e suas expectativas. Cada auditoria fornece scores detalhados e recomendações personalizadas para melhorar a experiência digital.
+                        </p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="group glass-panel p-8 rounded-2xl border border-slate-800/50 hover:border-cyber/30 transition-all hover:bg-slate-900/40">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 rounded-lg bg-cyber/10 group-hover:bg-cyber/20 transition-colors">
+                                <i data-lucide="users" class="w-5 h-5 text-cyber"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-lg">Excelência Técnica</h4>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Buscamos a perfeição em cada análise e recomendação, priorizando a experiência do usuário em todas as auditorias. Nossa metodologia garante que cada detalhe seja considerado na otimização de seus sites.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Creator Profile -->
+                <div class="glass-panel p-10 rounded-2xl border border-slate-800/50 overflow-hidden relative">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-20 -mt-20"></div>
+                    <div class="relative z-10">
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-6">Criado Por</p>
+                        <div class="flex flex-col md:flex-row md:items-center gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-20 h-20 bg-gradient-to-br from-primary via-accent to-cyber rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                                    SSW
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-bold text-2xl mb-1">Guilherme Cruz da Silva</h3>
+                                <p class="text-primary text-sm font-semibold mb-3">Desenvolvedor & Criador da S.S.W INTELLIGENCE</p>
+                                <p class="text-slate-400 text-sm leading-relaxed mb-3">
+                                    Especialista em otimização web, performance e experiência do usuário. Focado em criar soluções práticas e eficazes para empresas que desejam melhorar sua presença digital.
+                                </p>
+                                <ul class="space-y-2 text-sm text-slate-400">
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                        Missão: Criar ferramentas de análise web acessíveis e eficazes
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                        Desenvolvedor web especializado em performance e UX
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                        Focado em criar soluções práticas para otimização de sites
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="text-center py-8 border-t border-slate-800/50 mt-12">
+                    <p class="text-slate-500 text-xs">© 2026 S.S.W | INTELLIGENCE. Todos os direitos reservados.</p>
                 </div>
 
             </div>
@@ -2908,121 +2518,102 @@
 
 
 
-            <footer id="mainFooter" class="p-4 border-t border-slate-800/50 no-print bg-slate-950/50 backdrop-blur-sm mt-auto">
-
-                <div class="max-w-7xl mx-auto">
-
-
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-4">
-
-
-
-                        <div class="col-span-1 sm:col-span-2 lg:col-span-1">
-
-                            <h3 class="text-white font-bold text-lg mb-2">S.S.W INTELLIGENCE</h3>
-
-                            <p class="text-slate-400 text-sm leading-relaxed">Plataforma de auditoria web e benchmarking competitivo impulsionada por IA.</p>
-
-                        </div>
-
+            <footer id="mainFooter" class="fat-footer no-print mt-20">
+                <div class="max-w-7xl mx-auto px-6 py-12">
+                    <!-- Main Footer Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                         
+                        <!-- Brand Column -->
+                        <div class="lg:col-span-1">
+                            <div class="mb-4">
+                                <h3 class="text-white font-bold text-lg">S.S.W</h3>
+                                <p class="text-primary text-xs font-semibold uppercase tracking-wider">Intelligence</p>
+                            </div>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                                Plataforma enterprise de auditoria web e benchmarking competitivo impulsionada por IA.
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <div class="pulse-dot"></div>
+                                <span class="text-xs text-slate-500">Sistema Operacional</span>
+                            </div>
+                        </div>
 
+                        <!-- Contato Column -->
                         <div>
-
-                            <h4 class="text-white font-bold mb-2">Contato</h4>
-
-                            <div class="space-y-2 text-slate-400 text-sm">
-
-                                <a href="tel:82991301991" class="flex items-center gap-2 hover:text-primary transition-colors">
-
-                                    <i data-lucide="phone" class="w-4 h-4"></i>
-
-                                    82 991301991
-
+                            <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Contato</h4>
+                            <div class="space-y-3">
+                                <a href="tel:82991301991" class="flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm group">
+                                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                        <i data-lucide="phone" class="w-4 h-4"></i>
+                                    </div>
+                                    <span>82 99130-1991</span>
                                 </a>
-
-                                <a href="mailto:sswinteligence@gmail.com" class="flex items-center gap-2 hover:text-primary transition-colors">
-
-                                    <i data-lucide="mail" class="w-4 h-4"></i>
-
-                                    sswinteligence@gmail.com
-
+                                <a href="mailto:sswinteligence@gmail.com" class="flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm group">
+                                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                        <i data-lucide="mail" class="w-4 h-4"></i>
+                                    </div>
+                                    <span>sswinteligence@gmail.com</span>
                                 </a>
-
-                                <a href="https://instagram.com/sswinteligence" target="_blank" class="flex items-center gap-2 hover:text-primary transition-colors">
-
-                                    <i data-lucide="instagram" class="w-4 h-4"></i>
-
-                                    @sswinteligence
-
+                                <a href="https://instagram.com/sswinteligence" target="_blank" class="flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm group">
+                                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                        <i data-lucide="instagram" class="w-4 h-4"></i>
+                                    </div>
+                                    <span>@sswinteligence</span>
                                 </a>
-
                             </div>
-
                         </div>
 
-                        <div class="lg:col-span-2">
-
-                            <h4 class="text-white font-bold mb-2">Links Úteis</h4>
-
+                        <!-- Links Rápidos Column -->
+                        <div>
+                            <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Links Rápidos</h4>
                             <div class="space-y-2">
-
-                                <button onclick="showAboutCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
-
-                                    <i data-lucide="info" class="w-4 h-4"></i>
-
-                                    Sobre Nós
-
+                                <button onclick="nav('home')" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+                                    <i data-lucide="file-search" class="w-4 h-4 text-slate-600"></i> Nova Análise
                                 </button>
-
-                                <button onclick="showTermsCard()" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm text-left">
-
-                                    <i data-lucide="file-check" class="w-4 h-4"></i>
-
-                                    Termos de Uso
-
+                                <button onclick="nav('personas')" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+                                    <i data-lucide="users" class="w-4 h-4 text-slate-600"></i> Personas
                                 </button>
-
-                                <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm">
-
-                                    <i data-lucide="headphones" class="w-4 h-4"></i>
-
-                                    Suporte Técnico
-
-                                </a>
-
+                                <button onclick="nav('ranking')" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+                                    <i data-lucide="trophy" class="w-4 h-4 text-slate-600"></i> Ranking
+                                </button>
+                                <button onclick="showAboutCard()" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+                                    <i data-lucide="info" class="w-4 h-4 text-slate-600"></i> Sobre Nós
+                                </button>
                             </div>
-
                         </div>
 
-                    </div>
-
-
-
-                    
-
-                    <div class="border-t border-slate-800/50 pt-4">
-                        <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
-                            <p class="text-slate-500 text-sm text-center lg:text-left">&copy; 2026 S.S.W INTELLIGENCE. Todos os direitos reservados.</p>
+                        <!-- Suporte Column -->
+                        <div>
+                            <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Suporte</h4>
+                            <div class="space-y-2">
+                                <button onclick="showTermsCard()" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+                                    <i data-lucide="file-check" class="w-4 h-4 text-slate-600"></i> Termos de Uso
+                                </button>
+                                <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm py-1">
+                                    <i data-lucide="headphones" class="w-4 h-4 text-slate-600"></i> Suporte Técnico
+                                </a>
+                                <button onclick="nav('tutorial')" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+                                    <i data-lucide="book-open" class="w-4 h-4 text-slate-600"></i> Tutorial
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-
-
+                    <!-- Bottom Bar -->
+                    <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <p class="text-slate-500 text-sm text-center md:text-left">
+                            2026 S.S.W INTELLIGENCE. Todos os direitos reservados.
+                        </p>
+                        <div class="flex items-center gap-4 text-slate-500 text-xs">
+                            <span>Desenvolvido por um desenvolvedor solo Guilherme Cruz da Silva</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+                            <span>Versão 2.0</span>
+                        </div>
+                    </div>
                 </div>
-
-
-
             </footer>
 
-
-
-        </main>
-
-
-
-        <script>
+            <script>
         
         // Variável global de usuário
         let USER = null;
@@ -3043,8 +2634,9 @@
 
             }
             
-            // Atualiza o botão Login/Sair
+            // Atualiza os botões
             updateLoginLogoutButton();
+            updateAuthButton();
 
             }; // Fecha window.onload
 
@@ -3070,28 +2662,28 @@
             const isDesktop = window.innerWidth >= 768;
             
             if(isDesktop) {
-                // Comportamento desktop: usa classe sidebar-closed
-                const isClosed = sb.classList.contains('sidebar-closed');
-                
-                if(isClosed) {
-                    // Abre menu desktop
+                // Comportamento desktop: alterna classe sidebar-closed
+                if(sb.classList.contains('sidebar-closed')) {
                     sb.classList.remove('sidebar-closed');
                 } else {
-                    // Fecha menu desktop
                     sb.classList.add('sidebar-closed');
                 }
             } else {
-                // Comportamento mobile: usa translate-x-full
-                const isOpenMobile = !sb.classList.contains('-translate-x-full');
+                // Comportamento mobile: usa transform translate-x
+                // Remove conflitos primeiro
+                sb.classList.remove('sidebar-closed');
                 
-                if(isOpenMobile) {
+                // Verifica se está aberto (não tem -translate-x-full)
+                const isOpen = !sb.classList.contains('-translate-x-full');
+                
+                if(isOpen) {
                     // Fecha menu mobile
                     sb.classList.add('-translate-x-full');
-                    overlay.classList.add('hidden');
+                    if(overlay) overlay.classList.add('hidden');
                 } else {
                     // Abre menu mobile
                     sb.classList.remove('-translate-x-full');
-                    overlay.classList.remove('hidden');
+                    if(overlay) overlay.classList.remove('hidden');
                 }
             }
         }
@@ -3101,6 +2693,61 @@
 
 
 
+
+        // Suporte global a teclado - atalhos e navegação
+        document.addEventListener('keydown', (e) => {
+            // ESC fecha modais abertos
+            if(e.key === 'Escape') {
+                // Fecha sidebar em mobile
+                const sb = document.getElementById('appSidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                if(window.innerWidth < 768 && !sb.classList.contains('-translate-x-full')) {
+                    sb.classList.add('-translate-x-full');
+                    if(overlay) overlay.classList.add('hidden');
+                }
+            }
+            
+            // Alt + N vai para Nova Análise
+            if(e.altKey && e.key.toLowerCase() === 'n') {
+                e.preventDefault();
+                nav('home');
+                document.getElementById('auditUrl')?.focus();
+            }
+            
+            // Alt + P vai para Personas
+            if(e.altKey && e.key.toLowerCase() === 'p') {
+                e.preventDefault();
+                nav('personas');
+            }
+            
+            // Alt + R vai para Ranking
+            if(e.altKey && e.key.toLowerCase() === 'r') {
+                e.preventDefault();
+                nav('ranking');
+            }
+            
+            // Alt + M mostra/esconde menu
+            if(e.altKey && e.key.toLowerCase() === 'm') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+        window.addEventListener('resize', () => {
+            const sb = document.getElementById('appSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isDesktop = window.innerWidth >= 768;
+            
+            if(isDesktop) {
+                // Em desktop, sempre mostra o sidebar (remove translate)
+                sb.classList.remove('-translate-x-full');
+                if(overlay) overlay.classList.add('hidden');
+            } else {
+                // Em mobile, reseta para o estado fechado padrão
+                sb.classList.add('-translate-x-full');
+                sb.classList.remove('sidebar-closed');
+                if(overlay) overlay.classList.add('hidden');
+            }
+        });
 
         function toggleRegister() {
 
@@ -3124,11 +2771,46 @@
 
         function nav(view) {
             // Verifica se usuário está autenticado, senão mostra cadastro e não navega
-            if (!requireAuth()) return;
+            if (!USER || !USER.email) {
+                showAuthScreen();
+                return;
+            }
             
-            ['home', 'personas', 'ranking', 'precos', 'about', 'terms', 'tutorial'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
+            // Atualiza indicadores ativos na sidebar
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('active', 'bg-primary/10', 'border-primary/30');
+                btn.classList.add('border-transparent');
+                const indicator = btn.querySelector('.nav-indicator');
+                if (indicator) indicator.remove();
+            });
             
-            document.getElementById(`view-${view}`).classList.remove('hidden');
+            // Adiciona classe ativa ao botão atual
+            const activeBtn = document.querySelector(`button[onclick="nav('${view}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-primary/10', 'border-primary/30');
+                activeBtn.classList.remove('border-transparent');
+                if (!activeBtn.querySelector('.nav-indicator')) {
+                    activeBtn.insertAdjacentHTML('afterbegin', '<div class="nav-indicator"></div>');
+                }
+            }
+            
+            // Esconde todas as views
+            const views = ['home', 'personas', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.style.opacity = '';
+                    el.style.transform = '';
+                    el.style.transition = '';
+                }
+            });
+            
+            // Mostra a view selecionada
+            const targetEl = document.getElementById(`view-${view}`);
+            if (targetEl) {
+                targetEl.classList.remove('hidden');
+            }
             
             // Header Dinâmico
             const titles = { 
@@ -3137,17 +2819,34 @@
                 'precos': 'Planos e Preços',
                 'about': 'Sobre Nós',
                 'terms': 'Termos de Uso',
-                'tutorial': 'Como Usar o Sistema'
+                'tutorial': 'Como Usar o Sistema',
+                'home': 'Painel Principal'
             };
-
-            // Segurança caso o título não exista
+            
             const pageTitleElement = document.getElementById('pageTitle');
             if (pageTitleElement) {
                 pageTitleElement.innerText = titles[view] || 'S.S.W Intelligence';
             }
-
+            
             if(view === 'personas') loadManagePersonas();
             if(view === 'ranking') loadRanking();
+            
+            // Restaura cards e esconde resultados ao voltar para home
+            if(view === 'home') {
+                const emptyStateCards = document.getElementById('emptyStateCards');
+                const auditResults = document.getElementById('auditResults');
+                const auditLoading = document.getElementById('auditLoading');
+                
+                if(emptyStateCards) emptyStateCards.classList.remove('hidden');
+                if(auditResults) auditResults.classList.add('hidden');
+                if(auditLoading) auditLoading.classList.add('hidden');
+            }
+            
+            // Scroll para o topo
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) {
+                mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
 
@@ -3172,7 +2871,7 @@
 
 
 
-            if(!email || !pass) return alert("Preencha todos os campos");
+            if(!email || !pass) return Toast.warning("Preencha todos os campos");
 
 
 
@@ -3220,11 +2919,11 @@
 
 
 
-                } else alert(data.detail || "Erro no login");
+                } else Toast.error(data.detail || "Erro no login");
 
 
 
-            } catch(e) { alert("Erro de conexão"); }
+            } catch(e) { Toast.error("Erro de conexão"); }
 
 
 
@@ -3247,7 +2946,7 @@
                     body: JSON.stringify({ nome, email, senha: pass })
                 });
                 if(res.ok) { 
-                    alert("Conta criada! Um código de verificação foi enviado para seu e-mail.");
+                    Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
                     
                     // Limpa formulário
                     document.getElementById('regNome').value = "";
@@ -3264,8 +2963,8 @@
                     // Inicia a contagem de reenvio
                     iniciarContagemReenvio();
                 }
-                else alert("Erro ao criar conta");
-            } catch(e) { alert("Erro de conexão"); }
+                else Toast.error("Erro ao criar conta");
+            } catch(e) { Toast.error("Erro de conexão"); }
         }
 
         function loginSuccess() {
@@ -3293,8 +2992,9 @@
             
             loadManagePersonas();
             
-            // Atualiza o botão Login/Sair
+            // Atualiza os botões
             updateLoginLogoutButton();
+            updateAuthButton();
         }
         
         // Função para alternar Login/Sair
@@ -3337,15 +3037,68 @@
 
         function comprarCreditos() { window.open(`https://wa.me/5582991301991?text=Quero comprar créditos para ${USER.email}`, '_blank'); }
 
-        function requireAuth() {
+        // Função para controlar o botão de auth (cadastro/login vs settings)
+        function handleAuthButton() {
             if (!USER || !USER.email) {
-                // Mostra tela de cadastro em vez de login
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('registerForm').classList.remove('hidden');
-                document.getElementById('authScreen').classList.remove('hidden');
-                return false;
+                // Mostra tela de cadastro/login
+                showAuthScreen();
+            } else {
+                // Abrir menu de configurações do usuário
+                showUserSettings();
             }
-            return true;
+        }
+
+        // Função para atualizar o estado do botão de auth
+        function updateAuthButton() {
+            const btn = document.getElementById('authButton');
+            const icon = document.getElementById('authButtonIcon');
+            const text = document.getElementById('authButtonText');
+            
+            if (!USER || !USER.email) {
+                // Estado: Não logado - mostrar cadastro/login
+                icon.setAttribute('data-lucide', 'user-plus');
+                text.textContent = 'Realizar Cadastro/Login';
+                btn.classList.remove('hover:bg-orange-900/20', 'hover:text-orange-400');
+                btn.classList.add('hover:bg-primary/20', 'hover:text-primary');
+            } else {
+                // Estado: Logado - mostrar engrenagem (settings)
+                icon.setAttribute('data-lucide', 'settings');
+                text.textContent = 'Configurações';
+                btn.classList.remove('hover:bg-primary/20', 'hover:text-primary');
+                btn.classList.add('hover:bg-orange-900/20', 'hover:text-orange-400');
+            }
+            // Recriar ícones Lucide
+            lucide.createIcons();
+        }
+
+        // Função para mostrar configurações do usuário
+        function showUserSettings() {
+            // Criar menu de configurações flutuante
+            const settingsMenu = document.createElement('div');
+            settingsMenu.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4';
+            settingsMenu.innerHTML = `
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white">Configurações</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-slate-400 hover:text-white">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="logout(); this.closest('.fixed').remove();" class="w-full text-left px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-3">
+                            <i data-lucide="log-out" class="w-4 h-4 text-red-400"></i>
+                            <span>Sair do Sistema</span>
+                        </button>
+                        <button onclick="this.closest('.fixed').remove();" class="w-full text-left px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-3">
+                            <i data-lucide="user" class="w-4 h-4 text-blue-400"></i>
+                            <span>Meu Perfil</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(settingsMenu);
+            // Recriar ícones Lucide
+            lucide.createIcons();
         }
 
         async function confirmarCodigoAPI() {
@@ -3353,7 +3106,14 @@
             const codigo = codigoInput.value.trim();
             const btn = event.target; // O botão clicado
 
-            if (codigo.length < 4) return alert("Digite o código de 4 números.");
+            if (codigo.length < 4) return Toast.warning("Digite o código de 4 números.");
+            
+            // Verifica se USER existe e tem email
+            if (!USER || !USER.email) {
+                Toast.error("Usuário não encontrado. Faça login novamente.");
+                logout();
+                return;
+            }
 
             // Efeito visual de carregando
             const textoOriginal = btn.innerHTML;
@@ -3375,7 +3135,7 @@
 
                 if (res.ok) {
                     // SUCESSO!
-                    alert("Conta verificada com sucesso! Bem-vindo.");
+                    Toast.success("Conta verificada com sucesso! Bem-vindo.");
                     
                     // Atualiza o usuário local para verificado
                     USER.verificado = true; 
@@ -3385,14 +3145,14 @@
                     loginSuccess(); 
                 } else {
                     // ERRO (Código errado)
-                    alert(data.detail || "Código incorreto. Tente novamente.");
+                    Toast.error(data.detail || "Código incorreto. Tente novamente.");
                     codigoInput.value = ""; // Limpa campo
                     codigoInput.focus();
                 }
 
             } catch (e) {
                 console.error(e);
-                alert("Erro de conexão com o servidor.");
+                Toast.error("Erro de conexão com o servidor.");
             }
 
             // Restaura o botão
@@ -3429,7 +3189,7 @@
         async function createPersona() {
             const nome = document.getElementById('newPersonaName').value;
             const desc = document.getElementById('newPersonaDesc').value;
-            if(!nome || !desc) return alert("Preencha tudo");
+            if(!nome || !desc) return Toast.warning("Preencha todos os campos");
             
             const btn = event.target; btn.innerText = "..."; btn.disabled = true;
             try {
@@ -3442,8 +3202,8 @@
                 document.getElementById('newPersonaDesc').value = "";
                 await loadManagePersonas();
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
-                alert("Perfil Salvo!");
-            } catch(e) { alert("Erro ao criar"); }
+                Toast.success("Perfil salvo com sucesso!");
+            } catch(e) { Toast.error("Erro ao criar perfil"); }
             btn.innerText = "SALVAR"; btn.disabled = false;
         }
 
@@ -3463,6 +3223,61 @@
 
 
 
+        // Função para criar estrutura HTML inicial dos resultados da auditoria
+        function createAuditResultsStructure() {
+            const resultsContainer = document.getElementById('auditResults');
+            if (!resultsContainer) return;
+            
+            resultsContainer.innerHTML = `
+                <!-- 1. Sumário Executivo -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mb-6">
+                    <h3 class="text-primary font-bold uppercase text-lg mb-6 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+                        <i data-lucide="file-text" class="w-6 h-6"></i> 1. Sumário Executivo
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-5xl font-black text-white mb-2" id="resScore">-</div>
+                            <p class="text-sm text-slate-400">Score Geral</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-cyber mb-2" id="resUrl">-</div>
+                            <p class="text-sm text-slate-400">URL Analisada</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="flex justify-center gap-2 mb-2">
+                                <img id="printMobile" class="w-16 h-16 rounded-lg border border-slate-700" alt="Mobile">
+                                <img id="printDesktop" class="w-20 h-16 rounded-lg border border-slate-700" alt="Desktop">
+                            </div>
+                            <p class="text-sm text-slate-400">Capturas de Tela</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-slate-900/30 rounded-xl border border-slate-800">
+                        <p class="text-white leading-relaxed" id="resSummary">Carregando resumo...</p>
+                    </div>
+                </div>
+
+                <!-- 2. Matriz de Vulnerabilidades -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mb-6">
+                    <h3 class="text-orange-500 font-bold uppercase text-lg mb-6 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i> 2. Matriz de Vulnerabilidades
+                    </h3>
+                    <div class="space-y-3" id="vulnerabilitiesGrid">
+                        <!-- Vulnerabilidades serão inseridas aqui -->
+                    </div>
+                </div>
+
+                <!-- 3. Análise Comportamental -->
+                <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mb-6">
+                    <h3 class="text-emerald-500 font-bold uppercase text-lg mb-6 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
+                        <i data-lucide="users" class="w-6 h-6"></i> 3. Análise Comportamental
+                    </h3>
+                    <div class="space-y-4" id="personasGrid">
+                        <!-- Personas serão inseridas aqui -->
+                    </div>
+                </div>
+            `;
+        }
+
         async function toggleManualSelect() {
             console.log("toggleManualSelect chamada");
             const mode = document.getElementById('auditMode').value;
@@ -3470,16 +3285,16 @@
 
             const manualArea = document.getElementById('manualSelectArea');
             const compareArea = document.getElementById('compareArea');
-            const singleUrlArea = document.getElementById('singleUrlArea');
-            const mainButton = document.querySelector('button[onclick="runAudit()"]');
+            const normalSearchBar = document.getElementById('normalSearchBar');
+            const compareSearchBar = document.getElementById('compareSearchBar');
             
-            console.log("Elementos encontrados:", { manualArea, compareArea, singleUrlArea, mainButton });
+            console.log("Elementos encontrados:", { manualArea, compareArea, normalSearchBar, compareSearchBar });
 
             // Reset all areas
             if (manualArea) manualArea.classList.add('hidden');
             if (compareArea) compareArea.classList.add('hidden');
-            if (singleUrlArea) singleUrlArea.classList.remove('hidden');
-            if (mainButton) mainButton.classList.remove('hidden');
+            if (normalSearchBar) normalSearchBar.classList.remove('hidden');
+            if (compareSearchBar) compareSearchBar.classList.add('hidden');
 
             if(mode === 'manual') {
                 console.log("Entrando no modo manual");
@@ -3535,9 +3350,11 @@
 
             } else if(mode === 'compare') {
                 console.log("Entrando no modo comparativo");
-                if (compareArea) compareArea.classList.remove('hidden');
-                if (singleUrlArea) singleUrlArea.classList.add('hidden');
-                if (mainButton) mainButton.classList.add('hidden');
+                // Esconde a barra normal e mostra a barra comparativa
+                if (normalSearchBar) normalSearchBar.classList.add('hidden');
+                if (compareSearchBar) compareSearchBar.classList.remove('hidden');
+                // Mantém a área de comparação escondida pois agora está integrada na barra
+                if (compareArea) compareArea.classList.add('hidden');
             }
         }
 
@@ -3558,7 +3375,7 @@
             let selected = [];
 
 
-            if(!url) return alert("Digite uma URL");
+            if(!url) return Toast.warning("Digite uma URL para analisar");
 
 
 
@@ -3570,7 +3387,7 @@
 
 
 
-                if(selected.length === 0) return alert("Selecione pelo menos um perfil");
+                if(selected.length === 0) return Toast.warning("Selecione pelo menos um perfil");
 
 
 
@@ -3583,6 +3400,7 @@
 
 
             document.getElementById('auditLoading').classList.remove('hidden');
+            document.getElementById('emptyStateCards').classList.add('hidden');
 
 
 
@@ -3627,6 +3445,9 @@
 
 
 
+                // Criar estrutura HTML inicial para todas as seções
+                createAuditResultsStructure();
+
                 USER.credits = data.novo_saldo;
 
 
@@ -3634,51 +3455,30 @@
                 localStorage.setItem('ssw_user', JSON.stringify(USER));
 
 
-
                 document.getElementById('uCredits').innerText = USER.credits;
-
-
 
                 document.getElementById('auditResults').classList.remove('hidden');
 
+                // Popula Dados com verificações de segurança
+                const resScoreEl = document.getElementById('resScore');
+                if (resScoreEl) resScoreEl.innerText = data.resultado.technical_audit.score;
 
+                const resUrlEl = document.getElementById('resUrl');
+                if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
 
-
-
-
-
-                // Popula Dados
-
-
-
-                document.getElementById('resScore').innerText = data.resultado.technical_audit.score;
-
-
-
-                document.getElementById('resUrl').innerText = url.replace(/https?:\/\//, '').split('/')[0];
-
-
-
-                document.getElementById('resSummary').innerText = data.resultado.technical_audit.executive_summary;
-
-
-
-
-
-
+                const resSummaryEl = document.getElementById('resSummary');
+                if (resSummaryEl) resSummaryEl.innerText = data.resultado.technical_audit.executive_summary;
 
                 if(data.images) {
+                    const printMobileEl = document.getElementById('printMobile');
+                    if (printMobileEl && data.images.mobile) {
+                        printMobileEl.src = "data:image/jpeg;base64," + data.images.mobile;
+                    }
 
-
-
-                    document.getElementById('printMobile').src = "data:image/jpeg;base64," + data.images.mobile;
-
-
-
-                    document.getElementById('printDesktop').src = "data:image/jpeg;base64," + data.images.desktop;
-
-
-
+                    const printDesktopEl = document.getElementById('printDesktop');
+                    if (printDesktopEl && data.images.desktop) {
+                        printDesktopEl.src = "data:image/jpeg;base64," + data.images.desktop;
+                    }
                 }
 
 
@@ -3699,140 +3499,87 @@
 
 
 
+    // ===============================================
 
 
 
 
-                // Vulnerabilidades
-                const vDiv = document.getElementById('vulnerabilitiesGrid'); vDiv.innerHTML="";
 
-                // Dados reais da API - usa vulnerabilidades do backend
-                const vulnerabilities = data.resultado.technical_audit.vulnerabilities || [];
-                console.log("Vulnerabilidades da API:", vulnerabilities);
 
-                // Filtra ou mostra todos (aqui mostramos todos para ficar "cheio")
-                vulnerabilities.forEach((v, index) => {
-                    console.log(`Vulnerabilidade ${index}:`, v);
-                    
-                    // Lógica de cores dinâmica baseada na severidade
-                    let corClasse = "text-blue-400"; // padrão azul
-                    
-                    if (v.severity) {
-                        const severity = v.severity.toUpperCase();
-                        if (severity.includes("CRÍTICO") || severity.includes("CRITICAL")) {
-                            corClasse = "text-red-500";
-                        } else if (severity.includes("ALTO") || severity.includes("HIGH")) {
-                            corClasse = "text-orange-500";
-                        } else if (severity.includes("MÉDIO") || severity.includes("MEDIUM")) {
-                            corClasse = "text-yellow-500";
-                        }
-                    }
-                    
-                    console.log(`Severity: "${v.severity}" - Cor: ${corClasse}`);
 
-                    vDiv.innerHTML += `
-                        <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
-                            <div class="min-w-[80px]">
-                                <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
-                                <p class="font-black ${corClasse} text-lg">${v.severity || 'N/A'}</p>
-                            </div>
-                            <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
-                                <p class="text-white text-sm font-bold mb-1">${v.title || 'Sem título'}</p>
-                                <p class="text-xs text-slate-400 leading-relaxed">${v.description || 'Sem descrição'}</p>
-                            </div>
-                        </div>
-                    `;
-                });
+    // Vulnerabilidades
+    const vDiv = document.getElementById('vulnerabilitiesGrid');
+    if (vDiv) {
+        vDiv.innerHTML="";
+        // Dados reais da API - usa vulnerabilidades do backend
+        const vulnerabilities = data.resultado.technical_audit.vulnerabilities || [];
+        console.log("Vulnerabilidades da API:", vulnerabilities);
 
+        // Filtra ou mostra todos (aqui mostramos todos para ficar "cheio")
+        vulnerabilities.forEach((v, index) => {
+            console.log(`Vulnerabilidade ${index}:`, v);
+            
+            // Lógica de cores dinâmica baseada na severidade
+            let corClasse = "text-blue-400"; // padrão azul
+            
+            if (v.severity) {
+                const severity = v.severity.toUpperCase();
+                if (severity.includes("CRÍTICO") || severity.includes("CRITICAL")) {
+                    corClasse = "text-red-500";
+                } else if (severity.includes("ALTO") || severity.includes("HIGH")) {
+                    corClasse = "text-orange-500";
+                } else if (severity.includes("MÉDIO") || severity.includes("MEDIUM")) {
+                    corClasse = "text-yellow-500";
+                } else {
+                    corClasse = "text-blue-400";
+                }
+            }
+            
+            console.log(`Severity: "${v.severity}" - Cor: ${corClasse}`);
+
+            vDiv.innerHTML += `
+                <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
+                    <div class="min-w-[80px]">
+                        <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
+                        <p class="font-black ${corClasse} text-lg">${v.severity || 'N/A'}</p>
+                    </div>
+                    <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
+                        <p class="text-white text-sm font-bold mb-1">${v.title || 'Sem título'}</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">${v.description || 'Sem descrição'}</p>
+                    </div>
+                </div>
+            `;
+        });
+    }
 
 
                 // Renderiza Personas ANTES do Plano de Ação
-
-
-
                 const pGrid = document.getElementById('personasGrid');
+                if (pGrid) {
+                    pGrid.innerHTML = "";
 
-
-
-                pGrid.innerHTML = "";
-
-
-
-                data.resultado.personas_results.forEach(p => {
-
-
-
-                    pGrid.innerHTML += `
-
-
-
-                        <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
-
-
-
-                            <div class="md:w-1/4">
-
-
-
-                                <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
-
-
-
-                                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${p.profile_name}</h4>
-
-
-
-                                    <div class="text-3xl font-black text-cyber">${p.score}<span class="text-sm text-slate-500">/10</span></div>
-
-
-
+                    data.resultado.personas_results.forEach(p => {
+                        pGrid.innerHTML += `
+                            <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
+                                <div class="md:w-1/4">
+                                    <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
+                                        <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${p.profile_name}</h4>
+                                        <div class="text-3xl font-black text-cyber">${p.score}<span class="text-sm text-slate-500">/10</span></div>
+                                    </div>
                                 </div>
-
-
-
-                            </div>
-
-
-
-                            <div class="flex-1">
-
-
-
-                                <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Citação Direta</p>
-
-
-
-                                <p class="text-sm text-white italic border-l-4 border-primary pl-4 mb-4">"${p.direct_quote}"</p>
-
-
-
-                                <div class="space-y-2 pt-2 border-t border-slate-800/50">
-
-                                    <div class="flex items-center gap-2 text-xs text-slate-400"><i data-lucide="activity" class="w-3 h-3 text-primary"></i> Análise de Jornada Concluída</div>
-
+                                <div class="flex-1">
+                                    <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Citação Direta</p>
+                                    <p class="text-sm text-white italic border-l-4 border-primary pl-4 mb-4">"${p.direct_quote}"</p>
+                                    <div class="space-y-2 pt-2 border-t border-slate-800/50">
+                                        <div class="flex items-center gap-2 text-xs text-slate-400"><i data-lucide="activity" class="w-3 h-3 text-primary"></i> Análise de Jornada Concluída</div>
+                                    </div>
                                 </div>
-
-
-
-                            </div>
-
-
-
-                        </div>`;
-
-
-
-                });
-
-
+                            </div>`;
+                    });
+                }
 
                 // Recria ícones Lucide para os novos botões de chat
-
                 lucide.createIcons();
-
-
-
-
 
 
 
@@ -4004,6 +3751,7 @@
 
 
                 document.getElementById('auditLoading').classList.add('hidden');
+                document.getElementById('emptyStateCards').classList.remove('hidden');
 
 
 
@@ -4038,25 +3786,42 @@
         // === FUNÇÃO DE COMPARAÇÃO ===
         async function runCompare() {
             console.log("Iniciando processo de comparação...");
+            
+            // Oculta os cards IMEDIATAMENTE ao iniciar comparação
+            const emptyStateCards = document.getElementById('emptyStateCards');
+            if(emptyStateCards) emptyStateCards.classList.add('hidden');
 
             // 1. Verificações de Segurança
             if (!USER || !USER.id) {
                 alert("Sessão inválida. Faça login novamente.");
+                document.getElementById('emptyStateCards').classList.remove('hidden');
                 return;
             }
-            if (USER.credits <= 0) return comprarCreditos();
+            if (USER.credits <= 0) {
+                document.getElementById('emptyStateCards').classList.remove('hidden');
+                return comprarCreditos();
+            }
             
             // 2. Coleta de Inputs
             const elA = document.getElementById('compareUrlA_main') || document.getElementById('compareUrlA');
             const elB = document.getElementById('compareUrlB_main') || document.getElementById('compareUrlB');
 
-            if (!elA || !elB) return alert("Erro interno: Inputs não encontrados.");
+            if (!elA || !elB) {
+                document.getElementById('emptyStateCards').classList.remove('hidden');
+                return alert("Erro interno: Inputs não encontrados.");
+            }
 
             const urlA = elA.value.trim();
             const urlB = elB.value.trim();
             
-            if (!urlA || !urlB) return alert("Preencha ambas as URLs.");
-            if (urlA === urlB) return alert("As URLs devem ser diferentes.");
+            if (!urlA || !urlB) {
+                document.getElementById('emptyStateCards').classList.remove('hidden');
+                return alert("Preencha ambas as URLs.");
+            }
+            if (urlA === urlB) {
+                document.getElementById('emptyStateCards').classList.remove('hidden');
+                return alert("As URLs devem ser diferentes.");
+            }
 
             // 3. UI Loading
             const loading = document.getElementById('auditLoading');
@@ -4124,6 +3889,7 @@
                 console.error("Dados inválidos recebidos:", data);
                 alert("Erro ao renderizar resultados. Tente novamente.");
                 document.getElementById('auditLoading').classList.add('hidden');
+                document.getElementById('emptyStateCards').classList.remove('hidden');
                 return;
             }
 
@@ -4208,6 +3974,10 @@
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
         function generateFallbackAudit(url, mode, selected) {
             document.getElementById('auditLoading').classList.add('hidden');
+            
+            // Criar estrutura HTML inicial para todas as seções
+            createAuditResultsStructure();
+            
             document.getElementById('auditResults').classList.remove('hidden');
             
             // Gera score aleatório entre 60-89
@@ -4216,536 +3986,101 @@
             // Atualiza créditos (simula consumo)
             USER.credits = Math.max(0, USER.credits - 1);
             localStorage.setItem('ssw_user', JSON.stringify(USER));
-            document.getElementById('uCredits').innerText = USER.credits;
-
-            // Popula Dados Fallback
-            document.getElementById('resScore').innerText = score;
-            document.getElementById('resUrl').innerText = url.replace(/https?:\/\//, '').split('/')[0];
-            document.getElementById('resSummary').innerText = "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.";
-
-            // Imagens placeholder
-            document.getElementById('printMobile').src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
-            document.getElementById('printDesktop').src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
-
-            // Vulnerabilidades baseadas no score
-            const vDiv = document.getElementById('vulnerabilitiesGrid'); vDiv.innerHTML="";
-
-            const listaVulnerabilidades = [
-
-
-                {
-
-
-
-                    nivel: score < 70 ? "CRÍTICO" : score < 80 ? "ALTO" : "MÉDIO",
-
-
-
-                    cor: score < 70 ? "text-red-500" : score < 80 ? "text-orange-500" : "text-yellow-500",
-
-
-
-                    titulo: score < 70 ? "Performance Geral Baixa" : score < 80 ? "Otimizações de Performance Necessárias" : "Pequenas Otimizações Sugeridas",
-
-
-
-                    desc: "A análise detectou oportunidades de melhoria na performance geral do site."
-
-
-
-                },
-
-
-
-                {
-
-
-
-                    nivel: "MÉDIO", cor: "text-yellow-500",
-
-
-
-                    titulo: "SEO Técnico",
-
-
-
-                    desc: "Existem melhorias a serem implementadas nos aspectos técnicos de SEO."
-
-
-
-                },
-
-
-
-                {
-
-
-
-                    nivel: "BAIXO", cor: "text-blue-400",
-
-
-
-                    titulo: "Acessibilidade",
-
-
-
-                    desc: "Algumas práticas de acessibilidade poderiam ser melhoradas."
-
-
-
-                }
-
-
-
-            ];
-
-
-
-
-
-
-
-            listaVulnerabilidades.forEach(v => {
-
-
-
-                vDiv.innerHTML += `
-
-
-
-                    <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
-
-
-
-                        <div class="min-w-[80px]">
-
-
-
-                            <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
-
-
-
-                            <p class="font-black ${v.cor} text-lg">${v.nivel}</p>
-
-
-
-                        </div>
-
-
-
-                        <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
-
-
-
-                            <p class="text-white text-sm font-bold mb-1">${v.titulo}</p>
-
-
-
-                            <p class="text-xs text-slate-400 leading-relaxed">${v.desc}</p>
-
-
-
-                        </div>
-
-
-
-                    </div>
-
-
-
-                `;
-
-
-
-            });
-
-
-
-
-
-
-
-            // Personas simuladas
-
-
-
-            const pGrid = document.getElementById('personasGrid');
-
-
-
-            pGrid.innerHTML = "";
-
-
-
+            const uCreditsEl = document.getElementById('uCredits');
+            if (uCreditsEl) uCreditsEl.innerText = USER.credits;
+
+            // Popula Dados Fallback com verificações de segurança
+            const resScoreEl = document.getElementById('resScore');
+            if (resScoreEl) resScoreEl.innerText = score;
             
-
-
-
-            const personasToUse = selected.length > 0 ? selected : SYSTEM_PERSONAS.slice(0, 3);
-
-
-
+            const resUrlEl = document.getElementById('resUrl');
+            if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
             
-
-
-
-            personasToUse.forEach((personaName, index) => {
-
-
-
-                const personaScore = Math.floor(Math.random() * 4) + 5; // 5-8
-
-
-
-                const quotes = [
-
-
-
-                    "Site funcional mas poderia ser mais intuitivo.",
-
-
-
-                    "Navegação ok, mas alguns elementos poderiam ser mais claros.",
-
-
-
-                    "Funciona bem no meu dispositivo.",
-
-
-
-                    "Consigo usar sem grandes dificuldades."
-
-
-
-                ];
-
-
-
-                
-
-
-
-                pGrid.innerHTML += `
-
-
-
-                    <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
-
-
-
-                        <div class="md:w-1/4">
-
-
-
-                            <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
-
-
-
-                                <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${personaName}</h4>
-
-
-
-                                <div class="text-3xl font-black text-cyber">${personaScore}<span class="text-sm text-slate-500">/10</span></div>
-
-
-
-                            </div>
-
-
-
-                        </div>
-
-
-
-                        <div class="flex-1">
-
-
-
-                            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Citação Direta</p>
-
-
-
-                            <p class="text-sm text-white italic border-l-4 border-primary pl-4 mb-4">"${quotes[index % quotes.length]}"</p>
-
-
-
-                            <div class="space-y-2 pt-2 border-t border-slate-800/50">
-
-
-
-                                <div class="flex items-center gap-2 text-xs text-slate-400"><i data-lucide="activity" class="w-3 h-3 text-primary"></i> Análise Básica Concluída</div>
-
-
-
-                            </div>
-
-
-
-                        </div>
-
-
-
-                    </div>
-
-
-
-                `;
-
-
-
-            });
-
-
-
-            // Recria ícones Lucide para os novos botões de chat
-
-            lucide.createIcons();
-
-
-
-            const resultsContainer = document.getElementById('auditResults');
-
-
-
-            if (!document.getElementById('actionPlanSection')) {
-
-
-
-                const novaDiv = document.createElement('div');
-
-
-
-                novaDiv.id = "actionPlanSection";
-
-
-
-                novaDiv.className = "glass-panel p-10 rounded-2xl border border-slate-800 page-break";
-
-
-
-                novaDiv.innerHTML = `
-
-
-
-                    <h3 class="text-primary font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-
-
-
-                        <i data-lucide="wrench" class="w-6 h-6"></i> 4. Plano de Ação Técnico
-
-
-
-                    </h3>
-
-
-
-                    <div class="space-y-0 relative border-l-2 border-slate-800 ml-3" id="actionPlanSteps">
-
-
-
-                    </div>
-
-
-
-                `;
-
-
-
-                resultsContainer.appendChild(novaDiv);
-
-
-
+            const resSummaryEl = document.getElementById('resSummary');
+            if (resSummaryEl) resSummaryEl.innerText = "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.";
+
+            // Imagens placeholder com verificações
+            const printMobileEl = document.getElementById('printMobile');
+            if (printMobileEl) {
+                printMobileEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
+            }
+            
+            const printDesktopEl = document.getElementById('printDesktop');
+            if (printDesktopEl) {
+                printDesktopEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
             }
 
-
-
-
-
-
-
-            const passos = [
-
-
-
-                { titulo: "Otimização de Performance", desc: "Comprimir imagens e minificar CSS/JS para melhorar velocidade." },
-
-
-
-                { titulo: "SEO Básico", desc: "Revisar meta tags e estrutura semântica do HTML." },
-
-
-
-                { titulo: "Acessibilidade", desc: "Melhorar contraste e adicionar textos alternativos." },
-
-
-
-                { titulo: "Experiência do Usuário", desc: "Simplificar navegação e melhorar calls-to-action." }
-
-
-
-            ];
-
-
-
-
-
-
-
-            const containerPassos = document.getElementById('actionPlanSteps');
-
-
-
-            containerPassos.innerHTML = "";
-
-
-
-
-
-
-
-            passos.forEach((p, i) => {
-
-
-
-                containerPassos.innerHTML += `
-
-
-
-                    <div class="mb-8 ml-6 relative group scale-in" style="animation-delay: ${i * 0.1}s">
-
-
-
-                        <span class="absolute -left-[31px] top-0 flex items-center justify-center w-6 h-6 bg-slate-900 rounded-full ring-4 ring-slate-900 border-2 border-slate-700 group-hover:border-primary transition font-bold text-[10px] text-slate-400 group-hover:text-primary">
-
-
-
-                            ${i + 1}
-
-
-
-                        </span>
-
-
-
-                        <h4 class="text-white font-bold text-sm mb-1 group-hover:text-primary transition">${p.titulo}</h4>
-
-
-
-                        <p class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded border border-slate-800/50">
-
-
-
-                            ${p.desc}
-
-
-
-                        </p>
-
-
-
-                    </div>
-
-
-
-                `;
-
-
-
-            });
-
-
-
-            
-
-
-
-            lucide.createIcons();
-
-
-
-            
-
-
-
-            // Notificação sobre modo fallback
-
-
-
-            setTimeout(() => {
-
-
-
-                const notification = document.createElement('div');
-
-
-
-                notification.className = 'fixed top-4 right-4 bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 p-4 rounded-xl max-w-sm z-50 fade-in';
-
-
-
-                notification.innerHTML = `
-
-
-
-                    <div class="flex items-start gap-3">
-
-
-
-                        <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
-
-
-
-                        <div>
-
-
-
-                            <p class="font-bold text-sm">Análise em Modo Básico</p>
-
-
-
-                            <p class="text-xs mt-1 opacity-90">Sistema de IA temporariamente indisponível. Resultados baseados em análise heurística.</p>
-
-
-
+            // Vulnerabilidades baseadas no score
+            const vDiv = document.getElementById('vulnerabilitiesGrid');
+            if (vDiv) {
+                vDiv.innerHTML="";
+
+                const listaVulnerabilidades = [
+                    {
+                        nivel: score < 70 ? "CRÍTICO" : score < 80 ? "ALTO" : "MÉDIO",
+                        cor: score < 70 ? "text-red-500" : score < 80 ? "text-orange-500" : "text-yellow-500",
+                        titulo: score < 70 ? "Performance Geral Baixa" : score < 80 ? "Otimizações de Performance Necessárias" : "Pequenas Otimizações Sugeridas",
+                        desc: "A análise detectou oportunidades de melhoria na performance geral do site."
+                    },
+                    {
+                        nivel: "MÉDIO", cor: "text-yellow-500",
+                        titulo: "SEO Técnico",
+                        desc: "Existem melhorias a serem implementadas nos aspectos técnicos de SEO."
+                    },
+                    {
+                        nivel: "BAIXO", cor: "text-blue-400",
+                        titulo: "Acessibilidade",
+                        desc: "Algumas práticas de acessibilidade poderiam ser melhoradas."
+                    }
+                ];
+
+                listaVulnerabilidades.forEach(v => {
+                    vDiv.innerHTML += `
+                        <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
+                            <div class="min-w-[80px]">
+                                <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
+                                <p class="font-black ${v.cor} text-lg">${v.nivel}</p>
+                            </div>
+                            <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
+                                <p class="text-white text-sm font-bold mb-1">${v.titulo}</p>
+                                <p class="text-xs text-slate-400 leading-relaxed">${v.desc}</p>
+                            </div>
                         </div>
+                    `;
+                });
+            }
 
+            // Personas simuladas
+            const pGrid = document.getElementById('personasGrid');
+            if (pGrid) {
+                pGrid.innerHTML = "";
 
+                const personasToUse = selected.length > 0 ? selected : SYSTEM_PERSONAS.slice(0, 3);
 
-                    </div>
+                personasToUse.forEach((personaName, index) => {
+                    const personaScore = Math.floor(Math.random() * 4) + 5; // 5-8
+                    const quotes = [
+                        "Site funcional mas poderia ser mais intuitivo.",
+                        "Navegação ok, mas alguns elementos poderiam ser mais claros.",
+                        "Funciona bem no meu dispositivo.",
+                        "Consigo usar sem grandes dificuldades."
+                    ];
 
-
-
-                `;
-
-
-
-                document.body.appendChild(notification);
-
-
-
-                lucide.createIcons();
-
-
-
-                setTimeout(() => {
-
-
-
-                    notification.remove();
-
-
-
-                }, 5000);
-
-
-
-            }, 1000);
-
-
-
+                    pGrid.innerHTML += `
+                        <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
+                            <div class="md:w-1/4">
+                                <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
+                                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${personaName}</h4>
+                                    <div class="text-3xl font-black text-cyber">${personaScore}<span class="text-sm text-slate-500">/10</span></div>
+                                    <p class="font-bold text-sm">Análise em Modo Básico</p>
+                                    <p class="text-xs mt-1 opacity-90">Sistema de IA temporariamente indisponível. Resultados baseados em análise heurística.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
         }
-
-
 
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
 
@@ -5380,6 +4715,56 @@
         // === FUNÇÃO DE TUTORIAL CARDS ===
         function showTutorialCard(type) {
             const tutorials = {
+                'primeira': {
+                    title: 'Primeira Análise',
+                    icon: 'play-circle',
+                    content: `
+                        <div class="space-y-4">
+                            <p class="text-slate-300">Siga estes passos para fazer sua primeira auditoria completa:</p>
+                            <ol class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">1.</span>
+                                    <div>
+                                        <strong class="text-white">Faça login ou cadastro</strong> no sistema (clique no botão de menu lateral)
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">2.</span>
+                                    <div>
+                                        <strong class="text-white">Digite a URL do site</strong> que deseja analisar no campo de busca
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">3.</span>
+                                    <div>
+                                        <strong class="text-white">Escolha o modo de análise:</strong> Automático (recomendado), Manual ou Comparativo
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">4.</span>
+                                    <div>
+                                        <strong class="text-white">Selecione as personas (no modo manual)</strong> - escolha até 3 perfis de usuários
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">5.</span>
+                                    <div>
+                                        <strong class="text-white">Clique em "ANALISAR"</strong> e aguarde 30 segundos
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-primary font-bold">6.</span>
+                                    <div>
+                                        <strong class="text-white">Veja o relatório completo</strong> com scores de UX, performance e segurança
+                                    </div>
+                                </li>
+                            </ol>
+                            <div class="bg-primary/10 p-3 rounded-lg border border-primary/20">
+                                <p class="text-primary text-sm font-medium"> Dica: Comece com o modo Automático para obter uma visão geral completa do seu site!</p>
+                            </div>
+                        </div>
+                    `
+                },
                 'auditar': {
                     title: '1: Como Auditar um Site',
                     icon: 'file-search',
@@ -5669,73 +5054,98 @@
                         <h3 class="text-2xl font-bold text-white">Sobre Nós</h3>
                     </div>
                     
-                    <div class="text-slate-300 leading-relaxed space-y-6">
-                        <div>
-                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
+                    <!-- Mission Section -->
+                    <div class="bg-slate-900/30 rounded-xl p-6 border border-slate-800/50 mb-6">
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="p-2 rounded-lg bg-primary/10 flex-shrink-0">
                                 <i data-lucide="zap" class="w-5 h-5 text-primary"></i>
-                                Nossa Missão
-                            </h4>
-                            <p class="leading-relaxed">
-                                A <span class="text-primary font-bold">S.S.W INTELLIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo desenvolvida para fornecer análises detalhadas de performance e experiência do usuário. Nossa ferramenta utiliza personas personalizadas para simular diferentes perfis de usuários e fornecer insights acionáveis para melhorar seus sites.
-                            </p>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg mb-2">Nossa Missão</h4>
+                                <p class="text-slate-300 leading-relaxed text-sm">
+                                    A <span class="text-primary font-bold">S.S.W INTELLIGENCE</span> é uma plataforma de auditoria web e benchmarking competitivo desenvolvida para fornecer análises detalhadas de performance e experiência do usuário. Nossa ferramenta utiliza personas personalizadas para simular diferentes perfis de usuários e fornecer insights acionáveis para melhorar seus sites.
+                                </p>
+                            </div>
                         </div>
+                    </div>
 
-                        <div>
-                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
-                                <i data-lucide="target" class="w-5 h-5 text-accent"></i>
-                                Do Código à Conversão
-                            </h4>
-                            <p class="leading-relaxed">
+                    <!-- Values Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <!-- Card 1 -->
+                        <div class="group bg-slate-900/20 hover:bg-slate-900/40 rounded-xl p-5 border border-slate-800/50 hover:border-primary/30 transition-all">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                                    <i data-lucide="target" class="w-4 h-4 text-primary"></i>
+                                </div>
+                                <h4 class="text-white font-bold">Do Código à Conversão</h4>
+                            </div>
+                            <p class="text-slate-400 text-xs leading-relaxed">
                                 Transformamos dados brutos em decisões estratégicas acionáveis. Nossa plataforma analisa múltiplos aspectos de um site, desde performance técnica até experiência do usuário, ajudando você a identificar pontos de melhoria e otimizar suas taxas de conversão.
                             </p>
                         </div>
 
-                        <div>
-                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
-                                <i data-lucide="shield" class="w-5 h-5 text-cyber"></i>
-                                Tecnologia & Inovação
-                            </h4>
-                            <p class="leading-relaxed">
-                                Nossa plataforma utiliza análise comportamental através de 15 personas pré-configuradas, permitindo simular diferentes tipos de usuários e suas expectativas. Cada auditoria fornece scores detalhados e recomendações personalizadas para melhorar a experiência digital.
+                        <!-- Card 2 -->
+                        <div class="group bg-slate-900/20 hover:bg-slate-900/40 rounded-xl p-5 border border-slate-800/50 hover:border-accent/30 transition-all">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="p-2 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                                    <i data-lucide="shield" class="w-4 h-4 text-accent"></i>
+                                </div>
+                                <h4 class="text-white font-bold">Tecnologia & Inovação</h4>
+                            </div>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                Nossa plataforma utiliza análise comportamental através de 15 personas pré-configuradas, permitindo simular diferentes tipos de usuários e suas expectativas. Cada auditoria fornece scores detalhados e recomendações personalizadas.
                             </p>
                         </div>
+                    </div>
 
-                        <div>
-                            <h4 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
-                                <i data-lucide="users" class="w-5 h-5 text-primary"></i>
-                                Nossos Valores
-                            </h4>
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
-                                    <h5 class="text-primary font-semibold mb-2">Excelência Técnica</h5>
-                                    <p class="text-slate-300 text-sm">Buscamos a perfeição em cada análise e recomendação.</p>
+                    <!-- Values Section -->
+                    <div class="bg-slate-900/20 rounded-xl p-6 border border-slate-800/50 mb-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 rounded-lg bg-cyan/10">
+                                <i data-lucide="users" class="w-5 h-5 text-cyan-400"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-lg">Nossos Valores</h4>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div class="flex items-start gap-3">
+                                <span class="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></span>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Excelência Técnica</p>
+                                    <p class="text-slate-400 text-xs">Buscamos a perfeição em cada análise e recomendação.</p>
                                 </div>
-                                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
-                                    <h5 class="text-accent font-semibold mb-2">Foco no Usuário</h5>
-                                    <p class="text-slate-300 text-sm">Priorizamos a experiência do usuário em todas as análises.</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="w-2 h-2 bg-accent rounded-full flex-shrink-0 mt-2"></span>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Foco no Usuário</p>
+                                    <p class="text-slate-400 text-xs">Priorizamos a experiência do usuário em todas as análises.</p>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
-                            <div class="flex items-center gap-6">
-                                <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                                    SSW
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-white font-bold text-xl mb-2">Guilherme Cruz da Silva</p>
-                                    <p class="text-slate-400 mb-1">Desenvolvedor & Criador da S.S.W INTELLIGENCE</p>
-                                    <p class="text-primary text-sm mb-2"> Missão: Criar ferramentas de análise web acessíveis e eficazes</p>
-                                    <p class="text-slate-400 text-sm"> Desenvolvedor web especializado em performance e UX</p>
-                                    <p class="text-slate-400 text-sm"> Focado em criar soluções práticas para otimização de sites</p>
+                    <!-- Creator Profile -->
+                    <div class="bg-gradient-to-r from-slate-900/40 to-primary/5 rounded-xl p-6 border border-slate-800/50 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+                        <div class="relative z-10 flex items-center gap-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary via-accent to-cyber rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg flex-shrink-0">
+                                SSW
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-white font-bold text-lg mb-1">Guilherme Cruz da Silva</p>
+                                <p class="text-primary text-xs font-semibold mb-2">Desenvolvedor & Criador</p>
+                                <div class="space-y-1 text-xs text-slate-400">
+                                    <p>✦ Auditorias web acessíveis e eficazes</p>
+                                    <p>✦ Especialista em performance e UX</p>
+                                    <p>✦ Soluções práticas para otimização</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-6 pt-6 border-t border-slate-700">
-                        <p class="text-center text-slate-500 text-sm">
-                            2026 S.S.W | INTELLIGENCE. Todos os direitos reservados.
+                    <div class="mt-6 pt-6 border-t border-slate-700/50">
+                        <p class="text-center text-slate-500 text-xs">
+                            © 2026 S.S.W | INTELLIGENCE. Todos os direitos reservados.
                         </p>
                     </div>
                 </div>
@@ -5887,13 +5297,13 @@
                     // Redireciona para o Mercado Pago
                     window.location.href = data.checkout_url;
                 } else {
-                    alert(data.detail || "Erro ao criar pagamento.");
+                    Toast.error(data.detail || "Erro ao criar pagamento.");
                     btn.innerHTML = textoOriginal;
                     btn.disabled = false;
                 }
             } catch(e) {
                 console.error(e);
-                alert("Erro de conexão.");
+                Toast.error("Erro de conexão.");
                 btn.innerHTML = textoOriginal;
                 btn.disabled = false;
             }
@@ -6021,6 +5431,13 @@ function iniciarContagemReenvio() {
 async function reenviarCodigo() {
     const link = document.getElementById('linkReenviar');
     
+    // Verifica se USER existe e tem email
+    if (!USER || !USER.email) {
+        Toast.error("Usuário não encontrado. Faça login novamente.");
+        logout();
+        return;
+    }
+    
     // Efeito visual de "Enviando..."
     link.innerHTML = "Enviando...";
     link.classList.add('pointer-events-none', 'opacity-50');
@@ -6033,18 +5450,18 @@ async function reenviarCodigo() {
         });
 
         if (res.ok) {
-            alert("Novo código enviado! Verifique seu e-mail.");
+            Toast.success("Novo código enviado! Verifique seu e-mail.");
             // Reinicia a contagem de 30s
             link.innerHTML = 'Reenviar código em <span id="timerReenvio">30</span>s';
             iniciarContagemReenvio();
         } else {
-            alert("Erro ao reenviar. Tente novamente.");
+            Toast.error("Erro ao reenviar. Tente novamente.");
             link.innerHTML = "Tentar novamente";
             link.classList.remove('pointer-events-none', 'opacity-50');
         }
     } catch (e) {
         console.error(e);
-        alert("Erro de conexão.");
+        Toast.error("Erro de conexão.");
     }
 }
 </script>
