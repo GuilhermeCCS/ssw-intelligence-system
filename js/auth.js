@@ -17,7 +17,18 @@ async function fazerLogin() {
         } else {
             msg.innerText = data.detail || "Erro ao entrar.";
         }
-    } catch (e) { msg.innerText = "Sem conexão com o servidor."; }
+    } catch (e) { 
+        console.error('Erro de login:', e);
+        
+        // Verifica se é erro de rede/conexão
+        if (e.name === 'TypeError' && e.message.includes('fetch')) {
+            msg.innerText = "Sem conexão com o servidor.";
+        } else if (e.name === 'SyntaxError') {
+            msg.innerText = "Erro na resposta do servidor.";
+        } else {
+            msg.innerText = "Ocorreu um erro inesperado.";
+        }
+    }
 }
 
 async function fazerCadastro() {
@@ -31,5 +42,16 @@ async function fazerCadastro() {
         });
         const data = await res.json();
         alert(data.msg || data.detail);
-    } catch (e) { alert("Erro de conexão"); }
+    } catch (e) { 
+        console.error('Erro de cadastro:', e);
+        
+        // Verifica se é erro de rede/conexão
+        if (e.name === 'TypeError' && e.message.includes('fetch')) {
+            alert("Sem conexão com o servidor.");
+        } else if (e.name === 'SyntaxError') {
+            alert("Erro na resposta do servidor.");
+        } else {
+            alert("Ocorreu um erro inesperado.");
+        }
+    }
 }
