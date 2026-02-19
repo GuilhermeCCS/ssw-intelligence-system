@@ -1228,100 +1228,6 @@
             aspect-ratio: 1/1 !important;
             object-fit: cover !important;
         }
-
-        /* Barras de Status Estilo Videogame RPG */
-        .persona-status-bars {
-            margin-top: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .status-bar-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-label {
-            font-size: 9px;
-            font-weight: 600;
-            color: #94a3b8;
-            min-width: 85px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-bar-wrapper {
-            flex: 1;
-            height: 16px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .status-bar-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Efeito de brilho animado nas barras */
-        .status-bar-fill::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        /* Cores diferentes para cada tipo de status */
-        .status-bar-fill.paciencia {
-            background: linear-gradient(90deg, #ef4444 0%, #f87171 50%, #fca5a5 100%);
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
-        }
-
-        .status-bar-fill.tecnologico {
-            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
-        }
-
-        .status-bar-fill.preco {
-            background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Efeito hover */
-        .persona-checkbox:checked + .persona-content .status-bar-fill {
-            animation: pulse-glow 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            from { filter: brightness(1); }
-            to { filter: brightness(1.2); }
-        }
-
-        /* Texto do valor da barra */
-        .status-value {
-            font-size: 8px;
-            font-weight: 700;
-            color: #e2e8f0;
-            margin-left: 6px;
-            min-width: 12px;
-            text-align: right;
-        }
     </style>
 
     <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -1463,26 +1369,49 @@
 
 
         const SYSTEM_PERSONAS = [
-            { name: "O Comprador Impulsivo", desc: "Decide em segundos. Não lê descrições longas. Kryptonita: Formulários longos, botão de comprar escondido, falta de checkout rápido.", levels: { paciencia: 2, tecnologico: 4, preco: 8 } },
-            { name: "O Investigador Analítico", desc: "Lê tabela nutricional, política de troca e FAQ antes de comprar. Kryptonita: Falta de informações técnicas, fotos de baixa qualidade.", levels: { paciencia: 9, tecnologico: 7, preco: 3 } },
-            { name: "O Desconfiado", desc: "Tem medo de clonarem o cartão. Procura cadeado SSL, CNPJ no rodapé e selos de segurança. Kryptonita: Design amador, erros de português.", levels: { paciencia: 5, tecnologico: 3, preco: 6 } },
-            { name: "O Caçador de Promoções", desc: "Só converte se sentir que está levando vantagem. Kryptonita: Frete abusivo, dificuldade de encontrar ofertas ou aplicar cupom.", levels: { paciencia: 6, tecnologico: 5, preco: 10 } },
-            { name: "O Idoso Analógico", desc: "Digita com um dedo, dificuldade de visão e medo de errar a senha. Kryptonita: Fontes minúsculas, baixo contraste, menus complexos.", levels: { paciencia: 7, tecnologico: 1, preco: 7 } },
-            { name: "O Gen Z Apressado", desc: "Navega exclusivamente pelo celular. Acostumado com ritmo do TikTok. Kryptonita: Blocos de texto gigantes, carregamento lento.", levels: { paciencia: 1, tecnologico: 8, preco: 5 } },
-            { name: "O Millennial Exigente", desc: "Valoriza estética (UI) e responsabilidade social da empresa. Kryptonita: Sites feios, layout poluído, sem seção 'Sobre Nós'.", levels: { paciencia: 4, tecnologico: 7, preco: 4 } },
-            { name: "O Estrangeiro/Imigrante", desc: "Não domina a língua nativa do site perfeitamente. Kryptonita: Falta de ícones universais, gírias locais excessivas.", levels: { paciencia: 5, tecnologico: 4, preco: 6 } },
-            { name: "O Daltônico / Baixa Visão", desc: "Depende de alto contraste para diferenciar elementos. Kryptonita: Avisos de erro baseados apenas em cor, contraste ruim.", levels: { paciencia: 6, tecnologico: 3, preco: 5 } },
-            { name: "O Motoramente Limitado", desc: "Usa tecla TAB para navegar ou tem tremores nas mãos. Kryptonita: Elementos clicáveis muito pequenos e colados.", levels: { paciencia: 8, tecnologico: 2, preco: 4 } },
-            { name: "O Neurodivergente (TDAH/Autismo)", desc: "Facilmente sobrecarregado por estímulos visuais e sonoros. Kryptonita: Vídeos com autoplay, pop-ups pulando na tela.", levels: { paciencia: 2, tecnologico: 6, preco: 5 } },
-            { name: "O Viajante 3G", desc: "Está no ônibus ou metrô, com sinal oscilando. Kryptonita: Imagens de 5MB, site em branco até carregar tudo.", levels: { paciencia: 3, tecnologico: 5, preco: 8 } },
-            { name: "O Multitarefas", desc: "Tem 40 abas abertas no navegador ao mesmo tempo. Kryptonita: Title Tag sem nome da empresa, falta de favicon claro.", levels: { paciencia: 1, tecnologico: 9, preco: 3 } },
-            { name: "O Trabalhador Disfarçado", desc: "Navegando escondido no trabalho. Precisa de discrição. Kryptonita: Áudio/vídeo começando sozinho, cores gritantes.", levels: { paciencia: 4, tecnologico: 6, preco: 5 } },
-            { name: "O Leitor Dinâmico (Skimmer)", desc: "Não lê, escaneia a página em formato de 'F'. Kryptonita: Falta de intertítulos, textos sem formatação, falta de listas.", levels: { paciencia: 2, tecnologico: 7, preco: 4 } },
-            { name: "O C-Level Executivo", desc: "Tempo é dinheiro. Quer saber ROI e a solução imediata. Kryptonita: Promessas vagas, dificuldade de achar página de Preços.", levels: { paciencia: 1, tecnologico: 5, preco: 9 } },
-            { name: "O Tech Snob (Desenvolvedor/Especialista)", desc: "Abre 'Inspecionar Elemento' para julgar como o site foi feito. Kryptonita: Tecnologias obsoletas, erros no console.", levels: { paciencia: 7, tecnologico: 10, preco: 2 } },
-            { name: "O Analista de Compras/RH", desc: "Precisa de PDFs, documentos, garantias e contato direto. Kryptonita: Esconder botão 'Fale com Vendas', falta de contato corporativo.", levels: { paciencia: 8, tecnologico: 4, preco: 7 } },
-            { name: "O Cliente Recorrente", desc: "Quer pular introdução e ir direto para login ou produto. Kryptonita: Ocultar botão Login, obrigar tutoriais sempre.", levels: { paciencia: 3, tecnologico: 6, preco: 6 } },
-            { name: "O Espião (O Concorrente)", desc: "Não vai comprar, quer ver como cliente faz as coisas. Sistema analisa proteção de dados e vulnerabilidade.", levels: { paciencia: 9, tecnologico: 10, preco: 1 } }
+
+
+
+            { name: "O Comprador Impulsivo", desc: "Decide em segundos. Não lê descrições longas. Kryptonita: Formulários longos, botão de comprar escondido, falta de checkout rápido." },
+
+            { name: "O Investigador Analítico", desc: "Lê tabela nutricional, política de troca e FAQ antes de comprar. Kryptonita: Falta de informações técnicas, fotos de baixa qualidade." },
+
+            { name: "O Desconfiado", desc: "Tem medo de clonarem o cartão. Procura cadeado SSL, CNPJ no rodapé e selos de segurança. Kryptonita: Design amador, erros de português." },
+
+            { name: "O Caçador de Promoções", desc: "Só converte se sentir que está levando vantagem. Kryptonita: Frete abusivo, dificuldade de encontrar ofertas ou aplicar cupom." },
+
+            { name: "O Idoso Analógico", desc: "Digita com um dedo, dificuldade de visão e medo de errar a senha. Kryptonita: Fontes minúsculas, baixo contraste, menus complexos." },
+
+            { name: "O Gen Z Apressado", desc: "Navega exclusivamente pelo celular. Acostumado com ritmo do TikTok. Kryptonita: Blocos de texto gigantes, carregamento lento." },
+
+            { name: "O Millennial Exigente", desc: "Valoriza estética (UI) e responsabilidade social da empresa. Kryptonita: Sites feios, layout poluído, sem seção 'Sobre Nós'." },
+
+            { name: "O Estrangeiro/Imigrante", desc: "Não domina a língua nativa do site perfeitamente. Kryptonita: Falta de ícones universais, gírias locais excessivas." },
+
+            { name: "O Daltônico / Baixa Visão", desc: "Depende de alto contraste para diferenciar elementos. Kryptonita: Avisos de erro baseados apenas em cor, contraste ruim." },
+
+            { name: "O Motoramente Limitado", desc: "Usa tecla TAB para navegar ou tem tremores nas mãos. Kryptonita: Elementos clicáveis muito pequenos e colados." },
+
+            { name: "O Neurodivergente (TDAH/Autismo)", desc: "Facilmente sobrecarregado por estímulos visuais e sonoros. Kryptonita: Vídeos com autoplay, pop-ups pulando na tela." },
+
+            { name: "O Viajante 3G", desc: "Está no ônibus ou metrô, com sinal oscilando. Kryptonita: Imagens de 5MB, site em branco até carregar tudo." },
+
+            { name: "O Multitarefas", desc: "Tem 40 abas abertas no navegador ao mesmo tempo. Kryptonita: Title Tag sem nome da empresa, falta de favicon claro." },
+
+            { name: "O Trabalhador Disfarçado", desc: "Navegando escondido no trabalho. Precisa de discrição. Kryptonita: Áudio/vídeo começando sozinho, cores gritantes." },
+
+            { name: "O Leitor Dinâmico (Skimmer)", desc: "Não lê, escaneia a página em formato de 'F'. Kryptonita: Falta de intertítulos, textos sem formatação, falta de listas." },
+
+            { name: "O C-Level Executivo", desc: "Tempo é dinheiro. Quer saber ROI e a solução imediata. Kryptonita: Promessas vagas, dificuldade de achar página de Preços." },
+
+            { name: "O Tech Snob (Desenvolvedor/Especialista)", desc: "Abre 'Inspecionar Elemento' para julgar como o site foi feito. Kryptonita: Tecnologias obsoletas, erros no console." },
+
+            { name: "O Analista de Compras/RH", desc: "Precisa de PDFs, documentos, garantias e contato direto. Kryptonita: Esconder botão 'Fale com Vendas', falta de contato corporativo." },
+
+            { name: "O Cliente Recorrente", desc: "Quer pular introdução e ir direto para login ou produto. Kryptonita: Ocultar botão Login, obrigar tutoriais sempre." },
+
+            { name: "O Espião (O Concorrente)", desc: "Não vai comprar, quer ver como cliente faz as coisas. Sistema analisa proteção de dados e vulnerabilidade." }
+
         ];
 
 
@@ -3770,71 +3699,18 @@
                         // SISTEMA - Sempre carrega
                         SYSTEM_PERSONAS.forEach(p => {
                             cont.innerHTML += `
-                                <label class="flex items-start gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-cyber transition group">
-                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-cyber w-4 h-4 rounded mt-1" onclick="limitPersonaSelection(this)">
-                                    <div class="persona-content flex-1">
-                                        <p class="text-xs font-bold text-sky-400 group-hover:text-white">${p.name} <span class="text-[9px] bg-slate-800 px-1 rounded text-slate-400">SISTEMA</span></p>
-                                        <p class="text-[10px] text-slate-500 mb-2">${p.desc}</p>
-                                        <div class="persona-status-bars">
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Paciência</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill paciencia" style="width: ${p.levels.paciencia * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${p.levels.paciencia}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Tecnológico</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill tecnologico" style="width: ${p.levels.tecnologico * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${p.levels.tecnologico}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Foco no Preço</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill preco" style="width: ${p.levels.preco * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${p.levels.preco}</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-cyber transition group">
+                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-cyber w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
+                                    <div><p class="text-xs font-bold text-sky-400 group-hover:text-white">${p.name} <span class="text-[9px] bg-slate-800 px-1 rounded text-slate-400">SISTEMA</span></p><p class="text-[10px] text-slate-500">${p.desc}</p></div>
                                 </label>`;
                         });
 
                         // CUSTOM - Apenas se logado
                         custom.forEach(p => {
-                            const levels = p.levels || { paciencia: 5, tecnologico: 5, preco: 5 }; // Valores padrão
                             cont.innerHTML += `
-                                <label class="flex items-start gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-primary transition group">
-                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-primary w-4 h-4 rounded mt-1" onclick="limitPersonaSelection(this)">
-                                    <div class="persona-content flex-1">
-                                        <p class="text-xs font-bold text-emerald-400 group-hover:text-white">${p.name}</p>
-                                        <p class="text-[10px] text-slate-500 mb-2">${p.description}</p>
-                                        <div class="persona-status-bars">
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Paciência</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill paciencia" style="width: ${levels.paciencia * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${levels.paciencia}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Tecnológico</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill tecnologico" style="width: ${levels.tecnologico * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${levels.tecnologico}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Foco no Preço</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill preco" style="width: ${levels.preco * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${levels.preco}</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <label class="flex items-center gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-primary transition group">
+                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-primary w-4 h-4 rounded" onclick="limitPersonaSelection(this)">
+                                    <div><p class="text-xs font-bold text-emerald-400 group-hover:text-white">${p.name}</p><p class="text-[10px] text-slate-500">${p.description}</p></div>
                                 </label>`;
                         });
                         
