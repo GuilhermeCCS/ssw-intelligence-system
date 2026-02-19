@@ -2343,127 +2343,354 @@
 
 
 
-            <div id="view-precos" class="hidden max-w-6xl mx-auto space-y-8 animate-fade-in-up">
-                <header class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-3xl font-bold text-white">Planos e Preços</h2>
-                        <p class="text-slate-400 mt-1">Escolha o plano ideal para suas necessidades</p>
+            <div id="view-precos" class="hidden max-w-7xl mx-auto space-y-16 animate-fade-in-up">
+                <!-- HERO SECTION -->
+                <header class="text-center space-y-6">
+                    <div class="flex justify-center items-center gap-2 mb-4">
+                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+                        <i data-lucide="zap" class="w-6 h-6 text-blue-500"></i>
+                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
                     </div>
-                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
-                        <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
-                    </button>
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white">
+                        Invista em Inteligência. <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Domine o Mercado.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+                        Escolha o plano ideal para auditar, comparar e superar seus concorrentes com IA e análise comportamental.
+                    </p>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <div class="glass-panel p-6 rounded-2xl border border-slate-700/50 hover:border-primary/30 transition-all group flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center">
-                    <i data-lucide="calendar" class="w-6 h-6 text-primary"></i>
+                <!-- TOGGLE DE SELEÇÃO -->
+                <div class="flex justify-center">
+                    <div class="inline-flex items-center p-1 bg-[#161b22] rounded-full border border-white/10">
+                        <button id="toggleAssinaturas" onclick="togglePlanType('assinaturas')" class="px-6 py-2.5 rounded-full text-sm font-semibold transition-all bg-blue-600 text-white">
+                            Assinaturas
+                        </button>
+                        <button id="toggleRecargas" onclick="togglePlanType('recargas')" class="px-6 py-2.5 rounded-full text-sm font-semibold transition-all text-slate-400 hover:text-white">
+                            Recargas Avulsas
+                        </button>
+                    </div>
                 </div>
-                <span class="text-xs font-bold text-primary uppercase tracking-wider">POPULAR</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">MENSAL</h3>
-            <div class="mb-4">
-                <span class="text-3xl font-black text-primary">R$0,50</span>
-                <span class="text-slate-400">/mês (Teste)</span>
-            </div>
-            <ul class="space-y-3 mb-8 text-sm text-slate-300 flex-1">
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 40 licenças mensais</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Auditorias completas</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Relatórios detalhados</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Suporte prioritário</li>
-            </ul>
-            <button onclick="comprarPlano('plano_mensal')" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
-                <i data-lucide="shopping-cart" class="w-4 h-4"></i> Assinar Agora
-            </button>
-        </div>
 
-        <div class="glass-panel p-6 rounded-2xl border border-slate-700/50 hover:border-accent/30 transition-all group relative flex flex-col transform md:-translate-y-4 md:border-accent/30 bg-slate-900/80">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-accent to-primary text-slate-900 text-xs font-bold px-4 py-1 rounded-full shadow-lg">
-                MELHOR CUSTO-BENEFÍCIO
-            </div>
-            <div class="flex items-center justify-between mb-4 mt-2">
-                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center">
-                    <i data-lucide="calendar-days" class="w-6 h-6 text-accent"></i>
+                <!-- GRID DE PLANOS DE ASSINATURA -->
+                <div id="assinaturasGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <!-- PLANO MENSAL -->
+                    <div class="bg-[#0F1117]/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-300 group hover:transform hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                                <i data-lucide="calendar" class="w-7 h-7 text-blue-400"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Flexível</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Mensal</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black text-white">R$120</span>
+                            <span class="text-slate-400 text-lg">/mês</span>
+                        </div>
+                        <div class="border-b border-white/5 mb-6"></div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Auditorias Técnicas Ilimitadas</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Geração de PDFs White-Label</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Acesso à Galeria de Personas</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Suporte Prioritário</span>
+                            </li>
+                        </ul>
+                        <button onclick="comprarPlano('plano_mensal')" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Assinar Agora
+                        </button>
+                    </div>
+
+                    <!-- PLANO ANUAL (DESTAQUE) -->
+                    <div class="bg-[#0F1117]/80 backdrop-blur-md border-2 border-blue-500 rounded-2xl p-8 hover:border-blue-400 transition-all duration-300 group hover:transform hover:-translate-y-1 relative shadow-2xl shadow-blue-500/20 scale-105">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+                            Mais Vantajoso
+                        </div>
+                        <div class="flex items-center justify-between mb-6 mt-2">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-cyan-500/30 transition-colors">
+                                <i data-lucide="crown" class="w-7 h-7 text-blue-400"></i>
+                            </div>
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Popular</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Anual</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black text-white">R$1.200</span>
+                            <span class="text-slate-400 text-lg">/ano</span>
+                            <div class="inline-block bg-emerald-500/10 text-emerald-400 text-xs font-semibold px-2 py-1 rounded-lg mt-2">
+                                Economia de 33%
+                            </div>
+                        </div>
+                        <div class="border-b border-white/5 mb-6"></div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Todos os recursos do Mensal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Consultoria Estratégica Mensal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Integrações Avançadas</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>SLA Dedicado 24/7</span>
+                            </li>
+                        </ul>
+                        <button onclick="comprarPlano('plano_anual')" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25">
+                            <i data-lucide="star" class="w-4 h-4"></i> Assinar Agora
+                        </button>
+                    </div>
+
+                    <!-- PLANO SEMESTRAL -->
+                    <div class="bg-[#0F1117]/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-300 group hover:transform hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                                <i data-lucide="calendar-days" class="w-7 h-7 text-purple-400"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Equilíbrio</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Semestral</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black text-white">R$700</span>
+                            <span class="text-slate-400 text-lg">/6 meses</span>
+                            <div class="inline-block bg-blue-500/10 text-blue-400 text-xs font-semibold px-2 py-1 rounded-lg mt-2">
+                                Economia de 22%
+                            </div>
+                        </div>
+                        <div class="border-b border-white/5 mb-6"></div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Todos os recursos do Mensal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Relatórios Personalizados</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Análise Comparativa Avançada</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Suporte Prioritário</span>
+                            </li>
+                        </ul>
+                        <button onclick="comprarPlano('plano_semestral')" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Assinar Agora
+                        </button>
+                    </div>
                 </div>
-                <span class="text-xs font-bold text-accent uppercase tracking-wider">RECOMENDADO</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">SEMESTRAL</h3>
-            <div class="mb-4">
-                <span class="text-3xl font-black text-primary">R$699,99</span>
-                <span class="text-slate-400">/6 meses</span>
-            </div>
-            <ul class="space-y-3 mb-8 text-sm text-slate-300 flex-1">
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 210 licenças totais</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Economia de 22%</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Todos recursos do mensal</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Consultoria estratégica</li>
-            </ul>
-            <button onclick="comprarPlano('plano_semestral')" class="w-full bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent/20">
-                <i data-lucide="star" class="w-4 h-4"></i> Assinar Agora
-            </button>
-        </div>
 
-        <div class="glass-panel p-6 rounded-2xl border border-slate-700/50 hover:border-green-500/30 transition-all group flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center">
-                    <i data-lucide="calendar-check" class="w-6 h-6 text-green-500"></i>
+                <!-- GRID DE RECARGAS AVULSAS -->
+                <div id="recargasGrid" class="hidden grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <!-- RECARGA 10 -->
+                    <div class="bg-[#0F1117]/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-300 group hover:transform hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center group-hover:bg-orange-500/20 transition-colors">
+                                <i data-lucide="package" class="w-7 h-7 text-orange-400"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Leve</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Recarga Leve</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black text-white">R$50</span>
+                            <span class="text-slate-400 text-lg">/único</span>
+                        </div>
+                        <div class="border-b border-white/5 mb-6"></div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>10 Licenças de Auditoria</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Relatórios Completos</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Sem Compromisso Mensal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Validade de 90 dias</span>
+                            </li>
+                        </ul>
+                        <button onclick="comprarPlano('recarga_10')" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Comprar Agora
+                        </button>
+                    </div>
+
+                    <!-- RECARGA 40 -->
+                    <div class="bg-[#0F1117]/80 backdrop-blur-md border-2 border-purple-500 rounded-2xl p-8 hover:border-purple-400 transition-all duration-300 group hover:transform hover:-translate-y-1 relative shadow-2xl shadow-purple-500/20 scale-105">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+                            Mais Popular
+                        </div>
+                        <div class="flex items-center justify-between mb-6 mt-2">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-colors">
+                                <i data-lucide="package-2" class="w-7 h-7 text-purple-400"></i>
+                            </div>
+                            <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Ideal</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Recarga Média</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black text-white">R$150</span>
+                            <span class="text-slate-400 text-lg">/único</span>
+                            <div class="inline-block bg-purple-500/10 text-purple-400 text-xs font-semibold px-2 py-1 rounded-lg mt-2">
+                                Melhor Custo-Benefício
+                            </div>
+                        </div>
+                        <div class="border-b border-white/5 mb-6"></div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>40 Licenças de Auditoria</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Todos os Recursos Premium</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Sem Compromisso Mensal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Validade de 180 dias</span>
+                            </li>
+                        </ul>
+                        <button onclick="comprarPlano('recarga_40')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25">
+                            <i data-lucide="star" class="w-4 h-4"></i> Comprar Agora
+                        </button>
+                    </div>
+
+                    <!-- RECARGA 90 -->
+                    <div class="bg-[#0F1117]/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-300 group hover:transform hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+                                <i data-lucide="package-open" class="w-7 h-7 text-emerald-400"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Profissional</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Recarga Max</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black text-white">R$300</span>
+                            <span class="text-slate-400 text-lg">/único</span>
+                            <div class="inline-block bg-emerald-500/10 text-emerald-400 text-xs font-semibold px-2 py-1 rounded-lg mt-2">
+                                Economia de 25%
+                            </div>
+                        </div>
+                        <div class="border-b border-white/5 mb-6"></div>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>90 Licenças de Auditoria</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Todos os Recursos Premium</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Sem Compromisso Mensal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Validade de 365 dias</span>
+                            </li>
+                        </ul>
+                        <button onclick="comprarPlano('recarga_90')" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Comprar Agora
+                        </button>
+                    </div>
                 </div>
-                <span class="text-xs font-bold text-green-500 uppercase tracking-wider">ECONOMIA MÁXIMA</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">ANUAL</h3>
-            <div class="mb-4">
-                <span class="text-3xl font-black text-primary">R$1.200,00</span>
-                <span class="text-slate-400">/ano</span>
-            </div>
-            <ul class="space-y-3 mb-8 text-sm text-slate-300 flex-1">
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 480 licenças totais</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Economia de 33%</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Todos os recursos</li>
-                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> SLA dedicado 24/7</li>
-            </ul>
-            <button onclick="comprarPlano('plano_anual')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-600/20">
-                <i data-lucide="crown" class="w-4 h-4"></i> Assinar Agora
-            </button>
-        </div>
-    </div>
 
-    <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mt-8">
-        <div class="text-center mb-8">
-            <h3 class="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-                <i data-lucide="zap" class="w-6 h-6 text-yellow-500"></i> Recarga Simples
-            </h3>
-            <p class="text-slate-400">Sem compromisso. Compre licenças avulsas quando precisar.</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 min-w-[320px]">
-            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50 hover:border-primary/30 transition-all text-center group">
-                <p class="text-2xl font-black text-primary mb-1">R$49,99</p>
-                <p class="text-sm text-slate-300 mb-4">10 Licenças</p>
-                <button onclick="comprarPlano('recarga_10')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-lg transition-colors border border-slate-700 hover:border-primary/50">
-                    Comprar
-                </button>
-            </div>
+                <!-- ZONA DE CONFIANÇA -->
+                <div class="bg-[#0F1117]/60 backdrop-blur-md border border-white/5 rounded-2xl p-8 text-center">
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8 text-slate-400">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+                            <span class="text-sm font-medium">Pagamento Seguro via Mercado Pago</span>
+                        </div>
+                        <div class="hidden md:flex w-px h-5 bg-white/10"></div>
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="lock" class="w-5 h-5 text-blue-400"></i>
+                            <span class="text-sm font-medium">Criptografia SSL</span>
+                        </div>
+                        <div class="hidden md:flex w-px h-5 bg-white/10"></div>
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="x-circle" class="w-5 h-5 text-orange-400"></i>
+                            <span class="text-sm font-medium">Cancele quando quiser</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50 hover:border-primary/30 transition-all text-center group">
-                <p class="text-2xl font-black text-primary mb-1">R$149,99</p>
-                <p class="text-sm text-slate-300 mb-4">40 Licenças</p>
-                <button onclick="comprarPlano('recarga_40')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-lg transition-colors border border-slate-700 hover:border-primary/50">
-                    Comprar
-                </button>
-            </div>
+                <!-- FAQ ACCORDION -->
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold text-white text-center mb-8">Perguntas Frequentes</h2>
+                    
+                    <div class="space-y-4 max-w-4xl mx-auto">
+                        <div class="bg-[#0F1117]/60 backdrop-blur-md border border-white/5 rounded-xl overflow-hidden">
+                            <button onclick="toggleFAQ(0)" class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors">
+                                <span class="text-white font-medium">O que são os créditos de auditoria?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform" id="faq-icon-0"></i>
+                            </button>
+                            <div id="faq-content-0" class="hidden px-6 pb-4 text-slate-400 leading-relaxed">
+                                Cada crédito permite realizar uma auditoria completa de site. Nossas auditorias incluem análise técnica, SEO, performance, acessibilidade e simulação comportamental com múltiplas personas.
+                            </div>
+                        </div>
 
-            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50 hover:border-primary/30 transition-all text-center group">
-                <p class="text-2xl font-black text-primary mb-1">R$299,99</p>
-                <p class="text-sm text-slate-300 mb-4">90 Licenças</p>
-                <button onclick="comprarPlano('recarga_90')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-lg transition-colors border border-slate-700 hover:border-primary/50">
-                    Comprar
-                </button>
+                        <div class="bg-[#0F1117]/60 backdrop-blur-md border border-white/5 rounded-xl overflow-hidden">
+                            <button onclick="toggleFAQ(1)" class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors">
+                                <span class="text-white font-medium">Como funciona o modo comparativo?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform" id="faq-icon-1"></i>
+                            </button>
+                            <div id="faq-content-1" class="hidden px-6 pb-4 text-slate-400 leading-relaxed">
+                                O modo comparativo utiliza 2 créditos para analisar dois sites simultaneamente, gerando um relatório lado a lado com métricas comparativas, pontos fortes e fracos de cada site, e recomendações estratégicas para superar a concorrência.
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0F1117]/60 backdrop-blur-md border border-white/5 rounded-xl overflow-hidden">
+                            <button onclick="toggleFAQ(2)" class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors">
+                                <span class="text-white font-medium">Posso cancelar minha assinatura a qualquer momento?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform" id="faq-icon-2"></i>
+                            </button>
+                            <div id="faq-content-2" class="hidden px-6 pb-4 text-slate-400 leading-relaxed">
+                                Sim! Você pode cancelar sua assinatura a qualquer momento sem multas. O acesso permanece ativo até o final do período pago e você não será cobrado na próxima renovação.
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0F1117]/60 backdrop-blur-md border border-white/5 rounded-xl overflow-hidden">
+                            <button onclick="toggleFAQ(3)" class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors">
+                                <span class="text-white font-medium">Qual a diferença entre assinatura e recarga?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform" id="faq-icon-3"></i>
+                            </button>
+                            <div id="faq-content-3" class="hidden px-6 pb-4 text-slate-400 leading-relaxed">
+                                Assinaturas oferecem créditos mensais recarregados automaticamente com economia garantida. Recargas avulsas são compras únicas sem compromisso, ideais para uso esporádico. Ambas dão acesso aos mesmos recursos premium.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTÃO VOLTAR -->
+                <div class="text-center pt-8">
+                    <button onclick="nav('home')" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium rounded-xl transition-all duration-300">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar para o Início
+                    </button>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
             <div id="view-about" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
 
@@ -6584,6 +6811,63 @@
                 Toast.error("Erro de conexão.");
                 btn.innerHTML = textoOriginal;
                 btn.disabled = false;
+            }
+        }
+
+        // --- FUNÇÕES DO TOGGLE DE PLANOS E FAQ ---
+        
+        // Função para alternar entre Assinaturas e Recargas
+        function togglePlanType(type) {
+            const assinaturasGrid = document.getElementById('assinaturasGrid');
+            const recargasGrid = document.getElementById('recargasGrid');
+            const toggleAssinaturas = document.getElementById('toggleAssinaturas');
+            const toggleRecargas = document.getElementById('toggleRecargas');
+            
+            if (type === 'assinaturas') {
+                // Mostrar assinaturas, esconder recargas
+                assinaturasGrid.classList.remove('hidden');
+                recargasGrid.classList.add('hidden');
+                
+                // Atualizar botões
+                toggleAssinaturas.classList.add('bg-blue-600', 'text-white');
+                toggleAssinaturas.classList.remove('text-slate-400', 'hover:text-white');
+                toggleRecargas.classList.remove('bg-blue-600', 'text-white');
+                toggleRecargas.classList.add('text-slate-400', 'hover:text-white');
+            } else {
+                // Mostrar recargas, esconder assinaturas
+                recargasGrid.classList.remove('hidden');
+                assinaturasGrid.classList.add('hidden');
+                
+                // Atualizar botões
+                toggleRecargas.classList.add('bg-blue-600', 'text-white');
+                toggleRecargas.classList.remove('text-slate-400', 'hover:text-white');
+                toggleAssinaturas.classList.remove('bg-blue-600', 'text-white');
+                toggleAssinaturas.classList.add('text-slate-400', 'hover:text-white');
+            }
+            
+            // Recriar ícones Lucide após mudança
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        // Função para alternar FAQ accordion
+        function toggleFAQ(index) {
+            const content = document.getElementById(`faq-content-${index}`);
+            const icon = document.getElementById(`faq-icon-${index}`);
+            
+            if (!content || !icon) return;
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                // Abrir
+                content.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'transform 0.3s ease';
+            } else {
+                // Fechar
+                content.style.display = 'none';
+                icon.style.transform = 'rotate(0deg)';
+                icon.style.transition = 'transform 0.3s ease';
             }
         }
 
