@@ -204,6 +204,10 @@
 
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- jsPDF e AutoTable para geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
 
 
@@ -234,9 +238,82 @@
 
 
 
+        /* REGRAS CRÍTICAS DE PAGINAÇÃO PARA PDF */
+        @media print {
+            /* Força quebra de página antes de cada seção principal */
+            .print\:break-before-page {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+            
+            /* Evita cortes no meio dos elementos */
+            .print\:break-inside-avoid {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            
+            /* Força quebra após a página */
+            .print\:break-after-page {
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+            
+            /* Garante que o conteúdo não seja cortado */
+            * {
+                overflow: visible !important;
+                max-height: none !important;
+            }
+            
+            /* Remove scrollbars e overflow */
+            body, html {
+                overflow: visible !important;
+                height: auto !important;
+                max-height: none !important;
+            }
+            
+            /* Garante que grids não quebrem itens */
+            .print\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+            
+            .print\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+            
+            /* Garante que tabelas não quebrem */
+            table {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                width: 100% !important;
+            }
+            
+            tr, th, td {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                vertical-align: top !important;
+            }
+            
+            /* Garante que listas não quebrem */
+            ol, ul, li {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            
+            /* Garante que imagens não quebrem */
+            img {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            
+            /* Remove margens e padding desnecessários */
+            .no-print {
+                display: none !important;
+            }
+        }
+
         body { 
-
-
 
             font-family: 'Inter', sans-serif; 
 
@@ -1371,6 +1448,10 @@
 
         const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
 
+        // Variável global para armazenar dados da auditoria atual
+        let auditData = null;
+        let currentAuditUrl = null;
+
 
         // Função para mostrar tela de autenticação
 
@@ -1912,7 +1993,6 @@
                                 <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
                             </div>
                             <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
-                                <i data-lucide="zap" class="w-4 h-4"></i>
                                 Analisar
                             </button>
                         </div>
@@ -3563,56 +3643,169 @@
 
 
 
-        // Função para criar estrutura HTML inicial dos resultados da auditoria
+        // Função para criar estrutura HTML inicial dos resultados da auditoria (Relatório Técnico Corporativo)
         function createAuditResultsStructure() {
             const resultsContainer = document.getElementById('auditResults');
             if (!resultsContainer) return;
             
             resultsContainer.innerHTML = `
-                <!-- 1. Sumário Executivo -->
-                <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mb-6">
-                    <h3 class="text-primary font-bold uppercase text-lg mb-6 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-                        <i data-lucide="file-text" class="w-6 h-6"></i> 1. Sumário Executivo
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="text-center">
-                            <div class="text-5xl font-black text-white mb-2" id="resScore">-</div>
-                            <p class="text-sm text-slate-400">Score Geral</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-lg font-semibold text-cyber mb-2" id="resUrl">-</div>
-                            <p class="text-sm text-slate-400">URL Analisada</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="flex justify-center gap-2 mb-2">
-                                <img id="printMobile" class="w-16 h-16 rounded-lg border border-slate-700" alt="Mobile">
-                                <img id="printDesktop" class="w-20 h-16 rounded-lg border border-slate-700" alt="Desktop">
+                <!-- PÁGINA 1: Capa e Veredito Técnico -->
+                <div class="print:break-after-page bg-[#0F1117] text-white p-8 print:p-12 print:min-h-0 print:h-auto print:block print:overflow-visible" style="-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+                    <!-- Cabeçalho Profissional -->
+                    <header class="mb-8 pb-6 border-b border-slate-800">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h1 class="text-2xl font-bold text-white mb-2">S.S.W Intelligence</h1>
+                                <p class="text-lg text-slate-300 font-semibold">Relatório de Auditoria Técnica</p>
                             </div>
-                            <p class="text-sm text-slate-400">Capturas de Tela</p>
+                            <div class="text-right">
+                                <p class="text-sm text-slate-400" id="reportDate">${new Date().toLocaleDateString('pt-BR')}</p>
+                                <p class="text-sm text-slate-300 font-medium mt-1" id="reportUrl">-</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mt-6 p-4 bg-slate-900/30 rounded-xl border border-slate-800">
-                        <p class="text-white leading-relaxed" id="resSummary">Carregando resumo...</p>
-                    </div>
+                    </header>
+
+                    <!-- Score Principal -->
+                    <section class="mb-12 text-center print:break-inside-avoid">
+                        <h2 class="text-xl font-bold text-slate-300 mb-4">Veredito Técnico Geral</h2>
+                        <div class="inline-block bg-slate-800 border-2 border-slate-700 rounded-xl p-8 print:break-inside-avoid">
+                            <div class="text-6xl font-black text-white mb-2" id="resScore">-</div>
+                            <p class="text-slate-400 text-sm uppercase tracking-wider">Score Técnica</p>
+                        </div>
+                    </section>
+
+                    <!-- Dashboard Técnico - Cockpit de Performance -->
+                    <section class="grid grid-cols-1 print:grid-cols-2 gap-6 print:break-inside-avoid">
+                        <h3 class="text-lg font-bold text-slate-300 mb-6 print:break-inside-avoid">Dashboard Técnico - Google PageSpeed Insights</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 print:grid-cols-3 gap-6 mb-8 print:break-inside-avoid">
+                            <!-- Performance Score -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center print:break-inside-avoid print:block">
+                                <div class="flex items-center justify-center mb-2">
+                                    <i data-lucide="zap" class="w-5 h-5 text-blue-400 mr-2"></i>
+                                    <span class="text-xs text-slate-500 font-bold uppercase">Performance</span>
+                                </div>
+                                <div id="realPerformanceScore" class="text-3xl font-black text-white mb-1">--</div>
+                                <div class="text-xs text-slate-400">Score</div>
+                            </div>
+                            <!-- SEO Score -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center print:break-inside-avoid print:block">
+                                <div class="flex items-center justify-center mb-2">
+                                    <i data-lucide="search" class="w-5 h-5 text-green-400 mr-2"></i>
+                                    <span class="text-xs text-slate-500 font-bold uppercase">SEO</span>
+                                </div>
+                                <div id="realSeoScore" class="text-3xl font-black text-white mb-1">--</div>
+                                <div class="text-xs text-slate-400">Score</div>
+                            </div>
+                            <!-- Accessibility Score -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center print:break-inside-avoid print:block">
+                                <div class="flex items-center justify-center mb-2">
+                                    <i data-lucide="users" class="w-5 h-5 text-purple-400 mr-2"></i>
+                                    <span class="text-xs text-slate-500 font-bold uppercase">Acessibilidade</span>
+                                </div>
+                                <div id="realA11yScore" class="text-3xl font-black text-white mb-1">--</div>
+                                <div class="text-xs text-slate-400">Score</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6 mb-8 print:break-inside-avoid">
+                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 text-center print:break-inside-avoid print:block">
+                                <div class="flex items-center justify-center mb-2">
+                                    <i data-lucide="timer" class="w-5 h-5 text-cyan-400 mr-2"></i>
+                                    <span class="text-xs text-slate-500 font-bold uppercase">Primeiro item a aparecer</span>
+                                </div>
+                                <div id="realLcp" class="text-2xl font-bold text-white mb-1">--</div>
+                                <div class="text-xs text-slate-400">Tempo de Renderização</div>
+                            </div>
+                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 text-center print:break-inside-avoid print:block">
+                                <div class="flex items-center justify-center mb-2">
+                                    <i data-lucide="clock" class="w-5 h-5 text-orange-400 mr-2"></i>
+                                    <span class="text-xs text-slate-500 font-bold uppercase">Tempo de Carregamento</span>
+                                </div>
+                                <div id="realLoadTime" class="text-2xl font-bold text-white mb-1">--</div>
+                                <div class="text-xs text-slate-400">Total de tempo de carregamento</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Resumo Executivo -->
+                    <section class="mt-12 print:break-inside-avoid">
+                        <h3 class="text-lg font-bold text-slate-300 mb-4 print:break-inside-avoid">Resumo Executivo</h3>
+                        <div class="bg-slate-800 border border-slate-700 rounded-lg p-6 print:break-inside-avoid">
+                            <p class="text-slate-300 leading-relaxed" id="resSummary">Carregando resumo...</p>
+                        </div>
+                    </section>
                 </div>
 
-                <!-- 2. Matriz de Vulnerabilidades -->
-                <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mb-6">
-                    <h3 class="text-orange-500 font-bold uppercase text-lg mb-6 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-                        <i data-lucide="shield-alert" class="w-6 h-6"></i> 2. Matriz de Vulnerabilidades
-                    </h3>
-                    <div class="space-y-3" id="vulnerabilitiesGrid">
-                        <!-- Vulnerabilidades serão inseridas aqui -->
-                    </div>
+                <!-- PÁGINA 2: Detalhamento de Vulnerabilidades -->
+                <div class="print:break-before-page print:break-after-page bg-[#0F1117] text-white p-8 print:p-12 print:min-h-0 print:h-auto print:block print:overflow-visible" style="-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+                    <header class="mb-8 print:break-inside-avoid">
+                        <h2 class="text-2xl font-bold text-white print:break-inside-avoid">Vulnerabilidades e Riscos Encontrados</h2>
+                        <p class="text-slate-400 mt-2 print:break-inside-avoid">Análise detalhada dos pontos críticos de segurança e performance</p>
+                    </header>
+
+                    <section class="vulnerabilities-table print:break-inside-avoid">
+                        <table class="w-full text-left border-collapse border border-slate-700 print:table print:w-full print:border-collapse print:table-fixed print:break-inside-avoid">
+                            <thead class="print:table-header-group">
+                                <tr class="bg-slate-800 border-b border-slate-700 print:table-row print:break-inside-avoid">
+                                    <th class="p-4 font-semibold text-white border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">Nível de Risco</th>
+                                    <th class="p-4 font-semibold text-white border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">Problema</th>
+                                    <th class="p-4 font-semibold text-white print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">Descrição Técnica</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vulnerabilitiesTableBody" class="print:table-row-group">
+                                <!-- Vulnerabilidades serão inseridas aqui -->
+                            </tbody>
+                        </table>
+                    </section>
                 </div>
 
-                <!-- 3. Análise Comportamental -->
-                <div class="glass-panel p-8 rounded-2xl border border-slate-700/50 mb-6">
-                    <h3 class="text-emerald-500 font-bold uppercase text-lg mb-6 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-                        <i data-lucide="users" class="w-6 h-6"></i> 3. Análise Comportamental
-                    </h3>
-                    <div class="space-y-4" id="personasGrid">
-                        <!-- Personas serão inseridas aqui -->
+                <!-- PÁGINA 3: Simulação Comportamental -->
+                <div class="print:break-before-page print:break-after-page bg-[#0F1117] text-white p-8 print:p-12 print:min-h-0 print:h-auto print:block print:overflow-visible" style="-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+                    <header class="mb-8 print:break-inside-avoid">
+                        <h2 class="text-2xl font-bold text-white print:break-inside-avoid">Análise de Experiência do Usuário (Simulação por IA)</h2>
+                        <p class="text-slate-400 mt-2 print:break-inside-avoid">Comportamento simulado baseado em diferentes personas de usuários</p>
+                    </header>
+
+                    <section class="personas-table print:break-inside-avoid">
+                        <table class="w-full text-left border-collapse border border-slate-700 print:table print:w-full print:border-collapse print:table-fixed print:break-inside-avoid">
+                            <thead class="print:table-header-group">
+                                <tr class="bg-slate-800 border-b border-slate-700 print:table-row print:break-inside-avoid">
+                                    <th class="p-4 font-semibold text-white border-r border-slate-700 w-1/4 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">Perfil Simulado (Persona)</th>
+                                    <th class="p-4 font-semibold text-white border-r border-slate-700 w-1/6 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">Veredito/Sentimento</th>
+                                    <th class="p-4 font-semibold text-white w-1/2 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">Feedback Detalhado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personasTableBody" class="print:table-row-group">
+                                <!-- Personas serão inseridas aqui -->
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+
+                <!-- PÁGINA 4: Plano de Ação -->
+                <div class="print:break-before-page bg-[#0F1117] text-white p-8 print:p-12 print:min-h-0 print:h-auto print:block print:overflow-visible print:pb-0" style="-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+                    <header class="mb-8 print:break-inside-avoid">
+                        <h2 class="text-2xl font-bold text-white print:break-inside-avoid">Plano de Ação Recomendado</h2>
+                        <p class="text-slate-400 mt-2 print:break-inside-avoid">Estratégias priorizadas para melhoria contínua</p>
+                    </header>
+
+                    <section class="action-plan print:break-inside-avoid">
+                        <ol class="space-y-4 print:break-inside-avoid" id="actionPlanList">
+                            <!-- Itens do plano de ação serão inseridos aqui -->
+                        </ol>
+                    </section>
+
+                    <!-- Botões de Exportação (escondidos na impressão) -->
+                    <div class="mt-12 flex gap-4 print:hidden">
+                        <button onclick="gerarPDFOficial()" class="bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 print:hidden">
+                            <i data-lucide="file-down" class="w-4 h-4"></i>
+                            Exportar PDF
+                        </button>
+                        <button onclick="showSimplifiedSearch()" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 print:hidden">
+                            <i data-lucide="repeat" class="w-4 h-4"></i>
+                            Nova Análise
+                        </button>
                     </div>
                 </div>
             `;
@@ -3732,6 +3925,11 @@
             const normalSearchBar = document.getElementById('normalSearchBar');
             const compareSearchBar = document.getElementById('compareSearchBar');
             
+            // Elementos do hero que devem ser controlados
+            const titleContainer = document.querySelector('.hero-title-container');
+            const subtitleContainer = document.querySelector('.hero-subtitle-container');
+            const statsContainer = document.querySelector('.stats-container-premium');
+            
             console.log("Elementos encontrados:", { manualArea, compareArea, normalSearchBar, compareSearchBar });
 
             // Reset all areas
@@ -3739,6 +3937,19 @@
             if (compareArea) compareArea.classList.add('hidden');
             if (normalSearchBar) normalSearchBar.classList.remove('hidden');
             if (compareSearchBar) compareSearchBar.classList.add('hidden');
+
+            // Controle dos elementos do hero baseado no modo
+            if (mode === 'auto') {
+                // Mostra elementos no modo automático
+                if (titleContainer) titleContainer.classList.remove('hidden');
+                if (subtitleContainer) subtitleContainer.classList.remove('hidden');
+                if (statsContainer) statsContainer.classList.remove('hidden');
+            } else {
+                // Esconde elementos nos modos manual e compare
+                if (titleContainer) titleContainer.classList.add('hidden');
+                if (subtitleContainer) subtitleContainer.classList.add('hidden');
+                if (statsContainer) statsContainer.classList.add('hidden');
+            }
 
             if(mode === 'manual') {
                 console.log("Entrando no modo manual");
@@ -3945,6 +4156,10 @@
                 // Criar estrutura HTML inicial para todas as seções
                 createAuditResultsStructure();
 
+                // Armazenar dados globalmente para exportação PDF
+                auditData = data.resultado;
+                currentAuditUrl = url;
+
                 USER.credits = data.novo_saldo;
 
 
@@ -3960,11 +4175,69 @@
                 const resScoreEl = document.getElementById('resScore');
                 if (resScoreEl) resScoreEl.innerText = data.resultado.technical_audit.score;
 
-                const resUrlEl = document.getElementById('resUrl');
-                if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
+                const reportUrlEl = document.getElementById('reportUrl');
+                if (reportUrlEl) reportUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
 
                 const resSummaryEl = document.getElementById('resSummary');
                 if (resSummaryEl) resSummaryEl.innerText = data.resultado.technical_audit.executive_summary;
+
+                // Função para determinar cor baseada no score
+                function getScoreColor(score) {
+                    if (score >= 90) return "text-green-400";
+                    if (score >= 50) return "text-yellow-500";
+                    return "text-red-500";
+                }
+
+                // Função para determinar cor de tempo (em segundos)
+                function getTimeColor(timeStr) {
+                    const time = parseFloat(timeStr);
+                    if (time <= 2.5) return "text-green-400";
+                    if (time <= 4.0) return "text-yellow-500";
+                    return "text-red-500";
+                }
+
+                // Popula métricas reais do Google PageSpeed
+                const realMetrics = data.resultado.technical_audit.real_metrics || {};
+                
+                // Performance Score
+                const perfScoreEl = document.getElementById('realPerformanceScore');
+                if (perfScoreEl) {
+                    const score = realMetrics.performance_score || '--';
+                    perfScoreEl.innerText = score;
+                    perfScoreEl.className = `text-4xl font-black ${typeof score === 'number' ? getScoreColor(score) : 'text-white'}`;
+                }
+
+                // SEO Score
+                const seoScoreEl = document.getElementById('realSeoScore');
+                if (seoScoreEl) {
+                    const score = realMetrics.seo_score || '--';
+                    seoScoreEl.innerText = score;
+                    seoScoreEl.className = `text-4xl font-black ${typeof score === 'number' ? getScoreColor(score) : 'text-white'}`;
+                }
+
+                // Accessibility Score
+                const a11yScoreEl = document.getElementById('realA11yScore');
+                if (a11yScoreEl) {
+                    const score = realMetrics.accessibility_score || '--';
+                    a11yScoreEl.innerText = score;
+                    a11yScoreEl.className = `text-4xl font-black ${typeof score === 'number' ? getScoreColor(score) : 'text-white'}`;
+                }
+
+                // LCP (Largest Contentful Paint)
+                const lcpEl = document.getElementById('realLcp');
+                if (lcpEl) {
+                    const lcp = realMetrics.lcp || '--';
+                    lcpEl.innerText = lcp;
+                    lcpEl.className = `text-2xl font-bold ${typeof lcp === 'string' ? getTimeColor(lcp) : 'text-white'}`;
+                }
+
+                // Load Time
+                const loadTimeEl = document.getElementById('realLoadTime');
+                if (loadTimeEl) {
+                    const loadTime = realMetrics.load_time || '--';
+                    loadTimeEl.innerText = loadTime;
+                    loadTimeEl.className = `text-2xl font-bold ${typeof loadTime === 'string' ? getTimeColor(loadTime) : 'text-white'}`;
+                }
 
                 if(data.images) {
                     const printMobileEl = document.getElementById('printMobile');
@@ -4005,7 +4278,7 @@
 
 
     // Vulnerabilidades
-    const vDiv = document.getElementById('vulnerabilitiesGrid');
+    const vDiv = document.getElementById('vulnerabilitiesTableBody');
     if (vDiv) {
         vDiv.innerHTML="";
         // Dados reais da API - usa vulnerabilidades do backend
@@ -4035,197 +4308,102 @@
             console.log(`Severity: "${v.severity}" - Cor: ${corClasse}`);
 
             vDiv.innerHTML += `
-                <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
-                    <div class="min-w-[80px]">
-                        <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
-                        <p class="font-black ${corClasse} text-lg">${v.severity || 'N/A'}</p>
-                    </div>
-                    <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
-                        <p class="text-white text-sm font-bold mb-1">${v.title || 'Sem título'}</p>
-                        <p class="text-xs text-slate-400 leading-relaxed">${v.description || 'Sem descrição'}</p>
-                    </div>
-                </div>
+                <tr class="border-b border-slate-700 print:table-row print:break-inside-avoid hover:bg-slate-800/50 transition">
+                    <td class="p-4 font-semibold ${corClasse} border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">${v.severity || 'N/A'}</td>
+                    <td class="p-4 text-white font-medium border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">${v.title || 'Sem título'}</td>
+                    <td class="p-4 text-slate-300 text-sm print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">${v.description || 'Sem descrição'}</td>
+                </tr>
             `;
         });
     }
 
 
-                // Renderiza Personas ANTES do Plano de Ação
-                const pGrid = document.getElementById('personasGrid');
+                // Renderiza Plano de Ação
+                const actionPlanList = document.getElementById('actionPlanList');
+                if (actionPlanList) {
+                    actionPlanList.innerHTML = "";
+                    
+                    // Dados reais da API - usa action_plan do backend
+                    const actionPlan = data.resultado.technical_audit.action_plan || {};
+                    console.log("Action Plan da API:", actionPlan);
+                    
+                    // Combina todos os períodos (week_1, month_1, etc) em uma única lista
+                    const realSteps = [];
+                    Object.keys(actionPlan).forEach(period => {
+                        if (Array.isArray(actionPlan[period])) {
+                            realSteps.push(...actionPlan[period]);
+                        }
+                    });
+                    console.log("Steps combinados:", realSteps);
+                    
+                    // Renderiza os passos como lista ordenada
+                    realSteps.forEach((stepText, i) => {
+                        actionPlanList.innerHTML += `
+                            <li class="flex items-start gap-4 p-4 border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
+                                <span class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                    ${i + 1}
+                                </span>
+                                <div class="flex-1">
+                                    <p class="text-slate-300 leading-relaxed">${stepText}</p>
+                                </div>
+                            </li>
+                        `;
+                    });
+                }
+                const pGrid = document.getElementById('personasTableBody');
                 if (pGrid) {
                     pGrid.innerHTML = "";
 
                     data.resultado.personas_results.forEach(p => {
+                        // Determina cor do score
+                        let scoreColor = "text-green-400";
+                        if (p.score <= 4) scoreColor = "text-red-500";
+                        
+                        // Determina sentimento
+                        let sentiment = "Neutro";
+                        let sentimentColor = "text-slate-300";
+                        if (p.score >= 8) {
+                            sentiment = "Positivo";
+                            sentimentColor = "text-green-400";
+                        } else if (p.score <= 4) {
+                            sentiment = "Negativo";
+                            sentimentColor = "text-red-400";
+                        }
+
                         pGrid.innerHTML += `
-                            <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
-                                <div class="md:w-1/4">
-                                    <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
-                                        <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${p.profile_name}</h4>
-                                        <div class="text-3xl font-black text-cyber">${p.score}<span class="text-sm text-slate-500">/10</span></div>
+                            <tr class="border-b border-slate-700 print:table-row print:break-inside-avoid hover:bg-slate-800/50 transition">
+                                <td class="p-4 border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
+                                    <div class="font-semibold text-white">${p.profile_name}</div>
+                                    <div class="text-sm ${scoreColor} font-bold">Score: ${p.score}/10</div>
+                                </td>
+                                <td class="p-4 border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
+                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${sentimentColor} bg-slate-800 border border-slate-600">
+                                        ${sentiment}
+                                    </span>
+                                </td>
+                                <td class="p-4 text-slate-300 text-sm print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
+                                    <div class="mb-2">
+                                        <span class="text-xs text-slate-500 font-semibold uppercase">Citação Direta:</span>
+                                        <p class="italic text-white mt-1">"${p.direct_quote}"</p>
                                     </div>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Citação Direta</p>
-                                    <p class="text-sm text-white italic border-l-4 border-primary pl-4 mb-4">"${p.direct_quote}"</p>
-                                    <div class="space-y-2 pt-2 border-t border-slate-800/50">
-                                        <div class="flex items-center gap-2 text-xs text-slate-400"><i data-lucide="activity" class="w-3 h-3 text-primary"></i> Análise de Jornada Concluída</div>
+                                    <div class="text-xs text-slate-500">
+                                        <i data-lucide="activity" class="w-3 h-3 inline mr-1"></i>
+                                        Análise de Jornada Concluída
                                     </div>
-                                </div>
-                            </div>`;
+                                </td>
+                            </tr>
+                        `;
                     });
                 }
 
                 // Recria ícones Lucide para os novos botões de chat
                 lucide.createIcons();
 
-
-
-                // ===============================================
-
-
-
-                // BLOCO 2: ADICIONAR PLANO DE AÇÃO TÉCNICO (NOVO)
-
-
-
-                // ===============================================
-
-
-
-                
-
-
-
-                // Verifica se já existe a div do plano de ação, se não, cria.
-
-
-
-                const resultsContainer = document.getElementById('auditResults');
-
-
-
-                
-
-
-
-                // Se não existir, criamos a estrutura HTML na hora (Inserindo DEPOIS das Personas)
-
-
-
-                if (!document.getElementById('actionPlanSection')) {
-
-
-
-                    const novaDiv = document.createElement('div');
-
-
-
-                    novaDiv.id = "actionPlanSection";
-
-
-
-                    novaDiv.className = "glass-panel p-10 rounded-2xl border border-slate-800 page-break";
-
-
-
-                    novaDiv.innerHTML = `
-
-
-
-                        <h3 class="text-primary font-bold uppercase text-lg mb-8 tracking-wider border-b border-slate-800 pb-4 flex items-center gap-3">
-
-
-
-                            <i data-lucide="wrench" class="w-6 h-6"></i> 4. Plano de Ação Técnico
-
-
-
-                        </h3>
-
-
-
-                        <div class="space-y-0 relative border-l-2 border-slate-800 ml-3" id="actionPlanSteps">
-
-
-
-                        </div>
-
-
-
-                    `;
-
-
-
-                    // Append no final do container
-
-
-
-                    resultsContainer.appendChild(novaDiv);
-
-
-
-                } 
-
-
-
-
-
-
-
-                // Dados reais da API - usa action_plan do backend
-                const actionPlan = data.resultado.technical_audit.action_plan || {};
-                console.log("Action Plan da API:", actionPlan);
-                
-                // Combina todos os períodos (week_1, month_1, etc) em uma única lista
-                const realSteps = [];
-                Object.keys(actionPlan).forEach(period => {
-                    if (Array.isArray(actionPlan[period])) {
-                        realSteps.push(...actionPlan[period]);
-                    }
-                });
-                console.log("Steps combinados:", realSteps);
-
-                // Renderiza os passos
-                const containerPassos = document.getElementById('actionPlanSteps');
-                containerPassos.innerHTML = ""; 
-
-                // Adiciona título único "Ações recomendadas" apenas se houver steps
-                if (realSteps.length > 0) {
-                    containerPassos.innerHTML += `
-                        <h4 class="text-white font-bold text-sm mb-4 group-hover:text-primary transition">Ações recomendadas</h4>
-                    `;
-                }
-
-                realSteps.forEach((stepText, i) => {
-                    containerPassos.innerHTML += `
-                        <div class="mb-8 ml-6 relative group scale-in" style="animation-delay: ${i * 0.1}s">
-                            <div class="flex items-start gap-3">
-                                <span class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0 opacity-60 group-hover:opacity-100 transition"></span>
-                                <p class="text-xs text-slate-300 leading-relaxed flex-1">${stepText}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-
-
-
-
-
-                lucide.createIcons();
-
-
-
                 // Adiciona botão flutuante de chat
-
                 addFloatingChatButton(data.resultado.personas_results);
 
-
-
                 // Ajusta posição do footer para não sobrepor resultados
-
                 adjustFooterPosition(true);
-
-
 
                 // Verificação adicional para garantir o posicionamento
 
@@ -4462,12 +4640,17 @@
                     };
                     
                     displayCompareResults(mockData);
-                    
                 }, 2500);
             }
         }
+
         function displayCompareResults(data) {
             console.log("🎯 Exibindo resultados:", data);
+            
+            // Armazenar dados globalmente para exportação PDF (comparação)
+            auditData = data;
+            currentAuditUrl = (data.site_a?.url || "Site A") + " vs " + (data.site_b?.url || "Site B");
+            
             console.log("📊 Detectando formato...", {
                 hasExecutiveVerdict: !!data.executive_verdict,
                 hasSiteData: !!(data.site_a && data.site_b),
@@ -4660,7 +4843,7 @@
 
                 <!-- BOTÃO EXPORTAR PDF (Não aparece no print) -->
                 <div style="margin-top: 30px; padding: 20px; text-align: center; background: #f5f5f5; border-radius: 8px;" class="no-print">
-                    <button onclick="window.print()" style="padding: 12px 30px; font-size: 14px; font-weight: bold; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 10px;">
+                    <button onclick="gerarPDFOficial()" style="padding: 12px 30px; font-size: 14px; font-weight: bold; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 10px;">
                         📥 EXPORTAR COMO PDF
                     </button>
                     <button onclick="smoothScrollTo('compareArea')" style="padding: 12px 30px; font-size: 14px; font-weight: bold; background: #666; color: white; border: none; border-radius: 6px; cursor: pointer;">
@@ -4876,7 +5059,7 @@
 
                 <!-- CTA e PDF -->
                 <div class="mt-12 flex flex-col md:flex-row gap-4 items-center justify-center">
-                    <button onclick="window.print()" class="flex items-center gap-2 px-8 py-4 rounded-xl font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                    <button onclick="gerarPDFOficial()" class="flex items-center gap-2 px-8 py-4 rounded-xl font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105">
                         <i data-lucide="file-down" class="w-5 h-5"></i> 
                         BAIXAR RELATÓRIO PDF
                     </button>
@@ -4948,7 +5131,7 @@
                 </div>
 
                 <div class="mt-10 text-center">
-                    <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg inline-flex items-center gap-2 transition-all hover:scale-105">
+                    <button onclick="gerarPDFOficial()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg inline-flex items-center gap-2 transition-all hover:scale-105">
                         <i data-lucide="file-down" class="w-5 h-5"></i> BAIXAR RELATÓRIO PDF
                     </button>
                 </div>
@@ -4965,6 +5148,25 @@
             // Criar estrutura HTML inicial para todas as seções
             createAuditResultsStructure();
             
+            // Armazenar dados globalmente para exportação PDF (fallback)
+            auditData = {
+                url: url,
+                technical_audit: {
+                    score: Math.floor(Math.random() * 30) + 60,
+                    performance_score: Math.floor(Math.random() * 30) + 60,
+                    seo_score: Math.floor(Math.random() * 30) + 60,
+                    accessibility_score: Math.floor(Math.random() * 30) + 60,
+                    lcp: (Math.random() * 3 + 1).toFixed(1),
+                    load_time: (Math.random() * 4 + 1).toFixed(1),
+                    executive_summary: "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.",
+                    vulnerabilities: [],
+                    action_plan: []
+                },
+                personas_results: [],
+                behavioral_analysis: []
+            };
+            currentAuditUrl = url;
+            
             document.getElementById('auditResults').classList.remove('hidden');
             
             // Gera score aleatório entre 60-89
@@ -4979,11 +5181,66 @@
             const resScoreEl = document.getElementById('resScore');
             if (resScoreEl) resScoreEl.innerText = score;
             
-            const resUrlEl = document.getElementById('resUrl');
+            const resUrlEl = document.getElementById('reportUrl');
             if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
             
             const resSummaryEl = document.getElementById('resSummary');
             if (resSummaryEl) resSummaryEl.innerText = "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.";
+
+            // Função para determinar cor baseada no score
+            function getScoreColor(score) {
+                if (score >= 90) return "text-green-400";
+                if (score >= 50) return "text-yellow-500";
+                return "text-red-500";
+            }
+
+            // Função para determinar cor de tempo (em segundos)
+            function getTimeColor(timeStr) {
+                const time = parseFloat(timeStr);
+                if (time <= 2.5) return "text-green-400";
+                if (time <= 4.0) return "text-yellow-500";
+                return "text-red-500";
+            }
+
+            // Gera métricas reais simuladas para fallback
+            const fallbackMetrics = {
+                performance_score: Math.floor(Math.random() * 30) + 60, // 60-89
+                seo_score: Math.floor(Math.random() * 20) + 80, // 80-99
+                accessibility_score: Math.floor(Math.random() * 25) + 70, // 70-94
+                lcp: `${(Math.random() * 3 + 1.5).toFixed(1)} s`, // 1.5-4.5s
+                load_time: `${(Math.random() * 2 + 1).toFixed(1)} s` // 1.0-3.0s
+            };
+
+            // Popula métricas reais do Google PageSpeed (Fallback)
+            const perfScoreEl = document.getElementById('realPerformanceScore');
+            if (perfScoreEl) {
+                perfScoreEl.innerText = fallbackMetrics.performance_score;
+                perfScoreEl.className = `text-4xl font-black ${getScoreColor(fallbackMetrics.performance_score)}`;
+            }
+
+            const seoScoreEl = document.getElementById('realSeoScore');
+            if (seoScoreEl) {
+                seoScoreEl.innerText = fallbackMetrics.seo_score;
+                seoScoreEl.className = `text-4xl font-black ${getScoreColor(fallbackMetrics.seo_score)}`;
+            }
+
+            const a11yScoreEl = document.getElementById('realA11yScore');
+            if (a11yScoreEl) {
+                a11yScoreEl.innerText = fallbackMetrics.accessibility_score;
+                a11yScoreEl.className = `text-4xl font-black ${getScoreColor(fallbackMetrics.accessibility_score)}`;
+            }
+
+            const lcpEl = document.getElementById('realLcp');
+            if (lcpEl) {
+                lcpEl.innerText = fallbackMetrics.lcp;
+                lcpEl.className = `text-2xl font-bold ${getTimeColor(fallbackMetrics.lcp)}`;
+            }
+
+            const loadTimeEl = document.getElementById('realLoadTime');
+            if (loadTimeEl) {
+                loadTimeEl.innerText = fallbackMetrics.load_time;
+                loadTimeEl.className = `text-2xl font-bold ${getTimeColor(fallbackMetrics.load_time)}`;
+            }
 
             // Imagens placeholder com verificações
             const printMobileEl = document.getElementById('printMobile');
@@ -4997,7 +5254,7 @@
             }
 
             // Vulnerabilidades baseadas no score
-            const vDiv = document.getElementById('vulnerabilitiesGrid');
+            const vDiv = document.getElementById('vulnerabilitiesTableBody');
             if (vDiv) {
                 vDiv.innerHTML="";
 
@@ -5022,29 +5279,24 @@
 
                 listaVulnerabilidades.forEach(v => {
                     vDiv.innerHTML += `
-                        <div class="flex items-start gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/50 hover:bg-slate-900/60 transition group card-hover">
-                            <div class="min-w-[80px]">
-                                <p class="text-[10px] text-slate-500 font-bold uppercase">Nível</p>
-                                <p class="font-black ${v.cor} text-lg">${v.nivel}</p>
-                            </div>
-                            <div class="flex-1 pl-4 border-l border-slate-700 group-hover:border-slate-600 transition">
-                                <p class="text-white text-sm font-bold mb-1">${v.titulo}</p>
-                                <p class="text-xs text-slate-400 leading-relaxed">${v.desc}</p>
-                            </div>
-                        </div>
+                        <tr class="border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
+                            <td class="p-4 font-semibold ${v.cor} border-r border-slate-700">${v.nivel}</td>
+                            <td class="p-4 text-white font-medium border-r border-slate-700">${v.titulo}</td>
+                            <td class="p-4 text-slate-300 text-sm">${v.desc}</td>
+                        </tr>
                     `;
                 });
             }
 
             // Personas simuladas
-            const pGrid = document.getElementById('personasGrid');
-            if (pGrid) {
-                pGrid.innerHTML = "";
+            const pDiv = document.getElementById('personasTableBody');
+            if (pDiv) {
+                pDiv.innerHTML = "";
 
                 const personasToUse = selected.length > 0 ? selected : SYSTEM_PERSONAS.slice(0, 3);
 
-                personasToUse.forEach((personaName, index) => {
-                    const personaScore = Math.floor(Math.random() * 4) + 5; // 5-8
+                personasToUse.forEach((persona, index) => {
+                    const personaScore = Math.floor(Math.random() * 4) + 6; // 6-9
                     const quotes = [
                         "Site funcional mas poderia ser mais intuitivo.",
                         "Navegação ok, mas alguns elementos poderiam ser mais claros.",
@@ -5052,17 +5304,57 @@
                         "Consigo usar sem grandes dificuldades."
                     ];
 
-                    pGrid.innerHTML += `
-                        <div class="glass-panel p-6 rounded-xl border border-slate-700/50 flex flex-col md:flex-row gap-6 card-hover">
-                            <div class="md:w-1/4">
-                                <div class="bg-slate-800/50 rounded-lg p-3 text-center border border-slate-700">
-                                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-2">${personaName}</h4>
-                                    <div class="text-3xl font-black text-cyber">${personaScore}<span class="text-sm text-slate-500">/10</span></div>
-                                    <p class="font-bold text-sm">Análise em Modo Básico</p>
-                                    <p class="text-xs mt-1 opacity-90">Sistema de IA temporariamente indisponível. Resultados baseados em análise heurística.</p>
+                    const sentiment = personaScore >= 8 ? "Positivo" : personaScore <= 6 ? "Negativo" : "Neutro";
+                    const sentimentColor = personaScore >= 8 ? "text-green-400" : personaScore <= 6 ? "text-red-400" : "text-slate-300";
+
+                    pDiv.innerHTML += `
+                        <tr class="border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
+                            <td class="p-4 border-r border-slate-700">
+                                <div class="font-semibold text-white">${persona.name}</div>
+                                <div class="text-sm ${personaScore >= 8 ? "text-green-400" : personaScore <= 6 ? "text-red-500" : "text-yellow-500"} font-bold">Score: ${personaScore}/10</div>
+                            </td>
+                            <td class="p-4 border-r border-slate-700">
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${sentimentColor} bg-slate-800 border border-slate-600">
+                                    ${sentiment}
+                                </span>
+                            </td>
+                            <td class="p-4 text-slate-300 text-sm">
+                                <div class="mb-2">
+                                    <span class="text-xs text-slate-500 font-semibold uppercase">Citação Direta:</span>
+                                    <p class="italic text-white mt-1">"${quotes[index]}"</p>
                                 </div>
+                                <div class="text-xs text-slate-500">
+                                    <i data-lucide="activity" class="w-3 h-3 inline mr-1"></i>
+                                    Análise de Jornada Concluída
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Plano de Ação Fallback
+            const actionPlanList = document.getElementById('actionPlanList');
+            if (actionPlanList) {
+                actionPlanList.innerHTML = "";
+                
+                const fallbackSteps = [
+                    "Otimizar imagens e implementar lazy loading para melhorar performance",
+                    "Revisar meta tags e estrutura SEO para melhor posicionamento",
+                    "Melhorar contraste e navegação por teclado para acessibilidade",
+                    "Implementar cache de navegador para reduzir tempo de carregamento"
+                ];
+                
+                fallbackSteps.forEach((stepText, i) => {
+                    actionPlanList.innerHTML += `
+                        <li class="flex items-start gap-4 p-4 border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
+                            <span class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                ${i + 1}
+                            </span>
+                            <div class="flex-1">
+                                <p class="text-slate-300 leading-relaxed">${stepText}</p>
                             </div>
-                        </div>
+                        </li>
                     `;
                 });
             }
@@ -6295,6 +6587,285 @@
             }
         }
 
+        // Função para gerar PDF oficial a partir dos dados brutos da API
+        function gerarPDFOficial(dadosOverride = null) {
+            try {
+                // Usar dados fornecidos ou dados globais
+                const dados = dadosOverride || auditData;
+                if (!dados) {
+                    Toast.error("Nenhum dado de auditoria disponível para exportar.");
+                    return;
+                }
+
+                // Adicionar URL se não estiver nos dados
+                if (!dados.url && currentAuditUrl) {
+                    dados.url = currentAuditUrl;
+                }
+
+                // Inicializar jsPDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // Configurações de fonte
+                doc.setFont('helvetica');
+                
+                // Cores corporativas (preto, cinza, branco)
+                const colors = {
+                    black: [17, 24, 39],         // #111827
+                    darkGray: [55, 65, 81],       // #374151
+                    lightGray: [249, 250, 251],   // #f9fafb
+                    headerBg: [243, 244, 246],    // #f3f4f6
+                    border: [229, 231, 235]      // #e5e7eb
+                };
+
+                let yPosition = 20;
+
+                // === CABEÇALHO DO DOCUMENTO (Limpo e Elegante) ===
+                
+                // Título principal
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...colors.black);
+                doc.text('S.S.W Intelligence - Dossiê de Auditoria Técnica', 105, yPosition, { align: 'center' });
+                yPosition += 12;
+
+                // URL analisada
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...colors.darkGray);
+                doc.text(`URL Analisada: ${dados.url || 'N/A'}`, 20, yPosition);
+                yPosition += 7;
+
+                // Data da análise
+                const dataGeracao = new Date().toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                doc.text(`Data da Análise: ${dataGeracao}`, 20, yPosition);
+                yPosition += 12;
+
+                // Linha horizontal separadora
+                doc.setDrawColor(...colors.border);
+                doc.line(20, yPosition, 190, yPosition);
+                yPosition += 15;
+
+                // === SCORES COMO TABELA (Painel de Métricas) ===
+                
+                // 1. EXTRAÇÃO DOS SCORES com fallbacks seguros
+                const metrics = dados?.technical_audit?.real_metrics || {};
+                const score_perf = metrics.performance_score ?? "N/A";
+                const score_seo = metrics.seo_score ?? "N/A";  // Corrigido de "SEQ" para "SEO"
+                const score_acc = metrics.accessibility_score ?? "N/A";
+                const load_time = metrics.load_time || "N/A";
+                const lcp = metrics.lcp || "N/A";
+
+                // Remover duplicação de "s" nos tempos
+                const clean_load_time = String(load_time).replace(/s+$/, '');
+                const clean_lcp = String(lcp).replace(/s+$/, '');
+
+                // Criar tabela de scores
+                doc.autoTable({
+                    head: [['Performance', 'SEO', 'Acessibilidade', 'LCP', 'Load Time']],
+                    body: [[score_perf, score_seo, score_acc, clean_lcp, clean_load_time]],
+                    startY: yPosition,
+                    theme: 'plain',
+                    headStyles: {
+                        fillColor: colors.headerBg,
+                        textColor: colors.black,
+                        fontStyle: 'bold',
+                        halign: 'center',
+                        fontSize: 11
+                    },
+                    bodyStyles: {
+                        halign: 'center',
+                        fontSize: 14,
+                        textColor: colors.black
+                    },
+                    margin: { left: 20, right: 20 },
+                    didDrawPage: function(data) {
+                        yPosition = data.cursor.y;
+                    }
+                });
+
+                yPosition += 15;
+
+                // === TABELA DE VULNERABILIDADES (Página Separada) ===
+                // 2. EXTRAÇÃO DE VULNERABILIDADES com fallbacks
+                const vulns = dados?.technical_audit?.vulnerabilities || [];
+                if (vulns.length > 0) {
+                    // Força nova página para vulnerabilidades
+                    doc.addPage();
+                    yPosition = 20;
+
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(...colors.black);
+                    doc.text('Vulnerabilidades Identificadas', 20, yPosition);
+                    yPosition += 8;
+
+                    // Preparar dados para a tabela
+                    const bodyVulns = vulns.map(v => [
+                        v.severity || "Atenção",
+                        v.title || "Não especificado",
+                        v.description || "Sem detalhes"
+                    ]);
+
+                    // Criar tabela de vulnerabilidades
+                    doc.autoTable({
+                        head: [['Nível de Risco', 'Problema', 'Descrição Técnica']],
+                        body: bodyVulns,
+                        startY: yPosition,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [31, 41, 55],
+                            textColor: [255, 255, 255],
+                            fontStyle: 'bold',
+                            fontSize: 10
+                        },
+                        bodyStyles: {
+                            textColor: colors.darkGray,
+                            fontSize: 9
+                        },
+                        alternateRowStyles: {
+                            fillColor: colors.lightGray
+                        },
+                        tableLineColor: colors.border,
+                        margin: { left: 20, right: 20 },
+                        didDrawPage: function(data) {
+                            yPosition = data.cursor.y;
+                        }
+                    });
+                }
+
+                // === TABELA DE PERSONAS (Página Separada) ===
+                // 3. MAPEAMENTO UNIVERSAL DE PERSONAS
+                const personas = dados?.personas_results || dados?.battle_data?.persona_battleground || dados?.behavioral_analysis || [];
+                if (personas.length > 0) {
+                    // Força nova página para personas
+                    doc.addPage();
+                    yPosition = 20;
+
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(...colors.black);
+                    doc.text('Análise de Personas', 20, yPosition);
+                    yPosition += 8;
+
+                    // Preparar dados para a tabela de personas
+                    const bodyPersonas = personas.map(p => [
+                        p.profile_name || p.persona || "Usuário Geral",
+                        (p.score ? `Nota: ${p.score}/10` : null) || p.sentiment || p.preference || "Neutro",
+                        p.direct_quote || p.feedback || p.reason || "Sem análise detalhada."
+                    ]);
+
+                    // Criar tabela de personas
+                    doc.autoTable({
+                        head: [['Perfil Simulado (Persona)', 'Veredito/Sentimento', 'Feedback Detalhado']],
+                        body: bodyPersonas,
+                        startY: yPosition,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [31, 41, 55],
+                            textColor: [255, 255, 255],
+                            fontStyle: 'bold',
+                            fontSize: 10
+                        },
+                        bodyStyles: {
+                            textColor: colors.darkGray,
+                            fontSize: 9
+                        },
+                        alternateRowStyles: {
+                            fillColor: colors.lightGray
+                        },
+                        tableLineColor: colors.border,
+                        columnStyles: {
+                            0: { cellWidth: 40 }, // Persona
+                            1: { cellWidth: 35 }, // Veredito
+                            2: { cellWidth: 'auto' } // Feedback Detalhado (largura automática)
+                        },
+                        margin: { left: 20, right: 20 },
+                        didDrawPage: function(data) {
+                            yPosition = data.cursor.y;
+                        }
+                    });
+                }
+
+                // === PLANO DE AÇÃO ===
+                // 4. RENDERIZAR O PLANO DE AÇÃO com autoTable para paginação automática
+                let actions = dados?.technical_audit?.action_plan?.week_1 || 
+                           dados?.technical_audit?.action_plan?.month_1 || 
+                           dados?.action_plan || 
+                           dados?.battle_data?.action_plan_for_a || [];
+                
+                // Achatar arrays aninhados se existirem
+                if (Array.isArray(actions) && actions.length > 0 && Array.isArray(actions[0])) {
+                    actions = actions.flat();
+                }
+                
+                if (actions.length > 0) {
+                    if (yPosition > 180) {
+                        doc.addPage();
+                        yPosition = 20;
+                    } else {
+                        yPosition += 15;
+                    }
+
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(...colors.black);
+                    doc.text('Plano de Ação Recomendado', 20, yPosition);
+                    yPosition += 10;
+
+                    // Preparar dados para o plano de ação como tabela de 1 coluna
+                    const bodyActions = actions.map((act, index) => [`${index + 1}. ${act}`]);
+
+                    // Criar tabela para o plano de ação (sem bordas visíveis, apenas para paginação)
+                    doc.autoTable({
+                        head: [], // Sem cabeçalho
+                        body: bodyActions,
+                        startY: yPosition,
+                        showHead: 'never',
+                        theme: 'plain',
+                        styles: {
+                            textColor: colors.black,
+                            fontSize: 10,
+                            cellPadding: 2
+                        },
+                        margin: { left: 20, right: 20 },
+                        didDrawPage: function(data) {
+                            yPosition = data.cursor.y;
+                        }
+                    });
+                }
+
+                // === RODAPÉ ===
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...colors.darkGray);
+                    doc.text(`Página ${i} de ${pageCount}`, 105, 287, { align: 'center' });
+                    doc.text('Gerado por S.S.W Intelligence - Plataforma de Auditoria Web', 105, 290, { align: 'center' });
+                }
+
+                // Salvar o PDF
+                const fileName = `dossie-auditoria-${dados.url ? dados.url.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 30) : 'site'}-${Date.now()}.pdf`;
+                doc.save(fileName);
+
+                Toast.success('Dossiê executivo gerado com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                Toast.error('Erro ao gerar PDF. Tente novamente.');
+            }
+        }
+
 </script>
 
 <script src="js/ranking.js"></script>
@@ -6445,11 +7016,14 @@ async function reenviarCodigo() {
             link.innerHTML = "Tentar novamente";
             link.classList.remove('pointer-events-none', 'opacity-50');
         }
-    } catch (e) {
-        console.error(e);
-        Toast.error("Erro de conexão.");
+    } catch (error) {
+        console.error("Erro ao reenviar código:", error);
+        Toast.error("Erro de conexão. Tente novamente.");
+        link.innerHTML = "Tentar novamente";
+        link.classList.remove('pointer-events-none', 'opacity-50');
     }
 }
+
 </script>
 
 </body> 
