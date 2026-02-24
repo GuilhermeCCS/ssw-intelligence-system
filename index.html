@@ -5674,25 +5674,9 @@
 
 
 
-            min-width: 12px;
-
-
-
-            text-align: right;
-
-
-
         }
 
-
-
     </style>
-
-
-
-
-
-
 
     <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -11379,57 +11363,12 @@
 
 
                         <!-- Barra de Pesquisa Visual -->
-
-
-
-                        <div class="max-w-2xl mx-auto relative">
-
-
-
-                            <div class="relative">
-
-
-
-                                <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-500"></i>
-
-
-
-                                <input 
-
-
-
-                                    type="text" 
-
-
-
-                                    placeholder="Pesquisar tutoriais, guias, documentação..."
-
-
-
-                                    class="w-full bg-[#161b22] border border-white/10 rounded-xl px-12 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-
-
-
-                                >
-
-
-
-                                <div class="absolute right-2 top-1/2 transform -translate-y-1/2">
-
-
-
-                                    <kbd class="px-2 py-1 bg-[#0F1117] border border-white/10 rounded text-xs text-slate-400">⌘K</kbd>
-
-
-
-                                </div>
-
-
-
+                        
+                        <div class="max-w-2xl mx-auto">
+                            <div class="text-center text-slate-400">
+                                <i data-lucide="book-open" class="w-8 h-8 mx-auto mb-4 text-slate-600"></i>
+                                <p class="text-sm">Use a navegação lateral para explorar os tutoriais</p>
                             </div>
-
-
-
                         </div>
 
 
@@ -14040,6 +13979,18 @@
 
 
                                     <i data-lucide="book-open" class="w-4 h-4 text-slate-600"></i> Tutorial
+
+
+
+                                </button>
+
+
+
+                                <button onclick="showFAQ()" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm w-full text-left py-1">
+
+
+
+                                    <i data-lucide="help-circle" class="w-4 h-4 text-slate-600"></i> FAQ
 
 
 
@@ -27668,9 +27619,343 @@
 
 
 
+        function closeFAQModal() {
+
+            const modal = document.getElementById('faqModal');
+
+            if (modal) {
+
+                modal.remove();
+
+            }
+
+        }
+
+        function showFAQ() {
+
+            // Remove modal anterior se existir
+
+            const existingModal = document.getElementById('faqModal');
+
+            if (existingModal) {
+
+                existingModal.remove();
+
+            }
+
+            // Cria o modal FAQ
+
+            const modal = document.createElement('div');
+
+            modal.id = 'faqModal';
+
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up';
+
+            modal.innerHTML = `
+
+                <div class="glass-panel p-8 rounded-2xl border border-slate-800 max-w-4xl w-full max-h-[80vh] overflow-y-auto relative">
+
+                    <button onclick="closeFAQModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+
+                        <i data-lucide="x" class="w-5 h-5"></i>
+
+                    </button>
+
+                    
+
+                    <div class="flex items-center gap-3 mb-6">
+
+                        <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
+
+                            <i data-lucide="help-circle" class="w-6 h-6 text-accent"></i>
+
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-white">Perguntas Frequentes - FAQ</h3>
+
+                    </div>
+
+                    
+
+                    <div class="space-y-4">
+
+                        <!-- FAQ Item 1 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">O que é o S.S.W Intelligence?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                A S.S.W Intelligence é uma plataforma avançada de análise inteligente de sites que identifica erros visuais e técnicos, gerando relatórios profissionais sobre velocidade de carregamento, SEO, performance e experiência do usuário. Nosso diferencial exclusivo são as personas - personalidades baseadas em pessoas reais que interagem e fornecem feedback personalizado ao final de cada análise.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 2 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Como funciona a análise de sites?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Nossa sistema analisa sites completos, identificando erros visuais e técnicos, problemas de performance, SEO, velocidade de carregamento e experiência do usuário. Ao final, nossas personas exclusivas interagem com você, fornecendo feedback personalizado baseado em suas características reais. Basta informar a URL do site para obter uma análise completa.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 3 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Quais tipos de análise são oferecidos?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Oferecemos análise individual completa e análise comparativa entre sites. Nossas análises cobrem performance técnica, SEO, velocidade de carregamento, erros visuais, acessibilidade, experiência do usuário e muito mais. Todas incluem o feedback exclusivo das nossas personas ao final.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 4 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">A análise é segura e confidencial?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Sim! Todas as análises são realizadas utilizando apenas informações publicamente disponíveis dos sites. Não armazenamos dados sensíveis dos sites analisados e utilizamos criptografia para proteger suas informações. Consulte nossos Termos de Uso para mais detalhes.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 5 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">O que são as Personas?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Nossas Personas são o diferencial exclusivo da SSW! São personalidades baseadas em pessoas reais que interagem com você ao final de cada análise, fornecendo feedback personalizado e insights únicos. Cada Persona tem características diferentes, oferecendo perspectivas variadas sobre os resultados da análise do seu site.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 6 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Como funciona a análise comparativa?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                A análise comparativa permite analisar dois ou mais sites simultaneamente, destacando semelhanças, diferenças e padrões de performance entre eles. Ideal para benchmarking competitivo, análise de concorrência ou compreensão de posicionamento no mercado. Inclui feedback das personas para cada site analisado.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 7 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Como são calculados os créditos?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Cada análise consome uma quantidade específica de créditos dependendo da complexidade e do tipo de análise. Análises individuais consomem menos créditos que análises comparativas. Você pode adquirir pacotes de créditos na seção Gestão de Créditos.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 8 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Posso exportar os resultados das análises?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Sim! Todos os relatórios de análise podem ser exportados em formato PDF, incluindo métricas detalhadas, gráficos de performance, insights técnicos e o feedback das personas. A função de exportação está disponível na seção Relatórios e Insights após cada análise concluída.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 9 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Como obtenho suporte técnico?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Você pode entrar em contato conosco através do WhatsApp (82 99130-1991), email (sswinteligence@gmail.com) ou consultar nosso Tutorial completo disponível no sistema. Também oferecemos suporte prioritário para usuários premium.
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <!-- FAQ Item 10 -->
+
+                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
+
+                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
+
+                                <span class="text-white font-medium">Qual a precisão das análises?</span>
+
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+
+                            </button>
+
+                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
+
+                                Nossos algoritmos são constantemente aprimorados e oferecem alta precisão na identificação de problemas técnicos e de performance. No entanto, as análises devem ser usadas como ferramenta de apoio para otimização. A precisão pode variar conforme a complexidade e estrutura do site analisado.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
+
+                        <p class="text-slate-300 text-sm text-center">
+
+                            <i data-lucide="info" class="w-4 h-4 inline mr-2"></i>
+
+                            Não encontrou sua dúvida? Entre em contato conosco pelo WhatsApp ou email para suporte personalizado.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            document.body.appendChild(modal);
+
+            // Inicializa ícones Lucide no modal
+
+            lucide.createIcons();
+
+            // Adiciona evento de clique para expandir/colapsar
+
+            modal.querySelectorAll('button[onclick*="expanded"]').forEach(button => {
+
+                button.addEventListener('click', function() {
+
+                    const content = this.nextElementSibling;
+
+                    const icon = this.querySelector('[data-lucide="chevron-down"]');
+
+                    
+
+                    if (content.classList.contains('hidden')) {
+
+                        content.classList.remove('hidden');
+
+                        icon.style.transform = 'rotate(180deg)';
+
+                    } else {
+
+                        content.classList.add('hidden');
+
+                        icon.style.transform = 'rotate(0deg)';
+
+                    }
+
+                });
+
+            });
+
+        }
+
         function showAboutCard() {
-
-
 
             // Remove modal anterior se existir
 
