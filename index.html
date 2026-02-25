@@ -6586,441 +6586,11 @@
 
 
 
-            <div class="space-y-6" id="loginForm">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <div class="group">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Email Corporativo</label>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <div class="relative">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <input type="email" id="loginEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        <div class="space-y-6" id="loginForm">
+                <div id="loginContent">
+                    <!-- Conteúdo será renderizado dinamicamente -->
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <div class="group">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Senha de Acesso</label>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <div class="relative">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
-
-
-
-                    Acessar Sistema
-
-
-
-                </button>
-
-
-
-
-
-
-
-                <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <button onclick="toggleRegister()" class="text-xs text-slate-400 hover:text-white transition-colors font-medium flex items-center gap-1">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <i data-lucide="user-plus" class="w-3 h-3"></i> Criar Conta
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <a href="https://wa.me/5582991301991?text=Preciso%20recuperar%20minha%20senha" target="_blank" class="text-xs text-slate-400 hover:text-primary transition-colors flex items-center gap-1">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        Recuperar Credencial <i data-lucide="external-link" class="w-3 h-3"></i>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             <div class="space-y-4 hidden" id="registerForm">
 
@@ -15238,6 +14808,13 @@
 
 
 
+        // States para recuperação de senha
+        let authView = 'login'; // 'login', 'email', 'codigo'
+        let emailTemporario = '';
+        let loadingRecuperacao = false;
+        let erroRecuperacao = '';
+        let sucessoRecuperacao = '';
+
         async function fazerLogin() {
 
 
@@ -15759,6 +15336,283 @@
 
 
         // Se o usuário não tiver a flag 'verificado' ou ela for falsa/0
+
+
+
+﻿// FunÃ§Ãµes de controle de visualizaÃ§Ã£o
+function setAuthView(view) {
+    authView = view;
+    erroRecuperacao = '';
+    sucessoRecuperacao = '';
+    renderAuthView();
+}
+
+// FunÃ§Ã£o para enviar cÃ³digo de recuperaÃ§Ã£o
+async function enviarCodigoRecuperacao() {
+    const email = document.getElementById('recuperarEmail').value;
+    
+    if(!email) {
+        Toast.warning("Preencha o campo de e-mail");
+        return;
+    }
+
+    loadingRecuperacao = true;
+    erroRecuperacao = '';
+    renderAuthView();
+
+    try {
+        const res = await fetch(`${API_URL}/api/recuperar-senha`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email})
+        });
+
+        // Salva e-mail temporÃ¡rio independentemente do resultado (seguranÃ§a)
+        emailTemporario = email;
+        
+        loadingRecuperacao = false;
+        
+        // Sempre muda para a tela de cÃ³digo (mesmo com erro, por seguranÃ§a)
+        setAuthView('codigo');
+        
+        if(res.ok) {
+            Toast.success("CÃ³digo enviado para seu e-mail!");
+        } else {
+            // NÃ£o mostra erro especÃ­fico por seguranÃ§a anti-enumeraÃ§Ã£o
+            Toast.info("Se o e-mail existir, vocÃª receberÃ¡ um cÃ³digo.");
+        }
+    } catch(e) {
+        console.error('Erro ao enviar cÃ³digo:', e);
+        loadingRecuperacao = false;
+        emailTemporario = email;
+        setAuthView('codigo');
+        Toast.info("Se o e-mail existir, vocÃª receberÃ¡ um cÃ³digo.");
+    }
+}
+
+// FunÃ§Ã£o para atualizar senha
+async function atualizarSenha() {
+    const codigo = document.getElementById('codigoRecuperacao').value;
+    const novaSenha = document.getElementById('novaSenha').value;
+    const confirmarSenha = document.getElementById('confirmarNovaSenha').value;
+
+    if(!codigo || !novaSenha || !confirmarSenha) {
+        Toast.warning("Preencha todos os campos");
+        return;
+    }
+
+    if(codigo.length !== 4) {
+        Toast.warning("O cÃ³digo deve ter 4 dÃ­gitos");
+        return;
+    }
+
+    if(novaSenha !== confirmarSenha) {
+        Toast.warning("As senhas nÃ£o coincidem");
+        return;
+    }
+
+    if(novaSenha.length < 6) {
+        Toast.warning("A senha deve ter pelo menos 6 caracteres");
+        return;
+    }
+
+    loadingRecuperacao = true;
+    erroRecuperacao = '';
+    renderAuthView();
+
+    try {
+        const res = await fetch(`${API_URL}/api/nova-senha`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: emailTemporario,
+                codigo: codigo,
+                nova_senha: novaSenha
+            })
+        });
+
+        const data = await res.json();
+        loadingRecuperacao = false;
+
+        if(res.ok) {
+            sucessoRecuperacao = "Senha atualizada com sucesso!";
+            Toast.success("Senha atualizada com sucesso!");
+            setTimeout(() => {
+                setAuthView('login');
+                // Limpa campos
+                document.getElementById('loginEmail').value = emailTemporario;
+                document.getElementById('loginPass').value = '';
+                emailTemporario = '';
+            }, 2000);
+        } else {
+            erroRecuperacao = data.detail || "CÃ³digo invÃ¡lido ou expirado";
+            Toast.error(erroRecuperacao);
+            renderAuthView();
+        }
+    } catch(e) {
+        console.error('Erro ao atualizar senha:', e);
+        loadingRecuperacao = false;
+        erroRecuperacao = "Erro de conexÃ£o com o servidor";
+        Toast.error(erroRecuperacao);
+        renderAuthView();
+    }
+}
+
+// FunÃ§Ã£o para renderizar a visualizaÃ§Ã£o atual
+function renderAuthView() {
+    const loginContent = document.getElementById('loginContent');
+    
+    if(authView === 'login') {
+        loginContent.innerHTML = getLoginHTML();
+    } else if(authView === 'email') {
+        loginContent.innerHTML = getEmailHTML();
+    } else if(authView === 'codigo') {
+        loginContent.innerHTML = getCodigoHTML();
+    }
+    
+    // Re-renderiza Ã­cones Lucide
+    setTimeout(() => lucide.createIcons(), 100);
+}
+
+// Templates HTML para cada visualizaÃ§Ã£o
+function getLoginHTML() {
+    return `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-white mb-2">Acessar Sistema</h2>
+            <p class="text-slate-400 text-sm">Entre com suas credenciais para continuar</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="group">
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">E-mail Corporativo</label>
+                <div class="relative">
+                    <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+                    <input type="email" id="loginEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
+                </div>
+            </div>
+
+            <div class="group">
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Senha de Acesso</label>
+                <div class="relative">
+                    <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+                    <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
+                </div>
+            </div>
+
+            <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
+                Acessar Sistema
+            </button>
+
+            <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
+                <button onclick="toggleRegister()" class="text-xs text-slate-400 hover:text-white transition-colors font-medium flex items-center gap-1">
+                    <i data-lucide="user-plus" class="w-3 h-3"></i> Criar Conta
+                </button>
+                
+                <button onclick="setAuthView('email')" class="text-xs text-slate-400 hover:text-[#00D4FF] transition-colors font-medium">
+                    Esqueci minha senha
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function getEmailHTML() {
+    return `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-white mb-2">Recuperar Acesso</h2>
+            <p class="text-slate-400 text-sm">Enviaremos um cÃ³digo de 4 dÃ­gitos para seu e-mail</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="group">
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">E-mail Corporativo</label>
+                <div class="relative">
+                    <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+                    <input type="email" id="recuperarEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();enviarCodigoRecuperacao();}">
+                </div>
+            </div>
+
+            <button onclick="enviarCodigoRecuperacao()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase" ${loadingRecuperacao ? 'disabled' : ''}>
+                ${loadingRecuperacao ? `
+                    <div class="flex items-center justify-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Enviando...
+                    </div>
+                ` : 'Enviar CÃ³digo'}
+            </button>
+
+            <button onclick="setAuthView('login')" class="w-full text-slate-400 hover:text-white transition-colors font-medium text-sm py-2">
+                Voltar para o Login
+            </button>
+        </div>
+    `;
+}
+
+function getCodigoHTML() {
+    return `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-white mb-2">Criar Nova Senha</h2>
+            <p class="text-slate-400 text-sm">Insira o cÃ³digo de 4 dÃ­gitos enviado ao seu e-mail</p>
+        </div>
+
+        ${erroRecuperacao ? `
+            <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
+                <p class="text-red-400 text-sm">${erroRecuperacao}</p>
+            </div>
+        ` : ''}
+
+        ${sucessoRecuperacao ? `
+            <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 mb-4">
+                <p class="text-emerald-400 text-sm">${sucessoRecuperacao}</p>
+            </div>
+        ` : ''}
+
+        <div class="space-y-4">
+            <div class="group">
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">CÃ³digo de 4 dÃ­gitos</label>
+                <div class="relative">
+                    <i data-lucide="key" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+                    <input type="text" id="codigoRecuperacao" maxlength="4" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600 text-center tracking-widest text-xl" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('novaSenha').focus();}">
+                </div>
+            </div>
+
+            <div class="group">
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Nova Senha</label>
+                <div class="relative">
+                    <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+                    <input type="password" id="novaSenha" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('confirmarNovaSenha').focus();}">
+                </div>
+            </div>
+
+            <div class="group">
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Confirmar Nova Senha</label>
+                <div class="relative">
+                    <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
+                    <input type="password" id="confirmarNovaSenha" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();atualizarSenha();}">
+                </div>
+            </div>
+
+            <button onclick="atualizarSenha()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase" ${loadingRecuperacao ? 'disabled' : ''}>
+                ${loadingRecuperacao ? `
+                    <div class="flex items-center justify-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Atualizando...
+                    </div>
+                ` : 'Atualizar Senha'}
+            </button>
+
+            <button onclick="setAuthView('login')" class="w-full text-slate-400 hover:text-white transition-colors font-medium text-sm py-2">
+                Voltar para o Login
+            </button>
+        </div>
+    `;
+}
 
 
 
@@ -31044,6 +30898,15 @@ async function reenviarCodigo() {
 
 
 
+
+
+// Inicializa o sistema de autenticação
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializa o formulário de login com a view padrão
+    if (document.getElementById('loginContent')) {
+        renderAuthView();
+    }
+});
 
 </script>
 
