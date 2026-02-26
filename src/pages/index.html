@@ -70,6 +70,11 @@
 
 
 
+    <!-- Mercado Pago SDK v2 -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+
+
     <!-- Open Graph Meta Tags -->
 
 
@@ -82,7 +87,7 @@
 
 
 
-    <meta property="og:image" content="./images/og-image.svg">
+    <meta property="og:image" content="../assets/images/og-image.svg">
 
 
 
@@ -134,7 +139,7 @@
 
 
 
-    <meta name="twitter:image" content="./images/og-image.svg">
+    <meta name="twitter:image" content="../assets/images/og-image.svg">
 
 
 
@@ -178,7 +183,7 @@
 
 
 
-    <link rel="icon" type="image/x-icon" href="images/logos.ico">
+    <link rel="icon" type="image/x-icon" href="../assets/images/logos.ico">
 
 
 
@@ -862,7 +867,7 @@
 
 
 
-    <link rel="stylesheet" href="CSS/cyber-theme.css">
+    <link rel="stylesheet" href="../styles/cyber-theme.css">
 
 
 
@@ -5762,7 +5767,7 @@
 
 
 
-                    <i data-lucide="${icons[type]}" style="width:20px;height:20px;color:${colors[type]};flex-shrink:0;"></i>
+                    <i data-lucide="${icons[type] || 'info'}" style="width:20px;height:20px;color:${colors[type] || '#3B82F6'};flex-shrink:0;"></i>
 
 
 
@@ -6526,7 +6531,7 @@
 
 
 
-                    <img src="images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-28 h-28 object-contain drop-shadow-lg rounded-full">
+                    <img src="../assets/images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-28 h-28 object-contain drop-shadow-lg rounded-full">
 
 
 
@@ -6828,7 +6833,7 @@
 
 
 
-                <img src="images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
+                <img src="../assets/images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
 
 
 
@@ -8973,31 +8978,14 @@
 
 
 
-                    <div class="flex justify-center items-center gap-2 mb-4">
-
-
-
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-
-
-
-                        <i data-lucide="zap" class="w-6 h-6 text-blue-500"></i>
-
-
-
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-
-
-
-                    </div>
-
+                    
 
 
                     <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white">
 
 
 
-                        Invista em Inteligência. <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Domine o Mercado.</span>
+                        Invista em Inteligência <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">e Domine o Mercado.</span>
 
 
 
@@ -9029,15 +9017,8 @@
 
 
 
-                        <button onclick="nav('home')" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium rounded-xl transition-all duration-300">
+                        
 
-
-
-                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar para o Início
-
-
-
-                        </button>
 
 
 
@@ -10904,20 +10885,7 @@
 
 
 
-                        <button onclick="nav('home')" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-
-
-
-                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
-
-
-
-                            <span>Voltar para o início</span>
-
-
-
-                        </button>
-
+                        
 
 
                     </div>
@@ -11116,7 +11084,7 @@
 
 
 
-                                                <img src="images/T1RED.png" alt="Interface de Nova Análise" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T1RED.png" alt="Interface de Nova Análise" class="w-full h-full object-cover">
 
 
 
@@ -11196,7 +11164,7 @@
 
 
 
-                                                <img src="images/T2RED.png" alt="Inserindo URL para Análise" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T2RED.png" alt="Inserindo URL para Análise" class="w-full h-full object-cover">
 
 
 
@@ -11276,7 +11244,7 @@
 
 
 
-                                                <img src="images/T3RED.png" alt="Selecionando Personas para Análise" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T3RED.png" alt="Selecionando Personas para Análise" class="w-full h-full object-cover">
 
 
 
@@ -11356,7 +11324,7 @@
 
 
 
-                                                <img src="images/T4RED.png" alt="Executando Análise Completa" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T4RED.png" alt="Executando Análise Completa" class="w-full h-full object-cover">
 
 
 
@@ -11476,7 +11444,7 @@
 
 
 
-                                            <img src="images/B1RED.png" alt="Acessando Modo Comparativo" class="w-full h-full object-cover">
+                                            <img src="../assets/images/B1RED.png" alt="Acessando Modo Comparativo" class="w-full h-full object-cover">
 
 
 
@@ -11556,7 +11524,7 @@
 
 
 
-                                            <img src="images/B2RED.png" alt="Configurando URLs Comparativas" class="w-full h-full object-cover">
+                                            <img src="../assets/images/B2RED.png" alt="Configurando URLs Comparativas" class="w-full h-full object-cover">
 
 
 
@@ -11636,7 +11604,7 @@
 
 
 
-                                            <img src="images/B3RED.png" alt="Executando Análise Comparativa" class="w-full h-full object-cover">
+                                            <img src="../assets/images/B3RED.png" alt="Executando Análise Comparativa" class="w-full h-full object-cover">
 
 
 
@@ -11828,7 +11796,7 @@
 
 
 
-                                            <img src="images/C1RED.png" alt="Acessando Gestão de Personas" class="w-full h-full object-cover">
+                                            <img src="../assets/images/C1RED.png" alt="Acessando Gestão de Personas" class="w-full h-full object-cover">
 
 
 
@@ -11908,7 +11876,7 @@
 
 
 
-                                            <img src="images/C2RED.png" alt="Criando Nova Persona" class="w-full h-full object-cover">
+                                            <img src="../assets/images/C2RED.png" alt="Criando Nova Persona" class="w-full h-full object-cover">
 
 
 
@@ -11988,7 +11956,7 @@
 
 
 
-                                            <img src="images/C3RED.png" alt="Salvando e Utilizando Persona" class="w-full h-full object-cover">
+                                            <img src="../assets/images/C3RED.png" alt="Salvando e Utilizando Persona" class="w-full h-full object-cover">
 
 
 
@@ -12129,7 +12097,7 @@
             Explore scores de performance, UX, SEO e comportamento. Cada métrica inclui explicações e recomendações.
         </p>
         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-            <img src="images/D1RED.png" alt="Analisando Métricas" class="w-full h-full object-cover">
+            <img src="../assets/images/D1RED.png" alt="Analisando Métricas" class="w-full h-full object-cover">
         </div>
     </div> </div>
 
@@ -12163,7 +12131,7 @@
 
                                             <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
 
-                                                <img src="images/D2RED.png" alt="Exportando Relatórios" class="w-full h-full object-cover">
+                                                <img src="../assets/images/D2RED.png" alt="Exportando Relatórios" class="w-full h-full object-cover">
 
                                             </div>
 
@@ -13777,7 +13745,7 @@
 
 
 
-            const saved = localStorage.getItem('ssw_user');
+            const saved = localStorage.getItem('USER');
 
 
 
@@ -14976,7 +14944,7 @@
 
 
 
-                    localStorage.setItem('ssw_user', JSON.stringify(data));
+                    localStorage.setItem('USER', JSON.stringify(data));
 
 
 
@@ -15986,7 +15954,12 @@ function getCodigoHTML() {
 
 
 
-        function logout() { localStorage.removeItem('ssw_user'); location.reload(); }
+        function logout() { 
+            localStorage.removeItem('USER'); 
+            USER = null;
+            Toast.success('Logout realizado com sucesso!');
+            setTimeout(() => location.reload(), 1000);
+        }
 
 
 
@@ -16051,114 +16024,42 @@ function getCodigoHTML() {
 
 
         function updateAuthButton() {
-
-
-
-            const btn = document.getElementById('authButton');
-
-
-
-            const icon = document.getElementById('authButtonIcon');
-
-
-
-            const text = document.getElementById('authButtonText');
-
-
-
+            const btn = document.getElementById('userMenuCircleLogoutBtn');
+            const text = document.getElementById('userMenuCircleText');
             
-
-
-
             // Verifica se os elementos existem antes de manipulá-los
-
-
-
-            if (!btn || !icon || !text) {
-
-
-
+            if (!btn || !text) {
                 console.warn('Elementos do botão de auth não encontrados');
-
-
-
                 return;
-
-
-
             }
-
-
-
             
-
-
-
             if (!USER || !USER.email) {
-
-
-
-                // Estado: Não logado - mostrar cadastro/login
-
-
-
-                icon.setAttribute('data-lucide', 'user-plus');
-
-
-
-                text.textContent = 'Realizar Cadastro/Login';
-
-
-
-                btn.classList.remove('hover:bg-orange-900/20', 'hover:text-orange-400');
-
-
-
-                btn.classList.add('hover:bg-primary/20', 'hover:text-primary');
-
-
-
+                // Usuário não logado - mostrar Login
+                btn.className = 'w-full bg-white text-black text-xs font-medium py-2 rounded-md hover:bg-slate-200 transition-colors mt-2';
+                btn.onclick = () => {
+                    document.getElementById('loginForm').classList.remove('hidden');
+                    document.getElementById('registerForm').classList.add('hidden');
+                    document.getElementById('authScreen').classList.remove('hidden');
+                    toggleUserMenuCircle();
+                };
+                text.textContent = 'Login';
             } else {
-
-
-
-                // Estado: Logado - mostrar engrenagem (settings)
-
-
-
-                icon.setAttribute('data-lucide', 'settings');
-
-
-
-                text.textContent = 'Configurações';
-
-
-
-                btn.classList.remove('hover:bg-primary/20', 'hover:text-primary');
-
-
-
-                btn.classList.add('hover:bg-orange-900/20', 'hover:text-orange-400');
-
-
-
+                // Usuário logado - mostrar Logout
+                btn.className = 'w-full bg-red-500 text-white text-xs font-medium py-2 rounded-md hover:bg-red-600 transition-colors mt-2';
+                btn.onclick = () => {
+                    USER = null;
+                    localStorage.removeItem('USER');
+                    updateAuthButton();
+                    Toast.success('Logout realizado com sucesso!');
+                    setTimeout(() => window.location.reload(), 1500);
+                };
+                text.textContent = 'Sair';
             }
-
-
-
-            // Recriar ícones Lucide
-
-
-
-            lucide.createIcons();
-
-
-
         }
 
 
 
-
+        
 
 
 
@@ -16434,7 +16335,7 @@ function getCodigoHTML() {
 
 
 
-                    localStorage.setItem('ssw_user', JSON.stringify(USER));
+                    localStorage.setItem('USER', JSON.stringify(USER));
 
 
 
@@ -18882,7 +18783,7 @@ function getCodigoHTML() {
 
 
 
-                localStorage.setItem('ssw_user', JSON.stringify(USER));
+                localStorage.setItem('USER', JSON.stringify(USER));
 
 
 
@@ -22887,7 +22788,7 @@ function getCodigoHTML() {
 
 
 
-            localStorage.setItem('ssw_user', JSON.stringify(USER));
+            localStorage.setItem('USER', JSON.stringify(USER));
 
 
 
@@ -28697,174 +28598,38 @@ function getCodigoHTML() {
 
 
 
-        // --- FUNÇÃO DE COMPRA SEGURA (ENVIA APENAS O ID) ---
-
-
-
+        // --- FUNÇÃO DE COMPRA COM CHECKOUT TRANSPARENTE MERCADO PAGO ---
         async function comprarPlano(pacoteId) {
-
-
-
             if(!USER || !USER.email) {
-
-
-
                 showAuthScreen(); 
-
-
-
                 return;
-
-
-
             }
 
+            // Definição dos pacotes
+            const pacotes = {
+                // Assinaturas
+                'plano_mensal': { id: 'plano_mensal', nome: 'Plano Mensal', preco: 120.00 },
+                'plano_anual': { id: 'plano_anual', nome: 'Plano Anual', preco: 997.00 },
+                'plano_semestral': { id: 'plano_semestral', nome: 'Plano Semestral', preco: 597.00 },
+                // Recargas
+                'recarga_10': { id: 'recarga_10', nome: 'Recarga 10 Créditos', preco: 47.00 },
+                'recarga_40': { id: 'recarga_40', nome: 'Recarga 40 Créditos', preco: 167.00 },
+                'recarga_90': { id: 'recarga_90', nome: 'Recarga 90 Créditos', preco: 347.00 }
+            };
 
+            const pacoteSelecionado = pacotes[pacoteId];
+            if (!pacoteSelecionado) {
+                Toast.error("Pacote não encontrado.");
+                return;
+            }
 
-
-
-
-
-            const btn = event.target;
-
-
-
-            const textoOriginal = btn.innerHTML;
-
-
-
-            
-
-
-
-            // Feedback visual
-
-
-
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Processando...';
-
-
-
-            btn.disabled = true;
-
-
-
-            if(typeof lucide !== 'undefined') lucide.createIcons();
-
-
-
-            
-
-
-
+            // Abrir checkout transparente
             try {
-
-
-
-                const res = await fetch(`${API_URL}/api/pagamento/checkout`, {
-
-
-
-                    method: 'POST',
-
-
-
-                    headers: {'Content-Type': 'application/json'},
-
-
-
-                    body: JSON.stringify({
-
-
-
-                        user_id: String(USER.id),
-
-
-
-                        email: USER.email,
-
-
-
-                        pacote_id: pacoteId // ENVIA SÓ O ID DO PACOTE
-
-
-
-                    })
-
-
-
-                });
-
-
-
-
-
-
-
-                const data = await res.json();
-
-
-
-
-
-
-
-                if (data.checkout_url) {
-
-
-
-                    // Redireciona para o Mercado Pago
-
-
-
-                    window.location.href = data.checkout_url;
-
-
-
-                } else {
-
-
-
-                    Toast.error(data.detail || "Erro ao criar pagamento.");
-
-
-
-                    btn.innerHTML = textoOriginal;
-
-
-
-                    btn.disabled = false;
-
-
-
-                }
-
-
-
-            } catch(e) {
-
-
-
-                console.error(e);
-
-
-
-                Toast.error("Erro de conexão.");
-
-
-
-                btn.innerHTML = textoOriginal;
-
-
-
-                btn.disabled = false;
-
-
-
+                await openCheckout(pacoteSelecionado, USER);
+            } catch (error) {
+                console.error('Erro ao abrir checkout:', error);
+                Toast.error("Erro ao abrir checkout. Tente novamente.");
             }
-
-
-
         }
 
 
@@ -30225,7 +29990,7 @@ function getCodigoHTML() {
 
 
 
-<script src="js/ranking.js"></script>
+<script src="../utils/ranking.js"></script>
 
 
 
@@ -30866,6 +30631,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+<script src="../utils/checkout-mercadopago.js"></script>
 </body> 
 
 
