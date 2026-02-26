@@ -15119,82 +15119,35 @@
                     body: JSON.stringify({ nome, email, senha: pass })
 
 
-
                 });
 
-
-
                 if(res.ok) { 
-
-
-
                     Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
-
-
-
                     
-
-
-
                     // Limpa formulário
-
-
-
                     document.getElementById('regNome').value = "";
-
-
-
                     document.getElementById('regEmail').value = "";
-
-
-
                     document.getElementById('regPass').value = "";
-
-
-
                     
-
-
-
+                    
                     // Esconde formulário de cadastro
-
-
-
                     document.getElementById('registerForm').classList.add('hidden');
-
-
-
                     
-
-
-
+                    
                     // Mostra tela de verificação diretamente
-
-
-
                     document.getElementById('verifyModal').classList.remove('hidden');
-
-
-
                     lucide.createIcons();
 
-
-
-                    
-
-
-
                     // Inicia a contagem de reenvio
-
-
-
                     iniciarContagemReenvio();
 
-
+                    // Reload automático após cadastro bem-sucedido
+                    setTimeout(() => {
+                        console.log(' Recarregando página após cadastro...');
+                        window.location.reload();
+                    }, 2000);
 
                 } else Toast.error("Erro ao criar conta");
-
-
 
             } catch(e) { 
 
@@ -15640,6 +15593,18 @@ function getCodigoHTML() {
             updateAuthButton();
 
 
+
+            // Reload automático da página após login bem-sucedido
+
+
+
+            setTimeout(() => {
+
+                console.log('🔄 Recarregando página após login...');
+
+                window.location.reload();
+
+            }, 1000);
 
         }
 
