@@ -44,14 +44,9 @@
       "dest": "/src/utils/$1"
     },
     {
-      "src": "/pages/(.*)",
-      "dest": "/src/pages/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/src/$1"
     }
   ],
-  "staticDirectory": "src",
   "outputDirectory": "public"
 }
