@@ -1,0 +1,22 @@
+{
+  "name": "ssw-intelligence-system",
+  "version": "1.0.0",
+  "description": "Plataforma de auditoria web e benchmarking competitivo impulsionada por IA",
+  "main": "src/pages/index.html",
+  "scripts": {
+    "start": "serve src",
+    "build": "echo 'Static build complete'",
+    "dev": "serve src -l 3000"
+  },
+  "keywords": [
+    "auditoria-web",
+    "benchmarking",
+    "inteligencia-artificial",
+    "analise-comportamental"
+  ],
+  "author": "S.S.W Intelligence",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
