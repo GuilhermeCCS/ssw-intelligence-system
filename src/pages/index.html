@@ -13769,7 +13769,8 @@
 
 
 
-                loginSuccess();
+                window.fromLoginFlow = true;
+                    loginSuccess();
 
 
 
@@ -14960,6 +14961,7 @@
 
 
 
+                    window.fromLoginFlow = true;
                     loginSuccess();
 
 
@@ -15592,71 +15594,28 @@ function getCodigoHTML() {
 
             updateAuthButton();
 
-
-
             // Reload automático da página após login bem-sucedido
-
-
-
-            setTimeout(() => {
-
-                console.log('🔄 Recarregando página após login...');
-
-                window.location.reload();
-
-            }, 1000);
-
+            // EVITA RELOAD INFINITO: Apenas recarrega se vier do fluxo de login explícito
+            if (!window.fromLoginFlow) {
+                setTimeout(() => {
+                    console.log(' Recarregando página após login...');
+                    window.location.reload();
+                }, 1000);
+            } else {
+                console.log(' Usuário já carregado do storage - sem reload necessário');
+                window.fromLoginFlow = false; // Reseta a flag
+            }
         }
-
-
-
-        
-
-
-
-        // Função para alternar visibilidade do menu circular
-
-
 
         function toggleUserMenuCircle() {
-
-
-
             const dropdown = document.getElementById('userMenuCircleDropdown');
-
-
-
             dropdown.classList.toggle('hidden');
-
-
-
             
-
-
-
             // Fechar ao clicar fora
-
-
-
             if (!dropdown.classList.contains('hidden')) {
-
-
-
                 document.addEventListener('click', closeUserMenuCircleOnClickOutside);
-
-
-
             }
-
-
-
         }
-
-
-
-        
-
-
 
         // Função para fechar o menu ao clicar fora
 
@@ -16312,6 +16271,7 @@ function getCodigoHTML() {
 
 
 
+                    window.fromLoginFlow = true;
                     loginSuccess(); 
 
 
