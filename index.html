@@ -11370,10 +11370,89 @@
 
     <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
+    <!-- BANNER MARQUEE HORIZONTAL -->
+    <div id="promo-banner" class="bg-gradient-to-r from-cyan-600 via-blue-500 to-cyan-600 text-white shadow-lg relative overflow-hidden w-full">
+        <!-- BOTÃO FECHAR -->
+        <button onclick="closePromoBanner()" class="absolute top-2 right-4 z-50 text-white/80 hover:text-white transition-colors p-1 rounded hover:bg-white/10">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="flex animate-marquee whitespace-nowrap">
+            <div class="flex items-center gap-8 py-3">
+                <i data-lucide="zap" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
+                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
+                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
+                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
+                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
+                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
+                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
+                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
+                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
+                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
+                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
+                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
+                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
+                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
+                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
+                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
+            </div>
+            <!-- Duplicado para loop contínuo -->
+            <div class="flex items-center gap-8 py-3">
+                <i data-lucide="zap" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
+                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
+                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
+                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
+                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
+                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
+                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
+                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
+                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
+                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
+                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
+                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
+                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
+                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
+                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
+                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
+            </div>
+        </div>
+    </div>
 
-
-
-
+    <style>
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 30s linear infinite;
+        }
+    </style>
+    
+    <script>
+        function closePromoBanner() {
+            const banner = document.getElementById('promo-banner');
+            if (banner) {
+                banner.style.transition = 'all 0.3s ease-out';
+                banner.style.opacity = '0';
+                banner.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    banner.remove();
+                }, 300);
+            }
+        }
+    </script>
 
 
 
@@ -13064,7 +13143,7 @@
 
 
 
-                    <img src="/assets/images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-28 h-28 object-contain drop-shadow-lg rounded-full">
+                    <img src="/assets/images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-6 h-6 object-contain drop-shadow-lg rounded-full" style="width: 24px !important; height: 24px !important;">
 
 
 
@@ -17972,19 +18051,21 @@
 
 
 
+        </div>
+    </div>
+</div>
 
+<style>
+    @keyframes marquee {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+        animation: marquee 30s linear infinite;
+    }
+</style>
 
-
-
-
-
-
-
-
-
-            <div id="view-precos" class="hidden max-w-7xl mx-auto space-y-20 animate-fade-in-up">
-
-
+<div id="view-precos" class="hidden max-w-7xl mx-auto space-y-20 animate-fade-in-up">
 
     <!-- PRICING CARDS REDESIGNADOS -->
 
@@ -18002,7 +18083,7 @@
 
             
 
-            <div class="relative bg-white border border-gray-200 rounded-2xl p-8 hover:border-gray-300 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-lg">
+            <div class="relative bg-white border-2 border-blue-500/30 rounded-2xl p-8 hover:border-blue-500 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-lg">
 
                 
 
@@ -18217,17 +18298,27 @@
                 <!-- Price -->
 
                 <div class="mb-8">
-
-                    <div class="flex items-baseline gap-2">
-
-                        <span class="text-6xl font-black text-black">R$ 149</span>
-
-                        <span class="text-gray-600 text-lg">,99</span>
-
+                    <!-- BADGE DE PROMOÇÃO -->
+                    <div class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold inline-block mb-3 animate-pulse">
+                        <i data-lucide="zap" class="w-3 h-3 inline mr-1"></i>
+                        ECONOMIA 20%
                     </div>
-
-                    <p class="text-cyan-600 text-sm mt-2 font-semibold">Melhor custo-benefício</p>
-
+                    
+                    <div class="flex items-baseline gap-2">
+                        <!-- PREÇO ANTIGO RISCADO -->
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-2xl text-gray-400 line-through">R$ 179</span>
+                            <span class="text-sm text-gray-400 line-through">,99</span>
+                        </div>
+                    </div>
+                    
+                    <!-- PREÇO ATUAL -->
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <span class="text-6xl font-black text-red-600">R$ 149</span>
+                        <span class="text-gray-600 text-lg">,99</span>
+                    </div>
+                    
+                    <p class="text-cyan-600 text-sm mt-2 font-bold">Economize R$ 30,00!</p>
                 </div>
 
 
@@ -18348,16 +18439,14 @@
 
             
 
-            <div class="relative bg-white border border-gray-200 rounded-2xl p-8 hover:border-gray-300 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-lg">
+            <div class="relative bg-white border-4 border-blue-500/30 rounded-2xl p-8 hover:border-blue-500 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-lg">
 
                 
 
                 <!-- Header -->
 
                 <div class="flex items-center justify-between mb-8">
-
                     <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center group-hover:from-primary/80 group-hover:to-emerald-500/80 transition-all">
-
                         <i data-lucide="building" class="w-8 h-8 text-white"></i>
 
                     </div>
@@ -18510,7 +18599,7 @@
 
     <!-- COMPARISON TABLE -->
 
-    <div class="bg-white border border-black rounded-2xl p-8 overflow-hidden">
+    <div class="bg-white border-4 border-blue-500/30 rounded-2xl p-8 overflow-hidden hover:border-blue-500 transition-all duration-300">
 
         <h3 class="text-2xl font-bold text-black mb-8 text-center">Comparação de Recursos</h3>
 
@@ -18524,13 +18613,13 @@
 
                     <tr class="border-b border-black">
 
-                        <th class="text-left py-4 px-4 text-black font-medium">Recursos</th>
+                        <th class="text-left py-4 px-4 text-black font-bold uppercase">RECURSOS</th>
 
-                        <th class="text-center py-4 px-4 text-black font-medium">Starter</th>
+                        <th class="text-center py-4 px-4 text-black font-bold uppercase">STARTER</th>
 
-                        <th class="text-center py-4 px-4 text-black font-medium">Pro</th>
+                        <th class="text-center py-4 px-4 text-black font-bold uppercase">PRO</th>
 
-                        <th class="text-center py-4 px-4 text-black font-medium">Enterprise</th>
+                        <th class="text-center py-4 px-4 text-black font-bold uppercase">ENTERPRISE</th>
 
                     </tr>
 
@@ -18540,9 +18629,9 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black">Créditos</td>
+                        <td class="py-4 px-4 text-black font-bold uppercase">CRÉDITOS</td>
 
-                        <td class="text-center py-4 px-4 text-black">10</td>
+                        <td class="text-center py-4 px-4 text-black font-bold">10</td>
 
                         <td class="text-center py-4 px-4 text-black font-bold">40</td>
 
@@ -18552,9 +18641,9 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black">Preço por auditoria</td>
+                        <td class="py-4 px-4 text-black font-bold uppercase">PREÇO POR AUDITORIA</td>
 
-                        <td class="text-center py-4 px-4 text-black">R$ 9,99</td>
+                        <td class="text-center py-4 px-4 text-black font-bold">R$ 9,99</td>
 
                         <td class="text-center py-4 px-4 text-black font-bold">R$ 3,75</td>
 
@@ -18564,9 +18653,9 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black">Histórico</td>
+                        <td class="py-4 px-4 text-black font-bold uppercase">HISTÓRICO</td>
 
-                        <td class="text-center py-4 px-4 text-black">30 dias</td>
+                        <td class="text-center py-4 px-4 text-black font-bold">30 dias</td>
 
                         <td class="text-center py-4 px-4 text-black font-bold">1 ano</td>
 
@@ -18576,7 +18665,7 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black">Exportação PDF</td>
+                        <td class="py-4 px-4 text-black font-bold uppercase">EXPORTAÇÃO PDF</td>
 
                         <td class="text-center py-4 px-4">
 
@@ -18600,7 +18689,7 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black">API Access</td>
+                        <td class="py-4 px-4 text-black font-bold uppercase">API ACCESS</td>
 
                         <td class="text-center py-4 px-4">
 
@@ -18624,7 +18713,7 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black">White-label</td>
+                        <td class="py-4 px-4 text-black font-bold uppercase">WHITE-LABEL</td>
 
                         <td class="text-center py-4 px-4">
 
@@ -18670,102 +18759,70 @@
 
         
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        <div class="max-w-4xl mx-auto space-y-4">
 
-            <!-- FAQ Items -->
-
-            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-all">
-
-                <div class="flex items-start gap-4">
-
-                    <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-
-                        <i data-lucide="help-circle" class="w-4 h-4 text-primary"></i>
-
+            <!-- FAQ Item 1 -->
+            <div class="bg-slate-900/60 backdrop-blur-xl border-2 border-blue-500/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20">
+                <button onclick="toggleFAQ(1)" class="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 border-4 border-blue-500 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="zap" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <h4 class="text-white font-semibold text-lg">Como funcionam os créditos?</h4>
                     </div>
-
-                    <div>
-
-                        <h4 class="text-gray-900 font-semibold mb-2">Como funcionam os créditos?</h4>
-
-                        <p class="text-gray-600 text-sm">1 crédito = 1 auditoria completa. Use quando quiser, sem validade.</p>
-
-                    </div>
-
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="faq-icon-1"></i>
+                </button>
+                <div id="faq-content-1" class="hidden px-6 pb-4">
+                    <p class="text-slate-300 text-sm leading-relaxed">1 crédito = 1 auditoria completa. Use quando quiser, sem validade.</p>
                 </div>
-
             </div>
 
-            
-
-            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-all">
-
-                <div class="flex items-start gap-4">
-
-                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-
-                        <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i>
-
+            <!-- FAQ Item 2 -->
+            <div class="bg-slate-900/60 backdrop-blur-xl border-2 border-blue-500/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20">
+                <button onclick="toggleFAQ(2)" class="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 border-4 border-blue-500 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="infinity" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <h4 class="text-white font-semibold text-lg">Os créditos expiram?</h4>
                     </div>
-
-                    <div>
-
-                        <h4 class="text-gray-900 font-semibold mb-2">Os créditos expiram?</h4>
-
-                        <p class="text-gray-600 text-sm">Não! Seus créditos ficam disponíveis para sempre em sua conta.</p>
-
-                    </div>
-
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="faq-icon-2"></i>
+                </button>
+                <div id="faq-content-2" class="hidden px-6 pb-4">
+                    <p class="text-slate-300 text-sm leading-relaxed">Não! Seus créditos ficam disponíveis para sempre em sua conta.</p>
                 </div>
-
             </div>
 
-            
-
-            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-all">
-
-                <div class="flex items-start gap-4">
-
-                    <div class="w-8 h-8 rounded-lg bg-cyber/10 flex items-center justify-center flex-shrink-0">
-
-                        <i data-lucide="globe" class="w-4 h-4 text-cyber"></i>
-
+            <!-- FAQ Item 3 -->
+            <div class="bg-slate-900/60 backdrop-blur-xl border-2 border-blue-500/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20">
+                <button onclick="toggleFAQ(3)" class="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 border-4 border-blue-500 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="target" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <h4 class="text-white font-semibold text-lg">Posso analisar concorrentes?</h4>
                     </div>
-
-                    <div>
-
-                        <h4 class="text-gray-900 font-semibold mb-2">Posso analisar concorrentes?</h4>
-
-                        <p class="text-gray-600 text-sm">Sim! Audite qualquer URL pública para benchmarking competitivo.</p>
-
-                    </div>
-
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="faq-icon-3"></i>
+                </button>
+                <div id="faq-content-3" class="hidden px-6 pb-4">
+                    <p class="text-slate-300 text-sm leading-relaxed">Sim! Audite qualquer URL pública para benchmarking competitivo.</p>
                 </div>
-
             </div>
 
-            
-
-            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-all">
-
-                <div class="flex items-start gap-4">
-
-                    <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-
-                        <i data-lucide="headphones" class="w-4 h-4 text-primary"></i>
-
+            <!-- FAQ Item 4 -->
+            <div class="bg-slate-900/60 backdrop-blur-xl border-2 border-blue-500/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20">
+                <button onclick="toggleFAQ(4)" class="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 border-4 border-blue-500 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="headphones" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <h4 class="text-white font-semibold text-lg">Como funciona o suporte?</h4>
                     </div>
-
-                    <div>
-
-                        <h4 class="text-gray-900 font-semibold mb-2">Como funciona o suporte?</h4>
-
-                        <p class="text-gray-600 text-sm">E-mail (Starter), WhatsApp (Pro), dedicado (Enterprise).</p>
-
-                    </div>
-
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="faq-icon-4"></i>
+                </button>
+                <div id="faq-content-4" class="hidden px-6 pb-4">
+                    <p class="text-slate-300 text-sm leading-relaxed">E-mail (Starter), WhatsApp (Pro), dedicado (Enterprise).</p>
                 </div>
-
             </div>
 
         </div>
@@ -51696,60 +51753,68 @@ function getCodigoHTML() {
 
 
         function closeFAQModal() {
-
-
-
             const modal = document.getElementById('faqModal');
-
-
-
             if (modal) {
-
-
-
                 modal.remove();
-
-
-
             }
-
-
-
         }
 
-
+        // Função para controlar o accordion do FAQ
+        function toggleFAQ(id) {
+            const content = document.getElementById(`faq-content-${id}`);
+            const icon = document.getElementById(`faq-icon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                // Abrir com animação suave
+                content.classList.remove('hidden');
+                content.style.maxHeight = '0px';
+                content.style.opacity = '0';
+                content.style.overflow = 'hidden';
+                content.style.transition = 'max-height 0.4s ease-out, opacity 0.3s ease-out';
+                
+                // Força reflow para garantir que a transição funcione
+                content.offsetHeight;
+                
+                content.style.maxHeight = content.scrollHeight + 'px';
+                content.style.opacity = '1';
+                icon.style.transform = 'rotate(180deg)';
+                
+                // Remove max-height após a animação para permitir conteúdo responsivo
+                setTimeout(() => {
+                    content.style.maxHeight = 'none';
+                    content.style.overflow = 'visible';
+                }, 400);
+                
+            } else {
+                // Fechar com animação suave
+                content.style.maxHeight = content.scrollHeight + 'px';
+                content.style.opacity = '1';
+                content.style.overflow = 'hidden';
+                content.style.transition = 'max-height 0.3s ease-in, opacity 0.3s ease-in';
+                
+                // Força reflow
+                content.offsetHeight;
+                
+                content.style.maxHeight = '0px';
+                content.style.opacity = '0';
+                icon.style.transform = 'rotate(0deg)';
+                
+                // Adiciona classe hidden após a animação
+                setTimeout(() => {
+                    content.classList.add('hidden');
+                }, 300);
+            }
+        }
 
         function showFAQ() {
-
-
-
             // Remove modal anterior se existir
-
-
-
             const existingModal = document.getElementById('faqModal');
-
-
-
             if (existingModal) {
-
-
-
                 existingModal.remove();
-
-
-
             }
 
-
-
             // Cria o modal FAQ
-
-
-
             const modal = document.createElement('div');
-
-
 
             modal.id = 'faqModal';
 
@@ -58333,4 +58398,68 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+<script>
+// SCRIPT DE CONTAGEM REGRESSIVA DA PROMOÇÃO
+let countdownInterval;
+let totalSeconds = 72 * 60 * 60; // 72 horas em segundos
+
+function updateCountdown() {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    const hoursEl = document.getElementById('countdown-hours');
+    const minutesEl = document.getElementById('countdown-minutes');
+    const secondsEl = document.getElementById('countdown-seconds');
+    
+    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+    
+    if (totalSeconds > 0) {
+        totalSeconds--;
+    } else {
+        clearInterval(countdownInterval);
+        // Promoção expirada
+        const promoBanner = document.getElementById('promo-banner');
+        if (promoBanner) {
+            promoBanner.innerHTML = `
+                <div class="text-center py-3">
+                    <h2 class="text-2xl font-black uppercase tracking-wider">PROMOÇÃO ENCERRADA!</h2>
+                    <p class="text-lg">Não se preocupe, novas ofertas em breve!</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// Iniciar contagem regressiva quando a seção de preços for visível
+function startCountdown() {
+    if (document.getElementById('countdown-hours')) {
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
+    }
+}
+
+// Contador de pessoas comprando (efeito social proof)
+let pessoasComprando = 247;
+
+function updateContadorPessoas() {
+    const contadorEl = document.getElementById('contador-pessoas');
+    if (contadorEl) {
+        // Simula variação no número de pessoas
+        const variacao = Math.floor(Math.random() * 5) - 2; // -2 a +2
+        pessoasComprando = Math.max(240, Math.min(260, pessoasComprando + variacao));
+        contadorEl.textContent = pessoasComprando;
+    }
+}
+
+// Iniciar contadores quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        startCountdown();
+        setInterval(updateContadorPessoas, 5000); // Atualiza a cada 5 segundos
+    }, 1000);
+});
+</script>
 </html>
