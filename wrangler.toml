@@ -1,0 +1,12 @@
+name = "ssw-intelligence-system"
+compatibility_date = "2024-01-01"
+
+[env.production]
+routes = [
+  { pattern = "ssw-intelligence-system.pages.dev/*", zone_name = "ssw-intelligence-system.pages.dev" }
+]
+
+[env.staging]
+routes = [
+  { pattern = "ssw-intelligence-system-staging.pages.dev/*", zone_name = "ssw-intelligence-system-staging.pages.dev" }
+]
