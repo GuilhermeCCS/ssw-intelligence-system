@@ -11369,67 +11369,7 @@
 
 
     <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
-
-    <!-- BANNER MARQUEE HORIZONTAL -->
-    <div id="promo-banner" class="bg-gradient-to-r from-cyan-600 via-blue-500 to-cyan-600 text-white shadow-lg relative overflow-hidden w-full">
-        <!-- BOTÃO FECHAR -->
-        <button onclick="closePromoBanner()" class="absolute top-2 right-4 z-50 text-white/80 hover:text-white transition-colors p-1 rounded hover:bg-white/10">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-        
-        <div class="flex animate-marquee whitespace-nowrap">
-            <div class="flex items-center gap-8 py-3">
-                <i data-lucide="zap" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
-                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
-                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
-                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
-                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
-                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
-                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
-                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
-                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
-                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
-                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
-                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
-                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
-                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
-                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
-                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
-            </div>
-            <!-- Duplicado para loop contínuo -->
-            <div class="flex items-center gap-8 py-3">
-                <i data-lucide="zap" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
-                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
-                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
-                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
-                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
-                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
-                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
-                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
-                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
-                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
-                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-black uppercase tracking-wider">PROMOÇÃO RELÂMPAGO!</span>
-                <span class="font-bold">ECONOMIZE ATÉ 20%</span>
-                <span class="font-bold">PRO: R$ 179,99 → R$ 149,99</span>
-                <span class="font-bold"><span id="countdown-hours">72</span>:<span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span> RESTANTES</span>
-                <i data-lucide="gift" class="w-5 h-5 text-yellow-300"></i>
-                <span class="font-bold">247 PESSOAS COMPRANDO AGORA</span>
-                <i data-lucide="star" class="w-5 h-5 text-yellow-300"></i>
-            </div>
-        </div>
-    </div>
-
+    
     <style>
         @keyframes marquee {
             0% { transform: translateX(0%); }
@@ -11450,6 +11390,22 @@
                 setTimeout(() => {
                     banner.remove();
                 }, 300);
+            }
+        }
+        
+        // Função para mostrar banner quando usuário faz login
+        function showPromoBanner() {
+            const promoBanner = document.getElementById('promo-banner');
+            if (promoBanner && USER && USER.email) {
+                // Atualiza o valor inicial no HTML
+                const contadorElementos = document.querySelectorAll('#contador-pessoas');
+                contadorElementos.forEach(el => {
+                    el.textContent = pessoasComprando;
+                });
+                
+                promoBanner.style.display = 'block';
+                startCountdown();
+                setInterval(updateContadorPessoas, 120000); // Atualiza a cada 2 minutos
             }
         }
     </script>
@@ -13143,7 +13099,7 @@
 
 
 
-                    <img src="/assets/images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-6 h-6 object-contain drop-shadow-lg rounded-full" style="width: 24px !important; height: 24px !important;">
+                    <img src="/assets/images/logos.ico" alt="S.S.W INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
 
 
 
@@ -14091,7 +14047,7 @@
 
 
 
-                    <div id="userMenuCircleDropdown" class="absolute right-0 mt-3 w-64 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl z-50 hidden overflow-hidden">
+                    <div id="userMenuCircleDropdown" class="absolute right-0 mt-3 w-64 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-2 border-blue-500/30 rounded-2xl shadow-2xl z-50 hidden overflow-hidden backdrop-blur-xl">
 
 
 
@@ -14115,7 +14071,7 @@
 
 
 
-                        <div id="userInfoCircleSection" class="border border-white/10 rounded-lg p-4 bg-[#0F1117] hidden">
+                        <div id="userInfoCircleSection" class="border border-blue-500/30 rounded-lg p-4 bg-blue-600/10 hidden">
 
 
 
@@ -14155,7 +14111,7 @@
 
 
 
-                            <div class="flex justify-between items-center mt-4 pt-4 border-t border-white/5">
+                            <div class="flex justify-between items-center mt-4 pt-4 border-t border-blue-500/20">
 
 
 
@@ -14211,7 +14167,7 @@
 
 
 
-                            <button onclick="mudarSenha()" class="w-full bg-slate-700 text-white text-sm font-medium py-2 rounded-md hover:bg-slate-600 transition-colors">
+                            <button onclick="mudarSenha()" class="w-full bg-blue-600/20 border border-blue-500/30 text-white text-sm font-medium py-2 rounded-md hover:bg-blue-600/30 transition-colors">
 
 
 
@@ -14877,7 +14833,7 @@
 
 
 
-                                <i data-lucide="users" class="w-5 h-5"></i>
+                                <i data-lucide="user-check" class="w-5 h-5"></i>
 
 
 
@@ -14957,7 +14913,7 @@
 
 
 
-                                <i data-lucide="activity" class="w-5 h-5"></i>
+                                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
 
 
 
@@ -15037,7 +14993,7 @@
 
 
 
-                                <i data-lucide="brain" class="w-5 h-5"></i>
+                                <i data-lucide="cpu" class="w-5 h-5"></i>
 
 
 
@@ -15117,7 +15073,7 @@
 
 
 
-                                <i data-lucide="zap" class="w-5 h-5"></i>
+                                <i data-lucide="timer" class="w-5 h-5"></i>
 
 
 
@@ -18063,9 +18019,125 @@
     .animate-marquee {
         animation: marquee 30s linear infinite;
     }
+    
+    /* Carrossel Styles */
+    .carousel-track {
+        transition: transform 0.7s ease-in-out;
+    }
+    
+    .carousel-card {
+        width: 320px;
+        opacity: 0.7;
+        transform: scale(0.8) translateX(0);
+        z-index: 1;
+        transition: all 0.7s ease-in-out;
+        cursor: pointer;
+    }
+    
+    .carousel-card.active {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+        z-index: 10;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .carousel-card.prev {
+        opacity: 0.6;
+        transform: scale(0.7) translateX(-180px);
+        z-index: 5;
+    }
+    
+    .carousel-card.next {
+        opacity: 0.6;
+        transform: scale(0.7) translateX(180px);
+        z-index: 5;
+    }
+    
+    .carousel-card.hidden {
+        opacity: 0;
+        transform: scale(0.6) translateX(0);
+        z-index: 0;
+        pointer-events: none;
+    }
+    
+    .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .carousel-dot.active {
+        background: white;
+        width: 24px;
+        border-radius: 4px;
+    }
+    
+    .carousel-card:hover {
+        transform: scale(0.75) translateX(0);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
+    
+    .carousel-card.active:hover {
+        transform: scale(1.05) translateX(0);
+    }
+    
+    .carousel-card.prev:hover {
+        transform: scale(0.75) translateX(-180px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
+    
+    .carousel-card.next:hover {
+        transform: scale(0.75) translateX(180px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
 </style>
 
 <div id="view-precos" class="hidden max-w-7xl mx-auto space-y-20 animate-fade-in-up">
+
+    <!-- HERO SECTION PROFISSIONAL -->
+    <div class="text-center space-y-8 relative">
+        <!-- Background Elements -->
+        
+        <!-- Badge Principal -->
+        
+        <!-- Título Principal -->
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-primary via-emerald-500 to-cyan-500 bg-clip-text text-transparent leading-tight">
+            Invista em Inteligência.<br>
+            <span class="text-white">Domine o Mercado.</span>
+        </h1>
+        
+        <!-- Subtítulo Convincente -->
+        <p class="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
+            Auditoria web avançada com IA. <span class="text-primary font-bold">Pague uma vez, use quando quiser.</span><br>
+            Transforme seu site em uma máquina de conversão com análises comportamentais profundas.
+        </p>
+        
+        <!-- Stats Bar -->
+        <div class="flex flex-wrap justify-center items-center gap-8 text-base text-gray-400">
+            <div class="flex items-center gap-3">
+                <i data-lucide="trending-up" class="w-5 h-5 text-emerald-500"></i>
+                <span>+50 Métricas Analisadas</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <i data-lucide="clock" class="w-5 h-5 text-primary"></i>
+                <span>Resultados em &lt;30s</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <i data-lucide="shield-check" class="w-5 h-5 text-cyan-500"></i>
+                <span>Análise 100% Segura</span>
+            </div>
+        </div>
+        
+        <!-- Linha Decorativa -->
+        <div class="flex items-center justify-center gap-4">
+            <div class="h-px w-20 bg-gradient-to-r from-transparent to-primary/50"></div>
+            <i data-lucide="zap" class="w-6 h-6 text-primary"></i>
+            <div class="h-px w-20 bg-gradient-to-l from-transparent to-primary/50"></div>
+        </div>
+    </div>
 
     <!-- PRICING CARDS REDESIGNADOS -->
 
@@ -18112,17 +18184,27 @@
                 <!-- Price -->
 
                 <div class="mb-8">
-
-                    <div class="flex items-baseline gap-2">
-
-                        <span class="text-6xl font-black text-black">R$ 99</span>
-
-                        <span class="text-gray-600 text-lg">,99</span>
-
+                    <!-- BADGE DE PROMOÇÃO -->
+                    <div class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold inline-block mb-3 animate-pulse">
+                        ECONOMIA 23%
                     </div>
-
-                    <p class="text-gray-500 text-sm mt-2">Pagamento único</p>
-
+                    
+                    <!-- PREÇO ANTIGO RISCADO -->
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span class="text-gray-500 text-sm">De:</span>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-2xl text-gray-400 line-through">R$ 129</span>
+                            <span class="text-sm text-gray-400 line-through">,99</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-gray-500 text-sm">Por:</span>
+                        <span class="text-6xl font-black text-black">R$ 99</span>
+                        <span class="text-gray-600 text-lg">,99</span>
+                    </div>
+                    
+                    <p class="text-cyan-600 text-sm mt-2 font-bold">Economize R$ 30,00!</p>
                 </div>
 
 
@@ -18300,12 +18382,12 @@
                 <div class="mb-8">
                     <!-- BADGE DE PROMOÇÃO -->
                     <div class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold inline-block mb-3 animate-pulse">
-                        <i data-lucide="zap" class="w-3 h-3 inline mr-1"></i>
                         ECONOMIA 20%
                     </div>
                     
                     <div class="flex items-baseline gap-2">
                         <!-- PREÇO ANTIGO RISCADO -->
+                        <span class="text-gray-500 text-sm">De:</span>
                         <div class="flex items-baseline gap-1">
                             <span class="text-2xl text-gray-400 line-through">R$ 179</span>
                             <span class="text-sm text-gray-400 line-through">,99</span>
@@ -18314,7 +18396,8 @@
                     
                     <!-- PREÇO ATUAL -->
                     <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-6xl font-black text-red-600">R$ 149</span>
+                        <span class="text-gray-500 text-sm">Por:</span>
+                        <span class="text-6xl font-black text-black">R$ 149</span>
                         <span class="text-gray-600 text-lg">,99</span>
                     </div>
                     
@@ -18599,9 +18682,9 @@
 
     <!-- COMPARISON TABLE -->
 
-    <div class="bg-white border-4 border-blue-500/30 rounded-2xl p-8 overflow-hidden hover:border-blue-500 transition-all duration-300">
+    <div class="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-2 border-blue-500/30 rounded-2xl p-8 overflow-hidden hover:border-blue-500 transition-all duration-300 backdrop-blur-xl">
 
-        <h3 class="text-2xl font-bold text-black mb-8 text-center">Comparação de Recursos</h3>
+        <h3 class="text-2xl font-bold text-white mb-8 text-center">Comparação de Recursos</h3>
 
         
 
@@ -18611,61 +18694,61 @@
 
                 <thead>
 
-                    <tr class="border-b border-black">
+                    <tr class="border-b border-white/30">
 
-                        <th class="text-left py-4 px-4 text-black font-bold uppercase">RECURSOS</th>
+                        <th class="text-left py-4 px-4 text-white font-bold uppercase">RECURSOS</th>
 
-                        <th class="text-center py-4 px-4 text-black font-bold uppercase">STARTER</th>
+                        <th class="text-center py-4 px-4 text-white font-bold uppercase">STARTER</th>
 
-                        <th class="text-center py-4 px-4 text-black font-bold uppercase">PRO</th>
+                        <th class="text-center py-4 px-4 text-white font-bold uppercase">PRO</th>
 
-                        <th class="text-center py-4 px-4 text-black font-bold uppercase">ENTERPRISE</th>
+                        <th class="text-center py-4 px-4 text-white font-bold uppercase">ENTERPRISE</th>
 
                     </tr>
 
                 </thead>
 
-                <tbody class="divide-y divide-black">
+                <tbody class="divide-y divide-white/30">
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black font-bold uppercase">CRÉDITOS</td>
+                        <td class="py-4 px-4 text-white font-bold uppercase">CRÉDITOS</td>
 
-                        <td class="text-center py-4 px-4 text-black font-bold">10</td>
+                        <td class="text-center py-4 px-4 text-white font-bold">10</td>
 
-                        <td class="text-center py-4 px-4 text-black font-bold">40</td>
+                        <td class="text-center py-4 px-4 text-white font-bold">40</td>
 
-                        <td class="text-center py-4 px-4 text-black font-bold">150+</td>
+                        <td class="text-center py-4 px-4 text-white font-bold">150+</td>
 
                     </tr>
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black font-bold uppercase">PREÇO POR AUDITORIA</td>
+                        <td class="py-4 px-4 text-white font-bold uppercase">PREÇO POR AUDITORIA</td>
 
-                        <td class="text-center py-4 px-4 text-black font-bold">R$ 9,99</td>
+                        <td class="text-center py-4 px-4 text-white font-bold">R$ 9,99</td>
 
-                        <td class="text-center py-4 px-4 text-black font-bold">R$ 3,75</td>
+                        <td class="text-center py-4 px-4 text-white font-bold">R$ 3,75</td>
 
-                        <td class="text-center py-4 px-4 text-black font-bold">Personalizado</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td class="py-4 px-4 text-black font-bold uppercase">HISTÓRICO</td>
-
-                        <td class="text-center py-4 px-4 text-black font-bold">30 dias</td>
-
-                        <td class="text-center py-4 px-4 text-black font-bold">1 ano</td>
-
-                        <td class="text-center py-4 px-4 text-black font-bold">Ilimitado</td>
+                        <td class="text-center py-4 px-4 text-white font-bold">Personalizado</td>
 
                     </tr>
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black font-bold uppercase">EXPORTAÇÃO PDF</td>
+                        <td class="py-4 px-4 text-white font-bold uppercase">HISTÓRICO</td>
+
+                        <td class="text-center py-4 px-4 text-white font-bold">30 dias</td>
+
+                        <td class="text-center py-4 px-4 text-white font-bold">1 ano</td>
+
+                        <td class="text-center py-4 px-4 text-white font-bold">Ilimitado</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td class="py-4 px-4 text-white font-bold uppercase">EXPORTAÇÃO PDF</td>
 
                         <td class="text-center py-4 px-4">
 
@@ -18689,7 +18772,7 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black font-bold uppercase">API ACCESS</td>
+                        <td class="py-4 px-4 text-white font-bold uppercase">API ACCESS</td>
 
                         <td class="text-center py-4 px-4">
 
@@ -18713,7 +18796,7 @@
 
                     <tr>
 
-                        <td class="py-4 px-4 text-black font-bold uppercase">WHITE-LABEL</td>
+                        <td class="py-4 px-4 text-white font-bold uppercase">WHITE-LABEL</td>
 
                         <td class="text-center py-4 px-4">
 
@@ -18745,12 +18828,127 @@
 
 
 
-    <!-- FAQ REDESIGNADO -->
+    <!-- CARROUSEL DE CARDS - BENEFÍCIOS SSW INTELLIGENCE -->
 
+    <div class="space-y-12 pb-16">
+        <div class="max-w-6xl mx-auto">
+            <!-- Título Principal -->
+            <div class="text-center mb-12">
+                <h4 class="text-3xl font-bold text-white mb-4">Comece sua jornada de excelência digital hoje</h4>
+                <p class="text-slate-300 text-lg">Junte-se a milhares de profissionais que confiam na SSW INTELLIGENCE</p>
+            </div>
+            
+            <!-- Carrossel Container -->
+            <div class="relative h-[400px] overflow-hidden mb-12">
+                <div id="carousel-container" class="relative w-full h-full flex items-center justify-center">
+                    <!-- Cards do Carrossel -->
+                    <div class="carousel-track flex items-center justify-center absolute w-full h-full transition-transform duration-700 ease-in-out">
+                        
+                        <!-- Card 1 - IA Avançada -->
+                        <div class="carousel-card absolute bg-gradient-to-br from-blue-600 to-cyan-600 border-2 border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="0">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4 mx-auto">
+                                <i data-lucide="brain" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h5 class="text-xl font-bold text-white mb-3 text-center">IA Avançada</h5>
+                            <p class="text-white/90 text-sm leading-relaxed text-center">
+                                Tecnologia de IA que identifica problemas e descobre oportunidades de crescimento que seus concorrentes estão ignorando.
+                            </p>
+                            <div class="mt-4 flex justify-center">
+                                <span class="text-blue-300 font-semibold text-sm">+40% Conversões</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 2 - Auditorias Comportamentais -->
+                        <div class="carousel-card absolute bg-gradient-to-br from-emerald-600 to-green-600 border-2 border-emerald-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="1">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-4 mx-auto">
+                                <i data-lucide="users" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h5 class="text-xl font-bold text-white mb-3 text-center">Análise Comportamental</h5>
+                            <p class="text-white/90 text-sm leading-relaxed text-center">
+                                Auditorias comportamentais que revelam o que seus usuários realmente pensam e sentem, permitindo experiências que convertem e encantam.
+                            </p>
+                            <div class="mt-4 flex justify-center">
+                                <span class="text-emerald-300 font-semibold text-sm">+60% Engajamento</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 3 - Plataforma Completa -->
+                        <div class="carousel-card absolute bg-gradient-to-br from-purple-600 to-pink-600 border-2 border-purple-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="2">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4 mx-auto">
+                                <i data-lucide="layers" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h5 class="text-xl font-bold text-white mb-3 text-center">Suite Completa</h5>
+                            <p class="text-white/90 text-sm leading-relaxed text-center">
+                                Análise completa cobrindo performance, acessibilidade, SEO e segurança - tudo em uma plataforma intuitiva que economiza horas de trabalho.
+                            </p>
+                            <div class="mt-4 flex justify-center">
+                                <span class="text-purple-300 font-semibold text-sm">Resultados Imediatos</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 4 - Insights Profundos -->
+                        <div class="carousel-card absolute bg-gradient-to-br from-orange-600 to-red-600 border-2 border-orange-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="3">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center mb-4 mx-auto">
+                                <i data-lucide="target" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h5 class="text-xl font-bold text-white mb-3 text-center">Insights Profundos</h5>
+                            <p class="text-white/90 text-sm leading-relaxed text-center">
+                                Deixe para trás ferramentas fragmentadas com insights superficiais. Obtenha análises profundas que entregam resultados mensuráveis desde o primeiro dia.
+                            </p>
+                            <div class="mt-4 flex justify-center">
+                                <span class="text-orange-300 font-semibold text-sm">Análise 360°</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 5 - Otimização Inteligente -->
+                        <div class="carousel-card absolute bg-gradient-to-br from-cyan-600 to-blue-600 border-2 border-cyan-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center mb-4 mx-auto">
+                                <i data-lucide="trending-up" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h5 class="text-xl font-bold text-white mb-3 text-center">Otimização Inteligente</h5>
+                            <p class="text-white/90 text-sm leading-relaxed text-center">
+                                Transforme seu site em uma máquina de conversão com recomendações baseadas em dados que seus concorrentes não conhecem.
+                            </p>
+                            <div class="mt-4 flex justify-center">
+                                <span class="text-cyan-300 font-semibold text-sm">Crescimento Acelerado</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <!-- Navegação -->
+                <div class="flex justify-center items-center gap-4 mt-8">
+                    <button onclick="moveCarousel(-1)" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="flex gap-2" id="carousel-dots">
+                        <!-- Dots serão gerados por JavaScript -->
+                    </div>
+                    <button onclick="moveCarousel(1)" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- CTA Final -->
+            <div class="text-center mt-16">
+                <button onclick="smoothScrollTo('view-precos')" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold px-8 py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-blue-500/50">
+                    <i data-lucide="arrow-right" class="w-5 h-5 inline mr-2"></i>
+                    Ver Planos e Preços
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ REDESIGNADO -->
     <div class="space-y-8 pb-16">
 
         <div class="text-center">
-
             <h3 class="text-3xl font-bold text-white mb-4">Perguntas Frequentes</h3>
 
             <p class="text-slate-400 max-w-2xl mx-auto">Tudo que você precisa saber sobre nossos pacotes de créditos</p>
@@ -18835,7 +19033,7 @@
 
 
 
-            <div id="view-tutorial" class="hidden min-h-screen bg-[#0F1117] animate-fade-in-up">
+            <div id="view-tutorial" class="hidden min-h-screen bg-gradient-to-r from-blue-600/20 to-cyan-600/20 animate-fade-in-up backdrop-blur-xl">
 
 
 
@@ -18862,35 +19060,9 @@
 
 
                         <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-
-
-
-
-
-                            Central de Inteligência
-
-
-
-
-
                         </h1>
 
-
-
-
-
                         <p class="text-slate-400 text-lg max-w-3xl mx-auto mb-8 leading-relaxed">
-
-
-
-
-
-                            Aprenda a extrair o máximo do S.S.W Intelligence. Tutoriais passo a passo para dominar auditorias e análises comparativas.
-
-
-
-
-
                         </p>
 
 
@@ -18906,15 +19078,10 @@
                         
 
                         <div class="max-w-2xl mx-auto">
-
-                            <div class="text-center text-slate-400">
-
-                                <i data-lucide="book-open" class="w-8 h-8 mx-auto mb-4 text-slate-600"></i>
-
-                                <p class="text-sm">Use a navegação lateral para explorar os tutoriais</p>
-
+                            <div class="text-center">
+                                <h2 class="text-3xl font-bold text-cyan-400 mb-2">Use a navegação lateral para explorar os tutoriais</h2>
+                                <p class="text-slate-400 text-sm">Navegue pelos diferentes módulos e aprenda a dominar o S.S.W Intelligence</p>
                             </div>
-
                         </div>
 
 
@@ -21455,159 +21622,11 @@
 
 
 
-                                <div class="mt-12 p-6 bg-orange-900/20 border border-orange-500/30 rounded-xl">
+                                <!-- Dica Pro removida -->
 
 
 
 
-
-
-
-                                    <div class="flex gap-4">
-
-
-
-
-
-
-
-                                        <div class="flex-shrink-0">
-
-
-
-
-
-
-
-                                            <i data-lucide="lightbulb" class="w-6 h-6 text-orange-400"></i>
-
-
-
-
-
-
-
-                                        </div>
-
-
-
-
-
-
-
-                                        <div>
-
-
-
-
-
-
-
-                                            <h4 class="text-orange-400 font-semibold mb-2">Dica Pro</h4>
-
-
-
-
-
-
-
-                                            <p class="text-orange-200 text-sm leading-relaxed">
-
-
-
-
-
-
-
-                                                Agende análises semanais para monitorar progresso. Use os relatórios para justificar investimentos em melhorias.
-
-
-
-
-
-
-
-                                            </p>
-
-
-
-
-
-
-
-                                        </div>
-
-
-
-
-
-
-
-                                    </div>
-
-
-
-
-
-
-
-                                </div>
-
-
-
-                                <!-- Segunda Dica Pro -->
-
-
-
-                                <div class="mt-8 p-6 bg-orange-900/20 border border-orange-500/30 rounded-xl">
-
-
-
-                                    <div class="flex gap-4">
-
-
-
-                                        <div class="flex-shrink-0">
-
-
-
-                                            <i data-lucide="trending-up" class="w-6 h-6 text-orange-400"></i>
-
-
-
-                                        </div>
-
-
-
-                                        <div>
-
-
-
-                                            <h4 class="text-orange-400 font-semibold mb-2">Dica Adicional</h4>
-
-
-
-                                            <p class="text-orange-200 text-sm leading-relaxed">
-
-
-
-                                                Compare relatórios anteriores para acompanhar a evolução do seu site ao longo do tempo.
-
-
-
-                                            </p>
-
-
-
-                                        </div>
-
-
-
-                                    </div>
-
-
-
-                                </div>
 
 
 
@@ -26261,6 +26280,126 @@
 
 
 
+                targetEl.style.opacity = '';
+
+
+
+
+
+
+
+                targetEl.style.transform = '';
+
+
+
+
+
+
+
+                targetEl.style.transition = '';
+
+
+
+
+
+
+
+                // Mostra banner promocional apenas na seção de preços
+
+
+
+
+
+
+
+                if (view === 'precos' && USER && USER.email) {
+
+
+
+
+
+
+
+                    const promoBanner = document.getElementById('promo-banner');
+
+
+
+
+
+
+
+                    if (promoBanner) {
+
+
+
+
+
+
+
+                        promoBanner.style.display = 'block';
+
+
+
+
+
+
+
+                        // Inicia contadores se ainda não foram iniciados
+
+
+
+
+
+
+
+                        if (!countdownInterval) {
+
+
+
+
+
+
+
+                            startCountdown();
+
+
+
+
+
+
+
+                            setInterval(updateContadorPessoas, 120000); // Atualiza a cada 2 minutos
+
+
+
+
+
+
+
+                        }
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
             }
 
 
@@ -28338,9 +28477,7 @@ function getCodigoHTML() {
 
 
             updateAuthButton();
-
-
-
+            
             // Reload automático da página após login bem-sucedido
 
             // EVITA RELOAD INFINITO: Apenas recarrega se vier do fluxo de login explícito
@@ -51788,23 +51925,118 @@ function getCodigoHTML() {
             } else {
                 // Fechar com animação suave
                 content.style.maxHeight = content.scrollHeight + 'px';
-                content.style.opacity = '1';
                 content.style.overflow = 'hidden';
-                content.style.transition = 'max-height 0.3s ease-in, opacity 0.3s ease-in';
-                
-                // Força reflow
                 content.offsetHeight;
                 
                 content.style.maxHeight = '0px';
                 content.style.opacity = '0';
                 icon.style.transform = 'rotate(0deg)';
                 
-                // Adiciona classe hidden após a animação
                 setTimeout(() => {
                     content.classList.add('hidden');
-                }, 300);
+                    content.style.maxHeight = '';
+                    content.style.opacity = '';
+                    content.style.overflow = '';
+                }, 400);
             }
         }
+
+        // Carrossel JavaScript
+        let currentCarouselIndex = 0;
+        const totalCards = 5;
+
+        function initCarousel() {
+            updateCarousel();
+            createDots();
+            
+            // Adicionar evento de clique aos cards
+            document.querySelectorAll('.carousel-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    goToCard(index);
+                });
+            });
+        }
+
+        function createDots() {
+            const dotsContainer = document.getElementById('carousel-dots');
+            dotsContainer.innerHTML = '';
+            
+            for (let i = 0; i < totalCards; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot';
+                dot.onclick = () => goToCard(i);
+                dotsContainer.appendChild(dot);
+            }
+            
+            updateDots();
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentCarouselIndex);
+            });
+        }
+
+        function updateCarousel() {
+            const cards = document.querySelectorAll('.carousel-card');
+            
+            cards.forEach((card, index) => {
+                // Remove todas as classes primeiro
+                card.classList.remove('active', 'prev', 'next', 'hidden');
+                
+                // Calcula a posição relativa ao card atual
+                const relativePosition = index - currentCarouselIndex;
+                
+                // Aplica as classes baseadas na posição
+                if (relativePosition === 0) {
+                    card.classList.add('active');
+                } else if (relativePosition === -1 || (currentCarouselIndex === 0 && index === totalCards - 1)) {
+                    card.classList.add('prev');
+                } else if (relativePosition === 1 || (currentCarouselIndex === totalCards - 1 && index === 0)) {
+                    card.classList.add('next');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            updateDots();
+        }
+
+        function moveCarousel(direction) {
+            currentCarouselIndex += direction;
+            
+            // Loop circular
+            if (currentCarouselIndex < 0) {
+                currentCarouselIndex = totalCards - 1;
+            } else if (currentCarouselIndex >= totalCards) {
+                currentCarouselIndex = 0;
+            }
+            
+            updateCarousel();
+        }
+
+        function goToCard(index) {
+            currentCarouselIndex = index;
+            updateCarousel();
+        }
+
+        // Auto-play (opcional - comente se não quiser)
+        function startAutoPlay() {
+            setInterval(() => {
+                moveCarousel(1);
+            }, 5000); // Muda a cada 5 segundos
+        }
+
+        // Inicializa o carrossel quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializa apenas se o carrossel existir na página
+            if (document.querySelector('.carousel-card')) {
+                initCarousel();
+                // startAutoPlay(); // Descomente para ativar auto-play
+            }
+        });
 
         function showFAQ() {
             // Remove modal anterior se existir
@@ -58442,14 +58674,13 @@ function startCountdown() {
 }
 
 // Contador de pessoas comprando (efeito social proof)
-let pessoasComprando = 247;
+let pessoasComprando = Math.floor(Math.random() * 81) + 20; // Valor inicial aleatório entre 20-100
 
 function updateContadorPessoas() {
     const contadorEl = document.getElementById('contador-pessoas');
     if (contadorEl) {
-        // Simula variação no número de pessoas
-        const variacao = Math.floor(Math.random() * 5) - 2; // -2 a +2
-        pessoasComprando = Math.max(240, Math.min(260, pessoasComprando + variacao));
+        // Gera valor aleatório entre 20-80
+        pessoasComprando = Math.floor(Math.random() * 61) + 20; // 20 a 80
         contadorEl.textContent = pessoasComprando;
     }
 }
@@ -58457,8 +58688,15 @@ function updateContadorPessoas() {
 // Iniciar contadores quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        startCountdown();
-        setInterval(updateContadorPessoas, 5000); // Atualiza a cada 5 segundos
+        // Banner só aparece na seção de preços
+        if (USER && USER.email) {
+            const promoBanner = document.getElementById('promo-banner');
+            if (promoBanner) {
+                promoBanner.style.display = 'none'; // Escondido por padrão
+                startCountdown();
+                setInterval(updateContadorPessoas, 120000); // Atualiza a cada 2 minutos
+            }
+        }
     }, 1000);
 });
 </script>
