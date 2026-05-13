@@ -18840,6 +18840,20 @@
             
             <!-- Carrossel Container -->
             <div class="relative h-[400px] overflow-hidden mb-12">
+                <!-- Seta Esquerda -->
+                <button onclick="moveCarousel(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                
+                <!-- Seta Direita -->
+                <button onclick="moveCarousel(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+
                 <div id="carousel-container" class="relative w-full h-full flex items-center justify-center">
                     <!-- Cards do Carrossel -->
                     <div class="carousel-track flex items-center justify-center absolute w-full h-full transition-transform duration-700 ease-in-out">
@@ -18917,21 +18931,11 @@
                     </div>
                 </div>
                 
-                <!-- Navegação -->
+                <!-- Navegação (Apenas Dots) -->
                 <div class="flex justify-center items-center gap-4 mt-8">
-                    <button onclick="moveCarousel(-1)" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
                     <div class="flex gap-2" id="carousel-dots">
                         <!-- Dots serão gerados por JavaScript -->
                     </div>
-                    <button onclick="moveCarousel(1)" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </button>
                 </div>
             </div>
             
