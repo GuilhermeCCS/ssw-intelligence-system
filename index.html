@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="Wtn9x9dusWTgSMWvKVd0PHfETwOBypsuv1SV9j84uns" />
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Open Graph Meta Tags -->
@@ -1219,19 +1220,19 @@
                         <i data-lucide="refresh-cw" class="w-3 h-3"></i> Atualizar Lista
                     </button>
                 </header>
-                <div class="glass-panel p-8 rounded-2xl border border-slate-800 relative overflow-hidden">
+                <div class="bg-blue-50/95 p-8 rounded-2xl border border-blue-200 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
-                    <h3 class="text-sm font-bold text-primary mb-6 uppercase tracking-wider flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-black mb-6 uppercase tracking-wider flex items-center gap-2">
                         <i data-lucide="plus-circle" class="w-4 h-4"></i> Cadastrar Novo Perfil
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
                         <div class="md:col-span-4 space-y-2">
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
-                            <input type="text" id="newPersonaName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newPersonaDesc').focus();}">
+                            <label class="text-[10px] text-slate-600 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
+                            <input type="text" id="newPersonaName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-black text-sm bg-slate-50 border border-slate-200" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newPersonaDesc').focus();}">
                         </div>
                         <div class="md:col-span-6 space-y-2">
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
-                            <input type="text" id="newPersonaDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createPersona();}">
+                            <label class="text-[10px] text-slate-600 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
+                            <input type="text" id="newPersonaDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-black text-sm bg-slate-50 border border-slate-200" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createPersona();}">
                         </div>
                         <div class="md:col-span-2">
                             <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.remove('hidden');document.getElementById('registerForm').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createPersona()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
