@@ -815,6 +815,28 @@ nav button.active i {
     .stat-value-premium {
         font-size: 1.25rem;
     }
+
+    .search-bar-hero {
+        flex-direction: column;
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .search-bar-hero .search-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-bar-hero.compare-mode > .w-px {
+        width: 100%;
+        height: 1px;
+        margin: 8px 0;
+    }
+
+    .search-bar-hero.compare-mode .px-4 {
+        padding: 8px 0;
+        width: 100%;
+    }
 }
 
 /* Animações adicionais */
