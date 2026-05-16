@@ -1,8 +1,8 @@
-# S.S.W | INTELLIGENCE
+# SSW INTELLIGENCE
 
 <div align="center">
 
-![S.S.W INTELLIGENCE](images/logo.ico)
+![SSW INTELLIGENCE](images/logo.ico)
 
 **Plataforma de Auditoria Web e Benchmarking Competitivo**
 
@@ -29,7 +29,7 @@
 
 ## 🌟 Sobre o Sistema
 
-O **S.S.W | INTELLIGENCE** é uma plataforma enterprise de auditoria web e benchmarking competitivo impulsionada por inteligência artificial. Desenvolvida para ajudar empresas e profissionais a analisar sites, comparar concorrentes e gerar insights valiosos para otimização de performance e experiência do usuário.
+O **SSW INTELLIGENCE** é uma plataforma enterprise de auditoria web e benchmarking competitivo impulsionada por inteligência artificial. Desenvolvida para ajudar empresas e profissionais a analisar sites, comparar concorrentes e gerar insights valiosos para otimização de performance e experiência do usuário.
 
 ### Principais Objetivos
 
@@ -302,10 +302,13 @@ Este projeto está licenciado sob a Licença MIT.
 
 <div align="center">
 
-**Desenvolvido com ❤️ por S.S.W INTELLIGENCE**
+**Desenvolvido com ❤️ por SSW INTELLIGENCE**
 
-© 2024 S.S.W INTELLIGENCE. Todos os direitos reservados.
+© 2024 SSW INTELLIGENCE. Todos os direitos reservados.
 
 [Topo](#-ssw--intelligence)
 
 </div>
+
+
+

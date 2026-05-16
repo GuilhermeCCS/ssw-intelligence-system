@@ -78,7 +78,7 @@ Ao compartilhar o link, aparecerá:
 ┌─────────────────────────────────────────────────────┐
 │  [IMAGEM 1200x630]                                  │
 │                                                     │
-│  S.S.W | INTELLIGENCE - Plataforma de Auditoria Web │
+│  SSW INTELLIGENCE - Plataforma de Auditoria Web │
 │  Plataforma de auditoria web e benchmarking         │
 │  competitivo impulsionada por IA...                  │
 │                                                     │
@@ -101,3 +101,5 @@ Após configurar as meta tags com seu domínio real:
 - Mantenha o texto curto e impactante
 - Inclua elementos visuais da sua marca
 - Teste em diferentes plataformas (WhatsApp, Facebook, LinkedIn, Twitter)
+
+

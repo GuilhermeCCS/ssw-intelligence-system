@@ -15,9 +15,10 @@
     "inteligencia-artificial",
     "analise-comportamental"
   ],
-  "author": "S.S.W Intelligence",
+  "author": "SSW Intelligence",
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
   }
 }
+

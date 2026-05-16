@@ -31,7 +31,7 @@
   
   <!-- Main Title -->
   <text x="600" y="250" font-family="Arial, sans-serif" font-size="64" font-weight="900" fill="white" text-anchor="middle">
-    S.S.W 
+    SSW 
     <tspan fill="#6366f1">| INTELLIGENCE</tspan>
   </text>
   
@@ -65,3 +65,4 @@
   <!-- URL -->
   <text x="60" y="580" font-family="Arial, sans-serif" font-size="18" fill="#64748b" font-weight="500">ssw-intelligence.com</text>
 </svg>
+
