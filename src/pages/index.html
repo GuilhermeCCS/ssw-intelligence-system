@@ -37,7 +37,7 @@
                         accent: { DEFAULT: '#C0C0C0', hover: '#A8A8A8' }, 
                         cyber: { DEFAULT: '#6B7280', hover: '#4B5563' } 
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     animation: {
                         'blob': 'blob 10s infinite',
                         'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
@@ -62,7 +62,7 @@
     <!-- jsPDF e AutoTable para geração de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <!-- Cyber/SaaS Theme -->
     <link rel="stylesheet" href="/styles/cyber-theme.css">
     <style>
@@ -133,7 +133,7 @@
             }
         }
         body { 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Poppins', sans-serif; 
             background-color: #020817; 
             color: #e2e8f0; 
             overflow-x: hidden;
@@ -162,17 +162,9 @@
             background-color: #0F1117;
             z-index: -1;
         }
-        /* Holofote de Luz no Topo */
+        /* Efeito de luz removido */
         body::before {
-            content: '';
-            position: fixed;
-            top: -20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle, rgba(74, 144, 226, 0.07) 0%, transparent 70%);
-            z-index: -1;
-            pointer-events: none;
+            display: none;
         }
         /* =========================================
            2. ESTILOS VISUAIS (GLASS & UI)
@@ -1237,9 +1229,9 @@
                 <div id="managePersonasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
             </div>
             <div id="view-ranking" class="hidden max-w-5xl mx-auto animate-fade-in-up">
-                <header class="mb-8">
-                    <h2 class="text-3xl font-bold text-white">Ranking Global</h2>
-                    <p class="text-slate-400 mt-1">Performance comparativa de mercado.</p>
+                <header class="mb-8 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white">Ranking Global</h2>
+                    <p class="text-slate-300 mt-4 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"><span class="text-cyan-400 font-bold text-2xl md:text-3xl">Compita no Topo.</span><br><span class="text-emerald-400 font-bold text-2xl md:text-3xl">Domine seu Mercado e Escale seu site com insights de desempenho comprovados.</span></p>
                 </header>
                 <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800">
                     <table class="w-full text-left text-sm text-slate-400">
