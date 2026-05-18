@@ -2498,11 +2498,6 @@
             document.getElementById('registerForm').classList.toggle('hidden');
         }
         function nav(view) {
-            // Verifica se usuário está autenticado, senão mostra cadastro e não navega
-            if (!USER || !USER.email) {
-                showAuthScreen();
-                return;
-            }
             // Atualiza indicadores ativos na sidebar
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('active', 'bg-primary/10', 'border-primary/30');
