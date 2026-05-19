@@ -1235,13 +1235,30 @@
                 </header>
                 <div class="glass-panel rounded-2xl overflow-hidden border border-cyan-400/20 p-8 bg-gradient-to-br from-cyan-950/60 to-blue-950/40 shadow-2xl shadow-cyan-500/10">
                     <div class="space-y-8">
-                        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                            <div></div>
-                            <div class="rounded-3xl border border-cyan-400/30 bg-cyan-950/50 px-5 py-3 text-center shadow-xl shadow-cyan-500/10">
-                                <span class="block text-xs uppercase tracking-[0.3em] text-slate-300">Participantes</span>
-                                <span id="rankingTotalCount" class="block text-3xl font-black text-white mt-1">0</span>
+                        <div class="rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-cyan-950/60 to-blue-950/40 p-6">
+                            <div class="flex flex-col gap-4 mb-5">
+                                <div>
+                                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                        <i data-lucide="search" class="w-5 h-5 text-cyan-400"></i>
+                                        Buscar Meu Site
+                                    </h3>
+                                    <p class="text-slate-400 text-sm mt-2">Procure por seu site no ranking para verificar sua posição.</p>
+                                </div>
                             </div>
+                            <div class="flex flex-col sm:flex-row gap-3 relative">
+                                <input type="text" id="searchRankingInput" placeholder="Digite o nome do seu site..." class="flex-1 px-4 py-3 rounded-lg bg-slate-950/50 border border-cyan-400/30 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 transition" autocomplete="off">
+                                <button onclick="searchRankingSite()" class="px-6 py-3 rounded-lg bg-cyan-500/20 border border-cyan-400/50 text-white font-semibold hover:bg-cyan-500/30 hover:border-cyan-400/80 transition flex items-center justify-center gap-2">
+                                    <i data-lucide="search" class="w-4 h-4"></i>
+                                    <span class="hidden sm:inline">Buscar</span>
+                                </button>
+                                <!-- Dropdown de sugestões -->
+                                <div id="searchSuggestionsDropdown" class="absolute top-full left-0 right-0 sm:right-auto sm:left-0 mt-1 hidden bg-slate-900/95 border border-cyan-400/30 rounded-lg shadow-lg z-50 max-w-sm sm:max-w-none overflow-hidden">
+                                    <ul id="suggestionsList" class="max-h-64 overflow-y-auto"></ul>
+                                </div>
+                            </div>
+                            <div id="searchResultContainer" class="mt-5 hidden"></div>
                         </div>
+
                         <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 items-end">
                             <div class="relative rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-950/60 to-blue-950/40 p-6 flex flex-col items-center justify-between overflow-hidden shadow-xl shadow-cyan-500/10" style="min-height: 18rem;">
                                 <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 opacity-50"></div>
@@ -1281,6 +1298,7 @@
                             </div>
                             <div id="rankingList" class="grid gap-3"></div>
                         </div>
+
                     </div>
                 </div>
             </div>
