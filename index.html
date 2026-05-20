@@ -37,7 +37,7 @@
                         accent: { DEFAULT: '#C0C0C0', hover: '#A8A8A8' }, 
                         cyber: { DEFAULT: '#6B7280', hover: '#4B5563' } 
                     },
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    fontFamily: { sans: ['New Science', 'sans-serif'] },
                     animation: {
                         'blob': 'blob 10s infinite',
                         'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
@@ -62,7 +62,6 @@
     <!-- jsPDF e AutoTable para geração de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <!-- Cyber/SaaS Theme -->
     <link rel="stylesheet" href="/styles/cyber-theme.css">
     <style>
@@ -133,7 +132,7 @@
             }
         }
         body { 
-            font-family: 'Poppins', sans-serif; 
+            font-family: 'New Science', sans-serif; 
             background-color: #020817; 
             color: #e2e8f0; 
             overflow-x: hidden;
@@ -237,7 +236,7 @@
             padding: 40px;
             max-width: 900px;
             margin: 0 auto;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'New Science', sans-serif;
             line-height: 1.6;
         }
         .report-page {
@@ -1231,7 +1230,7 @@
             <div id="view-ranking" class="hidden max-w-5xl mx-auto animate-fade-in-up">
                 <header class="mb-8 text-center">
                     <h2 class="text-4xl md:text-5xl font-bold text-white">Ranking Global</h2>
-                    <p class="text-slate-300 mt-4 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"><span class="text-cyan-400 font-bold text-2xl md:text-3xl">Compita no Topo.</span><br><span class="text-emerald-400 font-bold text-2xl md:text-3xl">Domine seu Mercado e Escale seu site com insights de desempenho comprovados.</span></p>
+                    <p class="text-slate-300 mt-4 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"><span class="text-emerald-400 font-bold text-2xl md:text-3xl">Domine seu Mercado e Escale seu site com insights de desempenho comprovados.</span></p>
                 </header>
                 <div class="glass-panel rounded-2xl overflow-hidden border border-cyan-400/20 p-8 bg-gradient-to-br from-cyan-950/60 to-blue-950/40 shadow-2xl shadow-cyan-500/10">
                     <div class="space-y-8">
@@ -3265,6 +3264,16 @@ function getCodigoHTML() {
             `;
             // Adiciona ao body
             document.body.appendChild(modal);
+        }
+
+        function closePersonaSelector() {
+            const m = document.getElementById('personaSelectorModal');
+            if (m) m.remove();
+            if (!personaChatActive) {
+                const btn = document.getElementById('floatingChatBtn');
+                if (btn) btn.style.display = '';
+            }
+        }
             // Inicializa ícones Lucide
             lucide.createIcons();
             // Funções globais para os botões
@@ -3288,7 +3297,7 @@ function getCodigoHTML() {
                     closeConfirmModal();
                 }
             });
-        }
+            
         async function deletePersona(id) {
             showConfirmDialog("Deseja realmente excluir essa persona?", async () => {
             await fetch(`${API_URL}/api/personas/${id}?user_id=${String(USER.id)}`, { method: 'DELETE' });
@@ -4795,6 +4804,12 @@ function getCodigoHTML() {
             const hasAuditResults = !!(auditResults && !auditResults.classList.contains('hidden')) ||
                                  !!(personasGrid && personasGrid.children.length > 0) ||
                                  !!(actionPlanSection && !actionPlanSection.classList.contains('hidden'));
+            // Se o chat de personas estiver ativo, não reexibe o botão
+            if (personaChatActive) {
+                const existingBtn = document.getElementById('floatingChatBtn');
+                if (existingBtn) existingBtn.style.display = 'none';
+                return;
+            }
             // Só adiciona botão se estiver na home e houver resultados de auditoria
             if (currentView !== 'home' || !hasAuditResults || !personas || personas.length === 0) {
                 // Remove botão anterior se existir
@@ -4811,44 +4826,53 @@ function getCodigoHTML() {
             chatBtn.className = 'no-print';
             chatBtn.style.cssText = `
                 position: fixed;
-                bottom: 20px;
-                right: 20px;
+                bottom: 28px;
+                right: 24px;
                 z-index: 9999;
-                background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+                background: linear-gradient(135deg, #2563eb, #7c3aed);
                 color: white;
-                padding: 12px 20px;
-                border-radius: 50px;
+                padding: 14px 24px;
+                border-radius: 999px;
                 cursor: pointer;
-                box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-                transition: all 0.3s ease;
-                font-weight: 600;
+                box-shadow: 0 22px 60px rgba(37, 99, 235, 0.18);
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
+                font-weight: 700;
                 font-size: 14px;
-                display: flex;
+                display: inline-flex;
                 align-items: center;
-                gap: 8px;
-                animation: pulse 2s infinite;
+                gap: 10px;
+                min-width: 230px;
+                max-width: calc(100% - 48px);
             `;
             chatBtn.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                Conversar com Personas
+                <div style="display:flex;align-items:center;gap:14px;">
+                    <div style="width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;">
+                        <span style="font-size:14px;font-weight:700;">Falar com personas</span>
+                        <span style="font-size:11px;color:rgba(255,255,255,0.88);">Escolha um perfil e converse</span>
+                    </div>
+                </div>
             `;
             // Adiciona hover effect
             chatBtn.onmouseover = () => {
-                chatBtn.style.transform = 'scale(1.05)';
-                chatBtn.style.boxShadow = '0 6px 25px rgba(59, 130, 246, 0.6)';
+                chatBtn.style.transform = 'translateY(-2px)';
+                chatBtn.style.boxShadow = '0 24px 70px rgba(37, 99, 235, 0.25)';
             };
             chatBtn.onmouseout = () => {
-                chatBtn.style.transform = 'scale(1)';
-                chatBtn.style.boxShadow = '0 4px 20px rgba(59, 130, 246, 0.4)';
+                chatBtn.style.transform = 'translateY(0)';
+                chatBtn.style.boxShadow = '0 22px 60px rgba(37, 99, 235, 0.18)';
             };
-            // Cria menu de seleção de personas
+            // Cria menu de seleção de personas (esconde o botão quando aberto)
             chatBtn.onclick = () => {
+                chatBtn.style.display = 'none';
                 showPersonaSelector(personas);
             };
             document.body.appendChild(chatBtn);
-            // Adiciona CSS da animação pulse
+            // Adiciona CSS da animação e estilo do chat
             if (!document.getElementById('chatBtnStyles')) {
                 const style = document.createElement('style');
                 style.id = 'chatBtnStyles';
@@ -4858,6 +4882,57 @@ function getCodigoHTML() {
                         50% { transform: scale(1.05); }
                         100% { transform: scale(1); }
                     }
+                    .persona-select-card {
+                        display: block;
+                        width: 100%;
+                        border-radius: 18px;
+                        background: #0f172a;
+                        border: 1px solid rgba(71, 85, 105, 0.55);
+                        padding: 18px 20px;
+                        text-align: left;
+                        color: #f8fafc;
+                        cursor: pointer;
+                        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+                    }
+                    .persona-select-card:hover {
+                        transform: translateY(-2px);
+                        border-color: #60a5fa;
+                        background: #1e293b;
+                    }
+                    .persona-select-card-title {
+                        font-size: 15px;
+                        font-weight: 700;
+                        letter-spacing: 0.01em;
+                        margin-bottom: 6px;
+                    }
+                    .persona-select-card-meta {
+                        font-size: 12px;
+                        color: #94a3b8;
+                    }
+                    .chat-bubble-user {
+                        background: linear-gradient(135deg, #14b8a6, #0f766e);
+                        color: white;
+                        border-radius: 24px 24px 4px 24px;
+                        padding: 14px 16px;
+                        max-width: 80%;
+                        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+                        word-break: break-word;
+                    }
+                    .chat-bubble-assistant {
+                        background: #0f172a;
+                        border: 1px solid rgba(148, 163, 184, 0.15);
+                        color: #e2e8f0;
+                        border-radius: 24px 24px 24px 4px;
+                        padding: 14px 16px;
+                        max-width: 80%;
+                        box-shadow: 0 12px 36px rgba(15, 23, 42, 0.2);
+                        word-break: break-word;
+                    }
+                    .chat-message-label {
+                        font-size: 11px;
+                        color: #94a3b8;
+                        margin-bottom: 6px;
+                    }
                 `;
                 document.head.appendChild(style);
             }
@@ -4866,47 +4941,52 @@ function getCodigoHTML() {
             // Remove modal anterior se existir
             const existingModal = document.getElementById('personaSelectorModal');
             if (existingModal) existingModal.remove();
-            // Cria modal de seleção
+            // Cria modal de seleção (container)
             const modal = document.createElement('div');
             modal.id = 'personaSelectorModal';
             modal.style.cssText = `
                 position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.8);
+                bottom: 4px;
+                right: 4px;
                 z-index: 10000;
+                display: block;
+                width: 100%;
+                max-width: 380px;
+                height: min(88vh, 580px);
+                max-height: 88vh;
+                animation: slideUp 0.22s ease;
+            `;
+            const panel = document.createElement('div');
+            panel.style.cssText = `
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+                border-radius: 32px;
+                border: 1px solid rgba(148, 163, 184, 0.16);
+                box-shadow: 0 30px 90px rgba(15, 23, 42, 0.65);
+                overflow: hidden;
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                animation: fadeIn 0.3s ease;
+                flex-direction: column;
             `;
-            modal.innerHTML = `
-                <div style="background: #1e293b; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto; border: 1px solid #334155;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="color: white; font-size: 18px; font-weight: 600;">Escolha uma Persona</h3>
-                        <button onclick="this.closest('#personaSelectorModal').remove()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+            panel.innerHTML = `
+                <div style="padding: 24px 24px 18px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 1px solid rgba(148, 163, 184, 0.08);">
+                    <div style="flex:1; min-width:0;">
+                        <p style="color: #22d3ee; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px;">Fale com personas</p>
+                        <h3 style="color: white; font-size: 20px; font-weight: 700; margin: 0;">Escolha o perfil para conversar</h3>
+                        <p style="margin: 10px 0 0; font-size: 13px; color: #94a3b8; line-height: 1.7;">Selecione a persona que orientará recomendações diretas de UX, performance e conversão.</p>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        ${personas.map((persona, index) => `
-                            <button onclick="selectPersonaForChat(${JSON.stringify(persona).replace(/"/g, '&quot;')}); this.closest('#personaSelectorModal').remove();" 
-                                    style="background: #334155; border: 1px solid #475569; color: white; padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align: left;"
-                                    onmouseover="this.style.background='#475569'; this.style.borderColor='#64748b';"
-                                    onmouseout="this.style.background='#334155'; this.style.borderColor='#475569';">
-                                <div style="font-weight: 600; margin-bottom: 4px;">${persona.profile_name.toUpperCase()}</div>
-                                <div style="font-size: 14px; color: #94a3b8;">Score: ${persona.score}/10</div>
-                            </button>
-                        `).join('')}
-                    </div>
+                    <button id="personaSelectorCloseBtn" style="background: rgba(148, 163, 184, 0.08); border: 1px solid rgba(148, 163, 184, 0.16); color: #cbd5e1; cursor: pointer; padding: 10px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
+                <div id="personasList" style="flex: 1; min-height: 0; overflow-y: auto; display: grid; gap: 14px; padding: 20px 24px 24px;"></div>
             `;
-            // Adiciona CSS da animação fadeIn
+            panel.querySelector('#personaSelectorCloseBtn').addEventListener('click', closePersonaSelector);
+            modal.appendChild(panel);
+            // Adiciona CSS da animação fadeIn se necessário
             if (!document.getElementById('modalStyles')) {
                 const style = document.createElement('style');
                 style.id = 'modalStyles';
@@ -4919,24 +4999,82 @@ function getCodigoHTML() {
                 document.head.appendChild(style);
             }
             document.body.appendChild(modal);
+            // Preenche a lista de personas com botões criados dinamicamente para evitar problemas com JSON inline
+            const list = document.getElementById('personasList');
+            personas.forEach(function(persona) {
+                const btn = document.createElement('button');
+                btn.className = 'persona-select-card';
+                btn.style.cssText = 'width:100%; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(71, 85, 105, 0.65); color: white; padding: 18px; border-radius: 20px; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; text-align: left; display: grid; gap: 8px;';
+                const title = document.createElement('div');
+                title.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;';
+                title.innerHTML = `<span class="persona-select-card-title">${persona.profile_name}</span><span class="persona-select-card-meta">Score ${persona.score || '--'}/10</span>`;
+                const desc = document.createElement('div');
+                desc.style.cssText = 'font-size:13px; color: #cbd5e1; line-height:1.6;';
+                desc.innerText = persona.description || 'Perspectiva projetada para análise estratégica e recomendações rápidas.';
+                btn.appendChild(title);
+                btn.appendChild(desc);
+                btn.addEventListener('click', function() {
+                    selectPersonaForChat(persona);
+                    const m = document.getElementById('personaSelectorModal');
+                    if (m) m.remove();
+                });
+                list.appendChild(btn);
+            });
         }
         function selectPersonaForChat(persona) {
             openChat(persona);
         }
         // === FUNÇÕES DE CHAT COM PERSONAS ===
-        let currentChatHistory = [];
-        let currentPersona = null;
+        // Armazena históricos por persona (id ou nome)
+        var personaChats = {};
+        var currentChatHistory = [];
+        var currentPersona = null;
+        var personaChatActive = false;
         function openChat(persona) {
+            personaChats = personaChats || {};
             currentPersona = persona;
-            currentChatHistory = []; // Limpa histórico novo
-            document.getElementById('chatModal').classList.remove('hidden');
+            const key = persona.id || persona.profile_name;
+            // Recupera histórico salvo (se houver)
+            currentChatHistory = personaChats[key] ? [...personaChats[key]] : [];
+            // Marca chat de persona como ativo e esconde botão flutuante
+            personaChatActive = true;
+            const floatBtn = document.getElementById('floatingChatBtn');
+            if (floatBtn) floatBtn.style.display = 'none';
+            // Abre modal localizado no canto inferior direito
+            const chatModal = document.getElementById('chatModal');
+            chatModal.classList.remove('hidden');
             document.getElementById('chatPersonaName').innerText = persona.profile_name;
-            document.getElementById('chatHistory').innerHTML = `
-                <div class="text-center text-xs text-slate-500 my-4">Chat iniciado com ${persona.profile_name}</div>
+            document.getElementById('chatPersonaScore').innerText = persona.score ? `Score ${persona.score}/10` : 'Perfil de análise ativo';
+            const container = document.getElementById('chatHistory');
+            container.innerHTML = `
+                <div class="rounded-[28px] border border-slate-700 bg-slate-950/95 p-5 text-slate-300">
+                    <div class="text-xs uppercase tracking-[0.25em] text-cyan-400 font-semibold mb-3">Converse com personas</div>
+                    <div class="text-white font-semibold text-base mb-2">Perfil: ${persona.profile_name}</div>
+                    <div class="grid gap-2 text-sm leading-6 text-slate-400">
+                        <p>Envie sua dúvida e receba orientações diretas para esse perfil.</p>
+                        <p class="text-slate-400/80">O chat foca em respostas claras e ações práticas.</p>
+                    </div>
+                </div>
             `;
+            // Renderiza histórico salvo
+            if (currentChatHistory.length > 0) {
+                for (const m of currentChatHistory) {
+                    appendMsg(m.role === 'assistant' ? 'ai' : 'user', m.content);
+                }
+            }
+            // Mostra botão de retorno dentro do modal
+            const backBtn = document.getElementById('chatBackBtn');
+            if (backBtn) backBtn.style.display = 'flex';
+            container.scrollTop = container.scrollHeight;
         }
         function closeChat() {
             document.getElementById('chatModal').classList.add('hidden');
+            personaChatActive = false;
+            // Reexibe botão flutuante se ele existir
+            const floatBtn = document.getElementById('floatingChatBtn');
+            if (floatBtn) floatBtn.style.display = '';
+            const backBtn = document.getElementById('chatBackBtn');
+            if (backBtn) backBtn.style.display = 'none';
         }
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -4948,7 +5086,7 @@ function getCodigoHTML() {
             // 2. Prepara histórico para API
             currentChatHistory.push({ role: "user", content: msg });
             // 3. Loading visual
-            const loadingId = appendMsg('ai', 'Digitando...');
+            const loadingId = appendMsg('ai', 'Elaborando resposta...');
             try {
                 const res = await fetch(`${API_URL}/api/chat`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -4964,20 +5102,37 @@ function getCodigoHTML() {
                 const resposta = data.resposta || "Erro na IA.";
                 appendMsg('ai', resposta);
                 currentChatHistory.push({ role: "assistant", content: resposta });
+                // Persiste histórico por persona
+                const key = currentPersona?.id || currentPersona?.profile_name;
+                if (key) personaChats[key] = [...currentChatHistory];
             } catch (e) {
                 document.getElementById(loadingId).innerText = "Erro de conexão.";
             }
         }
         function appendMsg(role, text) {
+            const safeText = String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
             const div = document.createElement('div');
             const id = "msg-" + Date.now();
             div.id = id;
             if (role === 'user') {
                 div.className = "flex justify-end";
-                div.innerHTML = `<div class="bg-emerald-600 text-white p-3 rounded-l-lg rounded-br-lg max-w-[80%] text-sm">${text}</div>`;
+                div.innerHTML = `
+                    <div class="space-y-2 text-right">
+                        <div class="chat-message-label">Você</div>
+                        <div class="chat-bubble-user">${safeText}</div>
+                    </div>
+                `;
             } else {
                 div.className = "flex justify-start";
-                div.innerHTML = `<div class="bg-slate-800 text-slate-200 p-3 rounded-r-lg rounded-bl-lg max-w-[80%] text-sm">${text}</div>`;
+                div.innerHTML = `
+                    <div class="space-y-2 text-left">
+                        <div class="chat-message-label">Assistente</div>
+                        <div class="chat-bubble-assistant">${safeText}</div>
+                    </div>
+                `;
             }
             const container = document.getElementById('chatHistory');
             container.appendChild(div);
@@ -6104,21 +6259,33 @@ function getCodigoHTML() {
 </script>
 <script src="/src/utils/ranking.js"></script>
 <!-- Modal de Chat com Persona -->
-<div id="chatModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-    <div class="glass-panel w-full max-w-md rounded-2xl border border-slate-700/50 shadow-2xl">
-        <div class="flex items-center justify-between p-4 border-b border-slate-800/50">
-            <h3 class="text-white font-bold">Chat: <span id="chatPersonaName"></span></h3>
-            <button onclick="closeChat()" class="text-slate-400 hover:text-white transition-colors">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
+<div id="chatModal" class="hidden fixed inset-0 z-50 bg-black/40">
+    <div class="glass-panel fixed bottom-4 right-4 w-full max-w-[380px] max-h-[88vh] rounded-[32px] border border-slate-700/60 shadow-[0_30px_90px_rgba(15,23,42,0.65)] overflow-hidden bg-slate-950/95 backdrop-blur-xl">
+        <div class="bg-slate-950/95 p-4 border-b border-slate-800/60">
+                <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-cyan-400 font-semibold mb-2">Assistente de Personas</p>
+                    <h3 class="text-xl font-semibold text-white mb-1"><span id="chatPersonaName"></span></h3>
+                    <p id="chatPersonaScore" class="text-slate-400 text-sm">Perfil analítico</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="chatBackBtn" onclick="closeChat()" style="display:none; height:40px; width:40px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(148,163,184,0.06); color:#cbd5e1; display:flex; align-items:center; justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <button onclick="closeChat()" class="h-10 w-10 rounded-2xl bg-slate-900/80 border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors flex items-center justify-center">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="mt-3 text-slate-400 text-sm leading-6">Converse com uma persona para obter recomendações diretas de otimização.</p>
         </div>
-        <div id="chatHistory" class="h-96 overflow-y-auto p-4 space-y-3"></div>
-        <div class="p-4 border-t border-slate-800/50">
-            <div class="flex gap-2">
-                <input type="text" id="chatInput" placeholder="Digite sua mensagem..." 
-                       class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-primary"
+        <div id="chatHistory" class="h-[420px] overflow-y-auto p-5 space-y-4 bg-slate-950/80"></div>
+        <div class="p-4 border-t border-slate-800/60 bg-slate-950/90">
+            <div class="flex gap-3">
+                <input type="text" id="chatInput" placeholder="Escreva sua dúvida para a persona..." 
+                       class="flex-1 bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
                        onkeypress="if(event.key === 'Enter') sendChat()">
-                <button onclick="sendChat()" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-colors">
+                <button onclick="sendChat()" class="inline-flex items-center justify-center bg-cyan-500 hover:bg-cyan-400 text-white rounded-2xl px-5 py-3 font-semibold transition-colors">
                     <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
             </div>
