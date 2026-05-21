@@ -1,93 +1,126 @@
-# Estrutura de Pastas Organizada
+# S.S.W Intelligence System
 
-## 📁 Estrutura do Projeto
+## � Visão Geral
+
+Plataforma SaaS B2B de auditoria web avançada e benchmarking competitivo impulsionada por inteligência artificial. O sistema oferece análise comportamental, auditoria técnica e insights estratégicos para otimização de performance digital.
+
+## 🏗️ Estrutura do Projeto
 
 ```
 MeuSistemaSSW/
-├── 📁 src/                          # Código fonte principal
-│   ├── 📁 components/               # Componentes React/JS
-│   │   └── 📄 CheckoutModal.jsx     # Modal de checkout Mercado Pago
-│   ├── 📁 pages/                   # Páginas e arquivos principais
-│   │   ├── 📄 index.html          # Página principal
-│   │   ├── 📄 og-image-generator.html
-│   │   ├── 📄 README.md
-│   │   ├── 📄 package.json
-│   │   └── 📄 package-lock.json
-│   ├── 📁 utils/                   # Utilitários JavaScript
-│   │   ├── 📄 auth.js             # Autenticação
-│   │   ├── 📄 checkout-mercadopago.js # Checkout Mercado Pago
-│   │   ├── 📄 config.js           # Configurações
-│   │   └── 📄 ranking.js          # Sistema de ranking
-│   ├── 📁 services/                # Serviços/API
-│   ├── 📁 hooks/                   # Hooks personalizados
+├── 📁 assets/                      # Assets estáticos
+│   └── � images/                  # Imagens e ícones
+├── � src/                         # Código fonte
+│   ├── 📁 components/              # Componentes da interface
+│   ├── 📁 pages/                   # Páginas e documentação
 │   ├── 📁 styles/                  # Estilos CSS
-│   │   ├── 📄 cyber-theme.css    # Tema cyber
-│   │   └── 📄 style.css          # Estilos gerais
-│   └── 📁 assets/                  # Assets estáticos
-│       └── 📁 images/            # Imagens
-│           ├── 🖼️ *.png             # Imagens de análise
-│           ├── 🖼️ logos.ico         # Ícone do site
-│           └── 🖼️ og-image.svg      # Open Graph image
-├── 📁 .git/                       # Controle de versão
-├── 📁 .vscode/                    # Configurações VS Code
-├── 📄 .gitignore                  # Ignorar arquivos Git
-└── 📄 OPEN_GRAPH_SETUP.md         # Setup Open Graph
+│   └── 📁 assets/                  # Assets específicos do src
+├── 📁 styles/                      # Estilos globais
+├── � .vscode/                     # Configurações do VS Code
+├── � index.html                   # Aplicação principal
+├── � package.json                 # Dependências do projeto
+├── 📄 .gitignore                   # Configurações Git
+└── 📄 README-STRUCTURE.md          # Este documento
 ```
 
-## 🏗️ Organização por Tipo
+## � Arquitetura
 
-### 📄 Páginas (`src/pages/`)
-- **index.html**: Aplicação principal
-- **og-image-generator.html**: Gerador de imagens Open Graph
-- **README.md**: Documentação do projeto
-- **package.json**: Dependências e scripts
+### Frontend
+- **Tecnologia**: HTML5, CSS3, JavaScript (Vanilla)
+- **Design System**: Glassmorphism com tema dark premium
+- **Responsividade**: Mobile-first, adaptável a todos os dispositivos
+- **Performance**: Otimizado para carregamento rápido
 
-### 🧩 Componentes (`src/components/`)
-- **CheckoutModal.jsx**: Componente React para checkout
+### Componentes Principais
+- **Sistema de Autenticação**: Login, cadastro e recuperação de senha
+- **Auditoria Web**: Análise técnica e comportamental de sites
+- **Benchmarking**: Comparação entre múltiplos sites
+- **Dashboard**: Painel de controle com histórico de análises
+- **Checkout**: Integração com gateway de pagamento
 
-### 🔧 Utilitários (`src/utils/`)
-- **auth.js**: Sistema de autenticação
-- **checkout-mercadopago.js**: Integração Mercado Pago
-- **config.js**: Configurações globais
-- **ranking.js**: Sistema de ranking
+## 🚀 Como Executar
 
-### 🎨 Estilos (`src/styles/`)
-- **cyber-theme.css**: Tema cyber/visual
-- **style.css**: Estilos base
+### Pré-requisitos
+- Node.js (v14 ou superior)
+- npm ou yarn
 
-### 🖼️ Assets (`src/assets/images/`)
-- Imagens de análise (B1RED, C1RED, etc.)
-- Ícones e logos
-
-## 🚀 Como Usar
-
-### Desenvolvimento
+### Instalação
 ```bash
-# Acessar arquivos principais
-cd src/pages
-# Editar index.html
+# Instalar dependências
+npm install
 
-# Editar componentes
-cd src/components
+# Iniciar servidor de desenvolvimento
+npm start
 
-# Editar utilitários
-cd src/utils
+# Ou usar porta específica
+npm run dev
 ```
 
-### Build
-O projeto usa estrutura estática - basta abrir `src/pages/index.html` no navegador.
+### Build de Produção
+```bash
+# Build estático
+npm run build
+```
 
-## 📋 Benefícios da Nova Estrutura
+## � Estrutura de Diretórios
 
-✅ **Organização clara**: Separação por tipo de arquivo
-✅ **Manutenibilidade**: Fácil encontrar e editar arquivos
-✅ **Escalabilidade**: Espaço para crescimento
-✅ **Padrão mercado**: Estrutura similar a projetos modernos
-✅ **Desenvolvimento limpo**: Separação de responsabilidades
+### `/assets/images/`
+- Imagens de análise e relatórios
+- Ícones e logos do sistema
+- Assets para Open Graph
 
-## 🔗 Referências
+### `/src/components/`
+- Componentes reutilizáveis da interface
+- Modais e formulários
+- Elementos interativos
 
-- **Components**: Reutilizáveis e independentes
-- **Utils**: Funções helper e configurações
-- **Services**: Integrações com APIs externas
-- **Assets**: Recursos estáticos otimizados
+### `/src/pages/`
+- Páginas principais da aplicação
+- Documentação técnica
+- Arquivos de configuração
+
+### `/src/styles/` e `/styles/`
+- Tema cyber/visual
+- Estilos base e utilitários
+- Animações e transições
+
+## 🔒 Segurança
+
+- Autenticação segura com tokens
+- Validação de dados em cliente e servidor
+- Proteção contra CSRF e XSS
+- Criptografia de dados sensíveis
+
+## � Tecnologias Utilizadas
+
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **Estilização**: TailwindCSS, CSS customizado
+- **Ícones**: Lucide Icons
+- **Servidor**: Serve (para desenvolvimento)
+- **Controle de Versão**: Git
+
+## 🎨 Design System
+
+- **Cores Primárias**: Azul, Ciano, Cyber
+- **Estilo**: Glassmorphism premium
+- **Tipografia**: Sans-serif moderna
+- **Animações**: Transições suaves e micro-interações
+
+## 📝 Notas Importantes
+
+- O arquivo principal da aplicação é `index.html` na raiz
+- Configurações sensíveis não estão incluídas neste repositório
+- APIs e endpoints são gerenciados separadamente
+- Ambiente de produção requer configuração adicional
+
+## � Manutenção
+
+Para manter o projeto organizado:
+- Siga a estrutura de diretórios estabelecida
+- Documente novas funcionalidades
+- Mantenha o código limpo e comentado
+- Teste alterações antes de commitar
+
+## 📞 Suporte
+
+Para questões técnicas ou suporte, consulte a documentação interna ou entre em contato com a equipe de desenvolvimento.
