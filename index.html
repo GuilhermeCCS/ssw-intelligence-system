@@ -3261,7 +3261,6 @@ function getCodigoHTML() {
             `;
             // Adiciona ao body
             document.body.appendChild(modal);
-
             // Inicializa ícones Lucide
             lucide.createIcons();
 
@@ -3288,18 +3287,6 @@ function getCodigoHTML() {
                 }
             });
         }
-
-        function closePersonaSelector() {
-            const m = document.getElementById('personaSelectorModal');
-            if (m) m.remove();
-            if (!personaChatActive) {
-                const btn = document.getElementById('floatingChatBtn');
-                if (btn) {
-                    btn.style.setProperty('display', 'inline-flex', 'important');
-                }
-            }
-        }
-        
         async function deletePersona(id) {
             showConfirmDialog("Deseja realmente excluir essa persona?", async () => {
             await fetch(`${API_URL}/api/personas/${id}?user_id=${String(USER.id)}`, { method: 'DELETE' });
@@ -4870,7 +4857,6 @@ function getCodigoHTML() {
             };
             // Cria menu de seleção de personas (esconde o botão quando aberto)
             chatBtn.onclick = () => {
-                chatBtn.style.setProperty('display', 'none', 'important');
                 showPersonaSelector(personas);
             };
 
@@ -5036,18 +5022,8 @@ function getCodigoHTML() {
         function openChat(persona) {
             personaChats = personaChats || {};
             currentPersona = persona;
-            const key = persona.id || persona.profile_name;
-            // Recupera histórico salvo (se houver)
-            currentChatHistory = personaChats[key] ? [...personaChats[key]] : [];
-            // Marca chat de persona como ativo e esconde botão flutuante
-            personaChatActive = true;
-            const floatBtn = document.getElementById('floatingChatBtn');
-            if (floatBtn) {
-                floatBtn.style.setProperty('display', 'none', 'important');
-            }
-            // Abre modal localizado no canto inferior direito
-            const chatModal = document.getElementById('chatModal');
-            chatModal.classList.remove('hidden');
+            currentChatHistory = []; // Limpa histórico novo
+            document.getElementById('chatModal').classList.remove('hidden');
             document.getElementById('chatPersonaName').innerText = persona.profile_name;
             document.getElementById('chatPersonaScore').innerText = persona.score ? `Score ${persona.score}/10` : 'Perfil de análise ativo';
             const container = document.getElementById('chatHistory');
@@ -5074,14 +5050,6 @@ function getCodigoHTML() {
         }
         function closeChat() {
             document.getElementById('chatModal').classList.add('hidden');
-            personaChatActive = false;
-            // Reexibe botão flutuante se ele existir
-            const floatBtn = document.getElementById('floatingChatBtn');
-            if (floatBtn) {
-                floatBtn.style.setProperty('display', 'inline-flex', 'important');
-            }
-            const backBtn = document.getElementById('chatBackBtn');
-            if (backBtn) backBtn.style.display = 'none';
         }
         async function sendChat() {
             const input = document.getElementById('chatInput');
