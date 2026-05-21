@@ -2410,6 +2410,7 @@
             <script>
         // Variável global de usuário
         let USER = null;
+        let isFloatingButtonVisible = true;
         // === 1. INICIALIZAÇÃO ===
             window.onload = () => {
             lucide.createIcons();
@@ -2534,20 +2535,31 @@
             }
         });
         window.addEventListener('resize', () => {
-            const sb = document.getElementById('appSidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const isDesktop = window.innerWidth >= 768;
-            if(isDesktop) {
-                // Em desktop, sempre mostra o sidebar (remove translate)
-                sb.classList.remove('-translate-x-full');
-                if(overlay) overlay.classList.add('hidden');
-            } else {
-                // Em mobile, reseta para o estado fechado padrão
-                sb.classList.add('-translate-x-full');
-                sb.classList.remove('sidebar-closed');
-                if(overlay) overlay.classList.add('hidden');
-            }
-        });
+    const sb = document.getElementById('appSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const btn = document.getElementById('floatingChatBtn');
+    const isDesktop = window.innerWidth >= 768;
+
+    if(isDesktop) {
+        // Em desktop, sempre mostra o sidebar (remove translate)
+        sb.classList.remove('-translate-x-full');
+        if(overlay) overlay.classList.add('hidden');
+    } else {
+        // Em mobile, reseta para o estado fechado padrão
+        sb.classList.add('-translate-x-full');
+        sb.classList.remove('sidebar-closed');
+        if(overlay) overlay.classList.add('hidden');
+    }
+
+    // --- NOVA LÓGICA DE CONTROLE DO BOTÃO DO CHAT ---
+    if (btn) {
+        if (isFloatingButtonVisible) {
+            btn.style.display = 'inline-flex';
+        } else {
+            btn.style.display = 'none';
+        }
+    }
+});
         function toggleRegister() {
             document.getElementById('loginForm').classList.toggle('hidden');
             document.getElementById('registerForm').classList.toggle('hidden');
@@ -4973,7 +4985,12 @@ function getCodigoHTML() {
                 </div>
                 <div id="personasList" style="flex: 1; min-height: 0; overflow-y: auto; display: grid; gap: 14px; padding: 20px 24px 24px;"></div>
             `;
-            panel.querySelector('#personaSelectorCloseBtn').addEventListener('click', closePersonaSelector);
+            panel.querySelector('#personaSelectorCloseBtn').onclick = function() {
+    const modal = document.getElementById('personaSelectorModal');
+    if (modal) {
+        modal.remove();
+    }
+};
             modal.appendChild(panel);
             // Adiciona CSS da animação fadeIn se necessário
             if (!document.getElementById('modalStyles')) {
@@ -5020,6 +5037,9 @@ function getCodigoHTML() {
         var currentPersona = null;
         var personaChatActive = false;
         function openChat(persona) {
+            isFloatingButtonVisible = false;
+            const btn = document.getElementById('floatingChatBtn');
+            if (btn) btn.style.display = 'none';
             personaChats = personaChats || {};
             currentPersona = persona;
             currentChatHistory = []; // Limpa histórico novo
@@ -5050,7 +5070,11 @@ function getCodigoHTML() {
         }
         function closeChat() {
             document.getElementById('chatModal').classList.add('hidden');
-        }
+            isFloatingButtonVisible = true;
+            const btn = document.getElementById('floatingChatBtn');
+            if (btn) btn.style.display = 'inline-flex';
+}
+        
         async function sendChat() {
             const input = document.getElementById('chatInput');
             const msg = input.value.trim();

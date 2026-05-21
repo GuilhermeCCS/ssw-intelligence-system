@@ -7,10 +7,9 @@
 **Plataforma de Auditoria Web e Benchmarking Competitivo**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/GuilhermeCCS/ssw-intelligence-system/blob/main/README.md#-licena)
-[![Status](https://img.shields.io/badge/status-Active-green.svg)](https://ssw-intelligence.vercel.app)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/GuilhermeCCS/ssw-intelligence-system)
 
-[Visitar Site](https://ssw-intelligence.vercel.app) • [Relatar Bug](https://github.com/GuilhermeCCS/ssw-intelligence-system/issues)
+[Relatar Bug](https://github.com/GuilhermeCCS/ssw-intelligence-system/issues)
 
 </div>
 
@@ -124,7 +123,7 @@ ssw-intelligence-system/
 
 3. **Configure o Domínio**
    - Abra `index.html`
-   - Substitua `https://seu-dominio-aqui.com` pelo seu domínio real nas meta tags Open Graph (ex: https://ssw-intelligence.vercel.app)
+   - Substitua `https://seu-dominio-aqui.com` pelo seu domínio real nas meta tags Open Graph
 
 4. **Inicie um servidor local**
    ```bash
@@ -167,11 +166,6 @@ ssw-intelligence-system/
 1. Conecte seu repositório ao Netlify
 2. Configure o diretório de publicação (raiz)
 3. Adicione variáveis de ambiente se necessário
-
-#### Vercel
-1. Importe o projeto no Vercel
-2. Configure as configurações de build
-3. Deploy automático via Git
 
 #### GitHub Pages
 1. Configure GitHub Pages no repositório
