@@ -281,10 +281,6 @@
         .report-table tr:nth-child(even) {
             background: #fafafa;
         }
-        /* Classe para esconder durante impressão */
-        .no-print {
-            display: block !important;
-        }
         /* =========================================
            3. MODO IMPRESSÃO (PDF LIMPO)
            ========================================= */
@@ -3233,6 +3229,7 @@ function getCodigoHTML() {
             btn.innerText = "SALVAR"; btn.disabled = false;
         }
         // Função de confirmação personalizada
+// Função de confirmação personalizada
         function showConfirmDialog(message, onConfirm, onCancel) {
             // Remove modal anterior se existir
             const existingModal = document.getElementById('confirmModal');
@@ -3264,18 +3261,10 @@ function getCodigoHTML() {
             `;
             // Adiciona ao body
             document.body.appendChild(modal);
-        }
 
-        function closePersonaSelector() {
-            const m = document.getElementById('personaSelectorModal');
-            if (m) m.remove();
-            if (!personaChatActive) {
-                const btn = document.getElementById('floatingChatBtn');
-                if (btn) btn.style.display = '';
-            }
-        }
             // Inicializa ícones Lucide
             lucide.createIcons();
+
             // Funções globais para os botões
             window.closeConfirmModal = function() {
                 const modal = document.getElementById('confirmModal');
@@ -3291,13 +3280,26 @@ function getCodigoHTML() {
                 }
                 if (onConfirm) onConfirm();
             };
+
             // Fecha ao clicar fora
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeConfirmModal();
                 }
             });
-            
+        }
+
+        function closePersonaSelector() {
+            const m = document.getElementById('personaSelectorModal');
+            if (m) m.remove();
+            if (!personaChatActive) {
+                const btn = document.getElementById('floatingChatBtn');
+                if (btn) {
+                    btn.style.setProperty('display', 'inline-flex', 'important');
+                }
+            }
+        }
+        
         async function deletePersona(id) {
             showConfirmDialog("Deseja realmente excluir essa persona?", async () => {
             await fetch(`${API_URL}/api/personas/${id}?user_id=${String(USER.id)}`, { method: 'DELETE' });
@@ -4868,9 +4870,10 @@ function getCodigoHTML() {
             };
             // Cria menu de seleção de personas (esconde o botão quando aberto)
             chatBtn.onclick = () => {
-                chatBtn.style.display = 'none';
+                chatBtn.style.setProperty('display', 'none', 'important');
                 showPersonaSelector(personas);
             };
+
             document.body.appendChild(chatBtn);
             // Adiciona CSS da animação e estilo do chat
             if (!document.getElementById('chatBtnStyles')) {
@@ -5039,7 +5042,9 @@ function getCodigoHTML() {
             // Marca chat de persona como ativo e esconde botão flutuante
             personaChatActive = true;
             const floatBtn = document.getElementById('floatingChatBtn');
-            if (floatBtn) floatBtn.style.display = 'none';
+            if (floatBtn) {
+                floatBtn.style.setProperty('display', 'none', 'important');
+            }
             // Abre modal localizado no canto inferior direito
             const chatModal = document.getElementById('chatModal');
             chatModal.classList.remove('hidden');
@@ -5072,7 +5077,9 @@ function getCodigoHTML() {
             personaChatActive = false;
             // Reexibe botão flutuante se ele existir
             const floatBtn = document.getElementById('floatingChatBtn');
-            if (floatBtn) floatBtn.style.display = '';
+            if (floatBtn) {
+                floatBtn.style.setProperty('display', 'inline-flex', 'important');
+            }
             const backBtn = document.getElementById('chatBackBtn');
             if (backBtn) backBtn.style.display = 'none';
         }
@@ -6458,5 +6465,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </html>
-
-
