@@ -1845,21 +1845,21 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             window.onload = () => {
             lucide.createIcons();
             
-            // Navegação baseada em hash
-            function handleHashChange() {
-                const hash = window.location.hash.replace('#', '');
-                if (hash && ['home', 'personas', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(hash)) {
-                    nav(hash);
+            // Navegação baseada em pathname (History API)
+            function handlePopState() {
+                const pathname = window.location.pathname.replace('/', '');
+                if (pathname && ['home', 'personas', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
+                    nav(pathname);
+                } else if (!pathname || pathname === '') {
+                    nav('home');
                 }
             }
             
-            // Listener para mudanças de hash
-            window.addEventListener('hashchange', handleHashChange);
+            // Listener para mudanças de histórico (botões voltar/avançar)
+            window.addEventListener('popstate', handlePopState);
             
-            // Verifica hash inicial ao carregar a página
-            if (window.location.hash) {
-                handleHashChange();
-            }
+            // Verifica pathname inicial ao carregar a página
+            handlePopState();
             
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
@@ -2012,9 +2012,9 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             document.getElementById('registerForm').classList.toggle('hidden');
         }
         function nav(view) {
-            // Atualiza a URL com hash da seção atual (apenas se for diferente)
-            if (window.location.hash !== `#${view}`) {
-                window.location.hash = view;
+            // Atualiza a URL com caminho limpo (sem hash)
+            if (window.location.pathname !== `/${view}`) {
+                window.history.pushState({}, '', `/${view}`);
             }
             
             // Atualiza indicadores ativos na sidebar
