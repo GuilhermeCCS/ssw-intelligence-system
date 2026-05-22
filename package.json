@@ -1,6 +1,6 @@
 {
-  "name": "ssw-intelligence-system",
-  "version": "1.0.0",
+  "name": "SSW INTELLIGENCE",
+  "version": "2.0.0",
   "description": "Plataforma de auditoria web e benchmarking competitivo impulsionada por IA",
   "main": "src/pages/index.html",
   "scripts": {
@@ -15,7 +15,7 @@
     "inteligencia-artificial",
     "analise-comportamental"
   ],
-  "author": "SSW Intelligence",
+  "author": "Guilherme Cruz da Silva e Deus",
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
