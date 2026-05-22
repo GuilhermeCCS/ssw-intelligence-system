@@ -2,7 +2,7 @@
   "name": "ssw-intelligence-system",
   "version": "1.0.0",
   "description": "Plataforma de auditoria web e benchmarking competitivo impulsionada por IA",
-  "main": "index.html",
+  "main": "src/pages/index.html",
   "scripts": {
     "start": "serve .",
     "build": "echo 'Static build complete'",
