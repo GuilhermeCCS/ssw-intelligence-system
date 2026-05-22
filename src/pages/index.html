@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <!-- Checkout Mercado Pago -->
+    <script src="/src/utils/checkout-mercadopago.js"></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -5956,7 +5958,7 @@ function getCodigoHTML() {
             }
             // Abrir checkout transparente
             try {
-                await openCheckout(pacoteSelecionado, USER);
+                await openCheckout(pacoteSelecionado);
             } catch (error) {
                 console.error('Erro ao abrir checkout:', error);
                 Toast.error("Erro ao abrir checkout. Tente novamente.");
@@ -6392,7 +6394,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-<script src="/src/utils/checkout-mercadopago.js"></script>
 </body> 
 <script>
 // SCRIPT DE CONTAGEM REGRESSIVA DA PROMOÇÃO
