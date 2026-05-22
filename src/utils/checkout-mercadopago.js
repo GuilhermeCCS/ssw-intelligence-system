@@ -8,8 +8,8 @@ class CheckoutMercadoPago {
     this.selectedPackage = null;
     
     // Carrega variáveis de ambiente
-    this.API_BASE_URL = import.meta.env?.VITE_API_URL || 'https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev';
-    this.MP_PUBLIC_KEY = import.meta.env?.VITE_MP_PUBLIC_KEY || 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
+    this.API_BASE_URL = 'https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev';
+    this.MP_PUBLIC_KEY = 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
   }
 
   // Inicializa o SDK do Mercado Pago v2

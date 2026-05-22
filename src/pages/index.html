@@ -6,11 +6,11 @@
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Checkout Mercado Pago -->
-    <script src="/src/utils/checkout-mercadopago.js"></script>
+    <script src="../utils/checkout-mercadopago.js" defer></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
-    <meta property="og:image" content="/assets/images/og-image.svg">
+    <meta property="og:image" content="../assets/images/og-image.svg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/svg+xml">
@@ -26,7 +26,7 @@
     <meta name="keywords" content="auditoria web, análise de sites, benchmarking competitivo, inteligência artificial, SEO, performance">
     <meta name="author" content="SSW INTELLIGENCE">
     <title>SSW INTELLIGENCE</title>
-    <link rel="icon" type="image/x-icon" href="/assets/images/logos.ico">
+    <link rel="icon" type="image/x-icon" href="../assets/images/logos.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -65,7 +65,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <!-- Cyber/SaaS Theme -->
-    <link rel="stylesheet" href="/styles/cyber-theme.css">
+    <link rel="stylesheet" href="../styles/cyber-theme.css">
     <style>
         /* =========================================
            1. FUNDAMENTOS & BACKGROUND
@@ -809,7 +809,7 @@
         Toast.info = (m, d) => Toast.show(m, 'info', d);
     </script>
     <script>
-        const API_URL = import.meta.env?.VITE_API_URL || "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
+        const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
         // Variável global para armazenar dados da auditoria atual
         let auditData = null;
         let currentAuditUrl = null;
@@ -883,7 +883,7 @@
         <div class="glass-panel p-10 rounded-3xl w-full max-w-md border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in-up">
             <div class="text-center mb-10">
                 <div class="mb-6 flex justify-center">
-                    <img src="/assets/images/logos.ico" alt="SSW INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
+                    <img src="../assets/images/logos.ico" alt="SSW INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
                 </div>
                 <a href="#" onclick="nav('home')" class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg hover:text-primary transition-colors cursor-pointer block">SSW <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELLIGENCE</span></a>
                 <p class="text-xs text-slate-400 uppercase tracking-[0.2em] font-medium">Enterprise Analytics Platform</p>
@@ -910,7 +910,7 @@
         <div class="w-full px-4 py-3 flex items-center justify-between">
             <!-- Left: Logo e Nome -->
             <div class="flex items-center gap-3 flex-shrink-0">
-                <img src="/assets/images/logos.ico" alt="SSW INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
+                <img src="../assets/images/logos.ico" alt="SSW INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
                 <a href="#" onclick="nav('home')" class="text-sm font-black tracking-tighter text-white hidden sm:block hover:text-primary transition-colors cursor-pointer">SSW <span class="text-primary">| INTELLIGENCE</span></a>
             </div>
             <!-- Center: Menu Navegação -->
@@ -1908,7 +1908,7 @@
                                             </p>
                                             <!-- Imagem Real da Interface -->
                                             <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="/assets/images/T1RED.png" alt="Interface de Nova Análise" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T1RED.png" alt="Interface de Nova Análise" class="w-full h-full object-cover">
                                             </div>
                                         </div>
                                     </div>
@@ -1926,7 +1926,7 @@
                                             </p>
                                             <!-- Imagem Real da Interface -->
                                             <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="/assets/images/T2RED.png" alt="Inserindo URL para Análise" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T2RED.png" alt="Inserindo URL para Análise" class="w-full h-full object-cover">
                                             </div>
                                         </div>
                                     </div>
@@ -1944,7 +1944,7 @@
                                             </p>
                                             <!-- Imagem Real da Interface -->
                                             <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="/assets/images/T3RED.png" alt="Selecionando Personas para Análise" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T3RED.png" alt="Selecionando Personas para Análise" class="w-full h-full object-cover">
                                             </div>
                                         </div>
                                     </div>
@@ -1962,7 +1962,7 @@
                                             </p>
                                             <!-- Imagem Real da Interface -->
                                             <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="/assets/images/T4RED.png" alt="Executando Análise Completa" class="w-full h-full object-cover">
+                                                <img src="../assets/images/T4RED.png" alt="Executando Análise Completa" class="w-full h-full object-cover">
                                             </div>
                                         </div>
                                     </div>
@@ -1992,7 +1992,7 @@
                                         </p>
                                         <!-- Imagem Real da Interface -->
                                         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="/assets/images/B1RED.png" alt="Acessando Modo Comparativo" class="w-full h-full object-cover">
+                                            <img src="../assets/images/B1RED.png" alt="Acessando Modo Comparativo" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -2010,7 +2010,7 @@
                                         </p>
                                         <!-- Imagem Real da Interface -->
                                         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="/assets/images/B2RED.png" alt="Configurando URLs Comparativas" class="w-full h-full object-cover">
+                                            <img src="../assets/images/B2RED.png" alt="Configurando URLs Comparativas" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -2028,7 +2028,7 @@
                                         </p>
                                         <!-- Imagem Real da Interface -->
                                         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="/assets/images/B3RED.png" alt="Executando Análise Comparativa" class="w-full h-full object-cover">
+                                            <img src="../assets/images/B3RED.png" alt="Executando Análise Comparativa" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -2072,7 +2072,7 @@
                                         </p>
                                         <!-- Placeholder de Vídeo -->
                                         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="/assets/images/C1RED.png" alt="Acessando Gestão de Personas" class="w-full h-full object-cover">
+                                            <img src="../assets/images/C1RED.png" alt="Acessando Gestão de Personas" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -2090,7 +2090,7 @@
                                         </p>
                                         <!-- Placeholder de Vídeo -->
                                         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="/assets/images/C2RED.png" alt="Criando Nova Persona" class="w-full h-full object-cover">
+                                            <img src="../assets/images/C2RED.png" alt="Criando Nova Persona" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -2108,7 +2108,7 @@
                                         </p>
                                         <!-- Placeholder de Vídeo -->
                                         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="/assets/images/C3RED.png" alt="Salvando e Utilizando Persona" class="w-full h-full object-cover">
+                                            <img src="../assets/images/C3RED.png" alt="Salvando e Utilizando Persona" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -2137,7 +2137,7 @@
             Explore scores de performance, UX, SEO e comportamento. Cada métrica inclui explicações e recomendações.
         </p>
         <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-            <img src="/assets/images/D1RED.png" alt="Analisando Métricas" class="w-full h-full object-cover">
+            <img src="../assets/images/D1RED.png" alt="Analisando Métricas" class="w-full h-full object-cover">
         </div>
     </div> </div>
                                 <!-- Passo 2 -->
@@ -2154,7 +2154,7 @@
                                             </p>
                                             <!-- Placeholder de Vídeo -->
                                             <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="/assets/images/D2RED.png" alt="Exportando Relatórios" class="w-full h-full object-cover">
+                                                <img src="../assets/images/D2RED.png" alt="Exportando Relatórios" class="w-full h-full object-cover">
                                             </div>
                                         </div>
                                     </div>
@@ -5958,7 +5958,7 @@ function getCodigoHTML() {
             }
             // Abrir checkout transparente
             try {
-                await openCheckout(pacoteSelecionado);
+                await openCheckout(pacoteSelecionado, USER);
             } catch (error) {
                 console.error('Erro ao abrir checkout:', error);
                 Toast.error("Erro ao abrir checkout. Tente novamente.");
@@ -6258,7 +6258,7 @@ function getCodigoHTML() {
             }
         }
 </script>
-<script src="/src/utils/ranking.js"></script>
+<script src="../utils/ranking.js"></script>
 <!-- Modal de Chat com Persona -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 bg-black/40">
     <div class="glass-panel fixed bottom-4 right-4 w-full max-w-[380px] max-h-[88vh] rounded-[32px] border border-slate-700/60 shadow-[0_30px_90px_rgba(15,23,42,0.65)] overflow-hidden bg-slate-950/95 backdrop-blur-xl">
