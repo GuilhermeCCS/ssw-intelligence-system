@@ -17,9 +17,6 @@ pnpm-lock.yaml
 # Logs
 logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Arquivos temporários
 .tmp
@@ -39,58 +36,18 @@ temp_backup/
 .vscode/extensions.json
 .vscode/*.log
 
-# Outras IDEs
-.idea/
-*.iml
-*.ipr
-*.iws
-.project
-.classpath
-.settings/
-*.sublime-project
-*.sublime-workspace
-
 # Arquivos do sistema
 .DS_Store
 .DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
 ehthumbs.db
 Thumbs.db
-desktop.ini
 
 # Build e dist
 build/
 dist/
 out/
-.next/
-.nuxt/
 .cache/
-.parcel-cache/
-
-# Testes e coverage
-coverage/
-.nyc_output/
-*.lcov
-.coverage
 
 # Deploy
-.vercel/
-.netlify/
 .wrangler/
-.cloudflare/
-
-# Documentação gerada
-docs/_build/
-.docz/
-.docusaurus/
-
-# Arquivos de CI/CD locais
-.github/workflows/*.local
-.gitlab-ci.yml.local
-
-# Misc
-*.pid
-*.seed
-*.pid.lock
