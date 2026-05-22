@@ -6,6 +6,23 @@ Plataforma avançada de auditoria web e análise de performance digital com inte
 
 O S.S.W Intelligence System é uma solução completa e profissional para análise e avaliação de sites, fornecendo insights profundos e acionáveis sobre performance, acessibilidade, SEO, segurança e experiência do usuário. Desenvolvido com tecnologia de ponta em inteligência artificial e 15 personas personalizadas, oferece uma visão 360° e abrangente da qualidade digital de qualquer site, permitindo que empresas e profissionais tomem decisões estratégicas baseadas em dados concretos.
 
+## Configuração
+
+### Variáveis de Ambiente
+
+Para configurar o projeto localmente:
+
+1. Copie o arquivo `.env.local.example` para `.env.local`
+2. Preencha com suas credenciais reais
+
+```bash
+cp .env.local.example .env.local
+```
+
+**Variáveis necessárias:**
+- `VITE_API_URL` - URL da API backend
+- `VITE_MP_PUBLIC_KEY` - Chave pública do Mercado Pago
+
 ## Diferenciais
 
 ### Tecnologia de IA Avançada

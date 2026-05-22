@@ -6,13 +6,15 @@ class CheckoutMercadoPago {
     this.modal = null;
     this.currentUser = null;
     this.selectedPackage = null;
+    
+    // Carrega variáveis de ambiente
+    this.API_BASE_URL = import.meta.env?.VITE_API_URL || 'https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev';
+    this.MP_PUBLIC_KEY = import.meta.env?.VITE_MP_PUBLIC_KEY || 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
   }
 
-  // URL base da API do Replit
-  API_BASE_URL = 'https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev';
-
   // Inicializa o SDK do Mercado Pago v2
-  async init(publicKey = 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac') {
+  async init(publicKey = null) {
+    const keyToUse = publicKey || this.MP_PUBLIC_KEY;
     try {
       // SDK v2 já está carregado via <script> no head
       if (!window.MercadoPago) {
@@ -20,7 +22,7 @@ class CheckoutMercadoPago {
       }
       
       // Inicializa a instância do Mercado Pago (V2)
-      this.mp = new window.MercadoPago(publicKey, {
+      this.mp = new window.MercadoPago(keyToUse, {
         locale: 'pt-BR'
       });
       

@@ -1,5 +1,5 @@
 // js/config.js
-const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
+const API_URL = import.meta.env?.VITE_API_URL || "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
 
 // Função para pegar o usuário logado com segurança
 function getUser() {
