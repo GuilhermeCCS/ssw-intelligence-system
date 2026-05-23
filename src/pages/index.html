@@ -897,7 +897,9 @@
                 <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
                 <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
                 <div class="mt-4">
-                    <div id="turnstile-register" class="flex justify-center"></div>
+                    <div id="turnstile-register" class="flex justify-center min-h-[65px] items-center">
+                        <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                    </div>
                 </div>
                 <button onclick="fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
                 <button onclick="toggleRegister()" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
@@ -2018,10 +2020,10 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         function toggleRegister() {
             document.getElementById('loginForm').classList.toggle('hidden');
             document.getElementById('registerForm').classList.toggle('hidden');
-            
+
             // Inicializa Turnstile quando o formulário de registro for exibido
             if (!document.getElementById('registerForm').classList.contains('hidden')) {
-                setTimeout(() => initTurnstileRegister(), 100);
+                setTimeout(() => initTurnstileRegister(), 500);
             }
         }
         function nav(view) {
@@ -2127,26 +2129,51 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             }
 
             const container = document.getElementById('turnstile-login');
-            if (!container) return;
-
-            // Verifica se o Turnstile está carregado
-            if (typeof turnstile === 'undefined') {
-                console.error('Turnstile não está carregado');
-                Toast.error('Erro ao carregar captcha. Recarregue a página.');
+            if (!container) {
+                console.error('Container turnstile-login não encontrado');
                 return;
             }
 
-            turnstileLoginWidget = turnstile.render('#turnstile-login', {
-                sitekey: TURNSTILE_SITE_KEY,
-                callback: function(token) {
-                    turnstileLoginToken = token;
-                    console.log('Turnstile login token:', token);
-                },
-                'error-callback': function() {
-                    turnstileLoginToken = null;
-                    Toast.error('Erro na verificação do captcha. Tente novamente.');
+            // Função para tentar renderizar o widget
+            const tryRender = () => {
+                if (typeof turnstile !== 'undefined') {
+                    console.log('✅ Turnstile carregado, renderizando widget...');
+                    // Limpa o texto de carregamento
+                    container.innerHTML = '';
+                    turnstileLoginWidget = turnstile.render('#turnstile-login', {
+                        sitekey: TURNSTILE_SITE_KEY,
+                        callback: function(token) {
+                            turnstileLoginToken = token;
+                            console.log('✅ Turnstile login token recebido:', token);
+                        },
+                        'error-callback': function() {
+                            turnstileLoginToken = null;
+                            console.error('❌ Erro na verificação do captcha');
+                            Toast.error('Erro na verificação do captcha. Tente novamente.');
+                        }
+                    });
+                } else {
+                    console.warn('⏳ Turnstile ainda não carregado, aguardando...');
                 }
-            });
+            };
+
+            // Tenta renderizar imediatamente
+            tryRender();
+
+            // Se não funcionou, tenta novamente a cada 500ms por até 10 segundos
+            let attempts = 0;
+            const maxAttempts = 20;
+            const interval = setInterval(() => {
+                attempts++;
+                if (typeof turnstile !== 'undefined') {
+                    clearInterval(interval);
+                    tryRender();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    console.error('❌ Turnstile não carregou após 10 segundos');
+                    Toast.error('Erro ao carregar captcha. Recarregue a página.');
+                }
+            }, 500);
         }
 
         // Inicializa o widget do Turnstile para registro
@@ -2157,26 +2184,51 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             }
 
             const container = document.getElementById('turnstile-register');
-            if (!container) return;
-
-            // Verifica se o Turnstile está carregado
-            if (typeof turnstile === 'undefined') {
-                console.error('Turnstile não está carregado');
-                Toast.error('Erro ao carregar captcha. Recarregue a página.');
+            if (!container) {
+                console.error('Container turnstile-register não encontrado');
                 return;
             }
 
-            turnstileRegisterWidget = turnstile.render('#turnstile-register', {
-                sitekey: TURNSTILE_SITE_KEY,
-                callback: function(token) {
-                    turnstileRegisterToken = token;
-                    console.log('Turnstile register token:', token);
-                },
-                'error-callback': function() {
-                    turnstileRegisterToken = null;
-                    Toast.error('Erro na verificação do captcha. Tente novamente.');
+            // Função para tentar renderizar o widget
+            const tryRender = () => {
+                if (typeof turnstile !== 'undefined') {
+                    console.log('✅ Turnstile carregado, renderizando widget de registro...');
+                    // Limpa o texto de carregamento
+                    container.innerHTML = '';
+                    turnstileRegisterWidget = turnstile.render('#turnstile-register', {
+                        sitekey: TURNSTILE_SITE_KEY,
+                        callback: function(token) {
+                            turnstileRegisterToken = token;
+                            console.log('✅ Turnstile register token recebido:', token);
+                        },
+                        'error-callback': function() {
+                            turnstileRegisterToken = null;
+                            console.error('❌ Erro na verificação do captcha');
+                            Toast.error('Erro na verificação do captcha. Tente novamente.');
+                        }
+                    });
+                } else {
+                    console.warn('⏳ Turnstile ainda não carregado, aguardando...');
                 }
-            });
+            };
+
+            // Tenta renderizar imediatamente
+            tryRender();
+
+            // Se não funcionou, tenta novamente a cada 500ms por até 10 segundos
+            let attempts = 0;
+            const maxAttempts = 20;
+            const interval = setInterval(() => {
+                attempts++;
+                if (typeof turnstile !== 'undefined') {
+                    clearInterval(interval);
+                    tryRender();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    console.error('❌ Turnstile não carregou após 10 segundos');
+                    Toast.error('Erro ao carregar captcha. Recarregue a página.');
+                }
+            }, 500);
         }
 
         async function fazerLogin() {
@@ -2372,7 +2424,7 @@ function renderAuthView() {
     if(authView === 'login') {
         loginContent.innerHTML = getLoginHTML();
         // Inicializa Turnstile após renderizar o HTML
-        setTimeout(() => initTurnstileLogin(), 100);
+        setTimeout(() => initTurnstileLogin(), 500);
     } else if(authView === 'email') {
         loginContent.innerHTML = getEmailHTML();
     } else if(authView === 'codigo') {
@@ -2404,7 +2456,9 @@ function getLoginHTML() {
                 </div>
             </div>
             <div class="mt-4">
-                <div id="turnstile-login" class="flex justify-center"></div>
+                <div id="turnstile-login" class="flex justify-center min-h-[65px] items-center">
+                    <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                </div>
             </div>
             <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
                 Acessar Sistema
