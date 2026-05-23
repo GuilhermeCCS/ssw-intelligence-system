@@ -284,16 +284,13 @@ class CheckoutMercadoPago {
             sitekey: '0x4AAAAAADU_DaUQEsTW3GMs',
             theme: 'dark',
             callback: function(token) {
-              console.log('✅ Turnstile checkout token recebido:', token);
+              // Token recebido
             },
             'error-callback': function(error) {
-              console.error('❌ Erro na verificação do captcha:', error);
+              // Erro na verificação
             }
           });
-          console.log('✅ Widget Turnstile renderizado no checkout');
         }
-      } else {
-        console.warn('⚠️ Turnstile não está disponível');
       }
     } catch (error) {
       console.error('Erro ao criar Payment Brick:', error);
@@ -340,10 +337,9 @@ class CheckoutMercadoPago {
                 sitekey: '0x4AAAAAADU_DaUQEsTW3GMs',
                 theme: 'dark',
                 callback: function(token) {
-                  console.log('✅ Turnstile checkout token recebido (fallback):', token);
+                  // Token recebido (fallback)
                 }
               });
-              console.log('✅ Widget Turnstile renderizado no checkout (fallback)');
             }
           }
         } catch (fallbackError) {
@@ -361,13 +357,8 @@ class CheckoutMercadoPago {
     this.showState('processing');
 
     // Capturar token do Turnstile do DOM
-    const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
-    console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
-    console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
-    
-    const cfToken = cfTokenInput?.value;
+    const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
     if (!cfToken) {
-      console.error('❌ cfToken está vazio ou undefined no checkout');
       this.showError('Resolva o captcha primeiro');
       this.showState('initial');
       return;
@@ -383,7 +374,6 @@ class CheckoutMercadoPago {
       cf_token: cfToken
     };
 
-    console.log("Enviando para o backend:", payload);
 
     try {
       const response = await fetch(`${this.API_BASE_URL}/api/pagamento/processar`, {

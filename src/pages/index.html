@@ -12,7 +12,7 @@
     <!-- Footer Section -->
     <script src="../components/footer/footer-component.js" defer></script>
     <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer onload="console.log('✅ Script Cloudflare Turnstile carregado com sucesso')" onerror="console.error('❌ Erro ao carregar script Cloudflare Turnstile')"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -2125,32 +2125,19 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
 
         // Inicializa o widget do Turnstile para login
         function initTurnstileLogin() {
-            console.log('🚀 Iniciando Turnstile Login...');
-            console.log('🔑 Site Key:', TURNSTILE_SITE_KEY);
-            console.log('🌐 Domínio atual:', window.location.hostname);
-
             if (turnstileLoginWidget) {
-                console.log('♻️ Widget já existe, resetando...');
                 turnstileLoginWidget.reset();
                 return;
             }
 
             const container = document.getElementById('turnstile-login');
             if (!container) {
-                console.error('❌ Container turnstile-login não encontrado');
                 return;
             }
 
-            console.log('✅ Container encontrado:', container);
-
             // Função para tentar renderizar o widget
             const tryRender = () => {
-                console.log('🔍 Verificando se turnstile está definido...');
-                console.log('typeof turnstile:', typeof turnstile);
-
                 if (typeof turnstile !== 'undefined') {
-                    console.log('✅ Turnstile carregado, renderizando widget...');
-                    console.log('📦 turnstile object:', turnstile);
                     // Limpa o texto de carregamento
                     container.innerHTML = '';
 
@@ -2159,25 +2146,18 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                             sitekey: TURNSTILE_SITE_KEY,
                             callback: function(token) {
                                 turnstileLoginToken = token;
-                                console.log('✅ Turnstile login token recebido:', token);
                             },
                             'error-callback': function(error) {
                                 turnstileLoginToken = null;
-                                console.error('❌ Erro na verificação do captcha:', error);
                                 Toast.error('Erro na verificação do captcha. Tente novamente.');
                             },
                             'expired-callback': function() {
                                 turnstileLoginToken = null;
-                                console.warn('⚠️ Turnstile token expirado');
                             }
                         });
-                        console.log('✅ Widget renderizado com sucesso');
                     } catch (error) {
-                        console.error('❌ Erro ao renderizar widget:', error);
                         Toast.error('Erro ao carregar captcha: ' + error.message);
                     }
-                } else {
-                    console.warn('⏳ Turnstile ainda não carregado, aguardando...');
                 }
             };
 
@@ -2189,14 +2169,11 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             const maxAttempts = 20;
             const interval = setInterval(() => {
                 attempts++;
-                console.log(`🔄 Tentativa ${attempts}/${maxAttempts}...`);
                 if (typeof turnstile !== 'undefined') {
                     clearInterval(interval);
                     tryRender();
                 } else if (attempts >= maxAttempts) {
                     clearInterval(interval);
-                    console.error('❌ Turnstile não carregou após 10 segundos');
-                    console.error('Verifique se o script do Cloudflare está sendo bloqueado');
                     Toast.error('Erro ao carregar captcha. Recarregue a página.');
                 }
             }, 500);
@@ -2211,30 +2188,24 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
 
             const container = document.getElementById('turnstile-register');
             if (!container) {
-                console.error('Container turnstile-register não encontrado');
                 return;
             }
 
             // Função para tentar renderizar o widget
             const tryRender = () => {
                 if (typeof turnstile !== 'undefined') {
-                    console.log('✅ Turnstile carregado, renderizando widget de registro...');
                     // Limpa o texto de carregamento
                     container.innerHTML = '';
                     turnstileRegisterWidget = turnstile.render('#turnstile-register', {
                         sitekey: TURNSTILE_SITE_KEY,
                         callback: function(token) {
                             turnstileRegisterToken = token;
-                            console.log('✅ Turnstile register token recebido:', token);
                         },
                         'error-callback': function() {
                             turnstileRegisterToken = null;
-                            console.error('❌ Erro na verificação do captcha');
                             Toast.error('Erro na verificação do captcha. Tente novamente.');
                         }
                     });
-                } else {
-                    console.warn('⏳ Turnstile ainda não carregado, aguardando...');
                 }
             };
 
@@ -2251,7 +2222,6 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     tryRender();
                 } else if (attempts >= maxAttempts) {
                     clearInterval(interval);
-                    console.error('❌ Turnstile não carregou após 10 segundos');
                     Toast.error('Erro ao carregar captcha. Recarregue a página.');
                 }
             }, 500);
@@ -2263,18 +2233,11 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
             
             // Capturar token do Turnstile do DOM
-            const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
-            console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
-            console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
-            
-            const cfToken = cfTokenInput?.value;
+            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
             if (!cfToken) {
-                console.error('❌ cfToken está vazio ou undefined');
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }
-            
-            console.log("Enviando para o backend:", { email, senha: pass, cf_token: cfToken });
             
             try {
                 const res = await fetch(`${API_URL}/api/login`, {
@@ -2301,28 +2264,18 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             }
         }
         async function fazerCadastro() {
-            console.log('🚀 fazerCadastro() chamada');
             const nome = document.getElementById('regNome').value;
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
             
-            console.log('📝 Dados do cadastro:', { nome, email });
-            
             if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
             
             // Capturar token do Turnstile do DOM
-            const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
-            console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
-            console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
-            
-            const cfToken = cfTokenInput?.value;
+            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
             if (!cfToken) {
-                console.error('❌ cfToken está vazio ou undefined');
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }
-            
-            console.log("Enviando para o backend:", { nome, email, senha: pass, cf_token: cfToken });
             
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
@@ -2330,7 +2283,6 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     body: JSON.stringify({ nome, email, senha: pass, cf_token: cfToken })
                 });
                 const data = await res.json();
-                console.log('📝 Resposta do cadastro:', res.status, data);
                 
                 if(res.ok) { 
                     Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
