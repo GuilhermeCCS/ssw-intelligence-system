@@ -2263,8 +2263,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
             
             // Capturar token do Turnstile do DOM
-            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
+            console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
+            console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
+            
+            const cfToken = cfTokenInput?.value;
             if (!cfToken) {
+                console.error('❌ cfToken está vazio ou undefined');
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }
@@ -2306,8 +2311,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
             
             // Capturar token do Turnstile do DOM
-            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
+            console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
+            console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
+            
+            const cfToken = cfTokenInput?.value;
             if (!cfToken) {
+                console.error('❌ cfToken está vazio ou undefined');
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }

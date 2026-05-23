@@ -361,8 +361,13 @@ class CheckoutMercadoPago {
     this.showState('processing');
 
     // Capturar token do Turnstile do DOM
-    const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
+    console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
+    console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
+    
+    const cfToken = cfTokenInput?.value;
     if (!cfToken) {
+      console.error('❌ cfToken está vazio ou undefined no checkout');
       this.showError('Resolva o captcha primeiro');
       this.showState('initial');
       return;
