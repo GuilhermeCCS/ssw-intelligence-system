@@ -19,6 +19,8 @@
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
+  },
+  "dependencies": {
+    "react-turnstile": "^1.1.5"
   }
 }
-
