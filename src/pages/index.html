@@ -1851,6 +1851,8 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         // Variável global de usuário
         let USER = null;
         let isFloatingButtonVisible = true;
+        // Variável temporária para senha no fluxo de cadastro
+        let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
             window.onload = () => {
             lucide.createIcons();
@@ -2321,11 +2323,10 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     lucide.createIcons();
                     // Inicia a contagem de reenvio
                     iniciarContagemReenvio();
-                    // Reload automático após cadastro bem-sucedido
-                    setTimeout(() => {
-                        console.log(' Recarregando página após cadastro...');
-                        window.location.reload();
-                    }, 2000);
+                    // Salva email e senha temporários para verificação e login automático
+                    emailTemporario = email;
+                    senhaTemporaria = pass;
+                    // O reload só acontecerá após confirmar o código em confirmarCodigoAPI()
                 } else Toast.error("Erro ao criar conta");
             } catch(e) { 
                 console.error('Erro de cadastro (index.html):', e);
@@ -2783,12 +2784,24 @@ function getCodigoHTML() {
             const codigo = codigoInput.value.trim();
             const btn = event.target; // O botão clicado
             if (codigo.length < 4) return Toast.warning("Digite o código de 4 números.");
-            // Verifica se USER existe e tem email
-            if (!USER || !USER.email) {
+            
+            // Determina qual email usar (fluxo de login ou cadastro)
+            let emailParaVerificar;
+            let isCadastroFlow = false;
+            
+            if (USER && USER.email) {
+                // Fluxo normal de login (usuário já logado)
+                emailParaVerificar = USER.email;
+            } else if (emailTemporario) {
+                // Fluxo de cadastro (usuário acabou de se cadastrar)
+                emailParaVerificar = emailTemporario;
+                isCadastroFlow = true;
+            } else {
                 Toast.error("Usuário não encontrado. Faça login novamente.");
                 logout();
                 return;
             }
+            
             // Efeito visual de carregando
             const textoOriginal = btn.innerHTML;
             btn.innerHTML = "Verificando...";
@@ -2799,7 +2812,7 @@ function getCodigoHTML() {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        email: USER.email, // Pega o email do usuário logado
+                        email: emailParaVerificar,
                         codigo: codigo
                     })
                 });
@@ -2807,12 +2820,50 @@ function getCodigoHTML() {
                 if (res.ok) {
                     // SUCESSO!
                     Toast.success("Conta verificada com sucesso! Bem-vindo.");
-                    // Atualiza o usuário local para verificado
-                    USER.verificado = true; 
-                    localStorage.setItem('USER', JSON.stringify(USER));
-                    // Recarrega a tela para liberar o acesso
-                    window.fromLoginFlow = true;
-                    loginSuccess(); 
+                    
+                    if (isCadastroFlow) {
+                        // Fluxo de cadastro: fazer login automático
+                        if (senhaTemporaria) {
+                            try {
+                                const loginRes = await fetch(`${API_URL}/api/login`, {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({ 
+                                        email: emailTemporario, 
+                                        senha: senhaTemporaria,
+                                        turnstile_token: 'bypass' // Bypass captcha no fluxo de cadastro
+                                    })
+                                });
+                                const loginData = await loginRes.json();
+                                if (loginRes.ok) {
+                                    USER = loginData;
+                                    localStorage.setItem('USER', JSON.stringify(loginData));
+                                    // Limpa variáveis temporárias
+                                    emailTemporario = null;
+                                    senhaTemporaria = null;
+                                    window.fromLoginFlow = true;
+                                    loginSuccess();
+                                } else {
+                                    Toast.error("Erro ao fazer login automático. Tente fazer login manualmente.");
+                                    document.getElementById('verifyModal').classList.add('hidden');
+                                    document.getElementById('authScreen').classList.remove('hidden');
+                                    document.getElementById('loginForm').classList.remove('hidden');
+                                }
+                            } catch (e) {
+                                console.error('Erro no login automático:', e);
+                                Toast.error("Erro ao fazer login automático. Tente fazer login manualmente.");
+                                document.getElementById('verifyModal').classList.add('hidden');
+                                document.getElementById('authScreen').classList.remove('hidden');
+                                document.getElementById('loginForm').classList.remove('hidden');
+                            }
+                        }
+                    } else {
+                        // Fluxo normal de login (usuário já logado)
+                        USER.verificado = true; 
+                        localStorage.setItem('USER', JSON.stringify(USER));
+                        window.fromLoginFlow = true;
+                        loginSuccess(); 
+                    }
                 } else {
                     // ERRO (Código errado)
                     Toast.error(data.detail || "Código incorreto. Tente novamente.");
@@ -6111,12 +6162,22 @@ function iniciarContagemReenvio() {
 }
 async function reenviarCodigo() {
     const link = document.getElementById('linkReenviar');
-    // Verifica se USER existe e tem email
-    if (!USER || !USER.email) {
+    
+    // Determina qual email usar (fluxo de login ou cadastro)
+    let emailParaReenviar;
+    
+    if (USER && USER.email) {
+        // Fluxo normal de login (usuário já logado)
+        emailParaReenviar = USER.email;
+    } else if (emailTemporario) {
+        // Fluxo de cadastro (usuário acabou de se cadastrar)
+        emailParaReenviar = emailTemporario;
+    } else {
         Toast.error("Usuário não encontrado. Faça login novamente.");
         logout();
         return;
     }
+    
     // Efeito visual de "Enviando..."
     link.innerHTML = "Enviando...";
     link.classList.add('pointer-events-none', 'opacity-50');
@@ -6124,7 +6185,7 @@ async function reenviarCodigo() {
         const res = await fetch(`${API_URL}/api/reenviar_codigo`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ email: USER.email })
+            body: JSON.stringify({ email: emailParaReenviar })
         });
         if (res.ok) {
             Toast.success("Novo código enviado! Verifique seu e-mail.");
