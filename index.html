@@ -6,11 +6,11 @@
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Checkout Mercado Pago -->
-    <script src="src/utils/checkout-mercadopago.js" defer></script>
+    <script src="src/utils/mercado-pago-checkout.js" defer></script>
     <!-- Pricing Section -->
-    <script src="src/components/pricing/pricing-section.js" defer></script>
+    <script src="src/components/pricing/pricing-component.js" defer></script>
     <!-- Footer Section -->
-    <script src="src/components/footer/footer-section.js" defer></script>
+    <script src="src/components/footer/footer-component.js" defer></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -70,6 +70,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <!-- Cyber/SaaS Theme -->
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="src/styles/base-styles.css">
     <style>
         /* =========================================
            1. FUNDAMENTOS & BACKGROUND
@@ -1313,7 +1315,7 @@
 // Carrega a seção de preços dinamicamente
 async function loadPricingSection() {
     try {
-        const response = await fetch('src/components/pricing/pricing-section.html');
+        const response = await fetch('src/components/pricing/pricing-component.html');
         const html = await response.text();
         document.getElementById('view-precos-container').innerHTML = html;
         // Recria ícones Lucide após carregar
@@ -1820,7 +1822,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             // Carrega o footer dinamicamente
             async function loadFooterSection() {
                 try {
-                    const response = await fetch('src/components/footer/footer-section.html');
+                    const response = await fetch('src/components/footer/footer-component.html');
                     const html = await response.text();
                     document.getElementById('footer-container').innerHTML = html;
                     // Recria ícones Lucide após carregar
