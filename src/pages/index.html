@@ -11,6 +11,8 @@
     <script src="../components/pricing/pricing-component.js" defer></script>
     <!-- Footer Section -->
     <script src="../components/footer/footer-component.js" defer></script>
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -894,6 +896,9 @@
                 <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
                 <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
                 <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
+                <div class="mt-4">
+                    <div id="turnstile-register" class="flex justify-center"></div>
+                </div>
                 <button onclick="fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
                 <button onclick="toggleRegister()" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
                     <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar para Login
@@ -2013,6 +2018,11 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         function toggleRegister() {
             document.getElementById('loginForm').classList.toggle('hidden');
             document.getElementById('registerForm').classList.toggle('hidden');
+            
+            // Inicializa Turnstile quando o formulário de registro for exibido
+            if (!document.getElementById('registerForm').classList.contains('hidden')) {
+                setTimeout(() => initTurnstileRegister(), 100);
+            }
         }
         function nav(view) {
             // Atualiza a URL com caminho limpo (sem hash)
@@ -2101,14 +2111,75 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         let loadingRecuperacao = false;
         let erroRecuperacao = '';
         let sucessoRecuperacao = '';
+
+        // Turnstile Configuration
+        const TURNSTILE_SITE_KEY = '0x4AAAAAAAxxxxxxxxxxxxxxxxxx'; // Substitua com sua site key do Cloudflare
+        let turnstileLoginToken = null;
+        let turnstileRegisterToken = null;
+        let turnstileLoginWidget = null;
+        let turnstileRegisterWidget = null;
+
+        // Inicializa o widget do Turnstile para login
+        function initTurnstileLogin() {
+            if (turnstileLoginWidget) {
+                turnstileLoginWidget.reset();
+                return;
+            }
+
+            const container = document.getElementById('turnstile-login');
+            if (!container) return;
+
+            turnstileLoginWidget = turnstile.render('#turnstile-login', {
+                sitekey: TURNSTILE_SITE_KEY,
+                callback: function(token) {
+                    turnstileLoginToken = token;
+                    console.log('Turnstile login token:', token);
+                },
+                'error-callback': function() {
+                    turnstileLoginToken = null;
+                    Toast.error('Erro na verificação do captcha. Tente novamente.');
+                }
+            });
+        }
+
+        // Inicializa o widget do Turnstile para registro
+        function initTurnstileRegister() {
+            if (turnstileRegisterWidget) {
+                turnstileRegisterWidget.reset();
+                return;
+            }
+
+            const container = document.getElementById('turnstile-register');
+            if (!container) return;
+
+            turnstileRegisterWidget = turnstile.render('#turnstile-register', {
+                sitekey: TURNSTILE_SITE_KEY,
+                callback: function(token) {
+                    turnstileRegisterToken = token;
+                    console.log('Turnstile register token:', token);
+                },
+                'error-callback': function() {
+                    turnstileRegisterToken = null;
+                    Toast.error('Erro na verificação do captcha. Tente novamente.');
+                }
+            });
+        }
+
         async function fazerLogin() {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
+            
+            // Validar Turnstile
+            if (!turnstileLoginToken) {
+                Toast.warning("Por favor, complete a verificação do captcha");
+                return;
+            }
+            
             try {
                 const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, senha: pass })
+                    body: JSON.stringify({ email, senha: pass, turnstile_token: turnstileLoginToken })
                 });
                 const data = await res.json();
                 if(res.ok) {
@@ -2133,10 +2204,19 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             const nome = document.getElementById('regNome').value;
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
+            
+            if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
+            
+            // Validar Turnstile
+            if (!turnstileRegisterToken) {
+                Toast.warning("Por favor, complete a verificação do captcha");
+                return;
+            }
+            
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ nome, email, senha: pass })
+                    body: JSON.stringify({ nome, email, senha: pass, turnstile_token: turnstileRegisterToken })
                 });
                 if(res.ok) { 
                     Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
@@ -2277,6 +2357,8 @@ function renderAuthView() {
     const loginContent = document.getElementById('loginContent');
     if(authView === 'login') {
         loginContent.innerHTML = getLoginHTML();
+        // Inicializa Turnstile após renderizar o HTML
+        setTimeout(() => initTurnstileLogin(), 100);
     } else if(authView === 'email') {
         loginContent.innerHTML = getEmailHTML();
     } else if(authView === 'codigo') {
@@ -2306,6 +2388,9 @@ function getLoginHTML() {
                     <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
                     <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
                 </div>
+            </div>
+            <div class="mt-4">
+                <div id="turnstile-login" class="flex justify-center"></div>
             </div>
             <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
                 Acessar Sistema
