@@ -3381,9 +3381,21 @@ function getCodigoHTML() {
             try {
                 let data;
                 try {
+                    // Capturar token do Turnstile do DOM
+                    const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+                    if (!cfToken) {
+                        Toast.warning("Resolva o captcha primeiro");
+                        document.getElementById('heroSection').classList.remove('hidden');
+                        document.getElementById('emptyStateCards').classList.remove('hidden');
+                        document.getElementById('manualSelectArea').classList.remove('hidden');
+                        document.getElementById('compareArea').classList.remove('hidden');
+                        document.getElementById('auditLoading').classList.add('hidden');
+                        return;
+                    }
+
                     const res = await fetch(`${API_URL}/api/auditar`, {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ url, user_id: String(USER.id), modo: mode, personas: selected })
+                        body: JSON.stringify({ url, user_id: String(USER.id), modo: mode, personas: selected, cf_token: cfToken })
                     });
                     if(res.ok) {
                         data = await res.json();
