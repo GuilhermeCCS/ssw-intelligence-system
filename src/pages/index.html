@@ -2129,6 +2129,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             const container = document.getElementById('turnstile-login');
             if (!container) return;
 
+            // Verifica se o Turnstile está carregado
+            if (typeof turnstile === 'undefined') {
+                console.error('Turnstile não está carregado');
+                Toast.error('Erro ao carregar captcha. Recarregue a página.');
+                return;
+            }
+
             turnstileLoginWidget = turnstile.render('#turnstile-login', {
                 sitekey: TURNSTILE_SITE_KEY,
                 callback: function(token) {
@@ -2151,6 +2158,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
 
             const container = document.getElementById('turnstile-register');
             if (!container) return;
+
+            // Verifica se o Turnstile está carregado
+            if (typeof turnstile === 'undefined') {
+                console.error('Turnstile não está carregado');
+                Toast.error('Erro ao carregar captcha. Recarregue a página.');
+                return;
+            }
 
             turnstileRegisterWidget = turnstile.render('#turnstile-register', {
                 sitekey: TURNSTILE_SITE_KEY,
