@@ -90,6 +90,11 @@ class CheckoutMercadoPago {
                   </div>
                 </div>
 
+                <!-- Cloudflare Turnstile Widget -->
+                <div id="turnstile-checkout" class="flex justify-center min-h-[65px] items-center">
+                  <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                </div>
+
                 <!-- Payment Brick Container -->
                 <div id="payment-brick-container" class="min-h-[400px]"></div>
               </div>
@@ -270,6 +275,26 @@ class CheckoutMercadoPago {
         settings
       );
       console.log('Payment Brick criado com sucesso');
+
+      // Renderizar widget do Cloudflare Turnstile no checkout
+      if (typeof turnstile !== 'undefined') {
+        const turnstileContainer = document.getElementById('turnstile-checkout');
+        if (turnstileContainer) {
+          turnstile.render('#turnstile-checkout', {
+            sitekey: '0x4AAAAAADU_DaUQEsTW3GMs',
+            theme: 'dark',
+            callback: function(token) {
+              console.log('✅ Turnstile checkout token recebido:', token);
+            },
+            'error-callback': function(error) {
+              console.error('❌ Erro na verificação do captcha:', error);
+            }
+          });
+          console.log('✅ Widget Turnstile renderizado no checkout');
+        }
+      } else {
+        console.warn('⚠️ Turnstile não está disponível');
+      }
     } catch (error) {
       console.error('Erro ao criar Payment Brick:', error);
       
@@ -306,6 +331,21 @@ class CheckoutMercadoPago {
             minimalSettings
           );
           console.log('Payment Brick simplificado criado com sucesso');
+
+          // Renderizar widget do Cloudflare Turnstile no checkout (fallback)
+          if (typeof turnstile !== 'undefined') {
+            const turnstileContainer = document.getElementById('turnstile-checkout');
+            if (turnstileContainer) {
+              turnstile.render('#turnstile-checkout', {
+                sitekey: '0x4AAAAAADU_DaUQEsTW3GMs',
+                theme: 'dark',
+                callback: function(token) {
+                  console.log('✅ Turnstile checkout token recebido (fallback):', token);
+                }
+              });
+              console.log('✅ Widget Turnstile renderizado no checkout (fallback)');
+            }
+          }
         } catch (fallbackError) {
           console.error('Erro até mesmo na configuração simplificada:', fallbackError);
           this.showError('Erro ao carregar formulário de pagamento. Tente recarregar a página.');
@@ -320,6 +360,14 @@ class CheckoutMercadoPago {
   async handlePaymentSubmit(formData) {
     this.showState('processing');
 
+    // Capturar token do Turnstile do DOM
+    const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    if (!cfToken) {
+      this.showError('Resolva o captcha primeiro');
+      this.showState('initial');
+      return;
+    }
+
     const payload = {
       user_id: this.currentUser?.id || 'user_temp_id',
       pacote_id: this.selectedPackage.id,
@@ -328,7 +376,8 @@ class CheckoutMercadoPago {
       transaction_amount: formData.transaction_amount,
       token: formData.token || null,
       installments: formData.installments || 1,
-      issuer_id: formData.issuer_id || null
+      issuer_id: formData.issuer_id || null,
+      cf_token: cfToken
     };
 
     try {

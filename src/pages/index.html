@@ -2262,16 +2262,17 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             const pass = document.getElementById('loginPass').value;
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
             
-            // Validar Turnstile
-            if (!turnstileLoginToken) {
-                Toast.warning("Por favor, complete a verificação do captcha");
+            // Capturar token do Turnstile do DOM
+            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            if (!cfToken) {
+                Toast.warning("Resolva o captcha primeiro");
                 return;
             }
             
             try {
                 const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, senha: pass, turnstile_token: turnstileLoginToken })
+                    body: JSON.stringify({ email, senha: pass, cf_token: cfToken })
                 });
                 const data = await res.json();
                 if(res.ok) {
@@ -2302,9 +2303,10 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             
             if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
             
-            // Validar Turnstile
-            if (!turnstileRegisterToken) {
-                Toast.warning("Por favor, complete a verificação do captcha");
+            // Capturar token do Turnstile do DOM
+            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            if (!cfToken) {
+                Toast.warning("Resolva o captcha primeiro");
                 return;
             }
             
@@ -2313,7 +2315,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ nome, email, senha: pass, turnstile_token: turnstileRegisterToken })
+                    body: JSON.stringify({ nome, email, senha: pass, cf_token: cfToken })
                 });
                 const data = await res.json();
                 console.log('📝 Resposta do cadastro:', res.status, data);
