@@ -894,7 +894,7 @@
                 <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
                 <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
                 <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
-                <button onclick="fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
+                <button onclick="event.preventDefault(); fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
                 <button onclick="toggleRegister()" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
                     <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar para Login
                 </button>
@@ -1844,6 +1844,8 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         // Variável global de usuário
         let USER = null;
         let isFloatingButtonVisible = true;
+        // Variável temporária para senha no fluxo de cadastro
+        let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
             window.onload = () => {
             lucide.createIcons();
@@ -2130,14 +2132,25 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             }
         }
         async function fazerCadastro() {
+            console.log('🚀 fazerCadastro() chamada');
             const nome = document.getElementById('regNome').value;
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
+            
+            console.log('📝 Dados do cadastro:', { nome, email });
+            
+            if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
+            
+            console.log('✅ Validações passadas, iniciando requisição...');
+            
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ nome, email, senha: pass })
                 });
+                const data = await res.json();
+                console.log('📝 Resposta do cadastro:', res.status, data);
+                
                 if(res.ok) { 
                     Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
                     // Limpa formulário
@@ -2151,12 +2164,36 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     lucide.createIcons();
                     // Inicia a contagem de reenvio
                     iniciarContagemReenvio();
-                    // Reload automático após cadastro bem-sucedido
-                    setTimeout(() => {
-                        console.log(' Recarregando página após cadastro...');
-                        window.location.reload();
-                    }, 2000);
-                } else Toast.error("Erro ao criar conta");
+                    // Salva email e senha temporários para verificação e login automático
+                    emailTemporario = email;
+                    senhaTemporaria = pass;
+                    // O reload só acontecerá após confirmar o código em confirmarCodigoAPI()
+                } else {
+                    console.error('❌ Erro no cadastro:', data);
+                    // Se o erro for sobre email já existente ou similar, mostra erro
+                    if (data.detail && data.detail.includes('já existe')) {
+                        Toast.error(data.detail || "Erro ao criar conta");
+                    } else {
+                        // Para outros erros, tenta mostrar a tela de verificação mesmo assim
+                        // pois a conta pode ter sido criada mesmo com erro de resposta
+                        console.warn('⚠️ Tentando mostrar tela de verificação mesmo com erro de resposta');
+                        Toast.warning("Conta pode ter sido criada. Verifique seu e-mail.");
+                        // Limpa formulário
+                        document.getElementById('regNome').value = "";
+                        document.getElementById('regEmail').value = "";
+                        document.getElementById('regPass').value = "";
+                        // Esconde formulário de cadastro
+                        document.getElementById('registerForm').classList.add('hidden');
+                        // Mostra tela de verificação diretamente
+                        document.getElementById('verifyModal').classList.remove('hidden');
+                        lucide.createIcons();
+                        // Inicia a contagem de reenvio
+                        iniciarContagemReenvio();
+                        // Salva email e senha temporários para verificação e login automático
+                        emailTemporario = email;
+                        senhaTemporaria = pass;
+                    }
+                }
             } catch(e) { 
                 console.error('Erro de cadastro (index.html):', e);
                 // Verifica se é erro de rede/conexão
@@ -2606,12 +2643,24 @@ function getCodigoHTML() {
             const codigo = codigoInput.value.trim();
             const btn = event.target; // O botão clicado
             if (codigo.length < 4) return Toast.warning("Digite o código de 4 números.");
-            // Verifica se USER existe e tem email
-            if (!USER || !USER.email) {
+            
+            // Determina qual email usar (fluxo de login ou cadastro)
+            let emailParaVerificar;
+            let isCadastroFlow = false;
+            
+            if (USER && USER.email) {
+                // Fluxo normal de login (usuário já logado)
+                emailParaVerificar = USER.email;
+            } else if (emailTemporario) {
+                // Fluxo de cadastro (usuário acabou de se cadastrar)
+                emailParaVerificar = emailTemporario;
+                isCadastroFlow = true;
+            } else {
                 Toast.error("Usuário não encontrado. Faça login novamente.");
                 logout();
                 return;
             }
+            
             // Efeito visual de carregando
             const textoOriginal = btn.innerHTML;
             btn.innerHTML = "Verificando...";
@@ -2622,7 +2671,7 @@ function getCodigoHTML() {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        email: USER.email, // Pega o email do usuário logado
+                        email: emailParaVerificar,
                         codigo: codigo
                     })
                 });
@@ -2630,12 +2679,49 @@ function getCodigoHTML() {
                 if (res.ok) {
                     // SUCESSO!
                     Toast.success("Conta verificada com sucesso! Bem-vindo.");
-                    // Atualiza o usuário local para verificado
-                    USER.verificado = true; 
-                    localStorage.setItem('USER', JSON.stringify(USER));
-                    // Recarrega a tela para liberar o acesso
-                    window.fromLoginFlow = true;
-                    loginSuccess(); 
+                    
+                    if (isCadastroFlow) {
+                        // Fluxo de cadastro: fazer login automático
+                        if (senhaTemporaria) {
+                            try {
+                                const loginRes = await fetch(`${API_URL}/api/login`, {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({ 
+                                        email: emailTemporario, 
+                                        senha: senhaTemporaria
+                                    })
+                                });
+                                const loginData = await loginRes.json();
+                                if (loginRes.ok) {
+                                    USER = loginData;
+                                    localStorage.setItem('USER', JSON.stringify(loginData));
+                                    // Limpa variáveis temporárias
+                                    emailTemporario = null;
+                                    senhaTemporaria = null;
+                                    window.fromLoginFlow = true;
+                                    loginSuccess();
+                                } else {
+                                    Toast.error("Erro ao fazer login automático. Tente fazer login manualmente.");
+                                    document.getElementById('verifyModal').classList.add('hidden');
+                                    document.getElementById('authScreen').classList.remove('hidden');
+                                    document.getElementById('loginForm').classList.remove('hidden');
+                                }
+                            } catch (e) {
+                                console.error('Erro no login automático:', e);
+                                Toast.error("Erro ao fazer login automático. Tente fazer login manualmente.");
+                                document.getElementById('verifyModal').classList.add('hidden');
+                                document.getElementById('authScreen').classList.remove('hidden');
+                                document.getElementById('loginForm').classList.remove('hidden');
+                            }
+                        }
+                    } else {
+                        // Fluxo normal de login (usuário já logado)
+                        USER.verificado = true; 
+                        localStorage.setItem('USER', JSON.stringify(USER));
+                        window.fromLoginFlow = true;
+                        loginSuccess(); 
+                    }
                 } else {
                     // ERRO (Código errado)
                     Toast.error(data.detail || "Código incorreto. Tente novamente.");
@@ -5934,12 +6020,22 @@ function iniciarContagemReenvio() {
 }
 async function reenviarCodigo() {
     const link = document.getElementById('linkReenviar');
-    // Verifica se USER existe e tem email
-    if (!USER || !USER.email) {
+    
+    // Determina qual email usar (fluxo de login ou cadastro)
+    let emailParaReenviar;
+    
+    if (USER && USER.email) {
+        // Fluxo normal de login (usuário já logado)
+        emailParaReenviar = USER.email;
+    } else if (emailTemporario) {
+        // Fluxo de cadastro (usuário acabou de se cadastrar)
+        emailParaReenviar = emailTemporario;
+    } else {
         Toast.error("Usuário não encontrado. Faça login novamente.");
         logout();
         return;
     }
+    
     // Efeito visual de "Enviando..."
     link.innerHTML = "Enviando...";
     link.classList.add('pointer-events-none', 'opacity-50');
@@ -5947,7 +6043,7 @@ async function reenviarCodigo() {
         const res = await fetch(`${API_URL}/api/reenviar_codigo`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ email: USER.email })
+            body: JSON.stringify({ email: emailParaReenviar })
         });
         if (res.ok) {
             Toast.success("Novo código enviado! Verifique seu e-mail.");

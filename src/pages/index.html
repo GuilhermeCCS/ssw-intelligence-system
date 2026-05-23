@@ -901,7 +901,7 @@
                         <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
                     </div>
                 </div>
-                <button onclick="fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
+                <button onclick="event.preventDefault(); fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
                 <button onclick="toggleRegister()" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
                     <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar para Login
                 </button>
@@ -2293,9 +2293,12 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             }
         }
         async function fazerCadastro() {
+            console.log('🚀 fazerCadastro() chamada');
             const nome = document.getElementById('regNome').value;
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
+            
+            console.log('📝 Dados do cadastro:', { nome, email });
             
             if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
             
@@ -2305,11 +2308,16 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 return;
             }
             
+            console.log('✅ Validações passadas, iniciando requisição...');
+            
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ nome, email, senha: pass, turnstile_token: turnstileRegisterToken })
                 });
+                const data = await res.json();
+                console.log('📝 Resposta do cadastro:', res.status, data);
+                
                 if(res.ok) { 
                     Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
                     // Limpa formulário
@@ -2327,7 +2335,32 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     emailTemporario = email;
                     senhaTemporaria = pass;
                     // O reload só acontecerá após confirmar o código em confirmarCodigoAPI()
-                } else Toast.error("Erro ao criar conta");
+                } else {
+                    console.error('❌ Erro no cadastro:', data);
+                    // Se o erro for sobre email já existente ou similar, mostra erro
+                    if (data.detail && data.detail.includes('já existe')) {
+                        Toast.error(data.detail || "Erro ao criar conta");
+                    } else {
+                        // Para outros erros, tenta mostrar a tela de verificação mesmo assim
+                        // pois a conta pode ter sido criada mesmo com erro de resposta
+                        console.warn('⚠️ Tentando mostrar tela de verificação mesmo com erro de resposta');
+                        Toast.warning("Conta pode ter sido criada. Verifique seu e-mail.");
+                        // Limpa formulário
+                        document.getElementById('regNome').value = "";
+                        document.getElementById('regEmail').value = "";
+                        document.getElementById('regPass').value = "";
+                        // Esconde formulário de cadastro
+                        document.getElementById('registerForm').classList.add('hidden');
+                        // Mostra tela de verificação diretamente
+                        document.getElementById('verifyModal').classList.remove('hidden');
+                        lucide.createIcons();
+                        // Inicia a contagem de reenvio
+                        iniciarContagemReenvio();
+                        // Salva email e senha temporários para verificação e login automático
+                        emailTemporario = email;
+                        senhaTemporaria = pass;
+                    }
+                }
             } catch(e) { 
                 console.error('Erro de cadastro (index.html):', e);
                 // Verifica se é erro de rede/conexão
