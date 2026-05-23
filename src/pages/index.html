@@ -1081,6 +1081,10 @@
                                 Analisar
                             </button>
                         </div>
+                        <!-- Cloudflare Turnstile Widget -->
+                        <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
+                            <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                        </div>
                         <!-- Modo Comparativo -->
                         <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
                             <div class="flex-1 flex items-center gap-2 px-4">
@@ -2101,6 +2105,8 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 if(emptyStateCards) emptyStateCards.classList.remove('hidden');
                 if(auditResults) auditResults.classList.add('hidden');
                 if(auditLoading) auditLoading.classList.add('hidden');
+                // Inicializa Turnstile para auditoria
+                setTimeout(() => initTurnstileAudit(), 500);
             }
             // Scroll para o topo
             const mainContent = document.getElementById('mainContent');
@@ -2120,8 +2126,10 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         const TURNSTILE_SITE_KEY = '0x4AAAAAADU_DaUQEsTW3GMs';
         let turnstileLoginToken = null;
         let turnstileRegisterToken = null;
+        let turnstileAuditToken = null;
         let turnstileLoginWidget = null;
         let turnstileRegisterWidget = null;
+        let turnstileAuditWidget = null;
 
         // Inicializa o widget do Turnstile para login
         function initTurnstileLogin() {
@@ -2206,6 +2214,62 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                             Toast.error('Erro na verificação do captcha. Tente novamente.');
                         }
                     });
+                }
+            };
+
+            // Tenta renderizar imediatamente
+            tryRender();
+
+            // Se não funcionou, tenta novamente a cada 500ms por até 10 segundos
+            let attempts = 0;
+            const maxAttempts = 20;
+            const interval = setInterval(() => {
+                attempts++;
+                if (typeof turnstile !== 'undefined') {
+                    clearInterval(interval);
+                    tryRender();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    Toast.error('Erro ao carregar captcha. Recarregue a página.');
+                }
+            }, 500);
+        }
+
+        // Inicializa o widget do Turnstile para auditoria
+        function initTurnstileAudit() {
+            if (turnstileAuditWidget) {
+                turnstileAuditWidget.reset();
+                return;
+            }
+
+            const container = document.getElementById('turnstile-audit');
+            if (!container) {
+                return;
+            }
+
+            // Função para tentar renderizar o widget
+            const tryRender = () => {
+                if (typeof turnstile !== 'undefined') {
+                    // Limpa o texto de carregamento
+                    container.innerHTML = '';
+
+                    try {
+                        turnstileAuditWidget = turnstile.render('#turnstile-audit', {
+                            sitekey: TURNSTILE_SITE_KEY,
+                            callback: function(token) {
+                                turnstileAuditToken = token;
+                            },
+                            'error-callback': function(error) {
+                                turnstileAuditToken = null;
+                                Toast.error('Erro na verificação do captcha. Tente novamente.');
+                            },
+                            'expired-callback': function() {
+                                turnstileAuditToken = null;
+                            }
+                        });
+                    } catch (error) {
+                        Toast.error('Erro ao carregar captcha: ' + error.message);
+                    }
                 }
             };
 
