@@ -2269,6 +2269,8 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 return;
             }
             
+            console.log("Enviando para o backend:", { email, senha: pass, cf_token: cfToken });
+            
             try {
                 const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -2310,7 +2312,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 return;
             }
             
-            console.log('✅ Validações passadas, iniciando requisição...');
+            console.log("Enviando para o backend:", { nome, email, senha: pass, cf_token: cfToken });
             
             try {
                 const res = await fetch(`${API_URL}/api/register`, {

@@ -368,17 +368,17 @@ class CheckoutMercadoPago {
       return;
     }
 
+    // Obter email do usuário (de this.currentUser ou USER global)
+    const userEmail = this.currentUser?.email || (typeof USER !== 'undefined' ? USER.email : null);
+
     const payload = {
       user_id: this.currentUser?.id || 'user_temp_id',
+      email: userEmail,
       pacote_id: this.selectedPackage.id,
-      payment_method_id: formData.payment_method_id,
-      payer: formData.payer,
-      transaction_amount: formData.transaction_amount,
-      token: formData.token || null,
-      installments: formData.installments || 1,
-      issuer_id: formData.issuer_id || null,
       cf_token: cfToken
     };
+
+    console.log("Enviando para o backend:", payload);
 
     try {
       const response = await fetch(`${this.API_BASE_URL}/api/pagamento/processar`, {
