@@ -2264,16 +2264,24 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             const pass = document.getElementById('loginPass').value;
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
 
-            // Validar Turnstile
-            if (!turnstileLoginToken) {
-                Toast.warning("Por favor, complete a verificação do captcha");
+            // Capturar token do Turnstile do DOM
+            const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
+            console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
+            console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
+
+            const cfToken = cfTokenInput?.value;
+            if (!cfToken) {
+                console.error('❌ cfToken está vazio ou undefined');
+                Toast.warning("Resolva o captcha primeiro");
                 return;
             }
+
+            console.log("Enviando para o backend:", { email, senha: pass, cf_token: cfToken });
 
             try {
                 const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, senha: pass })
+                    body: JSON.stringify({ email, senha: pass, cf_token: cfToken })
                 });
                 const data = await res.json();
                 if(res.ok) {
@@ -2304,18 +2312,24 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
 
             if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
 
-            // Validar Turnstile
-            if (!turnstileRegisterToken) {
-                Toast.warning("Por favor, complete a verificação do captcha");
+            // Capturar token do Turnstile do DOM
+            const cfTokenInput = document.querySelector('[name="cf-turnstile-response"]');
+            console.log('🔍 Elemento cf-turnstile-response encontrado:', cfTokenInput);
+            console.log('🔍 Valor do cf-turnstile-response:', cfTokenInput?.value);
+
+            const cfToken = cfTokenInput?.value;
+            if (!cfToken) {
+                console.error('❌ cfToken está vazio ou undefined');
+                Toast.warning("Resolva o captcha primeiro");
                 return;
             }
 
-            console.log('✅ Validações passadas, iniciando requisição...');
-            
+            console.log("Enviando para o backend:", { nome, email, senha: pass, cf_token: cfToken });
+
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ nome, email, senha: pass })
+                    body: JSON.stringify({ nome, email, senha: pass, cf_token: cfToken })
                 });
                 const data = await res.json();
                 console.log('📝 Resposta do cadastro:', res.status, data);
