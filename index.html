@@ -3610,9 +3610,9 @@ function getCodigoHTML() {
                         }
                     });
                     console.log("Steps combinados:", realSteps);
-                    // Renderiza os passos como lista ordenada
-                    // Renderiza os passos como lista ordenada
-          realSteps.forEach((stepText, i) => {
+                    // Renderiza os passos como lista ordenada (apenas os 4 primeiros)
+                    // Renderiza os passos como lista ordenada (apenas os 4 primeiros)
+          realSteps.slice(0, 4).forEach((stepText, i) => {
                         actionPlanList.innerHTML += `
                             <li class="flex items-start gap-4 p-4 border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
                                 <span class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -4019,7 +4019,7 @@ function getCodigoHTML() {
                         </h3>
                         ${actionPlan.length > 0 ? `
                             <ol class="report-checklist" style="color: #333; page-break-inside: avoid;">
-                                ${actionPlan.map(action => `
+                                ${actionPlan.slice(0, 4).map(action => `
                                     <li style="margin: 12px 0; font-size: 13px; line-height: 1.6; padding: 8px; background: #fafafa; page-break-inside: avoid;">
                                         ${action}
                                     </li>
@@ -5818,8 +5818,8 @@ function getCodigoHTML() {
                     doc.setTextColor(...colors.black);
                     doc.text('Plano de Ação Recomendado', 20, yPosition);
                     yPosition += 10;
-                    // Preparar dados para o plano de ação como tabela de 1 coluna
-                    const bodyActions = actions.map((act, index) => [`${index + 1}. ${act}`]);
+                    // Preparar dados para o plano de ação como tabela de 1 coluna (apenas os 4 primeiros)
+                    const bodyActions = actions.slice(0, 4).map((act, index) => [`${index + 1}. ${act}`]);
                     // Criar tabela para o plano de ação (sem bordas visíveis, apenas para paginação)
                     doc.autoTable({
                         head: [], // Sem cabeçalho
