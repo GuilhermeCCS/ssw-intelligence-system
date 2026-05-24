@@ -1348,453 +1348,615 @@ async function loadPricingSection() {
 // Carrega a seção quando a página estiver pronta
 document.addEventListener('DOMContentLoaded', loadPricingSection);
 </script>
-            <div id="view-tutorial" class="hidden min-h-screen bg-[#333333] animate-fade-in-up">
-                <!-- HERO SECTION - Central de Inteligência -->
-                <header class="max-w-7xl mx-auto px-6 pb-12">
-                    <div class="text-center pt-8">
-                        <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                            Centro de Treinamento SSW
-                        </h1>
-                        <p class="text-slate-400 text-lg max-w-3xl mx-auto mb-8 leading-relaxed">
-                            Domine toda a plataforma com nossos tutoriais completos. Aprenda desde auditorias básicas até análises comparativas avançadas.
-                        </p>
-                        <!-- Barra de Pesquisa Visual -->
-                        <div class="max-w-2xl mx-auto">
-                            <div class="text-center">
-                                <h2 class="text-3xl font-bold text-cyan-400 mb-2">Use a navegação lateral para explorar os tutoriais</h2>
-                                <p class="text-slate-400 text-sm">Navegue pelos diferentes módulos e aprenda a dominar o SSW INTELLIGENCE</p>
-                            </div>
+            <div id="view-tutorial" class="hidden min-h-screen bg-[#0F1117] animate-fade-in-up">
+                <!-- HEADER -->
+                <header class="max-w-7xl mx-auto px-6 py-12">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h1 class="text-3xl font-bold text-white mb-4">Documentação</h1>
+                            <p class="text-slate-400 text-lg">Guia completo de uso da plataforma SSW INTELLIGENCE</p>
                         </div>
-                    </div>
-                    <!-- Botão de Voltar -->
-                    <div class="mt-8 text-center">
+                        <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                            <i data-lucide="file-down" class="w-4 h-4"></i>
+                            Baixar PDF
+                        </button>
                     </div>
                 </header>
                 <!-- LAYOUT DE DUAS COLUNAS -->
                 <div class="max-w-7xl mx-auto px-6 pb-20">
-                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mt-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
                         <!-- COLUNA ESQUERDA - Sidebar de Navegação -->
-                        <aside class="lg:col-span-1">
-                            <nav class="sticky top-24 space-y-2">
-                                <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Navegação Rápida</h3>
+                        <aside class="lg:col-span-1 no-print">
+                            <nav class="sticky top-24 space-y-1">
+                                <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Conteúdo</h3>
                                 <button onclick="showTutorialSection('auditoria-simples')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    Auditoria Individual
+                                    <span class="flex items-center gap-2">
+                                        <i data-lucide="search" class="w-4 h-4"></i>
+                                        Auditoria Individual
+                                    </span>
                                 </button>
                                 <button onclick="showTutorialSection('batalha-comparativa')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    Análise Comparativa
+                                    <span class="flex items-center gap-2">
+                                        <i data-lucide="git-compare" class="w-4 h-4"></i>
+                                        Análise Comparativa
+                                    </span>
                                 </button>
                                 <button onclick="showTutorialSection('gestao-personas')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    Gestão de Personas
+                                    <span class="flex items-center gap-2">
+                                        <i data-lucide="users" class="w-4 h-4"></i>
+                                        Gestão de Personas
+                                    </span>
                                 </button>
                                 <button onclick="showTutorialSection('relatorios-insights')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    Relatórios e Insights
+                                    <span class="flex items-center gap-2">
+                                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                                        Relatórios e Insights
+                                    </span>
                                 </button>
                                 <button onclick="showTutorialSection('gestao-creditos')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    Gestão de Créditos
+                                    <span class="flex items-center gap-2">
+                                        <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                        Gestão de Créditos
+                                    </span>
                                 </button>
                             </nav>
                         </aside>
                         <!-- COLUNA DIREITA - Conteúdo Principal -->
-                        <main class="lg:col-span-3 space-y-16">
+                        <main class="lg:col-span-3">
                             <!-- SEÇÃO 1: Auditoria Individual -->
                             <section id="auditoria-simples" class="scroll-mt-24">
-                                <h2 class="text-2xl font-semibold text-white border-b border-white/10 pb-4 mb-6">
-                                    Auditoria Individual
-                                </h2>
-                                <p class="text-slate-300 mb-8 leading-relaxed">
-                                    Realize análises completas de sites com nossa IA avançada. Obtenha insights detalhados sobre performance, UX, SEO e comportamento do usuário em tempo real.
-                                </p>
-                                <!-- Passos Numerados -->
-                                <div class="space-y-8">
-                                    <!-- Passo 1 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                1
+                                <h2 class="text-2xl font-semibold text-white mb-6">Auditoria Individual</h2>
+                                
+                                <div class="prose prose-invert max-w-none">
+                                    <p class="text-slate-300 text-lg leading-relaxed mb-8">
+                                        A auditoria individual permite analisar qualquer site sob múltiplas perspectivas, gerando insights detalhados sobre performance, UX, SEO e comportamento do usuário em tempo real.
+                                    </p>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Como Realizar uma Auditoria</h3>
+                                    <div class="space-y-6 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">1. Acesso ao Painel</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Navegue até o menu lateral e clique em "Nova Análise". A interface apresentará uma search bar centralizada para inserção da URL.
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">2. Inserção da URL</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Digite a URL completa do site alvo. É obrigatório incluir o protocolo https:// ou http:// para garantir análise correta.
+                                            </p>
+                                            <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-800">
+                                                <p class="text-xs text-slate-400 mb-2">Exemplos de URLs válidas:</p>
+                                                <code class="text-green-400 text-sm">https://exemplo.com.br</code><br>
+                                                <code class="text-green-400 text-sm">https://www.exemplo.com.br/pagina</code>
                                             </div>
                                         </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Acesse o Painel de Análise</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                No menu lateral, clique em "Nova Análise" para abrir a interface de auditoria. Você encontrará uma search bar intuitiva pronta para receber sua URL.
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">3. Seleção de Personas (Modo Manual)</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Ao selecionar o modo manual, escolha até 3 personas que representarão diferentes perfis de usuários durante a análise.
                                             </p>
-                                            <!-- Imagem Real da Interface -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="../assets/images/tutorial/nova-analise/T1RED.png" alt="Interface de Nova Análise" class="w-full h-full object-cover">
-                                            </div>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">4. Execução da Análise</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Clique no botão "ANALISAR" para iniciar o processo. A IA examinará o site sob múltiplas dimensões, gerando insights acionáveis em poucos segundos.
+                                            </p>
                                         </div>
                                     </div>
-                                    <!-- Passo 2 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                2
-                                            </div>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Métricas Analisadas</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Performance</h4>
+                                            <p class="text-slate-400 text-sm">Tempo de carregamento, otimização de recursos, Core Web Vitals (LCP, FID, CLS), compressão de assets, cache HTTP/HTTPS, tamanho total da página, número de requisições.</p>
                                         </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Insira a URL do Site</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Digite a URL completa do site que deseja analisar. Certifique-se de incluir https:// ou http:// para garantir a análise correta.
-                                            </p>
-                                            <!-- Imagem Real da Interface -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="../assets/images/tutorial/nova-analise/T2RED.png" alt="Inserindo URL para Análise" class="w-full h-full object-cover">
-                                            </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">UX/UI</h4>
+                                            <p class="text-slate-400 text-sm">Usabilidade, acessibilidade WCAG, design responsivo, navegação intuitiva, hierarquia visual, contraste de cores, tamanho de fontes, espaçamento, feedback de interações.</p>
                                         </div>
-                                    </div>
-                                    <!-- Passo 3 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                3
-                                            </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">SEO</h4>
+                                            <p class="text-slate-400 text-sm">Meta tags (title, description, keywords), estrutura HTML semântica, headings H1-H6, sitemap.xml, robots.txt, canonical tags, Open Graph, Twitter Cards, schema.org structured data.</p>
                                         </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Ao escolher o modo manual selecione as personas</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Escolha até 3 personas que representarão os perfis de usuários durante a análise. Cada persona trará uma perspectiva única sobre o site.
-                                            </p>
-                                            <!-- Imagem Real da Interface -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="../assets/images/tutorial/nova-analise/T3RED.png" alt="Selecionando Personas para Análise" class="w-full h-full object-cover">
-                                            </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Comportamental</h4>
+                                            <p class="text-slate-400 text-sm">Jornada do usuário, pontos de fricção, taxa de rejeição, tempo na página, taxa de conversão, funil de conversão, heatmap de cliques, scroll depth, comportamento em dispositivos móveis.</p>
                                         </div>
                                     </div>
-                                    <!-- Passo 4 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                4
-                                            </div>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Inicie a Análise</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Clique no botão "ANALISAR" para iniciar o processo. Nossa IA irá examinar o site sob múltiplas perspectivas, gerando insights acionáveis em poucos segundos.
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Considerações Importantes</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Sites Protegidos</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Sites com autenticação, behind VPN ou com proteções anti-bot podem não ser analisados completamente. Considere usar URLs públicas ou ambientes de staging.
                                             </p>
-                                            <!-- Imagem Real da Interface -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="../assets/images/tutorial/nova-analise/T4RED.png" alt="Executando Análise Completa" class="w-full h-full object-cover">
-                                            </div>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Single Page Applications (SPAs)</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                SPAs baseadas em JavaScript (React, Vue, Angular) são analisadas considerando o estado inicial renderizado no servidor (SSR) ou o conteúdo estático disponível.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Frequência de Análise</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Recomenda-se analisar o site periodicamente (semanal ou mensal) para acompanhar evoluções e identificar regressões após atualizações.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Interpretação dos Resultados</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Score Global (0-100)</h4>
+                                            <p class="text-slate-400 text-sm">Pontuação agregada calculada com base em todas as métricas analisadas. Scores acima de 70 indicam boa qualidade geral, acima de 85 indicam excelência.</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Priorização de Correções</h4>
+                                            <p class="text-slate-400 text-sm">As recomendações são ordenadas por impacto estimado na experiência do usuário e facilidade de implementação. Foque primeiro em itens de alto impacto e baixa complexidade.</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Contexto de Negócio</h4>
+                                            <p class="text-slate-400 text-sm">Considere o objetivo do site ao priorizar correções. E-commerce deve focar em checkout e performance, blog em SEO e legibilidade, landing page em conversão.</p>
                                         </div>
                                     </div>
                                 </div>
                             </section>
                             <!-- SEÇÃO 2: Análise Comparativa -->
-                            <section id="batalha-comparativa" class="scroll-mt-24">
-                                <h2 class="text-2xl font-semibold text-white border-b border-white/10 pb-4 mb-6">
-                                Análise Comparativa
-                            </h2>
-                            <p class="text-slate-300 mb-8 leading-relaxed">
-                                Compare dois sites simultaneamente e descubra quem leva a vantagem competitiva. Análise lado a lado com métricas detalhadas e recomendações estratégicas.
-                            </p>
-                            <!-- Passos Numerados -->
-                            <div class="space-y-8">
-                                <!-- Passo 1 -->
-                                <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                                            1
+                            <section id="batalha-comparativa" class="hidden scroll-mt-24">
+                                <h2 class="text-2xl font-semibold text-white mb-6">Análise Comparativa</h2>
+                                
+                                <div class="prose prose-invert max-w-none">
+                                    <p class="text-slate-300 text-lg leading-relaxed mb-8">
+                                        Compare dois sites simultaneamente e descubra quem leva a vantagem competitiva. Análise lado a lado com métricas detalhadas e recomendações estratégicas.
+                                    </p>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Como Realizar uma Comparação</h3>
+                                    <div class="space-y-6 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">1. Acesso ao Modo Comparativo</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                No menu lateral, clique em "Nova Análise" e selecione a aba "Modo Comparativo" para comparar dois sites simultaneamente.
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">2. Configuração das URLs</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Digite a URL do seu site no campo "Site A" e a URL do concorrente no campo "Site B". Use URLs completas com protocolo.
+                                            </p>
+                                            <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-800">
+                                                <p class="text-xs text-slate-400 mb-2">Exemplo de configuração:</p>
+                                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                                    <div>
+                                                        <span class="text-slate-500">Site A:</span>
+                                                        <code class="text-green-400 block">https://seusite.com.br</code>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-slate-500">Site B:</span>
+                                                        <code class="text-green-400 block">https://concorrente.com.br</code>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">3. Execução da Comparação</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Clique em "COMPARAR" para iniciar a análise. O sistema analisará ambos os sites sob as mesmas condições e métricas.
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-white mb-3">Acesse o Modo Comparativo</h3>
-                                        <p class="text-slate-300 mb-4 leading-relaxed">
-                                            No menu lateral, clique em "Nova Análise" e selecione a aba "Modo Comparativo" para comparar dois sites simultaneamente.
-                                        </p>
-                                        <!-- Imagem Real da Interface -->
-                                        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="../assets/images/tutorial/benchmarking/B1RED.png" alt="Acessando Modo Comparativo" class="w-full h-full object-cover">
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Interpretação de Resultados</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Vencedor Global</h4>
+                                            <p class="text-slate-400 text-sm">Site com maior score agregado em todas as categorias analisadas. O vencedor é determinado pela média ponderada de performance, UX, SEO e comportamento.</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Pontos de Melhoria</h4>
+                                            <p class="text-slate-400 text-sm">Áreas onde seu site perdeu para o concorrente com recomendações específicas para alcançar ou superar o desempenho do adversário.</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Vantagens Competitivas</h4>
+                                            <p class="text-slate-400 text-sm">Pontos fortes do seu site em relação ao concorrente. Identifique onde você já lidera e mantenha essas vantagens.</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Oportunidades</h4>
+                                            <p class="text-slate-400 text-sm">Gaps identificados que podem ser explorados para ganhar vantagem competitiva. Áreas onde pequenas melhorias podem gerar grandes ganhos.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Estratégias de Benchmarking</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Seleção de Concorrentes</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Escolha concorrentes diretos (mesmo nicho), concorrentes indiretos (mesmo público-alvo) e referências do setor (líderes de mercado) para uma visão completa do cenário competitivo.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Análise de Páginas Específicas</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Compare páginas equivalentes (home vs home, checkout vs checkout, blog vs blog) para insights mais relevantes e acionáveis.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Monitoramento Contínuo</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Realize comparações periódicas para acompanhar evoluções do mercado e identificar quando concorrentes implementam melhorias significativas.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Limitações e Considerações</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Paridade de Condições</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                A análise é realizada sob as mesmas condições para ambos os sites, mas diferenças de infraestrutura, CDN ou geolocalização podem afetar resultados de performance.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Conteúdo Dinâmico</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Sites com conteúdo personalizado ou A/B testing podem apresentar variações. A análise considera o conteúdo padrão apresentado.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Contexto de Negócio</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Métricas técnicas não refletem necessariamente a estratégia de negócio. Considere o posicionamento, público-alvo e objetivos ao interpretar resultados.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Passo 2 -->
-                                <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                                            2
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-white mb-3">Insira as URLs dos Concorrentes</h3>
-                                        <p class="text-slate-300 mb-4 leading-relaxed">
-                                            Digite a URL do seu site no campo "Site A" e a URL do concorrente no campo "Site B". Use URLs completas com https:// ou http://.
-                                        </p>
-                                        <!-- Imagem Real da Interface -->
-                                        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="../assets/images/tutorial/benchmarking/B2RED.png" alt="Configurando URLs Comparativas" class="w-full h-full object-cover">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Passo 3 -->
-                                <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                                            3
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-white mb-3">Inicie a Análise Comparativa</h3>
-                                        <p class="text-slate-300 mb-4 leading-relaxed">
-                                            Clique em "COMPARAR" para começar a análise comparativa. Em poucos segundos você terá um relatório completo mostrando o vencedor.
-                                        </p>
-                                        <!-- Imagem Real da Interface -->
-                                        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="../assets/images/tutorial/benchmarking/B3RED.png" alt="Executando Análise Comparativa" class="w-full h-full object-cover">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Callout Pro Tip -->
-                            <div class="mt-12 p-6 bg-purple-900/20 border border-purple-500/30 rounded-xl">
-                                <div class="flex gap-4">
-                                    <div class="flex-shrink-0">
-                                        <i data-lucide="lightbulb" class="w-6 h-6 text-purple-400"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-purple-400 font-semibold mb-2">Dica Pro</h4>
-                                        <p class="text-purple-200 text-sm leading-relaxed">
-                                            No modo Comparativo, as personas são selecionadas automaticamente para garantir uma análise imparcial e abrangente de ambos os sites.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                            </section>
                         <!-- SEÇÃO 3: Gestão de Personas -->
                         <section id="gestao-personas" class="hidden scroll-mt-24">
-                            <h2 class="text-2xl font-semibold text-white border-b border-white/10 pb-4 mb-6">
-                                Gestão de Personas
-                            </h2>
-                            <p class="text-slate-300 mb-8 leading-relaxed">
-                                Crie e gerencie personas personalizadas para análises mais precisas. Cada persona representa um perfil de usuário com características específicas.
-                            </p>
-                            <!-- Passos Numerados -->
-                            <div class="space-y-8">
-                                <!-- Passo 1 -->
-                                <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                                            1
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-white mb-3">Acesse a Gestão de Personas</h3>
-                                        <p class="text-slate-300 mb-4 leading-relaxed">
+                            <h2 class="text-2xl font-semibold text-white mb-6">Gestão de Personas</h2>
+                            
+                            <div class="prose prose-invert max-w-none">
+                                <p class="text-slate-300 text-lg leading-relaxed mb-8">
+                                    Crie e gerencie personas personalizadas para análises mais precisas. Cada persona representa um perfil de usuário com características específicas, permitindo análises sob diferentes perspectivas.
+                                </p>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Como Gerenciar Personas</h3>
+                                <div class="space-y-6 mb-8">
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">1. Acesso ao Painel de Personas</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
                                             No menu lateral, clique em "Personas" para acessar o painel de gestão de perfis de usuários.
                                         </p>
-                                        <!-- Placeholder de Vídeo -->
-                                        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="../assets/images/tutorial/personas/C1RED.png" alt="Acessando Gestão de Personas" class="w-full h-full object-cover">
+                                    </div>
+                                    
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">2. Criação de Nova Persona</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Clique em "Criar Persona" e preencha os campos obrigatórios: nome, idade, profissão, objetivos e características comportamentais.
+                                        </p>
+                                        <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-800">
+                                            <p class="text-xs text-slate-400 mb-2">Campos obrigatórios:</p>
+                                            <ul class="text-xs text-slate-300 space-y-1">
+                                                <li>• Nome: Identificação da persona</li>
+                                                <li>• Idade: Faixa etária do perfil</li>
+                                                <li>• Profissão: Ocupação principal</li>
+                                                <li>• Objetivos: Metas e necessidades</li>
+                                                <li>• Características: Comportamentos e preferências</li>
+                                            </ul>
                                         </div>
+                                    </div>
+                                    
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">3. Salvamento e Utilização</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Após preencher os dados, clique em "Salvar". A persona ficará disponível para seleção em análises individuais e comparativas.
+                                        </p>
                                     </div>
                                 </div>
-                                <!-- Passo 2 -->
-                                <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                                            2
-                                        </div>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Personas Pré-Configuradas</h3>
+                                <div class="space-y-4 mb-8">
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Profissional Corporativo</h4>
+                                        <p class="text-slate-400 text-sm">Focado em eficiência, resultados corporativos e tomada de decisão rápida. Busca informações claras e objetivas.</p>
                                     </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-white mb-3">Crie Nova Persona</h3>
-                                        <p class="text-slate-300 mb-4 leading-relaxed">
-                                            Clique em "Criar Persona" e preencha os dados: nome, idade, profissão, objetivos e características comportamentais.
-                                        </p>
-                                        <!-- Placeholder de Vídeo -->
-                                        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="../assets/images/tutorial/personas/C2RED.png" alt="Criando Nova Persona" class="w-full h-full object-cover">
-                                        </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Consumidor Digital</h4>
+                                        <p class="text-slate-400 text-sm">Orientado para experiência de compra, avaliações e recomendações. Valoriza facilidade de uso e confiança.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Estudante/Pesquisador</h4>
+                                        <p class="text-slate-400 text-sm">Busca por conteúdo educativo, detalhes técnicos e facilidade de aprendizado. Valoriza profundidade de informação.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Usuário Mobile</h4>
+                                        <p class="text-slate-400 text-sm">Acessa principalmente via smartphone. Prioriza velocidade, navegação por toque e interface otimizada para telas pequenas.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Idoso/Tecnológico</h4>
+                                        <p class="text-slate-400 text-sm">Necessita de fontes maiores, contraste elevado e navegação simplificada. Valoriza clareza e acessibilidade.</p>
                                     </div>
                                 </div>
-                                <!-- Passo 3 -->
-                                <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                                            3
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-white mb-3">Salve e Utilize</h3>
-                                        <p class="text-slate-300 mb-4 leading-relaxed">
-                                            Salve a persona e ela ficará disponível para selecionar em suas análises individuais e comparativas.
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Melhores Práticas</h3>
+                                <div class="space-y-4 mb-8">
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Baseado em Dados Reais</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Crie personas baseadas em dados reais do seu público-alvo: analytics, pesquisas, feedback de clientes e entrevistas. Evite suposições.
                                         </p>
-                                        <!-- Placeholder de Vídeo -->
-                                        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                            <img src="../assets/images/tutorial/personas/C3RED.png" alt="Salvando e Utilizando Persona" class="w-full h-full object-cover">
-                                        </div>
+                                    </div>
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Combine Perspectivas</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Combine personas diferentes para obter visões complementares. Uma análise com 3 personas distintas revela insights que uma única persona não captaria.
+                                        </p>
+                                    </div>
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Atualização Periódica</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Revise e atualize personas periodicamente conforme evolução do produto, mudanças no mercado e feedback contínuo dos usuários.
+                                        </p>
+                                    </div>
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Específicas por Contexto</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Use personas específicas para cada tipo de análise: landing page (foco em conversão), checkout (foco em usabilidade), blog (foco em conteúdo).
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Limites e Recomendações</h3>
+                                <div class="space-y-4 mb-8">
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Máximo de 3 Personas por Análise</h4>
+                                        <p class="text-slate-400 text-sm">O sistema permite selecionar até 3 personas por análise para manter o relatório focado e acionável. Mais personas podem diluir as recomendações.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Consistência entre Análises</h4>
+                                        <p class="text-slate-400 text-sm">Use as mesmas personas em análises periódicas para garantir comparabilidade dos resultados ao longo do tempo.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Persona vs Público-Alvo</h4>
+                                        <p class="text-slate-400 text-sm">Persona é um perfil específico, público-alvo é um segmento mais amplo. Crie múltiplas personas para representar diferentes segmentos do seu público.</p>
                                     </div>
                                 </div>
                             </div>
                         </section>
                         <!-- SEÇÃO 4: Relatórios e Insights -->
                         <section id="relatorios-insights" class="hidden scroll-mt-24">
-                            <h2 class="text-2xl font-semibold text-white border-b border-white/10 pb-4 mb-6">
-                                Relatórios e Insights
-                            </h2>
-                            <p class="text-slate-300 mb-8 leading-relaxed">
-                                Analise relatórios detalhados e extraia insights acionáveis para melhorar seu site. Exporte dados e compartilhe com sua equipe.
-                            </p>
-                            <!-- Passos Numerados -->
-                            <div class="space-y-8">
-                                <!-- Passo 1 -->
-<div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-    <div class="flex-shrink-0">
-        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
-            1
-        </div>
-    </div>
-    <div class="flex-1">
-        <h3 class="text-xl font-semibold text-white mb-3">Analise as Métricas</h3>
-        <p class="text-slate-300 mb-4 leading-relaxed">
-            Explore scores de performance, UX, SEO e comportamento. Cada métrica inclui explicações e recomendações.
-        </p>
-        <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-            <img src="../assets/images/tutorial/detalhes/D1RED.png" alt="Analisando Métricas" class="w-full h-full object-cover">
-        </div>
-    </div> </div>
-                                <!-- Passo 2 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                2
-                                            </div>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Exporte Relatórios</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Clique em "BAIXAR RELATÓRIO PDF" para salvar uma versão compartilhável do relatório completo. O relatório estará disponível ao final de cada análise.
-                                            </p>
-                                            <!-- Placeholder de Vídeo -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl overflow-hidden mb-6 shadow-inner">
-                                                <img src="../assets/images/tutorial/detalhes/D2RED.png" alt="Exportando Relatórios" class="w-full h-full object-cover">
-                                            </div>
-                                        </div>
+                            <h2 class="text-2xl font-semibold text-white mb-6">Relatórios e Insights</h2>
+                            
+                            <div class="prose prose-invert max-w-none">
+                                <p class="text-slate-300 text-lg leading-relaxed mb-8">
+                                    Analise relatórios detalhados e extraia insights acionáveis para melhorar seu site. Exporte dados em PDF e compartilhe com sua equipe para tomada de decisões baseada em dados.
+                                </p>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Estrutura do Relatório</h3>
+                                <div class="space-y-6 mb-8">
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Score Global</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Pontuação agregada (0-100) representando a qualidade geral do site. Calculada com base em todas as métricas analisadas, ponderadas por impacto na experiência do usuário.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Métricas por Categoria</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Scores detalhados para Performance, UX/UI, SEO e Comportamental. Cada categoria possui submétricas específicas com pontuação individual.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Análise Comportamental</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Insights sobre jornada do usuário, pontos de fricção e oportunidades de conversão baseados nas personas selecionadas. Inclui mapa de jornada e identificação de gargalos.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Recomendações</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Lista priorizada de ações para melhoria, com impacto estimado, complexidade de implementação e exemplos práticos de como aplicar cada recomendação.
+                                        </p>
                                     </div>
                                 </div>
-                                <!-- Callout Pro Tip -->
-                                <!-- Dica Pro removida -->
-                            </section>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Interpretação de Scores</h3>
+                                <div class="space-y-4 mb-8">
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">90-100: Excelente</h4>
+                                        <p class="text-slate-400 text-sm">Site otimizado com poucas oportunidades de melhoria. Mantenha monitoramento contínuo para evitar regressões.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">70-89: Bom</h4>
+                                        <p class="text-slate-400 text-sm">Site com qualidade satisfatória mas com oportunidades claras de melhoria. Foque em itens de alto impacto para atingir excelência.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">50-69: Regular</h4>
+                                        <p class="text-slate-400 text-sm">Site com problemas significativos que afetam experiência. Priorize correções críticas antes de investir em melhorias incrementais.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">0-49: Crítico</h4>
+                                        <p class="text-slate-400 text-sm">Site com problemas graves que impedem uso efetivo. Requer intervenção imediata e plano de reestruturação completo.</p>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Exportação e Compartilhamento</h3>
+                                <div class="space-y-4 mb-8">
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Exportação em PDF</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Clique em "BAIXAR RELATÓRIO PDF" para gerar uma versão imprimível do relatório. O PDF inclui todas as métricas, recomendações e análise comportamental em formato profissional.
+                                        </p>
+                                    </div>
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Compartilhamento com Equipe</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            Use o PDF para compartilhar resultados com stakeholders, desenvolvedores, designers e equipe de marketing. Facilita discussões e alinhamento sobre prioridades.
+                                        </p>
+                                    </div>
+                                    <div class="border-l-2 border-slate-700 pl-4">
+                                        <h4 class="text-white font-semibold mb-2">Histórico de Análises</h4>
+                                        <p class="text-slate-300 text-sm leading-relaxed">
+                                            O sistema mantém histórico de análises para acompanhamento de evolução. Compare relatórios ao longo do tempo para medir impacto das correções implementadas.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="text-xl font-semibold text-white mb-4">Uso Estratégico dos Relatórios</h3>
+                                <div class="space-y-4 mb-8">
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Planejamento de Roadmap</h4>
+                                        <p class="text-slate-400 text-sm">Use as recomendações priorizadas para planejar roadmap de melhorias. Combine impacto estimado com capacidade da equipe para definir cronograma realista.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Justificativa de Investimento</h4>
+                                        <p class="text-slate-400 text-sm">Relatórios quantificam problemas e oportunidades, facilitando justificativa de orçamento para correções técnicas e melhorias de UX.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Benchmarking Interno</h4>
+                                        <p class="text-slate-400 text-sm">Compare relatórios de diferentes páginas do mesmo site para identificar inconsistências e padrões que podem ser padronizados.</p>
+                                    </div>
+                                    <div class="border border-slate-800 rounded-lg p-4">
+                                        <h4 class="text-white font-semibold mb-2">Aprendizado Contínuo</h4>
+                                        <p class="text-slate-400 text-sm">Revise relatórios periodicamente para identificar padrões recorrentes e oportunidades de melhoria sistêmicas no processo de desenvolvimento.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                             <!-- SEÇÃO 5: Gestão de Créditos -->
                             <section id="gestao-creditos" class="hidden scroll-mt-24">
-                                <h2 class="text-2xl font-semibold text-white border-b border-white/10 pb-4 mb-6">
-                                    Gestão de Créditos
-                                </h2>
-                                <p class="text-slate-300 mb-8 leading-relaxed">
-                                    Controle seus créditos de análise e gerencie assinaturas. Monitore consumo e recarregue quando necessário para nunca parar de analisar.
-                                </p>
-                                <!-- Passos Numerados -->
-                                <div class="space-y-8">
-                                    <!-- Passo 1 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                1
-                                            </div>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Verifique Seus Créditos</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                No painel principal, visualize seu saldo atual de créditos no canto superior direito. Cada análise consome créditos conforme o plano.
+                                <h2 class="text-2xl font-semibold text-white mb-6">Gestão de Créditos</h2>
+                                
+                                <div class="prose prose-invert max-w-none">
+                                    <p class="text-slate-300 text-lg leading-relaxed mb-8">
+                                        Controle seus créditos de análise com nosso modelo pay-as-you-go. Pague uma vez, use quando quiser. Sem mensalidades, sem pressão, total flexibilidade.
+                                    </p>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Como Gerenciar Créditos</h3>
+                                    <div class="space-y-6 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">1. Verificação de Saldo</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                No painel principal, visualize seu saldo atual de créditos no canto superior direito. Cada análise consome 1 crédito por URL analisada.
                                             </p>
-                                            <!-- Placeholder de Vídeo -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl flex items-center justify-center mb-6 shadow-inner">
-                                                <div class="text-center">
-                                                    <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                        <i data-lucide="play" class="w-8 h-8 text-cyan-400"></i>
-                                                    </div>
-                                                    <p class="text-slate-500 text-sm">Vídeo: Verificando Saldo de Créditos</p>
-                                                </div>
-                                            </div>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">2. Acesso a Planos e Preços</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Clique em "Planos e Preços" no menu para visualizar opções de pacotes de créditos disponíveis.
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">3. Escolha do Pacote</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Compare os pacotes disponíveis: Básico (10 créditos), Recomendado (40 créditos) ou Empresarial (150+ créditos).
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">4. Pagamento e Ativação</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Finalize o pagamento via Mercado Pago. Créditos são adicionados instantaneamente à sua conta após confirmação.
+                                            </p>
                                         </div>
                                     </div>
-                                    <!-- Passo 2 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                2
-                                            </div>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Pacotes Disponíveis</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Básico - R$ 99,99</h4>
+                                            <p class="text-slate-400 text-sm">10 créditos • R$ 10/auditoria • Histórico 30 dias • Suporte por e-mail • Relatório completo • Métricas básicas</p>
                                         </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Acesse Planos e Preços</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Clique em "Planos e Preços" no menu para visualizar opções de assinatura e pacotes de recarga.
-                                            </p>
-                                            <!-- Placeholder de Vídeo -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl flex items-center justify-center mb-6 shadow-inner">
-                                                <div class="text-center">
-                                                    <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                        <i data-lucide="play" class="w-8 h-8 text-cyan-400"></i>
-                                                    </div>
-                                                    <p class="text-slate-500 text-sm">Vídeo: Acessando Planos e Preços</p>
-                                                </div>
-                                            </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Recomendado - R$ 149,99</h4>
+                                            <p class="text-slate-400 text-sm">40 créditos • R$ 3,75/auditoria • Histórico 1 ano • Exportação PDF • Suporte WhatsApp • Métricas avançadas • Análise comparativa</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Empresarial - Sob Consulta</h4>
+                                            <p class="text-slate-400 text-sm">150+ créditos • Auditoria em lote • Acesso à API • White-label • Suporte dedicado • Múltiplos usuários • SLA personalizado</p>
                                         </div>
                                     </div>
-                                    <!-- Passo 3 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                3
-                                            </div>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Escolha seu Plano</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Compare assinaturas mensais, semestrais e anuais. Planos maiores oferecem melhor custo-benefício e créditos bonus.
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Política de Uso de Créditos</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Validade dos Créditos</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Créditos não expiram. Uma vez adquiridos, ficam disponíveis em sua conta indefinidamente para uso quando necessário. Não há pressão de tempo.
                                             </p>
-                                            <!-- Placeholder de Vídeo -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl flex items-center justify-center mb-6 shadow-inner">
-                                                <div class="text-center">
-                                                    <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                        <i data-lucide="play" class="w-8 h-8 text-cyan-400"></i>
-                                                    </div>
-                                                    <p class="text-slate-500 text-sm">Vídeo: Escolhendo Plano Ideal</p>
-                                                </div>
-                                            </div>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Consumo por Análise</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Cada análise individual consome 1 crédito por URL. Análises comparativas consomem 2 créditos (1 para cada site). O consumo é deduzido automaticamente ao iniciar a análise.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Reembolso e Cancelamento</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Como modelo pay-as-you-go, não há cancelamento de assinatura. Créditos adquiridos não são reembolsáveis após uso. Entre em contato para casos excepcionais.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Transferência de Créditos</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Créditos são vinculados à conta do usuário e não podem ser transferidos entre contas. Para uso em múltiplos usuários, considere o pacote Empresarial.
+                                            </p>
                                         </div>
                                     </div>
-                                    <!-- Passo 4 -->
-                                    <div class="flex gap-6" style="display: flex !important; gap: 1.5rem !important;">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                4
-                                            </div>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Recomendações de Uso</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Para Freelancers e Pequenos Projetos</h4>
+                                            <p class="text-slate-400 text-sm">O pacote Básico (10 créditos) é ideal para testar a plataforma ou analisar poucos sites. Custo por auditoria mais alto, mas sem compromisso de longo prazo.</p>
                                         </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-xl font-semibold text-white mb-3">Complete a Assinatura</h3>
-                                            <p class="text-slate-300 mb-4 leading-relaxed">
-                                                Finalize o pagamento via Mercado Pago. Créditos são adicionados instantaneamente após confirmação.
-                                            </p>
-                                            <!-- Placeholder de Vídeo -->
-                                            <div class="w-full aspect-video bg-[#161b22] border border-white/5 rounded-xl flex items-center justify-center mb-6 shadow-inner">
-                                                <div class="text-center">
-                                                    <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                        <i data-lucide="play" class="w-8 h-8 text-cyan-400"></i>
-                                                    </div>
-                                                    <p class="text-slate-500 text-sm">Vídeo: Finalizando Assinatura</p>
-                                                </div>
-                                            </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Para Profissionais e PMEs</h4>
+                                            <p class="text-slate-400 text-sm">O pacote Recomendado (40 créditos) oferece melhor custo-benefício com R$ 3,75 por auditoria. Ideal para uso regular e múltiplos clientes.</p>
+                                        </div>
+                                        <div class="border border-slate-800 rounded-lg p-4">
+                                            <h4 class="text-white font-semibold mb-2">Para Agências e Grandes Volumes</h4>
+                                            <p class="text-slate-400 text-sm">O pacote Empresarial é personalizado para alto volume. Inclui recursos avançados como API, white-label e suporte dedicado. Entre em contato para orçamento.</p>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Callout Pro Tip -->
-                                <div class="mt-12 p-6 bg-cyan-900/20 border border-cyan-500/30 rounded-xl">
-                                    <div class="flex gap-4">
-                                        <div class="flex-shrink-0">
-                                            <i data-lucide="lightbulb" class="w-6 h-6 text-cyan-400"></i>
+                                    
+                                    <h3 class="text-xl font-semibold text-white mb-4">Métodos de Pagamento</h3>
+                                    <div class="space-y-4 mb-8">
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Mercado Pago</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Aceitamos pagamento via Mercado Pago com cartão de crédito, débito, PIX e boleto. Transações são processadas de forma segura e créditos são ativados imediatamente após confirmação.
+                                            </p>
                                         </div>
-                                        <div>
-                                            <h4 class="text-cyan-400 font-semibold mb-2">Dica Pro</h4>
-                                            <p class="text-cyan-200 text-sm leading-relaxed">
-                                                Planos anuais oferecem até 20% de economia e créditos bônus. Ideal para equipes e uso intensivo de análises.
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Faturamento Empresarial</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Para pacotes Empresarial, oferecemos faturamento com boleto bancário ou transferência. Entre em contato com a equipe comercial para condições especiais.
+                                            </p>
+                                        </div>
+                                        <div class="border-l-2 border-slate-700 pl-4">
+                                            <h4 class="text-white font-semibold mb-2">Segurança</h4>
+                                            <p class="text-slate-300 text-sm leading-relaxed">
+                                                Todas as transações são processadas através de Mercado Pago com criptografia SSL de 256 bits. Seus dados de pagamento nunca são armazenados em nossos servidores.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </section>
                             <!-- Espaçador para afastar do footer -->
-<section id="gestao-creditos" class="hidden scroll-mt-24">
-                                </section>
                             <div style="height: 8rem;"></div>
                         </main> </div> </div> </div> <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
                     <!-- Espaçador para afastar do footer -->
