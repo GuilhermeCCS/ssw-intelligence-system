@@ -1,0 +1,82 @@
+/* =========================================
+   1. BARRA DE ROLAGEM CUSTOMIZADA (Dark)
+   ========================================= */
+/* Funciona no Chrome, Edge e Safari */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #020617; /* slate-950 (Fundo do site) */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155; /* slate-700 */
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569; /* slate-600 */
+}
+
+/* =========================================
+   2. EFEITO DE VIDRO (REUTILIZÁVEL)
+   ========================================= */
+/* Use class="glass" em qualquer div para dar esse efeito */
+.glass {
+    background: rgba(15, 23, 42, 0.6); /* slate-900 com transparência */
+    backdrop-filter: blur(12px);       /* Desfoque do fundo */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Borda sutil */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================
+   3. ANIMAÇÕES SUAVES
+   ========================================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+main > div {
+    animation: fadeIn 0.4s ease-out; /* Todo conteúdo novo desliza suavemente */
+}
+
+/* =========================================
+   4. MODO IMPRESSÃO (PDF)
+   ========================================= */
+/* Isso roda quando você clica em window.print() */
+@media print {
+    /* Esconde menu lateral, botões e inputs */
+    aside, button, input, select, .no-print {
+        display: none !important;
+    }
+
+    /* Ajusta o fundo para economizar tinta e ficar legível */
+    body, main {
+        background-color: white !important;
+        color: black !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Remove os efeitos de vidro para impressão */
+    .glass {
+        border: 1px solid #ccc;
+        background: none;
+        box-shadow: none;
+        color: black !important;
+    }
+
+    /* Garante que textos brancos fiquem pretos */
+    .text-white, .text-slate-200, .text-slate-400 {
+        color: black !important;
+    }
+    
+    /* Força quebra de página se necessário */
+    .page-break {
+        page-break-before: always;
+    }
+}
