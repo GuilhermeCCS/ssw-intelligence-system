@@ -13,9 +13,6 @@
     <script src="../components/footer/footer-component.js" defer></script>
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <!-- jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -815,7 +812,7 @@
         Toast.info = (m, d) => Toast.show(m, 'info', d);
     </script>
     <script>
-        const API_URL = "https://82e29984-9ee4-4727-929e-57421b477e7a-00-2bi525obh81pp.worf.replit.dev";
+        const API_URL = "https://ssw-intelligence-api.onrender.com";
         // Variável global para armazenar dados da auditoria atual
         let auditData = null;
         let currentAuditUrl = null;
@@ -1364,10 +1361,6 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                             <h1 class="text-3xl font-bold text-white mb-4">Documentação</h1>
                             <p class="text-slate-400 text-lg">Guia completo de uso da plataforma SSW INTELLIGENCE</p>
                         </div>
-                        <button onclick="printTutorial()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
-                            <i data-lucide="file-down" class="w-4 h-4"></i>
-                            Gerar PDF Completo
-                        </button>
                     </div>
                 </header>
                 <!-- LAYOUT DE DUAS COLUNAS -->
@@ -1953,164 +1946,28 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
             
-            // Função para gerar PDF do tutorial completo
-            window.printTutorial = async function() {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
+            // Função para baixar PDF de uma seção específica do tutorial
+            window.printTutorialSection = function(sectionId) {
+                // Mapeamento de seções para arquivos PDF
+                const pdfFiles = {
+                    'auditoria-simples': '../assets/PDF/audit01.pdf',
+                    'batalha-comparativa': '../assets/PDF/audit02.pdf',
+                    'gestao-personas': '../assets/PDF/audit03.pdf',
+                    'relatorios-insights': '../assets/PDF/audit04.pdf'
+                };
                 
-                // Mostrar todas as seções do tutorial temporariamente
-                const sections = ['auditoria-simples', 'batalha-comparativa', 'gestao-personas', 'relatorios-insights'];
-                const originalStates = {};
-                
-                sections.forEach(id => {
-                    const section = document.getElementById(id);
-                    if (section) {
-                        originalStates[id] = section.classList.contains('hidden');
-                        section.classList.remove('hidden');
-                        section.style.display = 'block';
-                    }
-                });
-                
-                // Aguardar renderização
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                try {
-                    const tutorialView = document.getElementById('view-tutorial');
-                    const canvas = await html2canvas(tutorialView, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#0F1117'
-                    });
-                    
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 210; // A4 width in mm
-                    const pageHeight = 297; // A4 height in mm
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    let heightLeft = imgHeight;
-                    let position = 0;
-                    
-                    // Primeira página
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    
-                    // Páginas adicionais se necessário
-                    while (heightLeft > 0) {
-                        position = heightLeft - imgHeight;
-                        doc.addPage();
-                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-                    }
-                    
-                    doc.save('SSW-Intelligence-Tutorial-Completo.pdf');
-                    Toast.success('PDF gerado com sucesso!');
-                } catch (error) {
-                    console.error('Erro ao gerar PDF:', error);
-                    Toast.error('Erro ao gerar PDF. Tente novamente.');
-                } finally {
-                    // Restaurar estados originais
-                    sections.forEach(id => {
-                        const section = document.getElementById(id);
-                        if (section) {
-                            if (originalStates[id]) {
-                                section.classList.add('hidden');
-                                section.style.display = 'none';
-                            } else {
-                                section.classList.remove('hidden');
-                                section.style.display = 'block';
-                            }
-                        }
-                    });
-                }
-            };
-            
-            // Função para gerar PDF de uma seção específica do tutorial
-            window.printTutorialSection = async function(sectionId) {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                
-                // Salvar a seção ativa atual
-                const activeSection = document.querySelector('#view-tutorial section:not(.hidden)');
-                const activeSectionId = activeSection ? activeSection.id : 'auditoria-simples';
-                
-                // Esconder todas as seções exceto a selecionada
-                const sections = ['auditoria-simples', 'batalha-comparativa', 'gestao-personas', 'relatorios-insights'];
-                const originalStates = {};
-                
-                sections.forEach(id => {
-                    const section = document.getElementById(id);
-                    if (section) {
-                        originalStates[id] = {
-                            hidden: section.classList.contains('hidden'),
-                            display: section.style.display
-                        };
-                        if (id === sectionId) {
-                            section.classList.remove('hidden');
-                            section.style.display = 'block';
-                        } else {
-                            section.classList.add('hidden');
-                            section.style.display = 'none';
-                        }
-                    }
-                });
-                
-                // Aguardar renderização
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                try {
-                    const sectionElement = document.getElementById(sectionId);
-                    const canvas = await html2canvas(sectionElement, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#0F1117'
-                    });
-                    
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 210; // A4 width in mm
-                    const pageHeight = 297; // A4 height in mm
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    let heightLeft = imgHeight;
-                    let position = 0;
-                    
-                    // Primeira página
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    
-                    // Páginas adicionais se necessário
-                    while (heightLeft > 0) {
-                        position = heightLeft - imgHeight;
-                        doc.addPage();
-                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-                    }
-                    
-                    // Nome do arquivo baseado na seção
-                    const sectionNames = {
-                        'auditoria-simples': 'Auditoria-Individual',
-                        'batalha-comparativa': 'Analise-Comparativa',
-                        'gestao-personas': 'Gestao-de-Personas',
-                        'relatorios-insights': 'Relatorios-e-Insights'
-                    };
-                    
-                    const fileName = sectionNames[sectionId] || 'Tutorial';
-                    doc.save(`SSW-Intelligence-${fileName}.pdf`);
-                    Toast.success('PDF gerado com sucesso!');
-                } catch (error) {
-                    console.error('Erro ao gerar PDF:', error);
-                    Toast.error('Erro ao gerar PDF. Tente novamente.');
-                } finally {
-                    // Restaurar estados originais
-                    sections.forEach(id => {
-                        const section = document.getElementById(id);
-                        if (section) {
-                            section.classList.remove('hidden');
-                            section.style.display = originalStates[id].display || '';
-                            if (originalStates[id].hidden) {
-                                section.classList.add('hidden');
-                            }
-                        }
-                    });
+                const pdfFile = pdfFiles[sectionId];
+                if (pdfFile) {
+                    // Criar link temporário para download
+                    const link = document.createElement('a');
+                    link.href = pdfFile;
+                    link.download = pdfFile.split('/').pop();
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    Toast.success('PDF baixado com sucesso!');
+                } else {
+                    Toast.error('Arquivo PDF não encontrado para esta seção.');
                 }
             };
             const saved = localStorage.getItem('USER');
