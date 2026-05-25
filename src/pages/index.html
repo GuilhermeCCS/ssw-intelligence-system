@@ -13,6 +13,9 @@
     <script src="../components/footer/footer-component.js" defer></script>
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -323,9 +326,9 @@
             .sticky, .fixed {
                 display: none !important;
             }
-            /* Esconde todas as views EXCETO conteúdo do relatório */
+            /* Esconde todas as views EXCETO conteúdo do relatório e tutorial */
             #view-personas, #view-ranking, #view-precos, 
-            #view-about, #view-tutorial, #view-terms,
+            #view-about, #view-terms,
             #emptyStateCards, #auditLoading, #compareArea,
             #manualSelectArea, .hero-section-premium,
             .stats-container-premium, #mainFooter {
@@ -512,7 +515,12 @@
             .sticky, .fixed, button, input, select, textarea {
                 display: none !important;
             }
-        }
+            
+            /* Classe para esconder elementos durante geração de PDF */
+            .no-print {
+                display: none !important;
+            }
+         }
         /* Animações Profissionais */
         .fade-in {
             animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -1356,9 +1364,9 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                             <h1 class="text-3xl font-bold text-white mb-4">Documentação</h1>
                             <p class="text-slate-400 text-lg">Guia completo de uso da plataforma SSW INTELLIGENCE</p>
                         </div>
-                        <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                        <button onclick="printTutorial()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
                             <i data-lucide="file-down" class="w-4 h-4"></i>
-                            Baixar PDF
+                            Gerar PDF Completo
                         </button>
                     </div>
                 </header>
@@ -1393,19 +1401,19 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                                         Relatórios e Insights
                                     </span>
                                 </button>
-                                <button onclick="showTutorialSection('gestao-creditos')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    <span class="flex items-center gap-2">
-                                        <i data-lucide="credit-card" class="w-4 h-4"></i>
-                                        Gestão de Créditos
-                                    </span>
-                                </button>
                             </nav>
                         </aside>
                         <!-- COLUNA DIREITA - Conteúdo Principal -->
                         <main class="lg:col-span-3">
                             <!-- SEÇÃO 1: Auditoria Individual -->
                             <section id="auditoria-simples" class="scroll-mt-24">
-                                <h2 class="text-2xl font-semibold text-white mb-6">Auditoria Individual</h2>
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-2xl font-semibold text-white">Auditoria Individual</h2>
+                                    <button onclick="printTutorialSection('auditoria-simples')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                        <i data-lucide="file-down" class="w-4 h-4"></i>
+                                        Gerar PDF desta Seção
+                                    </button>
+                                </div>
                                 
                                 <div class="prose prose-invert max-w-none">
                                     <p class="text-slate-300 text-lg leading-relaxed mb-8">
@@ -1509,7 +1517,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                             </section>
                             <!-- SEÇÃO 2: Análise Comparativa -->
                             <section id="batalha-comparativa" class="hidden scroll-mt-24">
-                                <h2 class="text-2xl font-semibold text-white mb-6">Análise Comparativa</h2>
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-2xl font-semibold text-white">Análise Comparativa</h2>
+                                    <button onclick="printTutorialSection('batalha-comparativa')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                        <i data-lucide="file-down" class="w-4 h-4"></i>
+                                        Gerar PDF desta Seção
+                                    </button>
+                                </div>
                                 
                                 <div class="prose prose-invert max-w-none">
                                     <p class="text-slate-300 text-lg leading-relaxed mb-8">
@@ -1620,7 +1634,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                             </section>
                         <!-- SEÇÃO 3: Gestão de Personas -->
                         <section id="gestao-personas" class="hidden scroll-mt-24">
-                            <h2 class="text-2xl font-semibold text-white mb-6">Gestão de Personas</h2>
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-semibold text-white">Gestão de Personas</h2>
+                                <button onclick="printTutorialSection('gestao-personas')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                    <i data-lucide="file-down" class="w-4 h-4"></i>
+                                    Baixar Esta Seção
+                                </button>
+                            </div>
                             
                             <div class="prose prose-invert max-w-none">
                                 <p class="text-slate-300 text-lg leading-relaxed mb-8">
@@ -1658,30 +1678,6 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                                         <p class="text-slate-300 text-sm leading-relaxed">
                                             Após preencher os dados, clique em "Salvar". A persona ficará disponível para seleção em análises individuais e comparativas.
                                         </p>
-                                    </div>
-                                </div>
-                                
-                                <h3 class="text-xl font-semibold text-white mb-4">Personas Pré-Configuradas</h3>
-                                <div class="space-y-4 mb-8">
-                                    <div class="border border-slate-800 rounded-lg p-4">
-                                        <h4 class="text-white font-semibold mb-2">Profissional Corporativo</h4>
-                                        <p class="text-slate-400 text-sm">Focado em eficiência, resultados corporativos e tomada de decisão rápida. Busca informações claras e objetivas.</p>
-                                    </div>
-                                    <div class="border border-slate-800 rounded-lg p-4">
-                                        <h4 class="text-white font-semibold mb-2">Consumidor Digital</h4>
-                                        <p class="text-slate-400 text-sm">Orientado para experiência de compra, avaliações e recomendações. Valoriza facilidade de uso e confiança.</p>
-                                    </div>
-                                    <div class="border border-slate-800 rounded-lg p-4">
-                                        <h4 class="text-white font-semibold mb-2">Estudante/Pesquisador</h4>
-                                        <p class="text-slate-400 text-sm">Busca por conteúdo educativo, detalhes técnicos e facilidade de aprendizado. Valoriza profundidade de informação.</p>
-                                    </div>
-                                    <div class="border border-slate-800 rounded-lg p-4">
-                                        <h4 class="text-white font-semibold mb-2">Usuário Mobile</h4>
-                                        <p class="text-slate-400 text-sm">Acessa principalmente via smartphone. Prioriza velocidade, navegação por toque e interface otimizada para telas pequenas.</p>
-                                    </div>
-                                    <div class="border border-slate-800 rounded-lg p-4">
-                                        <h4 class="text-white font-semibold mb-2">Idoso/Tecnológico</h4>
-                                        <p class="text-slate-400 text-sm">Necessita de fontes maiores, contraste elevado e navegação simplificada. Valoriza clareza e acessibilidade.</p>
                                     </div>
                                 </div>
                                 
@@ -1732,7 +1728,13 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                         </section>
                         <!-- SEÇÃO 4: Relatórios e Insights -->
                         <section id="relatorios-insights" class="hidden scroll-mt-24">
-                            <h2 class="text-2xl font-semibold text-white mb-6">Relatórios e Insights</h2>
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-semibold text-white">Relatórios e Insights</h2>
+                                <button onclick="printTutorialSection('relatorios-insights')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                    <i data-lucide="file-down" class="w-4 h-4"></i>
+                                    Baixar Esta Seção
+                                </button>
+                            </div>
                             
                             <div class="prose prose-invert max-w-none">
                                 <p class="text-slate-300 text-lg leading-relaxed mb-8">
@@ -1833,129 +1835,6 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                                 </div>
                             </div>
                         </section>
-                            <!-- SEÇÃO 5: Gestão de Créditos -->
-                            <section id="gestao-creditos" class="hidden scroll-mt-24">
-                                <h2 class="text-2xl font-semibold text-white mb-6">Gestão de Créditos</h2>
-                                
-                                <div class="prose prose-invert max-w-none">
-                                    <p class="text-slate-300 text-lg leading-relaxed mb-8">
-                                        Controle seus créditos de análise com nosso modelo pay-as-you-go. Pague uma vez, use quando quiser. Sem mensalidades, sem pressão, total flexibilidade.
-                                    </p>
-                                    
-                                    <h3 class="text-xl font-semibold text-white mb-4">Como Gerenciar Créditos</h3>
-                                    <div class="space-y-6 mb-8">
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">1. Verificação de Saldo</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                No painel principal, visualize seu saldo atual de créditos no canto superior direito. Cada análise consome 1 crédito por URL analisada.
-                                            </p>
-                                        </div>
-                                        
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">2. Acesso a Planos e Preços</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Clique em "Planos e Preços" no menu para visualizar opções de pacotes de créditos disponíveis.
-                                            </p>
-                                        </div>
-                                        
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">3. Escolha do Pacote</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Compare os pacotes disponíveis: Básico (10 créditos), Recomendado (40 créditos) ou Empresarial (150+ créditos).
-                                            </p>
-                                        </div>
-                                        
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">4. Pagamento e Ativação</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Finalize o pagamento via Mercado Pago. Créditos são adicionados instantaneamente à sua conta após confirmação.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <h3 class="text-xl font-semibold text-white mb-4">Pacotes Disponíveis</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Básico - R$ 99,99</h4>
-                                            <p class="text-slate-400 text-sm">10 créditos • R$ 10/auditoria • Histórico 30 dias • Suporte por e-mail • Relatório completo • Métricas básicas</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Recomendado - R$ 149,99</h4>
-                                            <p class="text-slate-400 text-sm">40 créditos • R$ 3,75/auditoria • Histórico 1 ano • Exportação PDF • Suporte WhatsApp • Métricas avançadas • Análise comparativa</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Empresarial - Sob Consulta</h4>
-                                            <p class="text-slate-400 text-sm">150+ créditos • Auditoria em lote • Acesso à API • White-label • Suporte dedicado • Múltiplos usuários • SLA personalizado</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <h3 class="text-xl font-semibold text-white mb-4">Política de Uso de Créditos</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Validade dos Créditos</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Créditos não expiram. Uma vez adquiridos, ficam disponíveis em sua conta indefinidamente para uso quando necessário. Não há pressão de tempo.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Consumo por Análise</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Cada análise individual consome 1 crédito por URL. Análises comparativas consomem 2 créditos (1 para cada site). O consumo é deduzido automaticamente ao iniciar a análise.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Reembolso e Cancelamento</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Como modelo pay-as-you-go, não há cancelamento de assinatura. Créditos adquiridos não são reembolsáveis após uso. Entre em contato para casos excepcionais.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Transferência de Créditos</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Créditos são vinculados à conta do usuário e não podem ser transferidos entre contas. Para uso em múltiplos usuários, considere o pacote Empresarial.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <h3 class="text-xl font-semibold text-white mb-4">Recomendações de Uso</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Para Freelancers e Pequenos Projetos</h4>
-                                            <p class="text-slate-400 text-sm">O pacote Básico (10 créditos) é ideal para testar a plataforma ou analisar poucos sites. Custo por auditoria mais alto, mas sem compromisso de longo prazo.</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Para Profissionais e PMEs</h4>
-                                            <p class="text-slate-400 text-sm">O pacote Recomendado (40 créditos) oferece melhor custo-benefício com R$ 3,75 por auditoria. Ideal para uso regular e múltiplos clientes.</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Para Agências e Grandes Volumes</h4>
-                                            <p class="text-slate-400 text-sm">O pacote Empresarial é personalizado para alto volume. Inclui recursos avançados como API, white-label e suporte dedicado. Entre em contato para orçamento.</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <h3 class="text-xl font-semibold text-white mb-4">Métodos de Pagamento</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Mercado Pago</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Aceitamos pagamento via Mercado Pago com cartão de crédito, débito, PIX e boleto. Transações são processadas de forma segura e créditos são ativados imediatamente após confirmação.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Faturamento Empresarial</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Para pacotes Empresarial, oferecemos faturamento com boleto bancário ou transferência. Entre em contato com a equipe comercial para condições especiais.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Segurança</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Todas as transações são processadas através de Mercado Pago com criptografia SSL de 256 bits. Seus dados de pagamento nunca são armazenados em nossos servidores.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
                             <!-- Espaçador para afastar do footer -->
                             <div style="height: 8rem;"></div>
                         </main> </div> </div> </div> <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
@@ -2046,7 +1925,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
                 // Esconder todas as seções
-                const sections = ['auditoria-simples', 'batalha-comparativa', 'gestao-personas', 'relatorios-insights', 'gestao-creditos'];
+                const sections = ['auditoria-simples', 'batalha-comparativa', 'gestao-personas', 'relatorios-insights'];
                 sections.forEach(id => {
                     const section = document.getElementById(id);
                     if (section) {
@@ -2072,6 +1951,167 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 }
                 // Scroll suave para o topo
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            
+            // Função para gerar PDF do tutorial completo
+            window.printTutorial = async function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Mostrar todas as seções do tutorial temporariamente
+                const sections = ['auditoria-simples', 'batalha-comparativa', 'gestao-personas', 'relatorios-insights'];
+                const originalStates = {};
+                
+                sections.forEach(id => {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        originalStates[id] = section.classList.contains('hidden');
+                        section.classList.remove('hidden');
+                        section.style.display = 'block';
+                    }
+                });
+                
+                // Aguardar renderização
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                try {
+                    const tutorialView = document.getElementById('view-tutorial');
+                    const canvas = await html2canvas(tutorialView, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#0F1117'
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 210; // A4 width in mm
+                    const pageHeight = 297; // A4 height in mm
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
+                    // Primeira página
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                    
+                    // Páginas adicionais se necessário
+                    while (heightLeft > 0) {
+                        position = heightLeft - imgHeight;
+                        doc.addPage();
+                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+                    
+                    doc.save('SSW-Intelligence-Tutorial-Completo.pdf');
+                    Toast.success('PDF gerado com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao gerar PDF:', error);
+                    Toast.error('Erro ao gerar PDF. Tente novamente.');
+                } finally {
+                    // Restaurar estados originais
+                    sections.forEach(id => {
+                        const section = document.getElementById(id);
+                        if (section) {
+                            if (originalStates[id]) {
+                                section.classList.add('hidden');
+                                section.style.display = 'none';
+                            } else {
+                                section.classList.remove('hidden');
+                                section.style.display = 'block';
+                            }
+                        }
+                    });
+                }
+            };
+            
+            // Função para gerar PDF de uma seção específica do tutorial
+            window.printTutorialSection = async function(sectionId) {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Salvar a seção ativa atual
+                const activeSection = document.querySelector('#view-tutorial section:not(.hidden)');
+                const activeSectionId = activeSection ? activeSection.id : 'auditoria-simples';
+                
+                // Esconder todas as seções exceto a selecionada
+                const sections = ['auditoria-simples', 'batalha-comparativa', 'gestao-personas', 'relatorios-insights'];
+                const originalStates = {};
+                
+                sections.forEach(id => {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        originalStates[id] = {
+                            hidden: section.classList.contains('hidden'),
+                            display: section.style.display
+                        };
+                        if (id === sectionId) {
+                            section.classList.remove('hidden');
+                            section.style.display = 'block';
+                        } else {
+                            section.classList.add('hidden');
+                            section.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Aguardar renderização
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                try {
+                    const sectionElement = document.getElementById(sectionId);
+                    const canvas = await html2canvas(sectionElement, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#0F1117'
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 210; // A4 width in mm
+                    const pageHeight = 297; // A4 height in mm
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
+                    // Primeira página
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                    
+                    // Páginas adicionais se necessário
+                    while (heightLeft > 0) {
+                        position = heightLeft - imgHeight;
+                        doc.addPage();
+                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+                    
+                    // Nome do arquivo baseado na seção
+                    const sectionNames = {
+                        'auditoria-simples': 'Auditoria-Individual',
+                        'batalha-comparativa': 'Analise-Comparativa',
+                        'gestao-personas': 'Gestao-de-Personas',
+                        'relatorios-insights': 'Relatorios-e-Insights'
+                    };
+                    
+                    const fileName = sectionNames[sectionId] || 'Tutorial';
+                    doc.save(`SSW-Intelligence-${fileName}.pdf`);
+                    Toast.success('PDF gerado com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao gerar PDF:', error);
+                    Toast.error('Erro ao gerar PDF. Tente novamente.');
+                } finally {
+                    // Restaurar estados originais
+                    sections.forEach(id => {
+                        const section = document.getElementById(id);
+                        if (section) {
+                            section.classList.remove('hidden');
+                            section.style.display = originalStates[id].display || '';
+                            if (originalStates[id].hidden) {
+                                section.classList.add('hidden');
+                            }
+                        }
+                    });
+                }
             };
             const saved = localStorage.getItem('USER');
             if(saved) {
