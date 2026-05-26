@@ -53,50 +53,32 @@ const CheckoutModal = ({
   /**
    * Submit seguro
    */
-  const handleSubmit = async (formData) => {
+   const handleSubmit = async (formData) => {
     try {
       setIsLoading(true);
       setPaymentStatus('processing');
       setErrorMessage('');
 
-      // 1. Obter user_id dinamicamente (da prop user ou localStorage)
-      const userId = user?.id || localStorage.getItem('USER') ? JSON.parse(localStorage.getItem('USER')).id : localStorage.getItem('user_id');
+      // Garante que o payment_method_id existe (ele é o que o Brick retorna)
+      // Se não vier no formData, o Brick falhou na inicialização
+      if (!formData.payment_method_id) {
+          throw new Error("Método de pagamento não identificado. Por favor, tente novamente.");
+      }
+
+      const idDoUsuario = user?.id || localStorage.getItem('user_id');
       
-      if (!userId) {
-        throw new Error("Usuário não identificado.");
-      }
-
-      // 2. Obter email dinamicamente (da prop user ou localStorage)
-      const userEmail = user?.email || (localStorage.getItem('USER') ? JSON.parse(localStorage.getItem('USER')).email : null);
-
-      if (!userEmail) {
-        throw new Error("Email do usuário não encontrado.");
-      }
-
-      // 3. Log do formData recebido do Payment Brick
-      console.log('📦 FormData recebido do Payment Brick:', formData);
-
-      // 4. Extrair payment_method_id do formData
-      const paymentMethodId = formData?.payment_method_id;
-
-      if (!paymentMethodId) {
-        throw new Error("payment_method_id não encontrado no formData.");
-      }
-
-      // 5. Montar payload limpo conforme contrato da API
-      // Backend espera: user_id, pacote_id, payment_method_id, payer
       const payload = {
-        user_id: String(userId),
+        user_id: String(idDoUsuario),
         pacote_id: pacoteSelecionado?.id || "pacote_basico",
-        payment_method_id: paymentMethodId,
-        payer: {
-          email: userEmail
-        }
+        payment_method_id: formData.payment_method_id, // O Brick preenche isso
+        payer: formData.payer, // O Brick preenche isso
+        token: formData.token || null,
+        installments: Number(formData.installments || 1),
+        issuer_id: formData.issuer_id || null
       };
 
-      console.log('📦 Payload limpo enviado para API:', JSON.stringify(payload, null, 2));
+      console.log("Enviando para o backend:", payload); // DEBUG: Veja isso no F12
 
-      // 6. Chamada à API
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
