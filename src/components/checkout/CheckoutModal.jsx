@@ -59,59 +59,42 @@ const CheckoutModal = ({
       setPaymentStatus('processing');
       setErrorMessage('');
 
-      // 1. Identificação Segura
-      const idDoUsuario = user?.id || localStorage.getItem('user_id');
+      // 1. Obter user_id dinamicamente (da prop user ou localStorage)
+      const userId = user?.id || localStorage.getItem('USER') ? JSON.parse(localStorage.getItem('USER')).id : localStorage.getItem('user_id');
       
-      if (!idDoUsuario) {
-        throw new Error("Utilizador não identificado.");
+      if (!userId) {
+        throw new Error("Usuário não identificado.");
       }
 
-      // 2. Log detalhado do formData recebido do Payment Brick
-      console.log('📦 FormData recebido do Payment Brick:', formData);
-      console.log('📦 Estrutura completa:', JSON.stringify(formData, null, 2));
+      // 2. Obter email dinamicamente (da prop user ou localStorage)
+      const userEmail = user?.email || (localStorage.getItem('USER') ? JSON.parse(localStorage.getItem('USER')).email : null);
 
-      // 3. Extração explícita dos campos do Payment Brick
-      // O SDK do Mercado Pago retorna um objeto com a estrutura:
-      // {
-      //   token: "card_token",
-      //   payment_method_id: "visa",
-      //   issuer_id: "123",
-      //   installments: 1,
-      //   payer: { email: "user@email.com" }
-      // }
-      const paymentData = {
-        token: formData?.token,
-        payment_method_id: formData?.payment_method_id,
-        issuer_id: formData?.issuer_id,
-        installments: formData?.installments || 1,
+      if (!userEmail) {
+        throw new Error("Email do usuário não encontrado.");
+      }
+
+      // 3. Log do formData recebido do Payment Brick
+      console.log('📦 FormData recebido do Payment Brick:', formData);
+
+      // 4. Extrair payment_method_id do formData
+      const paymentMethodId = formData?.payment_method_id;
+
+      if (!paymentMethodId) {
+        throw new Error("payment_method_id não encontrado no formData.");
+      }
+
+      // 5. Montar payload limpo conforme contrato da API
+      // Backend espera: user_id, pacote_id, payment_method_id, payer
+      const payload = {
+        user_id: String(userId),
+        pacote_id: pacoteSelecionado?.id || "pacote_basico",
+        payment_method_id: paymentMethodId,
         payer: {
-          email: formData?.payer?.email || user?.email
+          email: userEmail
         }
       };
 
-      console.log('📦 Dados de pagamento extraídos:', paymentData);
-
-      // 4. Obter cf_token do Turnstile (se existir)
-      let cfToken = null;
-      const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]');
-      if (turnstileResponse) {
-        cfToken = turnstileResponse.value;
-        console.log('📦 cf_token do Turnstile:', cfToken);
-      }
-
-      // 5. Montar payload final para a API
-      const payload = {
-        user_id: String(idDoUsuario),
-        pacote_id: pacoteSelecionado?.id || "pacote_basico",
-        token: paymentData.token,
-        payment_method_id: paymentData.payment_method_id,
-        issuer_id: paymentData.issuer_id,
-        installments: paymentData.installments,
-        payer: paymentData.payer,
-        cf_token: cfToken
-      };
-
-      console.log('📦 Payload final enviado para API:', JSON.stringify(payload, null, 2));
+      console.log('📦 Payload limpo enviado para API:', JSON.stringify(payload, null, 2));
 
       // 6. Chamada à API
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
