@@ -53,7 +53,7 @@ const CheckoutModal = ({
   /**
    * Submit seguro
    */
-   const handleSubmit = async (formData) => {
+   const handleSubmit = async ({formData}) => {
     try {
       setIsLoading(true);
       setPaymentStatus('processing');
