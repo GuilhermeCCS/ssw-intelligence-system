@@ -7,6 +7,8 @@
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Checkout Mercado Pago -->
     <script src="../utils/mercado-pago-checkout.js" defer></script>
+    <!-- Crypto Security -->
+    <script src="../utils/crypto.js" defer></script>
     <!-- Pricing Section -->
     <script src="../components/pricing/pricing-component.js" defer></script>
     <!-- Footer Section -->
@@ -1896,7 +1898,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         // Variável temporária para senha no fluxo de cadastro
         let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
-            window.onload = () => {
+            window.onload = async () => {
             lucide.createIcons();
             
             // Navegação baseada em pathname (History API)
@@ -1970,9 +1972,18 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     Toast.error('Arquivo PDF não encontrado para esta seção.');
                 }
             };
-            const saved = localStorage.getItem('USER');
+            // Carrega usuário do storage (criptografado ou não)
+            const loadUserFromStorage = async () => {
+                if (typeof secureStorage !== 'undefined') {
+                    return await secureStorage.getItem('USER');
+                }
+                const saved = localStorage.getItem('USER');
+                return saved ? JSON.parse(saved) : null;
+            };
+            
+            const saved = await loadUserFromStorage();
             if(saved) {
-                USER = JSON.parse(saved);
+                USER = saved;
                 window.fromLoginFlow = true;
                     loginSuccess();
             }
@@ -1981,7 +1992,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             updateAuthButton();
             // Mostrar a primeira seção do tutorial por padrão
             showTutorialSection('auditoria-simples');
-            }; // Fecha window.onload
+            }; // Fecha window.onload (async)
         // === 2. UI HELPERS ===
         function toggleSidebar() {
             const mobileMenu = document.getElementById('mobileMenuDropdown');
@@ -2433,7 +2444,12 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 const data = await res.json();
                 if(res.ok) {
                     USER = data;
-                    localStorage.setItem('USER', JSON.stringify(data));
+                    // Salva dados criptografados se secureStorage disponível
+                    if (typeof secureStorage !== 'undefined') {
+                        await secureStorage.setItem('USER', data);
+                    } else {
+                        localStorage.setItem('USER', JSON.stringify(data));
+                    }
                     window.fromLoginFlow = true;
                     loginSuccess();
                 } else Toast.error(data.detail || "Erro no login");
@@ -3022,7 +3038,12 @@ function getCodigoHTML() {
                                 const loginData = await loginRes.json();
                                 if (loginRes.ok) {
                                     USER = loginData;
-                                    localStorage.setItem('USER', JSON.stringify(loginData));
+                                    // Salva dados criptografados se secureStorage disponível
+                                    if (typeof secureStorage !== 'undefined') {
+                                        await secureStorage.setItem('USER', loginData);
+                                    } else {
+                                        localStorage.setItem('USER', JSON.stringify(loginData));
+                                    }
                                     // Limpa variáveis temporárias
                                     emailTemporario = null;
                                     senhaTemporaria = null;
@@ -3045,7 +3066,12 @@ function getCodigoHTML() {
                     } else {
                         // Fluxo normal de login (usuário já logado)
                         USER.verificado = true; 
-                        localStorage.setItem('USER', JSON.stringify(USER));
+                        // Salva dados criptografados se secureStorage disponível
+                        if (typeof secureStorage !== 'undefined') {
+                            await secureStorage.setItem('USER', USER);
+                        } else {
+                            localStorage.setItem('USER', JSON.stringify(USER));
+                        }
                         window.fromLoginFlow = true;
                         loginSuccess(); 
                     }
@@ -3616,7 +3642,12 @@ function getCodigoHTML() {
                 auditData = data.resultado;
                 currentAuditUrl = url;
                 USER.credits = data.novo_saldo;
-                localStorage.setItem('USER', JSON.stringify(USER));
+                // Salva dados criptografados se secureStorage disponível
+                if (typeof secureStorage !== 'undefined') {
+                    await secureStorage.setItem('USER', USER);
+                } else {
+                    localStorage.setItem('USER', JSON.stringify(USER));
+                }
                 updateUserMenuCircle();
                 document.getElementById('auditResults').classList.remove('hidden');
                 // Popula Dados com verificações de segurança
@@ -4431,7 +4462,7 @@ function getCodigoHTML() {
             lucide.createIcons();
         }
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
-        function generateFallbackAudit(url, mode, selected) {
+        async function generateFallbackAudit(url, mode, selected) {
             document.getElementById('auditLoading').classList.add('hidden');
             // Criar estrutura HTML inicial para todas as seções
             createAuditResultsStructure();
@@ -4458,7 +4489,12 @@ function getCodigoHTML() {
             const score = Math.floor(Math.random() * 30) + 60;
             // Atualiza créditos (simula consumo)
             USER.credits = Math.max(0, USER.credits - 1);
-            localStorage.setItem('USER', JSON.stringify(USER));
+            // Salva dados criptografados se secureStorage disponível
+            if (typeof secureStorage !== 'undefined') {
+                await secureStorage.setItem('USER', USER);
+            } else {
+                localStorage.setItem('USER', JSON.stringify(USER));
+            }
             updateUserMenuCircle();
             // Popula Dados Fallback com verificações de segurança
             const resScoreEl = document.getElementById('resScore');

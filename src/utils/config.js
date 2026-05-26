@@ -8,6 +8,12 @@ const API_URL = "https://ssw-intelligence-api.onrender.com";
 
 function getUser() {
 
+    // Tenta descriptografar dados do secureStorage primeiro
+    if (typeof secureStorage !== 'undefined' && secureStorage.getItem) {
+        return secureStorage.getItem('ssw_user');
+    }
+    
+    // Fallback para localStorage (dados não criptografados)
     const user = localStorage.getItem('ssw_user');
 
     return user ? JSON.parse(user) : null;

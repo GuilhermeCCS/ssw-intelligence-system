@@ -12,7 +12,12 @@ async function fazerLogin() {
         const data = await res.json();
         
         if (res.ok) {
-            localStorage.setItem('ssw_user', JSON.stringify(data));
+            // Criptografa dados sensíveis antes de salvar
+            if (typeof secureStorage !== 'undefined') {
+                secureStorage.setItem('ssw_user', data);
+            } else {
+                localStorage.setItem('ssw_user', JSON.stringify(data));
+            }
             window.location.href = 'index.html';
         } else {
             msg.innerText = data.detail || "Erro ao entrar.";
