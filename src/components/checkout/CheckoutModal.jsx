@@ -66,16 +66,54 @@ const CheckoutModal = ({
         throw new Error("Utilizador não identificado.");
       }
 
-      // 2. Extração inteligente do formData que o Payment Brick já te dá:
-      // O formData já contém payment_method_id, token, issuer_id, etc.
-      const payload = {
-        ...formData, // Espalha todos os dados do SDK
-        user_id: String(idDoUsuario),
-        pacote_id: pacoteSelecionado?.id || "pacote_basico"
-        // O transaction_amount foi removido aqui porque o backend calcula sozinho
+      // 2. Log detalhado do formData recebido do Payment Brick
+      console.log('📦 FormData recebido do Payment Brick:', formData);
+      console.log('📦 Estrutura completa:', JSON.stringify(formData, null, 2));
+
+      // 3. Extração explícita dos campos do Payment Brick
+      // O SDK do Mercado Pago retorna um objeto com a estrutura:
+      // {
+      //   token: "card_token",
+      //   payment_method_id: "visa",
+      //   issuer_id: "123",
+      //   installments: 1,
+      //   payer: { email: "user@email.com" }
+      // }
+      const paymentData = {
+        token: formData?.token,
+        payment_method_id: formData?.payment_method_id,
+        issuer_id: formData?.issuer_id,
+        installments: formData?.installments || 1,
+        payer: {
+          email: formData?.payer?.email || user?.email
+        }
       };
 
-      // 3. Chamada à API
+      console.log('📦 Dados de pagamento extraídos:', paymentData);
+
+      // 4. Obter cf_token do Turnstile (se existir)
+      let cfToken = null;
+      const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]');
+      if (turnstileResponse) {
+        cfToken = turnstileResponse.value;
+        console.log('📦 cf_token do Turnstile:', cfToken);
+      }
+
+      // 5. Montar payload final para a API
+      const payload = {
+        user_id: String(idDoUsuario),
+        pacote_id: pacoteSelecionado?.id || "pacote_basico",
+        token: paymentData.token,
+        payment_method_id: paymentData.payment_method_id,
+        issuer_id: paymentData.issuer_id,
+        installments: paymentData.installments,
+        payer: paymentData.payer,
+        cf_token: cfToken
+      };
+
+      console.log('📦 Payload final enviado para API:', JSON.stringify(payload, null, 2));
+
+      // 6. Chamada à API
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,13 +122,14 @@ const CheckoutModal = ({
 
       if (!response.ok) {
         const err = await response.json();
-        console.error("Erro do servidor:", err);
+        console.error("❌ Erro do servidor:", err);
         throw new Error(err.detail || 'Falha ao processar pagamento');
       }
 
       const result = await response.json();
+      console.log('✅ Resposta da API:', result);
       
-      // ... (mantenha o seu switch case igual) ...
+      // 7. Tratar resposta
       switch (result?.acao_requerida) {
         case 'pagar_pix':
           setPaymentStatus('pix_qr');
@@ -108,7 +147,7 @@ const CheckoutModal = ({
       }
 
     } catch (error) {
-      console.error(error);
+      console.error('❌ Erro no handleSubmit:', error);
       setPaymentStatus('error');
       setErrorMessage(error.message);
     } finally {
