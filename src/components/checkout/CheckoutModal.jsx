@@ -59,82 +59,58 @@ const CheckoutModal = ({
       setPaymentStatus('processing');
       setErrorMessage('');
 
-      // 1. Identificação Segura do Usuário
+      // 1. Identificação Segura
       const idDoUsuario = user?.id || localStorage.getItem('user_id');
-      const emailDoUsuario = user?.email || formData.payer?.email || localStorage.getItem('user_email');
-
+      
       if (!idDoUsuario) {
-        throw new Error("Utilizador não identificado. Por favor, inicie sessão novamente.");
+        throw new Error("Utilizador não identificado.");
       }
 
-      // 2. Montagem do Payload com todos os campos exigidos pelo Backend
+      // 2. Extração inteligente do formData que o Payment Brick já te dá:
+      // O formData já contém payment_method_id, token, issuer_id, etc.
       const payload = {
+        ...formData, // Espalha todos os dados do SDK
         user_id: String(idDoUsuario),
-        pacote_id: pacoteSelecionado?.id || "pacote_basico",
-        payment_method_id: formData.payment_method_id,
-        token: formData.token || null,
-        installments: Number(formData.installments || 1),
-        issuer_id: formData.issuer_id || null,
-        payer: {
-          email: emailDoUsuario || '',
-          identification: formData.payer?.identification || null
-        }
+        pacote_id: pacoteSelecionado?.id || "pacote_basico"
+        // O transaction_amount foi removido aqui porque o backend calcula sozinho
       };
 
-      // 3. Chamada à API no Render
+      // 3. Chamada à API
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
-        const errorDetails = await response.text();
-        console.error("Erro do servidor:", response.status, errorDetails);
-        throw new Error('Falha ao processar pagamento. Verifique o console para mais detalhes.');
+        const err = await response.json();
+        console.error("Erro do servidor:", err);
+        throw new Error(err.detail || 'Falha ao processar pagamento');
       }
 
       const result = await response.json();
-
+      
+      // ... (mantenha o seu switch case igual) ...
       switch (result?.acao_requerida) {
         case 'pagar_pix':
           setPaymentStatus('pix_qr');
-
           setQrCodeData({
             qr_code_base64: result.qr_code_base64,
             qr_code_copia_cola: result.qr_code_copia_cola
           });
-
           break;
-
         case 'sucesso_cartao':
           setPaymentStatus('success');
-
-          /**
-           * Melhor que reload completo:
-           * atualizar estado global/context.
-           */
-          setTimeout(() => {
-            closeModal();
-          }, 3000);
-
+          setTimeout(() => closeModal(), 3000);
           break;
-
         default:
-          throw new Error(
-            result?.detail || result?.mensagem || 'Erro ao processar pagamento'
-          );
+          throw new Error(result?.detail || 'Erro ao processar');
       }
+
     } catch (error) {
       console.error(error);
-
       setPaymentStatus('error');
-
-      setErrorMessage(
-        error?.message || 'Erro de ligação. Tente novamente.'
-      );
+      setErrorMessage(error.message);
     } finally {
       setIsLoading(false);
     }
