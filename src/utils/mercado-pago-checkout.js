@@ -12,8 +12,7 @@ class CheckoutMercadoPago {
     
     // Carrega PUBLIC KEY do Mercado Pago de variável de ambiente ou usa fallback
     // Em produção, use sempre variável de ambiente!
-    this.MP_PUBLIC_KEY = import.meta.env?.VITE_MP_PUBLIC_KEY || 
-                        window.ENV?.VITE_MP_PUBLIC_KEY || 
+    this.MP_PUBLIC_KEY = window.ENV?.VITE_MP_PUBLIC_KEY || 
                         'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
     
     // Aviso de segurança se estiver usando a chave hardcoded
