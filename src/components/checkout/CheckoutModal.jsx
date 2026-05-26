@@ -59,31 +59,31 @@ const CheckoutModal = ({
       setPaymentStatus('processing');
       setErrorMessage('');
 
-      /**
-       * IMPORTANTE:
-       * O backend deve recalcular:
-       * - valor do pacote
-       * - parcelas
-       * - usuário autenticado
-       *
-       * Nunca confiar no frontend.
-       */
+      // 1. Identificação Segura do Usuário
+      const idDoUsuario = user?.id || localStorage.getItem('user_id');
+      const emailDoUsuario = user?.email || formData.payer?.email || localStorage.getItem('user_email');
 
+      if (!idDoUsuario) {
+        throw new Error("Utilizador não identificado. Por favor, inicie sessão novamente.");
+      }
+
+      // 2. Montagem do Payload com todos os campos exigidos pelo Backend
       const payload = {
-        pacote_id: pacoteSelecionado?.id,
+        user_id: String(idDoUsuario),
+        pacote_id: pacoteSelecionado?.id || "pacote_basico",
         payment_method_id: formData.payment_method_id,
         token: formData.token || null,
         installments: Number(formData.installments || 1),
         issuer_id: formData.issuer_id || null,
         payer: {
-          email: formData.payer?.email || '',
+          email: emailDoUsuario || '',
           identification: formData.payer?.identification || null
         }
       };
 
-      const response = await fetch('/api/pagamento/processar', {
+      // 3. Chamada à API no Render
+      const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
-        credentials: 'include', // usa cookies/sessão segura
         headers: {
           'Content-Type': 'application/json'
         },
@@ -91,7 +91,9 @@ const CheckoutModal = ({
       });
 
       if (!response.ok) {
-        throw new Error('Falha ao processar pagamento');
+        const errorDetails = await response.text();
+        console.error("Erro do servidor:", response.status, errorDetails);
+        throw new Error('Falha ao processar pagamento. Verifique o console para mais detalhes.');
       }
 
       const result = await response.json();
@@ -122,7 +124,7 @@ const CheckoutModal = ({
 
         default:
           throw new Error(
-            result?.mensagem || 'Erro ao processar pagamento'
+            result?.detail || result?.mensagem || 'Erro ao processar pagamento'
           );
       }
     } catch (error) {
@@ -131,7 +133,7 @@ const CheckoutModal = ({
       setPaymentStatus('error');
 
       setErrorMessage(
-        error?.message || 'Erro de conexão. Tente novamente.'
+        error?.message || 'Erro de ligação. Tente novamente.'
       );
     } finally {
       setIsLoading(false);
@@ -296,7 +298,7 @@ const CheckoutModal = ({
               </h4>
 
               <p className="text-slate-400">
-                Seus créditos foram liberados.
+                Os seus créditos foram libertados.
               </p>
 
             </div>
