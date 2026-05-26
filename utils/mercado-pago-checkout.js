@@ -352,9 +352,39 @@ class CheckoutMercadoPago {
     }
   }
 
-  // Processa o pagamento
+  // Processa o pagamento - Extração correta dos dados do Brick do Mercado Pago
   async handlePaymentSubmit(formData) {
     this.showState('processing');
+
+    // DEBUG: Log do objeto completo recebido do Brick
+    console.log("📦 DADOS COMPLETOS DO BRICK (Vanilla JS):", formData);
+
+    // O Brick pode enviar os dados em diferentes estruturas:
+    // 1. Direto: formData.payment_method_id, formData.payer, etc.
+    // 2. Aninhado: formData.formData.payment_method_id, formData.formData.payer, etc.
+    
+    // Extração segura - verifica ambas as estruturas
+    const extractedFormData = formData.formData || formData;
+    
+    console.log("📋 DADOS EXTRAÍDOS DO FORMDATA:", extractedFormData);
+
+    // Extração do payment_method_id
+    const paymentMethodId = extractedFormData.payment_method_id;
+    console.log("💳 payment_method_id extraído:", paymentMethodId);
+
+    // Extração do payer
+    const payer = extractedFormData.payer || { 
+      email: this.currentUser?.email || (typeof USER !== 'undefined' ? USER.email : null)
+    };
+    console.log("👤 Payer extraído:", payer);
+
+    // Extração do token (para cartão)
+    const token = extractedFormData.token || null;
+    console.log("🎫 Token extraído:", token);
+
+    // Extração das parcelas
+    const installments = extractedFormData.installments || 1;
+    console.log("📊 Installments extraídos:", installments);
 
     // Capturar token do Turnstile do DOM
     const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
@@ -369,10 +399,16 @@ class CheckoutMercadoPago {
 
     const payload = {
       user_id: this.currentUser?.id || 'user_temp_id',
-      email: userEmail,
       pacote_id: this.selectedPackage.id,
+      payment_method_id: paymentMethodId,
+      payer: payer,
+      token: token,
+      installments: Number(installments),
+      issuer_id: extractedFormData.issuer_id || null,
       cf_token: cfToken
     };
+
+    console.log("🚀 Payload enviado para API (Vanilla JS):", payload);
 
 
     try {

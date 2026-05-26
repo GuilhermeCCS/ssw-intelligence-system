@@ -51,17 +51,30 @@ const CheckoutModal = ({
   };
 
   /**
-   * Submit seguro
+   * Submit seguro - Extração correta dos dados do Brick do Mercado Pago
    */
-   const handleSubmit = async ({formData}) => {
+  const handleSubmit = async (data) => {
     try {
       setIsLoading(true);
       setPaymentStatus('processing');
       setErrorMessage('');
 
-      // Extração segura do ID do método
-      // O Payment Brick geralmente coloca o método dentro de 'payment_method_id'
-      const methodId = formData.payment_method_id; 
+      // DEBUG: Log do objeto completo recebido do Brick
+      console.log("📦 DADOS COMPLETOS DO BRICK:", data);
+
+      // O Brick pode enviar os dados em diferentes estruturas:
+      // 1. Direto: data.payment_method_id, data.payer, etc.
+      // 2. Aninhado: data.formData.payment_method_id, data.formData.payer, etc.
+      
+      // Extração segura - verifica ambas as estruturas
+      const formData = data.formData || data;
+      
+      console.log("📋 DADOS EXTRAÍDOS DO FORMDATA:", formData);
+
+      // Extração do payment_method_id
+      const methodId = formData.payment_method_id;
+
+      console.log("💳 payment_method_id extraído:", methodId);
 
       if (!methodId) {
         throw new Error("Por favor, selecione um método de pagamento válido (Pix ou Cartão).");
@@ -69,17 +82,24 @@ const CheckoutModal = ({
 
       const idDoUsuario = user?.id || localStorage.getItem('user_id');
 
+      // Extração segura do payer com fallback
+      const payer = formData.payer || { 
+        email: user?.email || localStorage.getItem('user_email') 
+      };
+
+      console.log("👤 Payer extraído:", payer);
+
       const payload = {
         user_id: String(idDoUsuario),
         pacote_id: pacoteSelecionado?.id || "pacote_basico",
-        payment_method_id: methodId, // Agora garantimos que não é nulo
-        payer: formData.payer || { email: user?.email || localStorage.getItem('user_email') },
+        payment_method_id: methodId,
+        payer: payer,
         token: formData.token || null,
         installments: Number(formData.installments || 1),
         issuer_id: formData.issuer_id || null
       };
 
-      console.log("Payload enviado:", payload);
+      console.log("🚀 Payload enviado para API:", payload);
 
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
