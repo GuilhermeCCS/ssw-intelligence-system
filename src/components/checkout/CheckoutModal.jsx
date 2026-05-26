@@ -59,25 +59,27 @@ const CheckoutModal = ({
       setPaymentStatus('processing');
       setErrorMessage('');
 
-      // Garante que o payment_method_id existe (ele é o que o Brick retorna)
-      // Se não vier no formData, o Brick falhou na inicialização
-      if (!formData.payment_method_id) {
-          throw new Error("Método de pagamento não identificado. Por favor, tente novamente.");
+      // Extração segura do ID do método
+      // O Payment Brick geralmente coloca o método dentro de 'payment_method_id'
+      const methodId = formData.payment_method_id; 
+
+      if (!methodId) {
+        throw new Error("Por favor, selecione um método de pagamento válido (Pix ou Cartão).");
       }
 
       const idDoUsuario = user?.id || localStorage.getItem('user_id');
-      
+
       const payload = {
         user_id: String(idDoUsuario),
         pacote_id: pacoteSelecionado?.id || "pacote_basico",
-        payment_method_id: formData.payment_method_id, // O Brick preenche isso
-        payer: formData.payer, // O Brick preenche isso
+        payment_method_id: methodId, // Agora garantimos que não é nulo
+        payer: formData.payer || { email: user?.email || localStorage.getItem('user_email') },
         token: formData.token || null,
         installments: Number(formData.installments || 1),
         issuer_id: formData.issuer_id || null
       };
 
-      console.log("Enviando para o backend:", payload); // DEBUG: Veja isso no F12
+      console.log("Payload enviado:", payload);
 
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
