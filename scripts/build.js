@@ -5,6 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config(); // Carrega variáveis de ambiente do .env
 
 // Lê variáveis de ambiente
 const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY;
@@ -28,9 +29,9 @@ if (!encryptionKey || encryptionKey.length < 32) {
 
 console.log('🔧 Injetando variáveis de ambiente...');
 
-// Caminho do HTML (agora apenas na raiz)
+// Caminho do HTML (volta um nível para encontrar na raiz)
 const htmlPaths = [
-  path.join(__dirname, 'index.html')
+  path.join(__dirname, '..', 'index.html')
 ];
 
 htmlPaths.forEach(htmlPath => {
