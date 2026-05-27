@@ -60,6 +60,8 @@ MeuSistemaSSW/
 │   └── OPEN_GRAPH_SETUP.md
 ├── public/                  # Arquivos estáticos Cloudflare
 │   └── _headers            # Configurações de headers
+├── scripts/                 # Scripts de build
+│   └── build.js            # Script de build
 ├── src/                    # Código fonte
 │   ├── assets/            # Imagens, PDFs
 │   ├── components/        # Componentes reutilizáveis
@@ -67,7 +69,6 @@ MeuSistemaSSW/
 │   ├── styles/            # CSS global
 │   └── utils/             # Utilitários
 ├── index.html             # Página principal
-├── build.js               # Script de build
 ├── package.json           # Dependências
 └── wrangler.toml          # Configuração Cloudflare
 ```
