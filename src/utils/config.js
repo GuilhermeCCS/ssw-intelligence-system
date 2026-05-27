@@ -1,6 +1,6 @@
 // js/config.js
 
-const API_URL = "https://ssw-intelligence-api.onrender.com";
+const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.com";
 
 
 

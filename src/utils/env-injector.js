@@ -25,6 +25,12 @@ if (encryptionMetaEnv) {
   console.log('✅ ENCRYPTION_KEY carregada de meta tag');
 }
 
+const apiUrlMetaEnv = document.querySelector('meta[name="env-api-url"]');
+if (apiUrlMetaEnv) {
+  window.ENV.API_URL = apiUrlMetaEnv.getAttribute('content');
+  console.log('✅ API_URL carregada de meta tag');
+}
+
 // Método 2: Tenta ler de headers (se disponível via fetch)
 if (!window.ENV.VITE_MP_PUBLIC_KEY) {
   fetch(window.location.href, { method: 'HEAD' })

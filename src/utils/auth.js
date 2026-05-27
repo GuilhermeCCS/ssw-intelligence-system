@@ -1,4 +1,5 @@
 // js/auth.js
+const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.com";
 async function fazerLogin() {
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
