@@ -5,8 +5,8 @@
   "main": "src/pages/index.html",
   "scripts": {
     "start": "serve .",
-    "build": "echo 'Static build complete'",
-    "dev": "serve . -l 3000",
+    "build": "node build.js && echo 'Static build complete'",
+    "dev": "node build.js && serve . -l 3000",
     "preview": "serve . -l 4173"
   },
   "keywords": [

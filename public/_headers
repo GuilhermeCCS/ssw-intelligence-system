@@ -1,0 +1,5 @@
+# Cloudflare Pages Headers
+# Injeta variáveis de ambiente como headers para acesso no frontend
+
+/*
+  X-Env-MP-Public-Key: %VITE_MP_PUBLIC_KEY%

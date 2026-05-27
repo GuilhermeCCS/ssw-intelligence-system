@@ -10,14 +10,15 @@ class CheckoutMercadoPago {
     // Carrega variáveis de ambiente
     this.API_BASE_URL = 'https://ssw-intelligence-api.onrender.com';
     
-    // Carrega PUBLIC KEY do Mercado Pago de variável de ambiente ou usa fallback
-    // Em produção, use sempre variável de ambiente!
-    this.MP_PUBLIC_KEY = window.ENV?.VITE_MP_PUBLIC_KEY || 
-                        'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
+    // Carrega PUBLIC KEY do Mercado Pago de variável de ambiente
+    // Em produção, use sempre variável de ambiente configurada no Cloudflare Pages
+    this.MP_PUBLIC_KEY = window.ENV?.VITE_MP_PUBLIC_KEY;
     
-    // Aviso de segurança se estiver usando a chave hardcoded
-    if (this.MP_PUBLIC_KEY === 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac') {
-      console.warn('⚠️ ATENÇÃO: Usando chave hardcoded do Mercado Pago. Configure VITE_MP_PUBLIC_KEY no .env para produção!');
+    // Validação de segurança
+    if (!this.MP_PUBLIC_KEY) {
+      console.error('❌ ERRO CRÍTICO: VITE_MP_PUBLIC_KEY não configurada!');
+      console.error('Configure esta variável de ambiente no Cloudflare Pages (Settings → Environment Variables)');
+      throw new Error('VITE_MP_PUBLIC_KEY não configurada. Configure no Cloudflare Pages.');
     }
   }
 
