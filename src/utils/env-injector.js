@@ -12,11 +12,17 @@ window.ENV = window.ENV || {};
 // 2. Build script que substitui placeholders
 // 3. Runtime environment variables
 
-// Método 1: Tenta ler de meta tag injetada durante build
-const metaEnv = document.querySelector('meta[name="env-mp-public-key"]');
-if (metaEnv) {
-  window.ENV.VITE_MP_PUBLIC_KEY = metaEnv.getAttribute('content');
-  console.log('✅ Variável de ambiente carregada de meta tag');
+// Método 1: Tenta ler de meta tags injetadas durante build
+const mpMetaEnv = document.querySelector('meta[name="env-mp-public-key"]');
+if (mpMetaEnv) {
+  window.ENV.VITE_MP_PUBLIC_KEY = mpMetaEnv.getAttribute('content');
+  console.log('✅ VITE_MP_PUBLIC_KEY carregada de meta tag');
+}
+
+const encryptionMetaEnv = document.querySelector('meta[name="env-encryption-key"]');
+if (encryptionMetaEnv) {
+  window.ENV.ENCRYPTION_KEY = encryptionMetaEnv.getAttribute('content');
+  console.log('✅ ENCRYPTION_KEY carregada de meta tag');
 }
 
 // Método 2: Tenta ler de headers (se disponível via fetch)

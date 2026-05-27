@@ -4,7 +4,7 @@
  * Vanilla JS - compatível com script tags
  */
 
-const ENCRYPTION_KEY = 'ssw-secure-key-2024'; // Em produção, use variável de ambiente
+const ENCRYPTION_KEY = window.ENV?.ENCRYPTION_KEY || 'ssw-secure-key-2024'; // Usa variável de ambiente ou fallback
 
 // Converte string para ArrayBuffer
 const strToBuffer = (str) => new TextEncoder().encode(str);
