@@ -9,21 +9,16 @@ Configure as seguintes variáveis em **Settings → Environment Variables**:
 ```bash
 VITE_MP_PUBLIC_KEY=APP_USR-sua-chave-mercado-pago
 ENCRYPTION_KEY=sua-chave-secreta-criptografia
-API_URL=https://ssw-intelligence-api.onrender.com
+API_URL=sua-url-api
 ```
 
 ### Desenvolvimento Local
 
-1. Copie o arquivo de exemplo:
-```bash
-cp .env.example .env
-```
-
-2. Edite `.env` com suas variáveis:
+1. Crie um arquivo `.env` na raiz do projeto com suas variáveis:
 ```bash
 VITE_MP_PUBLIC_KEY=APP_USR-sua-chave-mercado-pago
 ENCRYPTION_KEY=sua-chave-secreta-criptografia
-API_URL=https://ssw-intelligence-api.onrender.com
+API_URL=sua-url-api
 ```
 
 ## Deploy no Cloudflare Pages
@@ -95,7 +90,7 @@ npm start
 
 - **VITE_MP_PUBLIC_KEY**: Chave pública do Mercado Pago (pode ser exposta)
 - **ENCRYPTION_KEY**: Chave para criptografia de localStorage (NÃO exponha)
-- **API_URL**: URL da API backend (pode ser exposta)
+- **API_URL**: URL da API backend (configure conforme seu ambiente)
 
 ### Boas Práticas
 
