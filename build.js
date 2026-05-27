@@ -11,10 +11,9 @@ const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY || 'APP_USR-0666c374-0f5e-442
 
 console.log('🔧 Injetando variáveis de ambiente...');
 
-// Caminhos dos HTMLs
+// Caminho do HTML (agora apenas na raiz)
 const htmlPaths = [
-  path.join(__dirname, 'index.html'),
-  path.join(__dirname, 'src/pages/index.html')
+  path.join(__dirname, 'index.html')
 ];
 
 htmlPaths.forEach(htmlPath => {

@@ -2,7 +2,7 @@
   "name": "sswintelligence",
   "version": "2.0.0",
   "description": "Plataforma de auditoria web e benchmarking competitivo impulsionada por IA",
-  "main": "src/pages/index.html",
+  "main": "index.html",
   "scripts": {
     "start": "serve .",
     "build": "node build.js && echo 'Static build complete'",
