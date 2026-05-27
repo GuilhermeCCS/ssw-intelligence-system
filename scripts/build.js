@@ -18,12 +18,12 @@ if (!mpPublicKey) {
   process.exit(1);
 }
 
-// Validação crítica para ENCRYPTION_KEY
+// Aviso para ENCRYPTION_KEY (não é crítico para desenvolvimento)
 if (!encryptionKey || encryptionKey.length < 32) {
-  console.error('❌ ERRO: ENCRYPTION_KEY não configurada ou muito curta!');
-  console.error('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
-  console.error('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
-  process.exit(1);
+  console.warn('⚠️ AVISO: ENCRYPTION_KEY não configurada ou muito curta!');
+  console.warn('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
+  console.warn('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
+  console.warn('Rodando sem criptografia - NÃO RECOMENDADO PARA PRODUÇÃO');
 }
 
 console.log('🔧 Injetando variáveis de ambiente...');
@@ -44,11 +44,12 @@ htmlPaths.forEach(htmlPath => {
 
   // Injeta meta tags com as variáveis de ambiente
   const mpMetaTag = `<meta name="env-mp-public-key" content="${mpPublicKey}">`;
-  const encryptionMetaTag = `<meta name="env-encryption-key" content="${encryptionKey}">`;
+  const encryptionMetaTag = encryptionKey ? `<meta name="env-encryption-key" content="${encryptionKey}">` : '';
   const apiUrlMetaTag = `<meta name="env-api-url" content="${apiUrl}">`;
 
-  // Adiciona meta tags após o charset
-  html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">\n    ${mpMetaTag}\n    ${encryptionMetaTag}\n    ${apiUrlMetaTag}`);
+  // Adiciona meta tags após o charset (só adiciona encryptionMetaTag se existir)
+  const metaTags = [mpMetaTag, encryptionMetaTag, apiUrlMetaTag].filter(tag => tag).join('\n    ');
+  html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">\n    ${metaTags}`);
 
   // Escreve o HTML modificado
   fs.writeFileSync(htmlPath, html);

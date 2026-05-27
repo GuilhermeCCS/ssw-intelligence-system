@@ -9,8 +9,8 @@
     <script src="src/utils/env-injector.js"></script>
     <!-- Checkout Mercado Pago (carrega primeiro para definir window.openCheckout) -->
     <script src="src/utils/mercado-pago-checkout.js"></script>
-    <!-- Crypto Security -->
-    <script src="src/utils/crypto.js" defer></script>
+    <!-- Crypto Security (carrega antes para definir secureStorage) -->
+    <script src="src/utils/crypto.js"></script>
     <!-- Pricing Section -->
     <script src="src/components/pricing/pricing-component.js" defer></script>
     <!-- Footer Section -->

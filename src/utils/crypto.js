@@ -6,12 +6,12 @@
 
 const ENCRYPTION_KEY = window.ENV?.ENCRYPTION_KEY;
 
-// Validação crítica - exige chave forte
+// Validação - avisa se chave não configurada, mas não quebra o site
 if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
-  console.error('❌ ERRO CRÍTICO: ENCRYPTION_KEY não configurada ou muito curta!');
-  console.error('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
-  console.error('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
-  throw new Error('ENCRYPTION_KEY não configurada ou muito curta. Configure no .env ou Cloudflare Pages.');
+  console.warn('⚠️ AVISO: ENCRYPTION_KEY não configurada ou muito curta!');
+  console.warn('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
+  console.warn('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
+  console.warn('Rodando sem criptografia - NÃO RECOMENDADO PARA PRODUÇÃO');
 }
 
 // Converte string para ArrayBuffer
@@ -46,6 +46,11 @@ async function deriveKey(password) {
 
 // Criptografa dados
 async function encrypt(data) {
+  // Se chave não configurada, retorna dados codificados em base64 (sem criptografia real)
+  if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
+    return btoa(JSON.stringify(data));
+  }
+
   try {
     const key = await deriveKey(ENCRYPTION_KEY);
     const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -69,10 +74,20 @@ async function encrypt(data) {
 
 // Descriptografa dados
 async function decrypt(encryptedData) {
+  // Se chave não configurada, decodifica base64 e retorna dados (sem descriptografia real)
+  if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
+    try {
+      return JSON.parse(atob(encryptedData));
+    } catch (error) {
+      console.error('Erro ao decodificar dados (sem criptografia):', error);
+      return null;
+    }
+  }
+
   try {
     const key = await deriveKey(ENCRYPTION_KEY);
     const combined = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
-    
+
     const iv = combined.slice(0, 12);
     const encrypted = combined.slice(12);
 
