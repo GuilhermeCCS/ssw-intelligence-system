@@ -4,7 +4,15 @@
  * Vanilla JS - compatível com script tags
  */
 
-const ENCRYPTION_KEY = window.ENV?.ENCRYPTION_KEY || 'ssw-secure-key-2024'; // Usa variável de ambiente ou fallback
+const ENCRYPTION_KEY = window.ENV?.ENCRYPTION_KEY;
+
+// Validação crítica - exige chave forte
+if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
+  console.error('❌ ERRO CRÍTICO: ENCRYPTION_KEY não configurada ou muito curta!');
+  console.error('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
+  console.error('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
+  throw new Error('ENCRYPTION_KEY não configurada ou muito curta. Configure no .env ou Cloudflare Pages.');
+}
 
 // Converte string para ArrayBuffer
 const strToBuffer = (str) => new TextEncoder().encode(str);

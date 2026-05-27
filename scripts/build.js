@@ -8,13 +8,21 @@ const path = require('path');
 
 // Lê variáveis de ambiente
 const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY;
-const encryptionKey = process.env.ENCRYPTION_KEY || 'ssw-secure-key-2024';
+const encryptionKey = process.env.ENCRYPTION_KEY;
 const apiUrl = process.env.API_URL || 'https://ssw-intelligence-api.onrender.com';
 
 // Validação crítica para VITE_MP_PUBLIC_KEY
 if (!mpPublicKey) {
   console.error('❌ ERRO: VITE_MP_PUBLIC_KEY não configurada!');
   console.error('Configure esta variável de ambiente no Cloudflare Pages ou .env');
+  process.exit(1);
+}
+
+// Validação crítica para ENCRYPTION_KEY
+if (!encryptionKey || encryptionKey.length < 32) {
+  console.error('❌ ERRO: ENCRYPTION_KEY não configurada ou muito curta!');
+  console.error('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
+  console.error('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
   process.exit(1);
 }
 

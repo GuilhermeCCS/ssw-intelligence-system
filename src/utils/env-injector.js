@@ -16,19 +16,16 @@ window.ENV = window.ENV || {};
 const mpMetaEnv = document.querySelector('meta[name="env-mp-public-key"]');
 if (mpMetaEnv) {
   window.ENV.VITE_MP_PUBLIC_KEY = mpMetaEnv.getAttribute('content');
-  console.log('✅ VITE_MP_PUBLIC_KEY carregada de meta tag');
 }
 
 const encryptionMetaEnv = document.querySelector('meta[name="env-encryption-key"]');
 if (encryptionMetaEnv) {
   window.ENV.ENCRYPTION_KEY = encryptionMetaEnv.getAttribute('content');
-  console.log('✅ ENCRYPTION_KEY carregada de meta tag');
 }
 
 const apiUrlMetaEnv = document.querySelector('meta[name="env-api-url"]');
 if (apiUrlMetaEnv) {
   window.ENV.API_URL = apiUrlMetaEnv.getAttribute('content');
-  console.log('✅ API_URL carregada de meta tag');
 }
 
 // Método 2: Tenta ler de headers (se disponível via fetch)
