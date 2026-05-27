@@ -7,9 +7,16 @@ const fs = require('fs');
 const path = require('path');
 
 // Lê variáveis de ambiente
-const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY || 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
+const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY;
 const encryptionKey = process.env.ENCRYPTION_KEY || 'ssw-secure-key-2024';
 const apiUrl = process.env.API_URL || 'https://ssw-intelligence-api.onrender.com';
+
+// Validação crítica para VITE_MP_PUBLIC_KEY
+if (!mpPublicKey) {
+  console.error('❌ ERRO: VITE_MP_PUBLIC_KEY não configurada!');
+  console.error('Configure esta variável de ambiente no Cloudflare Pages ou .env');
+  process.exit(1);
+}
 
 console.log('🔧 Injetando variáveis de ambiente...');
 
