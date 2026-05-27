@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <!-- Checkout Mercado Pago -->
-    <script src="src/utils/mercado-pago-checkout.js" defer></script>
+    <!-- Environment Variables Injector (carrega primeiro) -->
+    <script src="src/utils/env-injector.js"></script>
+    <!-- Checkout Mercado Pago (carrega primeiro para definir window.openCheckout) -->
+    <script src="src/utils/mercado-pago-checkout.js"></script>
+    <!-- Crypto Security -->
+    <script src="src/utils/crypto.js" defer></script>
     <!-- Pricing Section -->
     <script src="src/components/pricing/pricing-component.js" defer></script>
     <!-- Footer Section -->
@@ -16,7 +20,7 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
-    <meta property="og:image" content="src/assets/images/open-graph/REDESOCIALOG.png">
+    <meta property="og:image" content="src/assets/images/REDESOCIALOG.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
@@ -512,7 +516,12 @@
             .sticky, .fixed, button, input, select, textarea {
                 display: none !important;
             }
-        }
+            
+            /* Classe para esconder elementos durante geração de PDF */
+            .no-print {
+                display: none !important;
+            }
+         }
         /* Animações Profissionais */
         .fade-in {
             animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -881,7 +890,7 @@
         <div class="glass-panel p-10 rounded-3xl w-full max-w-md border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in-up">
             <div class="text-center mb-10">
                 <div class="mb-6 flex justify-center">
-                    <img src="../assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
+                    <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
                 </div>
                 <a href="#" onclick="nav('home')" class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg hover:text-primary transition-colors cursor-pointer block">SSW <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELLIGENCE</span></a>
                 <p class="text-xs text-slate-400 uppercase tracking-[0.2em] font-medium">Enterprise Analytics Platform</p>
@@ -913,7 +922,7 @@
         <div class="w-full px-4 py-3 flex items-center justify-between">
             <!-- Left: Logo e Nome -->
             <div class="flex items-center gap-3 flex-shrink-0">
-                <img src="../assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
+                <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
                 <a href="#" onclick="nav('home')" class="text-sm font-black tracking-tighter text-white hidden sm:block hover:text-primary transition-colors cursor-pointer">SSW <span class="text-primary">| INTELLIGENCE</span></a>
             </div>
             <!-- Center: Menu Navegação -->
@@ -1331,7 +1340,7 @@
 // Carrega a seção de preços dinamicamente
 async function loadPricingSection() {
     try {
-        const response = await fetch('../components/pricing/pricing-component.html');
+        const response = await fetch('src/components/pricing/pricing-component.html');
         const html = await response.text();
         document.getElementById('view-precos-container').innerHTML = html;
         // Recria ícones Lucide após carregar
@@ -1399,7 +1408,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                                     <h2 class="text-2xl font-semibold text-white">Auditoria Individual</h2>
                                     <button onclick="printTutorialSection('auditoria-simples')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
                                         <i data-lucide="file-down" class="w-4 h-4"></i>
-                                        Baixar Esta Seção
+                                        Gerar PDF desta Seção
                                     </button>
                                 </div>
                                 
@@ -1509,7 +1518,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                                     <h2 class="text-2xl font-semibold text-white">Análise Comparativa</h2>
                                     <button onclick="printTutorialSection('batalha-comparativa')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
                                         <i data-lucide="file-down" class="w-4 h-4"></i>
-                                        Baixar Esta Seção
+                                        Gerar PDF desta Seção
                                     </button>
                                 </div>
                                 
@@ -1867,7 +1876,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             // Carrega o footer dinamicamente
             async function loadFooterSection() {
                 try {
-                    const response = await fetch('../components/footer/footer-component.html');
+                    const response = await fetch('src/components/footer/footer-component.html');
                     const html = await response.text();
                     document.getElementById('footer-container').innerHTML = html;
                     // Recria ícones Lucide após carregar
@@ -1891,7 +1900,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
         // Variável temporária para senha no fluxo de cadastro
         let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
-            window.onload = () => {
+            window.onload = async () => {
             lucide.createIcons();
             
             // Navegação baseada em pathname (History API)
@@ -1945,10 +1954,10 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             window.printTutorialSection = function(sectionId) {
                 // Mapeamento de seções para arquivos PDF
                 const pdfFiles = {
-                    'auditoria-simples': 'assets/PDF/audit01.pdf',
-                    'batalha-comparativa': 'assets/PDF/audit02.pdf',
-                    'gestao-personas': 'assets/PDF/audit03.pdf',
-                    'relatorios-insights': 'assets/PDF/audit04.pdf'
+                    'auditoria-simples': 'src/assets/PDF/audit01.pdf',
+                    'batalha-comparativa': 'src/assets/PDF/audit02.pdf',
+                    'gestao-personas': 'src/assets/PDF/audit03.pdf',
+                    'relatorios-insights': 'src/assets/PDF/audit04.pdf'
                 };
                 
                 const pdfFile = pdfFiles[sectionId];
@@ -1965,9 +1974,18 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     Toast.error('Arquivo PDF não encontrado para esta seção.');
                 }
             };
-            const saved = localStorage.getItem('USER');
+            // Carrega usuário do storage (criptografado ou não)
+            const loadUserFromStorage = async () => {
+                if (typeof secureStorage !== 'undefined') {
+                    return await secureStorage.getItem('USER');
+                }
+                const saved = localStorage.getItem('USER');
+                return saved ? JSON.parse(saved) : null;
+            };
+            
+            const saved = await loadUserFromStorage();
             if(saved) {
-                USER = JSON.parse(saved);
+                USER = saved;
                 window.fromLoginFlow = true;
                     loginSuccess();
             }
@@ -1976,7 +1994,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
             updateAuthButton();
             // Mostrar a primeira seção do tutorial por padrão
             showTutorialSection('auditoria-simples');
-            }; // Fecha window.onload
+            }; // Fecha window.onload (async)
         // === 2. UI HELPERS ===
         function toggleSidebar() {
             const mobileMenu = document.getElementById('mobileMenuDropdown');
@@ -2428,7 +2446,12 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 const data = await res.json();
                 if(res.ok) {
                     USER = data;
-                    localStorage.setItem('USER', JSON.stringify(data));
+                    // Salva dados criptografados se secureStorage disponível
+                    if (typeof secureStorage !== 'undefined') {
+                        await secureStorage.setItem('USER', data);
+                    } else {
+                        localStorage.setItem('USER', JSON.stringify(data));
+                    }
                     window.fromLoginFlow = true;
                     loginSuccess();
                 } else Toast.error(data.detail || "Erro no login");
@@ -3017,7 +3040,12 @@ function getCodigoHTML() {
                                 const loginData = await loginRes.json();
                                 if (loginRes.ok) {
                                     USER = loginData;
-                                    localStorage.setItem('USER', JSON.stringify(loginData));
+                                    // Salva dados criptografados se secureStorage disponível
+                                    if (typeof secureStorage !== 'undefined') {
+                                        await secureStorage.setItem('USER', loginData);
+                                    } else {
+                                        localStorage.setItem('USER', JSON.stringify(loginData));
+                                    }
                                     // Limpa variáveis temporárias
                                     emailTemporario = null;
                                     senhaTemporaria = null;
@@ -3040,7 +3068,12 @@ function getCodigoHTML() {
                     } else {
                         // Fluxo normal de login (usuário já logado)
                         USER.verificado = true; 
-                        localStorage.setItem('USER', JSON.stringify(USER));
+                        // Salva dados criptografados se secureStorage disponível
+                        if (typeof secureStorage !== 'undefined') {
+                            await secureStorage.setItem('USER', USER);
+                        } else {
+                            localStorage.setItem('USER', JSON.stringify(USER));
+                        }
                         window.fromLoginFlow = true;
                         loginSuccess(); 
                     }
@@ -3611,7 +3644,12 @@ function getCodigoHTML() {
                 auditData = data.resultado;
                 currentAuditUrl = url;
                 USER.credits = data.novo_saldo;
-                localStorage.setItem('USER', JSON.stringify(USER));
+                // Salva dados criptografados se secureStorage disponível
+                if (typeof secureStorage !== 'undefined') {
+                    await secureStorage.setItem('USER', USER);
+                } else {
+                    localStorage.setItem('USER', JSON.stringify(USER));
+                }
                 updateUserMenuCircle();
                 document.getElementById('auditResults').classList.remove('hidden');
                 // Popula Dados com verificações de segurança
@@ -4426,7 +4464,7 @@ function getCodigoHTML() {
             lucide.createIcons();
         }
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
-        function generateFallbackAudit(url, mode, selected) {
+        async function generateFallbackAudit(url, mode, selected) {
             document.getElementById('auditLoading').classList.add('hidden');
             // Criar estrutura HTML inicial para todas as seções
             createAuditResultsStructure();
@@ -4453,7 +4491,12 @@ function getCodigoHTML() {
             const score = Math.floor(Math.random() * 30) + 60;
             // Atualiza créditos (simula consumo)
             USER.credits = Math.max(0, USER.credits - 1);
-            localStorage.setItem('USER', JSON.stringify(USER));
+            // Salva dados criptografados se secureStorage disponível
+            if (typeof secureStorage !== 'undefined') {
+                await secureStorage.setItem('USER', USER);
+            } else {
+                localStorage.setItem('USER', JSON.stringify(USER));
+            }
             updateUserMenuCircle();
             // Popula Dados Fallback com verificações de segurança
             const resScoreEl = document.getElementById('resScore');
@@ -6475,174 +6518,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 });
 </script>
-<style>
-    /* Estilos para impressão do tutorial */
-    @media print {
-        /* Esconder elementos de navegação e interface */
-        .no-print {
-            display: none !important;
-        }
-        
-        /* Ajustar layout para impressão */
-        #view-tutorial {
-            background: white !important;
-            color: black !important;
-        }
-        
-        /* Esconder sidebar de navegação */
-        aside {
-            display: none !important;
-        }
-        
-        /* Ajustar grid para uma coluna */
-        .grid {
-            grid-template-columns: 1fr !important;
-        }
-        
-        /* Ajustar cores de texto para impressão */
-        #view-tutorial h1,
-        #view-tutorial h2,
-        #view-tutorial h3,
-        #view-tutorial h4 {
-            color: #000 !important;
-        }
-        
-        #view-tutorial p,
-        #view-tutorial li {
-            color: #333 !important;
-        }
-        
-        /* Remover bordas e enfeites */
-        #view-tutorial .border,
-        #view-tutorial .border-l-2,
-        #view-tutorial .border-slate-700,
-        #view-tutorial .border-slate-800 {
-            border: none !important;
-        }
-        
-        /* Remover backgrounds decorativos */
-        #view-tutorial .bg-slate-900,
-        #view-tutorial .bg-slate-800,
-        #view-tutorial .bg-slate-700 {
-            background: white !important;
-        }
-        
-        /* Ajustar código */
-        #view-tutorial code {
-            background: #f0f0f0 !important;
-            color: #333 !important;
-            padding: 2px 4px;
-            border-radius: 0 !important;
-        }
-        
-        /* Garantir que todas as seções sejam visíveis */
-        #view-tutorial section {
-            display: block !important;
-            page-break-inside: avoid;
-        }
-        
-        /* Mostrar todas as seções do tutorial durante impressão */
-        #view-tutorial #auditoria-simples,
-        #view-tutorial #batalha-comparativa,
-        #view-tutorial #gestao-personas,
-        #view-tutorial #relatorios-insights {
-            display: block !important;
-        }
-        
-        /* Quebra de página antes de cada seção principal */
-        #view-tutorial #auditoria-simples {
-            page-break-before: auto;
-        }
-        
-        #view-tutorial #batalha-comparativa {
-            page-break-before: always;
-        }
-        
-        #view-tutorial #gestao-personas {
-            page-break-before: always;
-        }
-        
-        #view-tutorial #relatorios-insights {
-            page-break-before: always;
-        }
-        
-        /* Ajustar espaçamento */
-        #view-tutorial .mb-8 {
-            margin-bottom: 1.5rem !important;
-        }
-        
-        #view-tutorial .mb-4 {
-            margin-bottom: 1rem !important;
-        }
-        
-        #view-tutorial .mb-2 {
-            margin-bottom: 0.5rem !important;
-        }
-        
-        #view-tutorial .mb-6 {
-            margin-bottom: 1.25rem !important;
-        }
-        
-        /* Ajustar padding */
-        #view-tutorial .p-4 {
-            padding: 0 !important;
-        }
-        
-        #view-tutorial .pl-4 {
-            padding-left: 0 !important;
-        }
-        
-        #view-tutorial .mt-3 {
-            margin-top: 0.75rem !important;
-        }
-        
-        /* Remover animações */
-        #view-tutorial .animate-fade-in-up {
-            animation: none !important;
-        }
-        
-        /* Ajustar header */
-        #view-tutorial header {
-            border-bottom: none !important;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-        }
-        
-        /* Ocultar botões de download durante impressão */
-        #view-tutorial .no-print {
-            display: none !important;
-        }
-        
-        /* Ajustar tamanho de fonte para impressão */
-        #view-tutorial {
-            font-size: 12pt !important;
-            line-height: 1.4 !important;
-        }
-        
-        #view-tutorial h1 {
-            font-size: 24pt !important;
-            margin-bottom: 0.5rem !important;
-        }
-        
-        #view-tutorial h2 {
-            font-size: 18pt !important;
-            margin-top: 1.5rem !important;
-            margin-bottom: 1rem !important;
-            page-break-after: avoid;
-        }
-        
-        #view-tutorial h3 {
-            font-size: 14pt !important;
-            margin-top: 1rem !important;
-            margin-bottom: 0.75rem !important;
-            page-break-after: avoid;
-        }
-        
-        #view-tutorial h4 {
-            font-size: 12pt !important;
-            margin-top: 0.75rem !important;
-            margin-bottom: 0.5rem !important;
-        }
-    }
-</style>
 </html>

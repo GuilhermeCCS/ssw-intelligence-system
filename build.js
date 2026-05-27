@@ -11,20 +11,31 @@ const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY || 'APP_USR-0666c374-0f5e-442
 
 console.log('🔧 Injetando variáveis de ambiente...');
 
-// Caminho do HTML
-const htmlPath = path.join(__dirname, 'src/pages/index.html');
+// Caminhos dos HTMLs
+const htmlPaths = [
+  path.join(__dirname, 'index.html'),
+  path.join(__dirname, 'src/pages/index.html')
+];
 
-// Lê o HTML
-let html = fs.readFileSync(htmlPath, 'utf8');
+htmlPaths.forEach(htmlPath => {
+  if (!fs.existsSync(htmlPath)) {
+    console.log(`⚠️ Arquivo não encontrado: ${htmlPath}`);
+    return;
+  }
 
-// Injeta meta tag com a variável de ambiente
-const metaTag = `<meta name="env-mp-public-key" content="${mpPublicKey}">`;
+  // Lê o HTML
+  let html = fs.readFileSync(htmlPath, 'utf8');
 
-// Adiciona meta tag após o charset
-html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">\n    ${metaTag}`);
+  // Injeta meta tag com a variável de ambiente
+  const metaTag = `<meta name="env-mp-public-key" content="${mpPublicKey}">`;
 
-// Escreve o HTML modificado
-fs.writeFileSync(htmlPath, html);
+  // Adiciona meta tag após o charset
+  html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">\n    ${metaTag}`);
 
-console.log('✅ Variáveis de ambiente injetadas com sucesso!');
+  // Escreve o HTML modificado
+  fs.writeFileSync(htmlPath, html);
+
+  console.log(`✅ Variáveis injetadas em: ${htmlPath}`);
+});
+
 console.log(`🔑 MP Public Key: ${mpPublicKey.substring(0, 20)}...`);
