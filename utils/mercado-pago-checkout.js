@@ -14,11 +14,11 @@ class CheckoutMercadoPago {
     // Em produção, use sempre variável de ambiente configurada no Cloudflare Pages
     this.MP_PUBLIC_KEY = window.ENV?.VITE_MP_PUBLIC_KEY;
     
-    // Validação de segurança
+    // Validação de segurança - usa fallback hardcoded se não configurada
     if (!this.MP_PUBLIC_KEY) {
-      console.error('❌ ERRO CRÍTICO: VITE_MP_PUBLIC_KEY não configurada!');
-      console.error('Configure esta variável de ambiente no Cloudflare Pages (Settings → Environment Variables)');
-      throw new Error('VITE_MP_PUBLIC_KEY não configurada. Configure no Cloudflare Pages.');
+      console.warn('⚠️ VITE_MP_PUBLIC_KEY não configurada - usando fallback hardcoded');
+      console.warn('Configure esta variável de ambiente no Cloudflare Pages (Settings → Environment Variables)');
+      this.MP_PUBLIC_KEY = 'APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac';
     }
   }
 
