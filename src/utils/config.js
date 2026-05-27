@@ -10,11 +10,11 @@ function getUser() {
 
     // Tenta descriptografar dados do secureStorage primeiro
     if (typeof secureStorage !== 'undefined' && secureStorage.getItem) {
-        return secureStorage.getItem('ssw_user');
+        return secureStorage.getItem('USER');
     }
     
     // Fallback para localStorage (dados não criptografados)
-    const user = localStorage.getItem('ssw_user');
+    const user = localStorage.getItem('USER');
 
     return user ? JSON.parse(user) : null;
 

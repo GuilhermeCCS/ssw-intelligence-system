@@ -14,9 +14,9 @@ async function fazerLogin() {
         if (res.ok) {
             // Criptografa dados sensíveis antes de salvar
             if (typeof secureStorage !== 'undefined') {
-                secureStorage.setItem('ssw_user', data);
+                secureStorage.setItem('USER', data);
             } else {
-                localStorage.setItem('ssw_user', JSON.stringify(data));
+                localStorage.setItem('USER', JSON.stringify(data));
             }
             window.location.href = 'index.html';
         } else {
