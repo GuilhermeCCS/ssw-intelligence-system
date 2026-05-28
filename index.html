@@ -744,6 +744,18 @@
             from { filter: brightness(1); }
             to { filter: brightness(1.2); }
         }
+        @keyframes auditSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes auditPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.85); }
+        }
+        @keyframes auditSlideIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
         /* Texto do valor da barra */
         .status-value {
             font-size: 8px;
@@ -1206,18 +1218,8 @@
                         <p class="empty-state-desc">Conheça os recursos e tecnologias por trás do SSW INTELLIGENCE</p>
                     </div>
                 </div>
-                <!-- Loading State -->
-                <div id="auditLoading" class="hidden">
-                    <div class="relative w-24 h-24 mb-6">
-                        <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
-                        <div class="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i data-lucide="cpu" class="w-8 h-8 text-primary animate-pulse"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Analisando...</h3>
-                    <p class="text-sm text-slate-400">Isso pode levar alguns segundos</p>
-                </div>
+                <!-- Loading State (populado dinamicamente via startAuditLoadingAnimation) -->
+                <div id="auditLoading" class="hidden" style="width:100%;padding:40px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;"></div>
                 <!-- Results Area -->
                 <div id="auditResults" class="hidden space-y-6"></div>
                 <!-- Espaçador para empurrar footer para baixo (apenas na view-home) -->
@@ -3602,6 +3604,158 @@ function getCodigoHTML() {
                 if (compareArea) compareArea.classList.add('hidden');
             }
         }
+        // === LOADING ANIMATION DINÂMICO ===
+        var _auditLoadingInterval = null;
+        var _auditProgressInterval = null;
+        var _auditTipsInterval = null;
+
+        function startAuditLoadingAnimation(url, mode) {
+            var container = document.getElementById('auditLoading');
+            if (!container) return;
+            stopAuditLoadingAnimation();
+
+            var isCompare = mode === 'compare' || mode === 'comparativo';
+            var modeLabel = isCompare ? 'Análise Comparativa' : mode === 'manual' ? 'Análise Manual' : 'Análise Automática';
+            var modeColor = isCompare ? '#818cf8' : mode === 'manual' ? '#f472b6' : '#22d3ee';
+
+            var steps = isCompare ? [
+                { icon: '🔍', text: 'Acessando e verificando Site A...' },
+                { icon: '🔍', text: 'Acessando e verificando Site B...' },
+                { icon: '⚡', text: 'Comparando performance e velocidade...' },
+                { icon: '📊', text: 'Auditando SEO dos dois sites...' },
+                { icon: '🎯', text: 'Analisando experiência do usuário...' },
+                { icon: '🤖', text: 'Gerando análise comparativa com IA...' },
+                { icon: '🏆', text: 'Calculando pontuações e vencedor...' },
+                { icon: '📋', text: 'Compilando relatório de batalha...' }
+            ] : [
+                { icon: '🔍', text: 'Acessando estrutura da página...' },
+                { icon: '⚡', text: 'Analisando performance e Core Web Vitals...' },
+                { icon: '📊', text: 'Auditando SEO e metadados...' },
+                { icon: '♿', text: 'Verificando acessibilidade (WCAG)...' },
+                { icon: '🔒', text: 'Analisando segurança e certificados...' },
+                { icon: '🤖', text: 'Construindo perfis de personas com IA...' },
+                { icon: '💡', text: 'Gerando recomendações estratégicas...' },
+                { icon: '📋', text: 'Compilando relatório final...' }
+            ];
+
+            var tips = [
+                '💡 Sites com carregamento rápido convertem até 3× mais',
+                '📱 68% das buscas globais são feitas em dispositivos móveis',
+                '🔒 Sites com HTTPS têm melhor posicionamento no Google',
+                '⚡ 1 segundo de atraso reduz conversões em até 7%',
+                '🎯 53% dos usuários abandonam páginas que demoram mais de 3s',
+                '📊 Análise de personas aumenta eficácia de marketing em 73%',
+                '🌐 Acessibilidade pode ampliar seu público em até 15%',
+                '🔍 Páginas com Schema Markup têm 20% mais cliques nos resultados'
+            ];
+
+            var displayUrl = url.length > 45 ? url.substring(0, 42) + '...' : url;
+
+            container.innerHTML = [
+                '<div style="width:100%;max-width:520px;margin:0 auto;">',
+                  '<div style="text-align:center;margin-bottom:28px;">',
+                    '<div style="display:inline-flex;align-items:center;gap:8px;background:' + modeColor + '15;border:1px solid ' + modeColor + '30;border-radius:999px;padding:5px 16px;margin-bottom:18px;">',
+                      '<span style="width:7px;height:7px;border-radius:50%;background:' + modeColor + ';display:inline-block;animation:auditPulse 1.4s ease-in-out infinite;box-shadow:0 0 8px ' + modeColor + ';"></span>',
+                      '<span style="color:' + modeColor + ';font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;">' + modeLabel + '</span>',
+                    '</div>',
+                    '<h2 style="color:white;font-size:20px;font-weight:700;margin:0 0 10px;">Processando Auditoria</h2>',
+                    '<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(15,23,42,0.7);border:1px solid rgba(51,65,85,0.5);border-radius:10px;padding:7px 14px;">',
+                      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+                      '<span id="loadingUrlDisplay" style="color:#64748b;font-size:12px;font-family:monospace;">' + displayUrl + '</span>',
+                    '</div>',
+                  '</div>',
+                  '<div style="margin-bottom:24px;">',
+                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">',
+                      '<span style="color:#475569;font-size:11px;letter-spacing:0.05em;">PROGRESSO</span>',
+                      '<span id="loadingPercent" style="color:' + modeColor + ';font-size:12px;font-weight:700;">0%</span>',
+                    '</div>',
+                    '<div style="height:5px;background:rgba(30,41,59,0.8);border-radius:5px;overflow:hidden;position:relative;">',
+                      '<div id="loadingProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,' + modeColor + ',' + modeColor + '80);border-radius:5px;transition:width 0.7s ease;box-shadow:0 0 10px ' + modeColor + '50;"></div>',
+                    '</div>',
+                  '</div>',
+                  '<div id="loadingStepsList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">',
+                    steps.map(function(s, i) {
+                        return '<div id="auditStep_' + i + '" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,0.5);border:1px solid rgba(30,41,59,0.8);opacity:0.3;transition:opacity 0.35s,background 0.35s,border-color 0.35s;">' +
+                            '<div id="auditStepIcon_' + i + '" style="width:30px;height:30px;border-radius:9px;background:rgba(15,23,42,0.8);border:1px solid rgba(51,65,85,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:border-color 0.35s;">' + s.icon + '</div>' +
+                            '<span id="auditStepText_' + i + '" style="color:#475569;font-size:13px;flex:1;transition:color 0.35s;">' + s.text + '</span>' +
+                            '<div id="auditStepStatus_' + i + '" style="width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"></div>' +
+                        '</div>';
+                    }).join(''),
+                  '</div>',
+                  '<div style="border-top:1px solid rgba(30,41,59,0.8);padding-top:16px;text-align:center;min-height:36px;">',
+                    '<p id="loadingTip" style="color:#334155;font-size:12px;line-height:1.6;transition:opacity 0.4s ease;">' + tips[0] + '</p>',
+                  '</div>',
+                '</div>'
+            ].join('');
+
+            var currentStep = 0;
+            var progress = 2;
+            var tipIdx = 0;
+            var totalSteps = steps.length;
+            var stepDuration = Math.max(2200, Math.floor((totalSteps * 22000) / (totalSteps * 10)));
+
+            function activateStep(idx) {
+                var el = document.getElementById('auditStep_' + idx);
+                var txt = document.getElementById('auditStepText_' + idx);
+                var ico = document.getElementById('auditStepIcon_' + idx);
+                var sta = document.getElementById('auditStepStatus_' + idx);
+                if (el) { el.style.opacity = '1'; el.style.background = 'rgba(20,30,50,0.8)'; el.style.borderColor = modeColor + '25'; }
+                if (txt) txt.style.color = '#e2e8f0';
+                if (ico) ico.style.borderColor = modeColor + '45';
+                if (sta) sta.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(71,85,105,0.3);border-top-color:' + modeColor + ';border-radius:50%;animation:auditSpin 0.7s linear infinite;"></div>';
+            }
+
+            function completeStep(idx) {
+                var el = document.getElementById('auditStep_' + idx);
+                var txt = document.getElementById('auditStepText_' + idx);
+                var sta = document.getElementById('auditStepStatus_' + idx);
+                if (el) { el.style.background = modeColor + '08'; el.style.borderColor = modeColor + '18'; }
+                if (txt) txt.style.color = '#64748b';
+                if (sta) sta.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + modeColor + '" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+            }
+
+            activateStep(0);
+
+            _auditLoadingInterval = setInterval(function() {
+                completeStep(currentStep);
+                currentStep++;
+                if (currentStep < totalSteps) {
+                    activateStep(currentStep);
+                } else {
+                    clearInterval(_auditLoadingInterval);
+                }
+            }, stepDuration);
+
+            _auditProgressInterval = setInterval(function() {
+                var target = Math.min(93, ((currentStep + 1) / totalSteps) * 95);
+                if (progress < target) {
+                    progress = Math.min(target, progress + 0.6);
+                    var bar = document.getElementById('loadingProgressBar');
+                    var pct = document.getElementById('loadingPercent');
+                    if (bar) bar.style.width = progress + '%';
+                    if (pct) pct.textContent = Math.floor(progress) + '%';
+                }
+            }, 180);
+
+            _auditTipsInterval = setInterval(function() {
+                tipIdx = (tipIdx + 1) % tips.length;
+                var tipEl = document.getElementById('loadingTip');
+                if (tipEl) {
+                    tipEl.style.opacity = '0';
+                    setTimeout(function() {
+                        if (tipEl) { tipEl.textContent = tips[tipIdx]; tipEl.style.opacity = '1'; }
+                    }, 400);
+                }
+            }, 4500);
+        }
+
+        function stopAuditLoadingAnimation() {
+            if (_auditLoadingInterval) { clearInterval(_auditLoadingInterval); _auditLoadingInterval = null; }
+            if (_auditProgressInterval) { clearInterval(_auditProgressInterval); _auditProgressInterval = null; }
+            if (_auditTipsInterval) { clearInterval(_auditTipsInterval); _auditTipsInterval = null; }
+        }
+        // === FIM LOADING ANIMATION ===
+
         async function runAudit() {
             if(USER.credits <= 0) return comprarCreditos();
             const url = document.getElementById('auditUrl').value;
@@ -3618,6 +3772,7 @@ function getCodigoHTML() {
             document.getElementById('manualSelectArea').classList.add('hidden');
             document.getElementById('compareArea').classList.add('hidden');
             document.getElementById('auditLoading').classList.remove('hidden');
+            startAuditLoadingAnimation(url, mode);
             document.getElementById('auditResults').classList.add('hidden');
             try {
                 let data;
@@ -3630,6 +3785,7 @@ function getCodigoHTML() {
                         document.getElementById('emptyStateCards').classList.remove('hidden');
                         document.getElementById('manualSelectArea').classList.remove('hidden');
                         document.getElementById('compareArea').classList.remove('hidden');
+                        stopAuditLoadingAnimation();
                         document.getElementById('auditLoading').classList.add('hidden');
                         return;
                     }
@@ -3645,6 +3801,7 @@ function getCodigoHTML() {
                         document.getElementById('emptyStateCards').classList.remove('hidden');
                         document.getElementById('manualSelectArea').classList.remove('hidden');
                         document.getElementById('compareArea').classList.remove('hidden');
+                        stopAuditLoadingAnimation();
                         document.getElementById('auditLoading').classList.add('hidden');
                         comprarCreditos(); 
                         return;
@@ -3656,6 +3813,7 @@ function getCodigoHTML() {
                     generateFallbackAudit(url, mode, selected);
                     return;
                 }
+                stopAuditLoadingAnimation();
                 document.getElementById('auditLoading').classList.add('hidden');
                 // Criar estrutura HTML inicial para todas as seções
                 createAuditResultsStructure();
@@ -3862,6 +4020,7 @@ function getCodigoHTML() {
                 }, 500);
             } catch(e) { 
                 console.error("Erro na auditoria:", e);
+                stopAuditLoadingAnimation();
                 document.getElementById('auditLoading').classList.add('hidden');
                 document.getElementById('emptyStateCards').classList.remove('hidden');
                 // Verifica se é erro de conexão ou servidor
@@ -3926,7 +4085,7 @@ function getCodigoHTML() {
             const results = document.getElementById('auditResults');
             if(loading) {
                 loading.classList.remove('hidden');
-                if(typeof lucide !== 'undefined') lucide.createIcons();
+                startAuditLoadingAnimation(urlA + ' × ' + urlB, 'compare');
             }
             if(results) results.classList.add('hidden');
             try {
@@ -3951,9 +4110,11 @@ function getCodigoHTML() {
                 if(!data || (!data.executive_verdict && (!data.site_a || !data.site_b))) {
                     throw new Error("Dados da API incompletos ou formato inválido");
                 }
+                stopAuditLoadingAnimation();
                 displayCompareResults(data);
             } catch (e) {
                 console.warn("⚠️ Ativando MODO SIMULAÇÃO (Fallback). Motivo:", e.message);
+                stopAuditLoadingAnimation();
                 // 5. MODO SIMULAÇÃO - Novo Formato Enriquecido
                 setTimeout(() => {
                     const scoreA = Math.floor(Math.random() * 20) + 70;
@@ -4484,6 +4645,7 @@ function getCodigoHTML() {
         }
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
         async function generateFallbackAudit(url, mode, selected) {
+            stopAuditLoadingAnimation();
             document.getElementById('auditLoading').classList.add('hidden');
             // Criar estrutura HTML inicial para todas as seções
             createAuditResultsStructure();
