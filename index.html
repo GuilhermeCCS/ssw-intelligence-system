@@ -3615,75 +3615,65 @@ function getCodigoHTML() {
             stopAuditLoadingAnimation();
 
             var isCompare = mode === 'compare' || mode === 'comparativo';
-            var modeLabel = isCompare ? 'Análise Comparativa' : mode === 'manual' ? 'Análise Manual' : 'Análise Automática';
             var modeColor = isCompare ? '#818cf8' : mode === 'manual' ? '#f472b6' : '#22d3ee';
 
             var steps = isCompare ? [
-                { icon: '🔍', text: 'Acessando e verificando Site A...' },
-                { icon: '🔍', text: 'Acessando e verificando Site B...' },
-                { icon: '⚡', text: 'Comparando performance e velocidade...' },
-                { icon: '📊', text: 'Auditando SEO dos dois sites...' },
-                { icon: '🎯', text: 'Analisando experiência do usuário...' },
-                { icon: '🤖', text: 'Gerando análise comparativa com IA...' },
-                { icon: '🏆', text: 'Calculando pontuações e vencedor...' },
-                { icon: '📋', text: 'Compilando relatório de batalha...' }
+                'Acessando e verificando Site A...',
+                'Acessando e verificando Site B...',
+                'Comparando performance e velocidade...',
+                'Auditando SEO dos dois sites...',
+                'Analisando experiência do usuário...',
+                'Gerando análise comparativa com IA...',
+                'Calculando pontuações e vencedor...',
+                'Compilando relatório de batalha...'
             ] : [
-                { icon: '🔍', text: 'Acessando estrutura da página...' },
-                { icon: '⚡', text: 'Analisando performance e Core Web Vitals...' },
-                { icon: '📊', text: 'Auditando SEO e metadados...' },
-                { icon: '♿', text: 'Verificando acessibilidade (WCAG)...' },
-                { icon: '🔒', text: 'Analisando segurança e certificados...' },
-                { icon: '🤖', text: 'Construindo perfis de personas com IA...' },
-                { icon: '💡', text: 'Gerando recomendações estratégicas...' },
-                { icon: '📋', text: 'Compilando relatório final...' }
+                'Acessando estrutura da página...',
+                'Analisando performance e Core Web Vitals...',
+                'Auditando SEO e metadados...',
+                'Verificando acessibilidade (WCAG)...',
+                'Analisando segurança e certificados...',
+                'Construindo perfis de personas com IA...',
+                'Gerando recomendações estratégicas...',
+                'Compilando relatório final...'
             ];
 
             var tips = [
-                '💡 Sites com carregamento rápido convertem até 3× mais',
-                '📱 68% das buscas globais são feitas em dispositivos móveis',
-                '🔒 Sites com HTTPS têm melhor posicionamento no Google',
-                '⚡ 1 segundo de atraso reduz conversões em até 7%',
-                '🎯 53% dos usuários abandonam páginas que demoram mais de 3s',
-                '📊 Análise de personas aumenta eficácia de marketing em 73%',
-                '🌐 Acessibilidade pode ampliar seu público em até 15%',
-                '🔍 Páginas com Schema Markup têm 20% mais cliques nos resultados'
+                'Sites com carregamento rápido convertem até 3× mais',
+                '68% das buscas globais são feitas em dispositivos móveis',
+                'Sites com HTTPS têm melhor posicionamento no Google',
+                '1 segundo de atraso reduz conversões em até 7%',
+                '53% dos usuários abandonam páginas que demoram mais de 3s',
+                'Análise de personas aumenta eficácia de marketing em 73%',
+                'Acessibilidade pode ampliar seu público em até 15%',
+                'Páginas com Schema Markup têm 20% mais cliques nos resultados'
             ];
 
             var displayUrl = url.length > 45 ? url.substring(0, 42) + '...' : url;
 
             container.innerHTML = [
-                '<div style="width:100%;max-width:520px;margin:0 auto;">',
-                  '<div style="text-align:center;margin-bottom:28px;">',
-                    '<div style="display:inline-flex;align-items:center;gap:8px;background:' + modeColor + '15;border:1px solid ' + modeColor + '30;border-radius:999px;padding:5px 16px;margin-bottom:18px;">',
-                      '<span style="width:7px;height:7px;border-radius:50%;background:' + modeColor + ';display:inline-block;animation:auditPulse 1.4s ease-in-out infinite;box-shadow:0 0 8px ' + modeColor + ';"></span>',
-                      '<span style="color:' + modeColor + ';font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;">' + modeLabel + '</span>',
-                    '</div>',
-                    '<h2 style="color:white;font-size:20px;font-weight:700;margin:0 0 10px;">Processando Auditoria</h2>',
-                    '<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(15,23,42,0.7);border:1px solid rgba(51,65,85,0.5);border-radius:10px;padding:7px 14px;">',
-                      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-                      '<span id="loadingUrlDisplay" style="color:#64748b;font-size:12px;font-family:monospace;">' + displayUrl + '</span>',
-                    '</div>',
+                '<div style="width:100%;max-width:480px;margin:0 auto;text-align:center;">',
+                  '<h2 style="color:white;font-size:20px;font-weight:700;margin:0 0 6px;">Processando Auditoria</h2>',
+                  '<div style="display:inline-flex;align-items:center;gap:7px;margin-bottom:28px;">',
+                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+                    '<span id="loadingUrlDisplay" style="color:#64748b;font-size:12px;font-family:monospace;">' + displayUrl + '</span>',
                   '</div>',
-                  '<div style="margin-bottom:24px;">',
+                  '<div style="margin-bottom:32px;">',
                     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">',
                       '<span style="color:#475569;font-size:11px;letter-spacing:0.05em;">PROGRESSO</span>',
                       '<span id="loadingPercent" style="color:' + modeColor + ';font-size:12px;font-weight:700;">0%</span>',
                     '</div>',
-                    '<div style="height:5px;background:rgba(30,41,59,0.8);border-radius:5px;overflow:hidden;position:relative;">',
-                      '<div id="loadingProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,' + modeColor + ',' + modeColor + '80);border-radius:5px;transition:width 0.7s ease;box-shadow:0 0 10px ' + modeColor + '50;"></div>',
+                    '<div style="height:4px;background:rgba(30,41,59,0.8);border-radius:4px;overflow:hidden;">',
+                      '<div id="loadingProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,' + modeColor + ',' + modeColor + '80);border-radius:4px;transition:width 0.7s ease;box-shadow:0 0 10px ' + modeColor + '50;"></div>',
                     '</div>',
                   '</div>',
-                  '<div id="loadingStepsList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">',
-                    steps.map(function(s, i) {
-                        return '<div id="auditStep_' + i + '" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,0.5);border:1px solid rgba(30,41,59,0.8);opacity:0.3;transition:opacity 0.35s,background 0.35s,border-color 0.35s;">' +
-                            '<div id="auditStepIcon_' + i + '" style="width:30px;height:30px;border-radius:9px;background:rgba(15,23,42,0.8);border:1px solid rgba(51,65,85,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:border-color 0.35s;">' + s.icon + '</div>' +
-                            '<span id="auditStepText_' + i + '" style="color:#475569;font-size:13px;flex:1;transition:color 0.35s;">' + s.text + '</span>' +
-                            '<div id="auditStepStatus_' + i + '" style="width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"></div>' +
-                        '</div>';
-                    }).join(''),
+                  '<div style="min-height:56px;display:flex;align-items:center;justify-content:center;margin-bottom:32px;">',
+                    '<div id="auditCurrentStep" style="display:flex;align-items:center;gap:12px;opacity:1;transition:opacity 0.3s ease;">',
+                      '<div style="width:18px;height:18px;flex-shrink:0;border:2px solid rgba(71,85,105,0.25);border-top-color:' + modeColor + ';border-radius:50%;animation:auditSpin 0.8s linear infinite;"></div>',
+                      '<span id="auditCurrentStepText" style="color:#e2e8f0;font-size:15px;font-weight:500;">' + steps[0] + '</span>',
+                    '</div>',
                   '</div>',
-                  '<div style="border-top:1px solid rgba(30,41,59,0.8);padding-top:16px;text-align:center;min-height:36px;">',
-                    '<p id="loadingTip" style="color:#334155;font-size:12px;line-height:1.6;transition:opacity 0.4s ease;">' + tips[0] + '</p>',
+                  '<div style="border-top:1px solid rgba(30,41,59,0.8);padding-top:16px;min-height:32px;">',
+                    '<p id="loadingTip" style="color:#334155;font-size:11px;line-height:1.6;transition:opacity 0.4s ease;">' + tips[0] + '</p>',
                   '</div>',
                 '</div>'
             ].join('');
@@ -3692,35 +3682,23 @@ function getCodigoHTML() {
             var progress = 2;
             var tipIdx = 0;
             var totalSteps = steps.length;
-            var stepDuration = Math.max(2200, Math.floor((totalSteps * 22000) / (totalSteps * 10)));
+            var stepDuration = 2200;
 
-            function activateStep(idx) {
-                var el = document.getElementById('auditStep_' + idx);
-                var txt = document.getElementById('auditStepText_' + idx);
-                var ico = document.getElementById('auditStepIcon_' + idx);
-                var sta = document.getElementById('auditStepStatus_' + idx);
-                if (el) { el.style.opacity = '1'; el.style.background = 'rgba(20,30,50,0.8)'; el.style.borderColor = modeColor + '25'; }
-                if (txt) txt.style.color = '#e2e8f0';
-                if (ico) ico.style.borderColor = modeColor + '45';
-                if (sta) sta.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(71,85,105,0.3);border-top-color:' + modeColor + ';border-radius:50%;animation:auditSpin 0.7s linear infinite;"></div>';
+            function showStep(idx) {
+                var wrapper = document.getElementById('auditCurrentStep');
+                var txt = document.getElementById('auditCurrentStepText');
+                if (!wrapper || !txt) return;
+                wrapper.style.opacity = '0';
+                setTimeout(function() {
+                    if (txt) txt.textContent = steps[idx] || steps[totalSteps - 1];
+                    if (wrapper) wrapper.style.opacity = '1';
+                }, 300);
             }
-
-            function completeStep(idx) {
-                var el = document.getElementById('auditStep_' + idx);
-                var txt = document.getElementById('auditStepText_' + idx);
-                var sta = document.getElementById('auditStepStatus_' + idx);
-                if (el) { el.style.background = modeColor + '08'; el.style.borderColor = modeColor + '18'; }
-                if (txt) txt.style.color = '#64748b';
-                if (sta) sta.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + modeColor + '" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
-            }
-
-            activateStep(0);
 
             _auditLoadingInterval = setInterval(function() {
-                completeStep(currentStep);
                 currentStep++;
                 if (currentStep < totalSteps) {
-                    activateStep(currentStep);
+                    showStep(currentStep);
                 } else {
                     clearInterval(_auditLoadingInterval);
                 }
