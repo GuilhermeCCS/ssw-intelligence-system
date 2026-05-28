@@ -876,32 +876,58 @@
             const checkedBoxes = document.querySelectorAll('.persona-checkbox:checked');
             if (checkedBoxes.length > 3) {
                 checkbox.checked = false;
-                Toast.warning('Você pode selecionar no máximo 3 personas.');
+                Toast.warning('Você pode selecionar no máximo 3 especialistas.');
+            }
+            document.querySelectorAll('.persona-checkbox').forEach(function(cb) {
+                var label = cb.closest('label');
+                var color = cb.getAttribute('data-color') || '#6366f1';
+                if (!label) return;
+                if (cb.checked) {
+                    label.style.borderColor = color + '55';
+                    label.style.background = color + '0D';
+                    label.style.boxShadow = '0 0 0 1px ' + color + '25';
+                } else {
+                    label.style.borderColor = 'rgba(51,65,85,0.5)';
+                    label.style.background = 'rgba(15,23,42,0.6)';
+                    label.style.boxShadow = 'none';
+                }
+            });
+            var count = document.querySelectorAll('.persona-checkbox:checked').length;
+            var badge = document.getElementById('personaSelCount');
+            if (badge) {
+                badge.textContent = count + ' / 3';
+                badge.style.color = count > 0 ? '#e2e8f0' : '';
+                badge.style.borderColor = count > 0 ? 'rgba(99,102,241,0.4)' : '';
             }
         }
-        // --- PERSONAS DO SISTEMA ---
-        const SYSTEM_PERSONAS = [
-            { name: "O Comprador Impulsivo", desc: "Decide em segundos. Não lê descrições longas. Kryptonita: Formulários longos, botão de comprar escondido, falta de checkout rápido.", levels: { paciencia: 2, tecnologico: 4, preco: 8 } },
-            { name: "O Investigador Analítico", desc: "Lê tabela nutricional, política de troca e FAQ antes de comprar. Kryptonita: Falta de informações técnicas, fotos de baixa qualidade.", levels: { paciencia: 9, tecnologico: 7, preco: 3 } },
-            { name: "O Desconfiado", desc: "Tem medo de clonarem o cartão. Procura cadeado SSL, CNPJ no rodapé e selos de segurança. Kryptonita: Design amador, erros de português.", levels: { paciencia: 5, tecnologico: 3, preco: 6 } },
-            { name: "O Caçador de Promoções", desc: "Só converte se sentir que está levando vantagem. Kryptonita: Frete abusivo, dificuldade de encontrar ofertas ou aplicar cupom.", levels: { paciencia: 6, tecnologico: 5, preco: 10 } },
-            { name: "O Idoso Analógico", desc: "Digita com um dedo, dificuldade de visão e medo de errar a senha. Kryptonita: Fontes minúsculas, baixo contraste, menus complexos.", levels: { paciencia: 7, tecnologico: 1, preco: 7 } },
-            { name: "O Gen Z Apressado", desc: "Navega exclusivamente pelo celular. Acostumado com ritmo do TikTok. Kryptonita: Blocos de texto gigantes, carregamento lento.", levels: { paciencia: 1, tecnologico: 8, preco: 5 } },
-            { name: "O Millennial Exigente", desc: "Valoriza estética (UI) e responsabilidade social da empresa. Kryptonita: Sites feios, layout poluído, sem seção 'Sobre Nós'.", levels: { paciencia: 4, tecnologico: 7, preco: 4 } },
-            { name: "O Estrangeiro/Imigrante", desc: "Não domina a língua nativa do site perfeitamente. Kryptonita: Falta de ícones universais, gírias locais excessivas.", levels: { paciencia: 5, tecnologico: 4, preco: 6 } },
-            { name: "O Daltônico / Baixa Visão", desc: "Depende de alto contraste para diferenciar elementos. Kryptonita: Avisos de erro baseados apenas em cor, contraste ruim.", levels: { paciencia: 6, tecnologico: 3, preco: 5 } },
-            { name: "O Motoramente Limitado", desc: "Usa tecla TAB para navegar ou tem tremores nas mãos. Kryptonita: Elementos clicáveis muito pequenos e colados.", levels: { paciencia: 8, tecnologico: 2, preco: 4 } },
-            { name: "O Neurodivergente (TDAH/Autismo)", desc: "Facilmente sobrecarregado por estímulos visuais e sonoros. Kryptonita: Vídeos com autoplay, pop-ups pulando na tela.", levels: { paciencia: 2, tecnologico: 6, preco: 5 } },
-            { name: "O Viajante 3G", desc: "Está no ônibus ou metrô, com sinal oscilando. Kryptonita: Imagens de 5MB, site em branco até carregar tudo.", levels: { paciencia: 3, tecnologico: 5, preco: 8 } },
-            { name: "O Multitarefas", desc: "Tem 40 abas abertas no navegador ao mesmo tempo. Kryptonita: Title Tag sem nome da empresa, falta de favicon claro.", levels: { paciencia: 1, tecnologico: 9, preco: 3 } },
-            { name: "O Trabalhador Disfarçado", desc: "Navegando escondido no trabalho. Precisa de discrição. Kryptonita: Áudio/vídeo começando sozinho, cores gritantes.", levels: { paciencia: 4, tecnologico: 6, preco: 5 } },
-            { name: "O Leitor Dinâmico (Skimmer)", desc: "Não lê, escaneia a página em formato de 'F'. Kryptonita: Falta de intertítulos, textos sem formatação, falta de listas.", levels: { paciencia: 2, tecnologico: 7, preco: 4 } },
-            { name: "O C-Level Executivo", desc: "Tempo é dinheiro. Quer saber ROI e a solução imediata. Kryptonita: Promessas vagas, dificuldade de achar página de Preços.", levels: { paciencia: 1, tecnologico: 5, preco: 9 } },
-            { name: "O Tech Snob (Desenvolvedor/Especialista)", desc: "Abre 'Inspecionar Elemento' para julgar como o site foi feito. Kryptonita: Tecnologias obsoletas, erros no console.", levels: { paciencia: 7, tecnologico: 10, preco: 2 } },
-            { name: "O Analista de Compras/RH", desc: "Precisa de PDFs, documentos, garantias e contato direto. Kryptonita: Esconder botão 'Fale com Vendas', falta de contato corporativo.", levels: { paciencia: 8, tecnologico: 4, preco: 7 } },
-            { name: "O Cliente Recorrente", desc: "Quer pular introdução e ir direto para login ou produto. Kryptonita: Ocultar botão Login, obrigar tutoriais sempre.", levels: { paciencia: 3, tecnologico: 6, preco: 6 } },
-            { name: "O Espião (O Concorrente)", desc: "Não vai comprar, quer ver como cliente faz as coisas. Sistema analisa proteção de dados e vulnerabilidade.", levels: { paciencia: 9, tecnologico: 10, preco: 1 } }
-        ];
+        // --- PERSONAS ESPECIALISTAS POR SETOR ---
+        const PERSONAS_ESPECIALISTAS = {
+            "fintech_bancos": [{ "nome": "Engenheiro de Trust & Onboarding (Padrão Nubank/Stripe)", "perfil": "Especialista em fintechs, contabilidade e serviços financeiros. Sabe que o maior atrito na conversão financeira é a insegurança e o excesso de burocracia. O utilizador desiste se vir formulários enormes ou design amador.", "diretrizes": ["CONFIANÇA VISUAL: O site exibe cadeados de segurança, selos de proteção de dados (LGPD) e design limpo?", "ONBOARDING: O botão de 'Abrir Conta' pede apenas o essencial no primeiro clique, ou assusta com 15 campos?", "TRANSPARÊNCIA: As taxas, juros ou custos estão escondidos nas entrelinhas ou expostos de forma clara?"] }],
+            "turismo_hotelaria": [{ "nome": "Arquiteto de Escassez e Reservas (Padrão Booking/Airbnb)", "perfil": "Especialista em pousadas, hotéis e agências de viagens. Domina os gatilhos mentais de prova social e urgência, garantindo que o utilizador reserve agora, por medo de perder a oportunidade (FOMO).", "diretrizes": ["URGÊNCIA: Existem marcadores que aceleram a decisão (ex: 'Apenas 2 quartos disponíveis')?", "EXPECTATIVA vs REALIDADE: As imagens dos quartos e atrações são profissionais? A localização é fácil de encontrar?", "FRICÇÃO DE PREÇO: O preço final (com taxas) é transparente desde o início ou há surpresas no checkout?"] }],
+            "moda_vestuario": [{ "nome": "Estrategista de Fast-Fashion (Padrão Zara/Nike)", "perfil": "Especialista em e-commerce de moda. Sabe que roupa vende-se pelo desejo visual, mas o carrinho é abandonado pelo medo do tamanho errado ou da dor de cabeça na devolução.", "diretrizes": ["GUIA DE TAMANHOS: Existe um provador virtual ou tabela de medidas extremamente clara e fácil de achar?", "VISUAL MERCHANDISING: As fotos mostram o caimento da roupa num modelo real ou apenas a peça solta?", "POLÍTICA DE TROCA: O site deixa óbvio que a primeira troca é gratuita e fácil, eliminando o risco da compra?"] }],
+            "saude_suplementos": [{ "nome": "Especialista em Recorrência e LTV (Padrão Growth/Prozis)", "perfil": "Especialista em farmácias, suplementação e cosméticos. O foco não é apenas vender uma vez, mas garantir que o cliente confie nos ingredientes e faça assinaturas mensais.", "diretrizes": ["PROVA SOCIAL: Há depoimentos com fotos de 'antes e depois' ou avaliações reais na página do produto?", "INFORMAÇÃO NUTRICIONAL: Os ingredientes e tabelas nutricionais estão fáceis de ler?", "ASSINATURA: O site incentiva a compra recorrente (ex: 'Compre com 15% de desconto mensalmente')?"] }],
+            "saas_b2b": [{ "nome": "Growth Hacker PLG (Padrão Slack/Notion)", "perfil": "Especialista em vender softwares e sistemas. Acredita no Product-Led Growth: o produto vende-se a si mesmo. Avalia a rapidez com que o utilizador entende o valor antes de inserir um cartão de crédito.", "diretrizes": ["DEMONSTRAÇÃO: A primeira dobra mostra a interface real do sistema em ação (vídeo/gif)?", "PRICING: A página de planos mostra a diferença exata entre 'Básico' e 'Pro' numa tabela lado a lado?", "TIME-TO-VALUE: O CTA convida para um 'Teste Grátis' sem exigir dados de pagamento?"] }],
+            "edtech_infoprodutos": [{ "nome": "Designer de Engajamento e Autoridade (Padrão MasterClass/Hotmart)", "perfil": "Especialista em cursos online, mentorias e e-books. Sabe que o aluno compra uma 'versão melhorada de si mesmo'. O foco é tangibilizar a transformação e construir autoridade inquestionável do professor.", "diretrizes": ["AUTORIDADE: O currículo e a experiência do professor/mentor estão expostos de forma impressionante?", "GARANTIA: A política de devolução incondicional é usada como uma forte ferramenta de persuasão visual?", "ENTREGÁVEIS: A página deixa claro o formato (quantas aulas, horas de vídeo, PDFs extras)?"] }],
+            "marketplace_massas": [{ "nome": "Otimizador de Fricção Zero (Padrão Amazon/Mercado Livre)", "perfil": "Focado em varejo de massa e lojas de departamento. Avalia a máquina de vendas: a barra de busca tem de ser perfeita e a logística tem de ser a maior vantagem competitiva.", "diretrizes": ["BUSCA INTELIGENTE: A barra de pesquisa tem destaque absoluto no topo? Oferece autocompletar e filtros avançados?", "LOGÍSTICA VISÍVEL: O prazo de entrega e o valor do frete aparecem na página do produto antes do carrinho?", "COMPRA RÁPIDA: Existe a possibilidade de comprar sem criar uma conta longa (Guest Checkout)?"] }],
+            "consultoria_b2b": [{ "nome": "Estrategista de Demanda Enterprise (Padrão HubSpot/Salesforce)", "perfil": "Especialista em empresas que vendem serviços caros para outras empresas (B2B). O decisor não compra na hora, ele converte-se num lead para ser abordado por um vendedor.", "diretrizes": ["PROVA DE CONCEITO: Há logótipos de empresas clientes e estudos de caso (Case Studies) na página inicial?", "CAPTURA PROGRESSIVA: Os formulários de contato pedem informações estratégicas, mas são divididos em passos?", "CLAREZA DO SERVIÇO: O texto foca no ROI em vez de focar apenas no processo técnico?"] }],
+            "medicina_clinicas": [{ "nome": "Auditor de Credibilidade Clínica (Padrão Hospitais de Excelência)", "perfil": "Especialista na área da saúde (Médicos, Estética Avançada, Hospitais). O paciente procura resolver uma dor com segurança absoluta, acolhimento e validação de convênios.", "diretrizes": ["CORPO CLÍNICO: Há uma secção clara apresentando a equipa, com registos profissionais (CRM/CRO) e especializações?", "CONVÊNIOS E PAGAMENTOS: Os planos de saúde aceites estão expostos de forma clara?", "AGENDAMENTO WHATSAPP: O botão de agendamento leva a um WhatsApp com mensagem pré-definida?"] }],
+            "tecnologia_eletronicos": [{ "nome": "Especialista em UX de Ficha Técnica (Padrão Apple/Samsung)", "perfil": "Focado em produtos tecnológicos de alto ticket. Sabe que o cliente de tecnologia é analítico e compara especificações, mas não quer ler um manual chato.", "diretrizes": ["SHOWCASE: O design usa imagens grandes ou animações 3D que fazem o utilizador sentir a qualidade do aparelho?", "ESPECIFICAÇÕES DINÂMICAS: Os dados técnicos são apresentados com ícones visuais, em vez de texto puro?", "COMPARAÇÃO: Existe uma ferramenta fácil para comparar modelos diferentes lado a lado?"] }],
+            "automotivo": [{ "nome": "Arquiteto de Confiança Automotiva (Padrão Kavak/Webmotors)", "perfil": "Especialista em funis de alto valor. Entende que comprar um carro gera ansiedade e medo de golpes. O foco é eliminar o atrito através de hiper-transparência e facilitar o test-drive.", "diretrizes": ["TRANSPARÊNCIA VISUAL: O site oferece fotos detalhadas do interior/exterior? Exibe laudos cautelares ou garantias?", "INFORMAÇÃO FINANCEIRA: Existe uma ferramenta fácil para simular parcelas ou avaliar o carro usado na troca?", "AÇÃO IMEDIATA: O CTA (WhatsApp ou Agendamento) está flutuante no mobile e acompanha o scroll?"] }],
+            "advocacia": [{ "nome": "Estrategista de Autoridade Jurídica (Padrão Jusbrasil/Grandes Bancas)", "perfil": "Especialista em comportamento de clientes com urgências legais. Sabe que o utilizador está vulnerável e procura proteção imediata e autoridade inquestionável, respeitando as regras da OAB.", "diretrizes": ["AUTORIDADE E EMPATIA: O advogado mostra o rosto e o número da OAB, transmitindo segurança sem 'juridiquês'?", "URGÊNCIA DE CONTATO: Há um botão de contato rápido (WhatsApp) altamente destacado para ajuda imediata?", "ARQUITETURA DE SERVIÇOS: Fica claro nos primeiros 5 segundos quais as áreas de atuação do escritório?"] }],
+            "odontologia": [{ "nome": "Designer de Experiência do Paciente (Padrão Clínicas Premium)", "perfil": "Especialista em saúde e estética. O paciente não compra um tratamento dentário, compra autoestima e ausência de dor. Avalia como o site tangibiliza a transformação e a credibilidade.", "diretrizes": ["TANGIBILIZAÇÃO (ANTES/DEPOIS): O site usa fotos reais da clínica, dos equipamentos e sorrisos verdadeiros?", "FOCO NO BENEFÍCIO: Os tratamentos são explicados focando no resultado final e conforto?", "FACILIDADE DE AGENDAMENTO: O fluxo para a primeira avaliação leva diretamente a um atendimento humano no WhatsApp?"] }],
+            "imobiliaria": [{ "nome": "Engenheiro de Conversão Imobiliária (Padrão QuintoAndar/Zillow)", "perfil": "Domina a jornada de compra e aluguel de imóveis. Sabe que o utilizador precisa de dados completos (fotos, taxas, mapa) para só depois sentir confiança em falar com o corretor.", "diretrizes": ["MOTOR DE BUSCA: O filtro de imóveis (Bairro, Preço, Quartos) está na primeira dobra e funciona no mobile?", "DETALHAMENTO FINANCEIRO: O valor do imóvel, condomínio e IPTU estão completamente transparentes?", "EXPERIÊNCIA VISUAL: As galerias de fotos carregam rápido? Há links fáceis para agendar a visita?"] }],
+            "varejo": [{ "nome": "Otimizador de E-commerce de Volume (Padrão Amazon/Magalu)", "perfil": "Obcecado pela redução do abandono de carrinho e atrito cognitivo. Sabe que no varejo a briga é por frete claro, avaliações e velocidade de checkout.", "diretrizes": ["LOGÍSTICA ANTECIPADA: É possível calcular o prazo e frete na página do produto, antes de 'Comprar'?", "PROVA SOCIAL: O site possui sistema de avaliações visíveis com fotos dos clientes?", "OFERTA CLARA: O preço, desconto e o botão 'Adicionar ao Carrinho' têm forte contraste de cor?"] }],
+            "landing_pages": [{ "nome": "Copywriter de Resposta Direta (Padrão ClickFunnels/Empiricus)", "perfil": "A autoridade suprema em páginas com um único objetivo: Conversão. Audita a capacidade da página de prender a atenção (Headline), criar desejo e forçar uma ação através de gatilhos mentais.", "diretrizes": ["PROMESSA ÚNICA: A Headline responde instantaneamente: 'O que eu ganho e como resolve a minha dor?'", "ESCASSEZ E GARANTIA: Existem elementos de prova social forte, limite de vagas/tempo e garantia incondicional?", "REMOÇÃO DE PONTOS DE FUGA: A Landing Page tem menus ou links externos que tiram o utilizador do funil?"] }],
+            "sistemas": [{ "nome": "Especialista em PLG e Ativação (Padrão Canva/Slack)", "perfil": "Focado no 'Time-to-Value' para SaaS. Avalia quão rápido o utilizador percebe o que a ferramenta faz sem precisar criar conta ou falar com vendas.", "diretrizes": ["SHOWCASE DE PRODUTO: A primeira dobra mostra a interface real do software (print/vídeo)?", "PRICING TRANSPARENTE: A página de preços compara os planos lado a lado destacando a melhor oferta?", "ONBOARDING SEM ATRITO: O botão de cadastro permite usar rapidamente (ex: login com o Google)?"] }],
+            "servicos_locais": [{ "nome": "Hacker de Demanda Local (Padrão GetNinjas/Google Local)", "perfil": "Especialista na conversão de serviços imediatos (marcenaria, elétrica, reformas). O cliente precisa saber 'Onde atende' e 'Qual o nível de confiança' antes de pedir um orçamento.", "diretrizes": ["GEOLOCALIZAÇÃO: O site deixa claro quais cidades ou regiões o serviço cobre logo no topo?", "CONFIANÇA E PROVA: Existem fotos dos profissionais em ação e selos de garantia ou avaliações do Google?", "CALL-TO-ACTION DIRETO: Há um botão de WhatsApp flutuante preparado para captar orçamentos de urgência?"] }],
+            "restaurantes": [{ "nome": "Engenheiro de Cardápios de Alta Conversão (Padrão iFood/Rappi)", "perfil": "Sabe que o cliente com fome toma decisões em segundos. Focado no apelo visual e na eliminação total de fricção no momento de fazer o pedido ou ver as opções.", "diretrizes": ["APELO VISUAL: O menu utiliza fotos profissionais, reais e iluminadas dos pratos?", "USABILIDADE MOBILE: O cardápio é fluído no telemóvel? Informações de alergias e preços estão legíveis?", "LOGÍSTICA DE DELIVERY: O horário de funcionamento, taxas de entrega e 'Pedir Agora' estão expostos sem procurar?"] }],
+            "geral": [{ "nome": "Auditor Chefe de Heurísticas (Padrão Nielsen Norman Group)", "perfil": "A autoridade final em usabilidade universal. Especialista em identificar falhas cognitivas invisíveis que destroem a confiança do utilizador, independentemente do nicho.", "diretrizes": ["CLAREZA INSTANTÂNEA: O site passa no 'teste dos 5 segundos'? O utilizador sabe exatamente onde está?", "CONTRASTE E HIERARQUIA: Os botões de ação principal (CTAs) destacam-se do fundo da página?", "CARGA COGNITIVA: O site exige que o utilizador leia blocos gigantes de texto para tomar uma decisão?"] }]
+        };
+
+        // Flat array derivado para compatibilidade com o restante do sistema
+        const SYSTEM_PERSONAS = Object.entries(PERSONAS_ESPECIALISTAS).flatMap(([setor, arr]) =>
+            arr.map(p => ({ name: p.nome, setor, perfil: p.perfil, diretrizes: p.diretrizes }))
+        );
     </script>
     <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
         <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -1158,14 +1184,15 @@
                     </div>
                 </div>
                 <!-- Manual Selection Area -->
-                <div id="manualSelectArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
-                    <div class="flex justify-between items-center mb-4">
-                        <p class="text-xs text-accent font-bold uppercase tracking-widest flex items-center gap-2">
-                            <i data-lucide="check-square" class="w-4 h-4"></i> Selecione os Perfis Ativos (máx 3)
-                        </p>
-                        <button onclick="nav('personas')" class="text-[10px] text-slate-400 hover:text-white underline">Gerenciar Perfis</button>
+                <div id="manualSelectArea" class="hidden glass-panel p-5 rounded-2xl border border-slate-800/50">
+                    <div class="flex justify-between items-start mb-5">
+                        <div>
+                            <h3 class="text-sm font-bold text-white tracking-wide">Especialistas por Setor</h3>
+                            <p class="text-[11px] text-slate-500 mt-1">Selecione até <strong class="text-slate-400">3 especialistas</strong> para uma análise focada no seu nicho de mercado</p>
+                        </div>
+                        <span id="personaSelCount" class="text-[10px] font-semibold bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/50 whitespace-nowrap ml-4 mt-0.5">0 / 3</span>
                     </div>
-                    <div id="checklistContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                    <div id="checklistContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
                 </div>
                 <!-- Compare Area -->
                 <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
@@ -3516,77 +3543,48 @@ function getCodigoHTML() {
                             }
                         }
                         cont.innerHTML = "";
-                        console.log("SYSTEM_PERSONAS:", SYSTEM_PERSONAS);
+                        const SETOR_META = {
+                            fintech_bancos:         { label: 'Fintech',        color: '#6366f1' },
+                            turismo_hotelaria:      { label: 'Turismo',        color: '#f59e0b' },
+                            moda_vestuario:         { label: 'Moda',           color: '#ec4899' },
+                            saude_suplementos:      { label: 'Saúde',          color: '#10b981' },
+                            saas_b2b:               { label: 'SaaS B2B',       color: '#3b82f6' },
+                            edtech_infoprodutos:    { label: 'EdTech',         color: '#8b5cf6' },
+                            marketplace_massas:     { label: 'Marketplace',    color: '#f97316' },
+                            consultoria_b2b:        { label: 'Consultoria',    color: '#64748b' },
+                            medicina_clinicas:      { label: 'Medicina',       color: '#14b8a6' },
+                            tecnologia_eletronicos: { label: 'Tecnologia',     color: '#22d3ee' },
+                            automotivo:             { label: 'Automotivo',     color: '#eab308' },
+                            advocacia:              { label: 'Advocacia',      color: '#94a3b8' },
+                            odontologia:            { label: 'Odontologia',    color: '#60a5fa' },
+                            imobiliaria:            { label: 'Imobiliária',    color: '#34d399' },
+                            varejo:                 { label: 'Varejo',         color: '#f43f5e' },
+                            landing_pages:          { label: 'Landing Pages',  color: '#a78bfa' },
+                            sistemas:               { label: 'Sistemas',       color: '#22d3ee' },
+                            servicos_locais:        { label: 'Serv. Locais',   color: '#fbbf24' },
+                            restaurantes:           { label: 'Restaurantes',   color: '#ef4444' },
+                            geral:                  { label: 'Universal',      color: '#e2e8f0' }
+                        };
                         // SISTEMA - Sempre carrega
                         SYSTEM_PERSONAS.forEach(p => {
-                            cont.innerHTML += `
-                                <label class="flex items-start gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-cyber transition group">
-                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-cyber w-4 h-4 rounded mt-1" onclick="limitPersonaSelection(this)">
-                                    <div class="persona-content flex-1">
-                                        <p class="text-xs font-bold text-sky-400 group-hover:text-white">${p.name.toUpperCase()} <span class="text-[9px] bg-slate-800 px-1 rounded text-slate-400">SISTEMA</span></p>
-                                        <p class="text-[10px] text-slate-500 mb-2">${p.desc}</p>
-                                        <div class="persona-status-bars">
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Paciência</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill paciencia" style="width: ${p.levels.paciencia * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${p.levels.paciencia}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Tecnológico</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill tecnologico" style="width: ${p.levels.tecnologico * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${p.levels.tecnologico}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Foco no Preço</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill preco" style="width: ${p.levels.preco * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${p.levels.preco}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>`;
+                            const meta = SETOR_META[p.setor] || { label: p.setor || 'Geral', color: '#6366f1' };
+                            const color = meta.color;
+                            const setorLabel = meta.label;
+                            const nameMatch = p.name.match(/^(.+?)\s*\(Padrão\s*([^)]+)\)$/);
+                            const mainName = nameMatch ? nameMatch[1].trim() : p.name;
+                            const padrao = nameMatch ? nameMatch[2].trim() : '';
+                            const initial = mainName.charAt(0).toUpperCase();
+                            const shortPerfil = p.perfil && p.perfil.length > 90 ? p.perfil.substring(0, 87) + '...' : (p.perfil || '');
+                            const padraoHtml = padrao ? '<p style="color:#475569;font-size:10px;margin-bottom:5px;font-style:italic;">Ref: ' + padrao + '</p>' : '';
+                            cont.innerHTML += '<label style="display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-radius:14px;border:1px solid rgba(51,65,85,0.5);background:rgba(15,23,42,0.6);cursor:pointer;transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;position:relative;" onmouseover="if(!this.querySelector(\'input\').checked){this.style.borderColor=\'' + color + '28\';this.style.background=\'rgba(15,23,42,0.88)\';}" onmouseout="if(!this.querySelector(\'input\').checked){this.style.borderColor=\'rgba(51,65,85,0.5)\';this.style.background=\'rgba(15,23,42,0.6)\';}"><input type="checkbox" value="' + p.name + '" data-color="' + color + '" class="persona-checkbox" onclick="limitPersonaSelection(this)" style="opacity:0;position:absolute;width:0;height:0;"><div style="flex-shrink:0;padding-top:2px;"><div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,' + color + '22,' + color + '0D);border:1.5px solid ' + color + '30;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:' + color + ';">' + initial + '</div></div><div style="flex:1;min-width:0;"><span style="display:inline-block;padding:1px 7px;border-radius:999px;background:' + color + '10;border:1px solid ' + color + '22;font-size:9px;font-weight:700;letter-spacing:0.1em;color:' + color + ';text-transform:uppercase;margin-bottom:5px;">' + setorLabel + '</span><p style="color:#f1f5f9;font-size:12.5px;font-weight:600;line-height:1.3;margin-bottom:2px;">' + mainName + '</p>' + padraoHtml + '<p style="color:#2d3e52;font-size:10.5px;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + shortPerfil + '</p></div></label>';
                         });
                         // CUSTOM - Apenas se logado
                         custom.forEach(p => {
-                            const levels = p.levels || { paciencia: 5, tecnologico: 5, preco: 5 }; // Valores padrão
-                            cont.innerHTML += `
-                                <label class="flex items-start gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-primary transition group">
-                                    <input type="checkbox" value="${p.name}" class="persona-checkbox accent-primary w-4 h-4 rounded mt-1" onclick="limitPersonaSelection(this)">
-                                    <div class="persona-content flex-1">
-                                        <p class="text-xs font-bold text-emerald-400 group-hover:text-white">${p.name.toUpperCase()}</p>
-                                        <p class="text-[10px] text-slate-500 mb-2">${p.description}</p>
-                                        <div class="persona-status-bars">
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Paciência</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill paciencia" style="width: ${levels.paciencia * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${levels.paciencia}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Tecnológico</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill tecnologico" style="width: ${levels.tecnologico * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${levels.tecnologico}</span>
-                                            </div>
-                                            <div class="status-bar-container">
-                                                <span class="status-label">Foco no Preço</span>
-                                                <div class="status-bar-wrapper">
-                                                    <div class="status-bar-fill preco" style="width: ${levels.preco * 10}%"></div>
-                                                </div>
-                                                <span class="status-value">${levels.preco}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>`;
+                            const customColor = '#10b981';
+                            const customInitial = (p.name || 'C').charAt(0).toUpperCase();
+                            const shortDesc = p.description && p.description.length > 90 ? p.description.substring(0, 87) + '...' : (p.description || '');
+                            cont.innerHTML += '<label style="display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-radius:14px;border:1px solid rgba(16,185,129,0.2);background:rgba(15,23,42,0.6);cursor:pointer;transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;position:relative;" onmouseover="if(!this.querySelector(\'input\').checked){this.style.borderColor=\'#10b98135\';this.style.background=\'rgba(15,23,42,0.88)\';}" onmouseout="if(!this.querySelector(\'input\').checked){this.style.borderColor=\'rgba(16,185,129,0.2)\';this.style.background=\'rgba(15,23,42,0.6)\';}"><input type="checkbox" value="' + p.name + '" data-color="' + customColor + '" class="persona-checkbox" onclick="limitPersonaSelection(this)" style="opacity:0;position:absolute;width:0;height:0;"><div style="flex-shrink:0;padding-top:2px;"><div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#10b98122,#10b9810D);border:1.5px solid #10b98130;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#10b981;">' + customInitial + '</div></div><div style="flex:1;min-width:0;"><span style="display:inline-block;padding:1px 7px;border-radius:999px;background:#10b98110;border:1px solid #10b98122;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#10b981;text-transform:uppercase;margin-bottom:5px;">Personalizada</span><p style="color:#f1f5f9;font-size:12.5px;font-weight:600;line-height:1.3;margin-bottom:5px;">' + p.name + '</p><p style="color:#2d3e52;font-size:10.5px;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + shortDesc + '</p></div></label>';
                         });
-                        console.log("HTML gerado:", cont.innerHTML);
                     } catch (e) {
                         console.error(e);
                         cont.innerHTML = "<span class='text-xs text-red-400'>Erro ao carregar perfis</span>";
