@@ -1206,7 +1206,7 @@
                     </div>
                 </div>
                 <!-- Manual Selection Area -->
-                <div id="manualSelectArea" class="hidden glass-panel p-5 rounded-2xl border border-slate-800/50">
+                <div id="manualSelectArea" class="hidden p-5 rounded-2xl" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,0.16);box-shadow:0 8px 32px rgba(0,0,0,0.25);">
                     <div class="flex justify-between items-start mb-5">
                         <div>
                             <h3 class="text-sm font-bold text-white tracking-wide">Especialistas por Setor</h3>
@@ -3595,7 +3595,7 @@ function getCodigoHTML() {
                             document.head.appendChild(st);
                         }
                         // Filter bar HTML
-                        var fbBase = 'class="pcard-filter-btn" style="padding:4px 13px;border-radius:8px;font-size:10px;font-weight:600;letter-spacing:0.06em;cursor:pointer;transition:all 0.18s;font-family:inherit;border:1px solid rgba(51,65,85,0.4);';
+                        var fbBase = 'class="pcard-filter-btn" style="padding:6px 15px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.18s;font-family:inherit;border:1px solid rgba(51,65,85,0.4);';
                         var fbActive = fbBase + 'background:rgba(6,182,212,0.18);color:#67e8f9;border-color:rgba(6,182,212,0.4);"';
                         var fbIdle   = fbBase + 'background:rgba(14,22,40,0.7);color:#475569;"';
                         var _oldBar = document.getElementById('pcard-filter-bar');
@@ -3618,21 +3618,21 @@ function getCodigoHTML() {
                             var frontBg = 'background:linear-gradient(140deg,rgba(8,145,178,0.28) 0%,rgba(6,182,212,0.14) 100%);border:1px solid rgba(6,182,212,0.28);';
                             var backBg  = 'background:linear-gradient(140deg,rgba(7,89,133,0.55) 0%,rgba(8,145,178,0.38) 100%);border:1px solid rgba(6,182,212,0.35);';
                             var flipJs  = 'this.closest(\'.pcard-wrapper\').querySelector(\'.pcard-inner\').classList.toggle(\'flipped\')';
-                            return '<div class="pcard-wrapper" data-setor="' + setor + '" style="position:relative;height:148px;perspective:900px;border-radius:13px;">'
+                            return '<div class="pcard-wrapper" data-setor="' + setor + '" style="position:relative;height:168px;perspective:900px;border-radius:13px;">'
                                 + '<input type="checkbox" value="' + name + '" data-color="#06b6d4" class="persona-checkbox" onclick="event.stopPropagation();limitPersonaSelection(this)" style="position:absolute;top:10px;right:10px;z-index:20;width:15px;height:15px;cursor:pointer;accent-color:#06b6d4;">'
                                 + '<div class="pcard-inner" style="position:relative;width:100%;height:100%;cursor:pointer;" onclick="' + flipJs + '">'
                                 // --- FRONT ---
                                 + '<div class="pcard-face" style="' + frontBg + 'padding:13px 36px 13px 13px;display:flex;align-items:flex-start;gap:11px;">'
-                                + '<div style="flex-shrink:0;width:40px;height:40px;border-radius:50%;background:rgba(6,182,212,0.18);border:1.5px solid rgba(6,182,212,0.45);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#ffffff;">' + initial + '</div>'
+                                + '<div style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:rgba(6,182,212,0.18);border:1.5px solid rgba(6,182,212,0.45);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:#ffffff;">' + initial + '</div>'
                                 + '<div style="flex:1;min-width:0;">'
-                                + '<span style="display:inline-block;padding:1px 7px;border-radius:999px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.28);font-size:8.5px;font-weight:700;letter-spacing:0.07em;color:#a5f3fc;text-transform:uppercase;">' + setorLabel + '</span>'
-                                + '<p style="color:#ffffff;font-size:12.5px;font-weight:700;line-height:1.3;margin:5px 0 0;">' + name + '</p>'
-                                + '<p style="color:rgba(165,243,252,0.55);font-size:9px;margin-top:10px;">Clique para ver o perfil &#8635;</p>'
+                                + '<span style="display:inline-block;padding:2px 9px;border-radius:999px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.28);font-size:11px;font-weight:700;letter-spacing:0.05em;color:#a5f3fc;text-transform:uppercase;">' + setorLabel + '</span>'
+                                + '<p style="color:#ffffff;font-size:15px;font-weight:700;line-height:1.3;margin:5px 0 0;">' + name + '</p>'
+                                + '<p style="color:rgba(165,243,252,0.6);font-size:11px;margin-top:10px;">Clique para ver o perfil &#8635;</p>'
                                 + '</div></div>'
                                 // --- BACK ---
                                 + '<div class="pcard-face pcard-back" style="' + backBg + 'padding:12px 36px 12px 13px;overflow-y:auto;">'
-                                + '<p style="color:#ffffff;font-size:10px;font-weight:500;line-height:1.65;margin:0;">' + (perfil || '') + '</p>'
-                                + '<p style="color:rgba(165,243,252,0.45);font-size:8.5px;margin-top:8px;">&#8634; Clique para voltar</p>'
+                                + '<p style="color:#ffffff;font-size:12.5px;font-weight:500;line-height:1.65;margin:0;">' + (perfil || '') + '</p>'
+                                + '<p style="color:rgba(165,243,252,0.5);font-size:10.5px;margin-top:8px;">&#8634; Clique para voltar</p>'
                                 + '</div>'
                                 + '</div></div>';
                         }
