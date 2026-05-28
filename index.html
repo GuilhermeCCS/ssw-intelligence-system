@@ -1912,121 +1912,204 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                     <div style="height: 8rem;"></div>
             </div>
             <!-- VIEW: Sobre Nós -->
-            <div id="view-about" class="hidden max-w-5xl mx-auto animate-fade-in-up" style="padding-bottom:80px;">
-                <!-- Page Hero -->
-                <div style="padding:60px 0 48px;position:relative;overflow:hidden;">
-                    <div style="position:absolute;top:-80px;right:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(6,182,212,0.07) 0%,transparent 70%);pointer-events:none;"></div>
-                    <button onclick="nav('home')" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 14px;color:#94a3b8;font-size:13px;cursor:pointer;margin-bottom:32px;">
-                        <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Voltar
-                    </button>
-                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:999px;padding:4px 16px;margin-bottom:22px;display:flex;width:fit-content;">
-                        <span style="width:7px;height:7px;border-radius:50%;background:#22d3ee;display:inline-block;flex-shrink:0;"></span>
-                        <span style="color:#67e8f9;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;">Plataforma de Inteligência Web</span>
-                    </div>
-                    <h1 style="color:#ffffff;font-size:42px;font-weight:800;line-height:1.15;margin:0 0 18px;">Transformando dados em<br><span style="background:linear-gradient(90deg,#22d3ee,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">vantagem competitiva</span></h1>
-                    <p style="color:#94a3b8;font-size:16px;line-height:1.8;max-width:580px;margin:0;">A SSW INTELLIGENCE é uma plataforma enterprise de auditoria web orientada por IA, projetada para agências, desenvolvedores e times de marketing que buscam decisões fundamentadas em dados reais.</p>
-                </div>
+            <style>
+                #view-about { margin: -24px -16px 0 !important; width: calc(100% + 32px) !important; max-width:none !important; }
+                @media(min-width:768px){ #view-about { margin: -24px -40px 0 !important; width: calc(100% + 80px) !important; } }
+                .abt-inner { max-width:1080px; margin:0 auto; padding:80px 32px; }
+                @media(max-width:767px){ .abt-inner { padding:52px 20px; } }
+                .abt-section-link { display:flex;align-items:center;height:52px;padding:0 18px;color:#64748b;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.18s,border-color 0.18s;cursor:pointer; }
+                .abt-section-link:hover { color:#ffffff;border-bottom-color:#22d3ee; }
+                .abt-tag { display:inline-block;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600; }
+            </style>
+            <div id="view-about" class="hidden animate-fade-in-up">
 
-                <!-- Stats Bar -->
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:16px;margin-bottom:48px;overflow:hidden;">
-                    <div style="padding:28px 24px;text-align:center;border-right:1px solid rgba(255,255,255,0.06);">
-                        <p style="color:#ffffff;font-size:36px;font-weight:800;margin:0 0 6px;letter-spacing:-1px;">+50</p>
-                        <p style="color:#64748b;font-size:13px;margin:0;">Métricas por auditoria</p>
-                    </div>
-                    <div style="padding:28px 24px;text-align:center;border-right:1px solid rgba(255,255,255,0.06);">
-                        <p style="color:#ffffff;font-size:36px;font-weight:800;margin:0 0 6px;letter-spacing:-1px;">15+</p>
-                        <p style="color:#64748b;font-size:13px;margin:0;">Personas especializadas</p>
-                    </div>
-                    <div style="padding:28px 24px;text-align:center;">
-                        <p style="color:#ffffff;font-size:36px;font-weight:800;margin:0 0 6px;letter-spacing:-1px;">&lt;30s</p>
-                        <p style="color:#64748b;font-size:13px;margin:0;">Tempo de análise completa</p>
+                <!-- ① HERO -->
+                <div style="position:relative;width:100%;min-height:460px;background:linear-gradient(140deg,#03070f 0%,#060f1e 55%,#050c1a 100%);display:flex;align-items:center;padding:80px 32px;overflow:hidden;">
+                    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 75% 40%,rgba(6,182,212,0.1) 0%,transparent 55%);pointer-events:none;"></div>
+                    <div style="position:absolute;bottom:-120px;left:40%;width:340px;height:340px;background:radial-gradient(circle,rgba(99,102,241,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+                    <div class="abt-inner" style="padding-top:0;padding-bottom:0;width:100%;">
+                        <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;margin:0 0 20px;">SSW INTELLIGENCE — 2025</p>
+                        <h1 style="color:#ffffff;font-size:clamp(32px,5vw,54px);font-weight:900;line-height:1.1;margin:0 0 22px;letter-spacing:-1.5px;max-width:700px;">Fazemos da web<br>um lugar melhor<br><span style="color:#22d3ee;">para todos.</span></h1>
+                        <p style="color:#94a3b8;font-size:16px;line-height:1.85;max-width:500px;margin:0 0 36px;">Somos uma plataforma de auditoria web orientada por IA que ajuda empresas a entender e melhorar sua presença digital com dados reais, rápidos e acionáveis.</p>
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                            <button onclick="nav('home')" style="padding:13px 28px;border-radius:8px;background:#22d3ee;color:#000000;font-size:14px;font-weight:800;border:none;cursor:pointer;">Iniciar Auditoria</button>
+                            <button onclick="nav('precos')" style="padding:13px 28px;border-radius:8px;background:transparent;border:1.5px solid rgba(255,255,255,0.18);color:#ffffff;font-size:14px;font-weight:600;cursor:pointer;">Ver Planos</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- What we deliver -->
-                <p style="color:#475569;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin:0 0 18px;">O que entregamos</p>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:52px;">
-                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:24px;transition:border-color 0.2s;">
-                        <div style="width:42px;height:42px;border-radius:10px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-                            <i data-lucide="gauge" style="width:18px;height:18px;color:#22d3ee;"></i>
-                        </div>
-                        <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 8px;">Auditoria Técnica</p>
-                        <p style="color:#64748b;font-size:13px;line-height:1.65;margin:0;">Performance, Core Web Vitals, SEO e segurança em um único relatório consolidado.</p>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:24px;">
-                        <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-                            <i data-lucide="users" style="width:18px;height:18px;color:#818cf8;"></i>
-                        </div>
-                        <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 8px;">Análise de Personas</p>
-                        <p style="color:#64748b;font-size:13px;line-height:1.65;margin:0;">Simule o comportamento de diferentes perfis de usuário no seu site com precisão.</p>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:24px;">
-                        <div style="width:42px;height:42px;border-radius:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-                            <i data-lucide="git-compare" style="width:18px;height:18px;color:#34d399;"></i>
-                        </div>
-                        <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 8px;">Benchmarking</p>
-                        <p style="color:#64748b;font-size:13px;line-height:1.65;margin:0;">Compare dois sites lado a lado e identifique vantagens competitivas objetivamente.</p>
+                <!-- ② STICKY SECTION NAV -->
+                <div style="position:sticky;top:0;z-index:80;background:rgba(6,10,20,0.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.07);width:100%;">
+                    <div class="abt-inner" style="padding-top:0;padding-bottom:0;display:flex;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;">
+                        <a class="abt-section-link" onclick="document.getElementById('abt-quem').scrollIntoView({behavior:'smooth'})">Quem Somos</a>
+                        <a class="abt-section-link" onclick="document.getElementById('abt-missao').scrollIntoView({behavior:'smooth'})">Nossa Missão</a>
+                        <a class="abt-section-link" onclick="document.getElementById('abt-cultura').scrollIntoView({behavior:'smooth'})">Cultura</a>
+                        <a class="abt-section-link" onclick="document.getElementById('abt-produto').scrollIntoView({behavior:'smooth'})">Produto</a>
+                        <a class="abt-section-link" onclick="document.getElementById('abt-lideranca').scrollIntoView({behavior:'smooth'})">Liderança</a>
+                        <a class="abt-section-link" onclick="document.getElementById('abt-contato').scrollIntoView({behavior:'smooth'})">Contato</a>
                     </div>
                 </div>
 
-                <!-- Principles -->
-                <p style="color:#475569;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin:0 0 18px;">Nossos princípios</p>
-                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:52px;">
-                    <div style="display:flex;align-items:flex-start;gap:14px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
-                        <div style="width:9px;height:9px;border-radius:50%;background:#22d3ee;flex-shrink:0;margin-top:6px;"></div>
+                <!-- ③ QUEM SOMOS — two-column -->
+                <div id="abt-quem" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div class="abt-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;">
                         <div>
-                            <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 5px;">Dados sobre achismos</p>
-                            <p style="color:#64748b;font-size:13px;line-height:1.6;margin:0;">Cada recomendação é fundamentada em métricas objetivas e mensuráveis, não em suposições.</p>
+                            <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 16px;">Quem somos</p>
+                            <h2 style="color:#ffffff;font-size:clamp(24px,3vw,34px);font-weight:800;line-height:1.25;margin:0 0 24px;letter-spacing:-0.5px;">Uma plataforma construída para quem leva o digital a sério.</h2>
+                            <p style="color:#94a3b8;font-size:15px;line-height:1.85;margin:0 0 18px;">A SSW INTELLIGENCE nasceu da necessidade de tornar a auditoria web acessível, objetiva e acionável. Enquanto ferramentas enterprise custam milhares por mês, nós democratizamos o acesso a análises de profundidade real.</p>
+                            <p style="color:#94a3b8;font-size:15px;line-height:1.85;margin:0;">Nossa IA analisa mais de 50 métricas técnicas e comportamentais simultaneamente, gerando relatórios que antes levariam dias para serem produzidos manualmente por especialistas.</p>
                         </div>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:14px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
-                        <div style="width:9px;height:9px;border-radius:50%;background:#818cf8;flex-shrink:0;margin-top:6px;"></div>
-                        <div>
-                            <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 5px;">Acessibilidade democratizada</p>
-                            <p style="color:#64748b;font-size:13px;line-height:1.6;margin:0;">Análise de nível enterprise disponível para negócios de qualquer porte ou estágio.</p>
-                        </div>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:14px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
-                        <div style="width:9px;height:9px;border-radius:50%;background:#34d399;flex-shrink:0;margin-top:6px;"></div>
-                        <div>
-                            <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 5px;">Velocidade com precisão</p>
-                            <p style="color:#64748b;font-size:13px;line-height:1.6;margin:0;">Resultados completos em segundos, sem abrir mão da profundidade e qualidade analítica.</p>
-                        </div>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:14px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
-                        <div style="width:9px;height:9px;border-radius:50%;background:#f472b6;flex-shrink:0;margin-top:6px;"></div>
-                        <div>
-                            <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 5px;">Melhoria contínua</p>
-                            <p style="color:#64748b;font-size:13px;line-height:1.6;margin:0;">A plataforma evolui constantemente com novas métricas, personas e integrações de IA.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Founder -->
-                <p style="color:#475569;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin:0 0 18px;">Quem está por trás</p>
-                <div style="background:linear-gradient(135deg,rgba(6,182,212,0.06) 0%,rgba(99,102,241,0.06) 100%);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;display:flex;align-items:center;gap:24px;margin-bottom:48px;">
-                    <div style="width:68px;height:68px;border-radius:16px;background:linear-gradient(135deg,#0891b2,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#ffffff;flex-shrink:0;letter-spacing:-1px;">GC</div>
-                    <div style="flex:1;min-width:0;">
-                        <p style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 3px;">Guilherme Cruz da Silva</p>
-                        <p style="color:#22d3ee;font-size:13px;font-weight:600;margin:0 0 14px;letter-spacing:0.04em;">Fundador & Engenheiro de Produto</p>
-                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                            <span style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 12px;font-size:12px;color:#94a3b8;">Performance & UX</span>
-                            <span style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 12px;font-size:12px;color:#94a3b8;">IA Aplicada</span>
-                            <span style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 12px;font-size:12px;color:#94a3b8;">Auditoria Web</span>
-                            <span style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 12px;font-size:12px;color:#94a3b8;">Desenvolvimento Full-Stack</span>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                            <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.14);border-radius:16px;padding:28px 20px;">
+                                <p style="color:#22d3ee;font-size:34px;font-weight:900;margin:0 0 8px;letter-spacing:-1px;">2024</p>
+                                <p style="color:#64748b;font-size:12px;line-height:1.5;margin:0;">Ano de fundação da plataforma</p>
+                            </div>
+                            <div style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.14);border-radius:16px;padding:28px 20px;">
+                                <p style="color:#818cf8;font-size:34px;font-weight:900;margin:0 0 8px;letter-spacing:-1px;">+50</p>
+                                <p style="color:#64748b;font-size:12px;line-height:1.5;margin:0;">Métricas analisadas por auditoria</p>
+                            </div>
+                            <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.14);border-radius:16px;padding:28px 20px;">
+                                <p style="color:#34d399;font-size:34px;font-weight:900;margin:0 0 8px;letter-spacing:-1px;">15+</p>
+                                <p style="color:#64748b;font-size:12px;line-height:1.5;margin:0;">Personas especializadas por setor</p>
+                            </div>
+                            <div style="background:rgba(244,114,182,0.06);border:1px solid rgba(244,114,182,0.14);border-radius:16px;padding:28px 20px;">
+                                <p style="color:#f472b6;font-size:34px;font-weight:900;margin:0 0 8px;letter-spacing:-1px;">&lt;30s</p>
+                                <p style="color:#64748b;font-size:12px;line-height:1.5;margin:0;">Para análise completa do site</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- CTA -->
-                <div style="background:linear-gradient(135deg,rgba(8,145,178,0.1) 0%,rgba(79,70,229,0.1) 100%);border:1px solid rgba(6,182,212,0.2);border-radius:16px;padding:40px;text-align:center;">
-                    <p style="color:#ffffff;font-size:22px;font-weight:800;margin:0 0 10px;">Pronto para auditar seu site?</p>
-                    <p style="color:#94a3b8;font-size:14px;margin:0 0 28px;line-height:1.7;">Obtenha um relatório completo com insights acionáveis em menos de 30 segundos.</p>
-                    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                        <button onclick="nav('home')" style="padding:12px 28px;border-radius:10px;border:none;background:linear-gradient(135deg,#0891b2,#4f46e5);color:#ffffff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(6,182,212,0.28);">Iniciar Auditoria Gratuita</button>
-                        <button onclick="nav('precos')" style="padding:12px 28px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;">Ver Planos</button>
+                <!-- ④ PULL QUOTE — Missão -->
+                <div id="abt-missao" style="background:rgba(6,182,212,0.04);border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div class="abt-inner">
+                        <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 32px;">Nossa missão</p>
+                        <blockquote style="color:#ffffff;font-size:clamp(18px,2.5vw,26px);font-weight:700;line-height:1.5;margin:0 0 40px;max-width:820px;border-left:3px solid #22d3ee;padding-left:28px;">"Queremos ser a fonte independente e definitiva para qualquer pessoa que precise entender, otimizar e dominar sua presença na web — com dados reais, personas reais e recomendações que funcionam de verdade."</blockquote>
+                        <div style="display:flex;align-items:center;gap:16px;padding-left:28px;">
+                            <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0891b2,#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0;">GC</div>
+                            <div>
+                                <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0;">Guilherme Cruz da Silva</p>
+                                <p style="color:#475569;font-size:13px;margin:0;">Fundador, SSW INTELLIGENCE</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- ⑤ CULTURA — 4-column grid -->
+                <div id="abt-cultura" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div class="abt-inner">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:48px;">
+                            <div style="max-width:480px;">
+                                <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 14px;">Nossa cultura</p>
+                                <h2 style="color:#ffffff;font-size:clamp(22px,3vw,30px);font-weight:800;margin:0;line-height:1.25;letter-spacing:-0.4px;">Os princípios que guiam cada decisão que tomamos.</h2>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(255,255,255,0.04);border-radius:16px;overflow:hidden;">
+                            <div style="background:#060e1c;padding:32px 22px;">
+                                <div style="width:42px;height:42px;border-radius:10px;background:rgba(6,182,212,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+                                    <i data-lucide="database" style="width:18px;height:18px;color:#22d3ee;"></i>
+                                </div>
+                                <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 10px;">Dados, sempre</p>
+                                <p style="color:#475569;font-size:13px;line-height:1.7;margin:0;">Nenhuma recomendação sai sem embasamento em métricas reais e mensuráveis.</p>
+                            </div>
+                            <div style="background:#060e1c;padding:32px 22px;">
+                                <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+                                    <i data-lucide="zap" style="width:18px;height:18px;color:#818cf8;"></i>
+                                </div>
+                                <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 10px;">Velocidade</p>
+                                <p style="color:#475569;font-size:13px;line-height:1.7;margin:0;">Cada segundo economizado é vantagem competitiva direta para o nosso cliente.</p>
+                            </div>
+                            <div style="background:#060e1c;padding:32px 22px;">
+                                <div style="width:42px;height:42px;border-radius:10px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+                                    <i data-lucide="users-2" style="width:18px;height:18px;color:#34d399;"></i>
+                                </div>
+                                <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 10px;">Foco no humano</p>
+                                <p style="color:#475569;font-size:13px;line-height:1.7;margin:0;">O comportamento humano real está no centro de cada análise técnica que fazemos.</p>
+                            </div>
+                            <div style="background:#060e1c;padding:32px 22px;">
+                                <div style="width:42px;height:42px;border-radius:10px;background:rgba(244,114,182,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+                                    <i data-lucide="trending-up" style="width:18px;height:18px;color:#f472b6;"></i>
+                                </div>
+                                <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 10px;">Evolução contínua</p>
+                                <p style="color:#475569;font-size:13px;line-height:1.7;margin:0;">A plataforma nunca para. Novos modelos, métricas e personas a cada sprint.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⑥ PRODUTO — 3 pilares sem bordas externas -->
+                <div id="abt-produto" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div class="abt-inner">
+                        <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 14px;">O que fazemos</p>
+                        <h2 style="color:#ffffff;font-size:clamp(22px,3vw,30px);font-weight:800;margin:0 0 48px;letter-spacing:-0.4px;">Três pilares. Um relatório. Decisões melhores.</h2>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;">
+                            <div style="padding:40px 28px;border-right:1px solid rgba(255,255,255,0.05);">
+                                <i data-lucide="gauge" style="width:22px;height:22px;color:#22d3ee;display:block;margin-bottom:18px;"></i>
+                                <p style="color:#ffffff;font-size:16px;font-weight:700;margin:0 0 12px;">Auditoria Técnica</p>
+                                <p style="color:#475569;font-size:14px;line-height:1.8;margin:0;">Performance, Core Web Vitals, SEO on-page, acessibilidade WCAG e segurança — tudo em um único relatório estruturado e priorizado.</p>
+                            </div>
+                            <div style="padding:40px 28px;border-right:1px solid rgba(255,255,255,0.05);">
+                                <i data-lucide="users" style="width:22px;height:22px;color:#818cf8;display:block;margin-bottom:18px;"></i>
+                                <p style="color:#ffffff;font-size:16px;font-weight:700;margin:0 0 12px;">Análise de Personas</p>
+                                <p style="color:#475569;font-size:14px;line-height:1.8;margin:0;">Mais de 15 perfis especializados por setor simulam o comportamento real dos seus visitantes, revelando pontos cegos invisíveis em análises técnicas puras.</p>
+                            </div>
+                            <div style="padding:40px 28px;">
+                                <i data-lucide="git-compare" style="width:22px;height:22px;color:#34d399;display:block;margin-bottom:18px;"></i>
+                                <p style="color:#ffffff;font-size:16px;font-weight:700;margin:0 0 12px;">Benchmarking Competitivo</p>
+                                <p style="color:#475569;font-size:14px;line-height:1.8;margin:0;">Compare dois sites lado a lado com scores individuais e identifique exatamente onde seu concorrente tem vantagem — e como superá-lo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⑦ LIDERANÇA — card + bio -->
+                <div id="abt-lideranca" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div class="abt-inner">
+                        <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 14px;">Liderança</p>
+                        <h2 style="color:#ffffff;font-size:clamp(22px,3vw,30px);font-weight:800;margin:0 0 48px;letter-spacing:-0.4px;">Quem está construindo isso.</h2>
+                        <div style="display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start;">
+                            <div style="background:linear-gradient(145deg,rgba(8,145,178,0.08),rgba(79,70,229,0.08));border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:32px;text-align:center;">
+                                <div style="width:76px;height:76px;border-radius:18px;background:linear-gradient(135deg,#0891b2,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#ffffff;margin:0 auto 18px;letter-spacing:-1px;">GC</div>
+                                <p style="color:#ffffff;font-size:16px;font-weight:800;margin:0 0 5px;">Guilherme Cruz da Silva</p>
+                                <p style="color:#22d3ee;font-size:12px;font-weight:600;margin:0 0 20px;letter-spacing:0.04em;">Fundador & Engenheiro de Produto</p>
+                                <div style="display:flex;flex-direction:column;gap:8px;">
+                                    <a href="mailto:sswinteligence@gmail.com" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#64748b;font-size:12px;text-decoration:none;">
+                                        <i data-lucide="mail" style="width:13px;height:13px;"></i> sswinteligence@gmail.com
+                                    </a>
+                                    <a href="https://instagram.com/sswintelligence" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#64748b;font-size:12px;text-decoration:none;">
+                                        <i data-lucide="camera" style="width:13px;height:13px;"></i> @sswintelligence
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <p style="color:#94a3b8;font-size:15px;line-height:1.9;margin:0 0 18px;">Com background em desenvolvimento full-stack e especialização em performance web e UX, Guilherme fundou a SSW INTELLIGENCE para resolver um problema que viveu na prática: a dificuldade de obter análises rápidas, profundas e acessíveis para sites de qualquer porte.</p>
+                                <p style="color:#94a3b8;font-size:15px;line-height:1.9;margin:0 0 28px;">A plataforma combina inteligência artificial, análise comportamental por personas e engenharia de software para entregar algo que nenhuma outra ferramenta do mercado brasileiro oferece na mesma combinação de profundidade, velocidade e preço.</p>
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                                    <span class="abt-tag" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);color:#67e8f9;">Performance & Core Web Vitals</span>
+                                    <span class="abt-tag" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);color:#a5b4fc;">IA Aplicada a UX</span>
+                                    <span class="abt-tag" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:#6ee7b7;">Auditoria Web</span>
+                                    <span class="abt-tag" style="background:rgba(244,114,182,0.08);border:1px solid rgba(244,114,182,0.2);color:#f9a8d4;">Full-Stack Development</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⑧ CTA — split layout -->
+                <div id="abt-contato" style="background:linear-gradient(135deg,rgba(6,182,212,0.05) 0%,rgba(99,102,241,0.05) 100%);border-top:1px solid rgba(6,182,212,0.12);">
+                    <div class="abt-inner" style="display:grid;grid-template-columns:1fr auto;align-items:center;gap:48px;">
+                        <div>
+                            <p style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 14px;">Pronto para começar?</p>
+                            <h2 style="color:#ffffff;font-size:clamp(22px,3vw,34px);font-weight:800;margin:0 0 14px;letter-spacing:-0.5px;">Audite seu site agora.<br>Resultados em 30 segundos.</h2>
+                            <p style="color:#94a3b8;font-size:15px;line-height:1.75;margin:0;max-width:460px;">Cole a URL, escolha as personas e receba um relatório completo com insights técnicos e comportamentais — sem configuração, sem instalação.</p>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:10px;min-width:210px;">
+                            <button onclick="nav('home')" style="padding:14px 28px;border-radius:9px;background:#22d3ee;color:#000000;font-size:14px;font-weight:800;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 4px 20px rgba(6,182,212,0.3);">Iniciar Auditoria</button>
+                            <button onclick="nav('precos')" style="padding:14px 28px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#ffffff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">Ver Planos e Preços</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
