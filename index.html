@@ -658,12 +658,25 @@
             flex-direction: column;
         }
         #mainFooter {
-            margin-top: auto;
-            width: 100%;
-            padding-top: 2rem;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-        }
+    margin-top: auto;
+    margin-left: -16px;
+    margin-right: -16px;
+    width: auto;
+    padding: 2rem 16px 0 16px; 
+    
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+@media(min-width:768px) {
+    #mainFooter {
+        margin-left: -40px;
+        margin-right: -40px;
+        width: auto;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
     </style>
     <style>
         /* Forçar formato circular nas logos */
@@ -1096,7 +1109,7 @@
             </button>
         </nav>
     </div>
-    <main class="flex-1 md:h-screen overflow-y-auto relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;">
+    <main class="flex-1 md:h-screen overflow-y-auto overflow-x-hidden relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;"></main>
         <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper" style="background: transparent !important;">
             <div id="view-home" class="command-center max-w-6xl mx-auto space-y-8 animate-fade-in-up">
                 <!-- HERO SECTION PREMIUM -->
@@ -1984,14 +1997,7 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
                 <div id="abt-missao" style="background:rgba(74,144,226,0.02);border-bottom:1px solid rgba(255,255,255,0.05);">
                     <div class="abt-inner">
                         <p style="color:#4A90E2;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 32px;">Nossa missão</p>
-                        <blockquote style="color:#ffffff;font-size:clamp(18px,2.5vw,26px);font-weight:700;line-height:1.5;margin:0 0 40px;max-width:820px;border-left:4px solid #4A90E2;padding-left:28px;">"Queremos ser a fonte independente e definitiva para qualquer pessoa que precise entender, otimizar e dominar sua presença na web — com dados reais, personas reais e recomendações que funcionam de verdade."</blockquote>
-                        <div style="display:flex;align-items:center;gap:16px;padding-left:28px;">
-                            <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#4A90E2,#2d3748);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0;">GC</div>
-                            <div>
-                                <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0;">Guilherme Cruz da Silva</p>
-                                <p style="color:#475569;font-size:13px;margin:0;">Fundador, SSW INTELLIGENCE</p>
-                            </div>
-                        </div>
+                        <blockquote style="color:#ffffff;font-size:clamp(18px,2.5vw,26px);font-weight:700;line-height:1.5;margin:0;max-width:820px;border-left:4px solid #4A90E2;padding-left:28px;">"Queremos ser a fonte independente e definitiva para qualquer pessoa que precise entender, otimizar e dominar sua presença na web — com dados reais, personas reais e recomendações que funcionam de verdade."</blockquote>
                     </div>
                 </div>
 
