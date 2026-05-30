@@ -1,466 +1,406 @@
-<!-- SEÇÃO DE PREÇOS - Componente Isolado -->
-<div id="view-precos" class="hidden max-w-7xl mx-auto space-y-20 animate-fade-in-up">
-    <!-- HERO SECTION PROFISSIONAL -->
-    <div class="text-center space-y-8 relative">
-        <!-- Título Principal -->
-        <h1 class="text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-primary via-emerald-500 to-cyan-500 bg-clip-text text-transparent leading-tight">
-            Invista em Inteligência.<br>
-            <span class="text-white">Domine o Mercado.</span>
-        </h1>
-        <!-- Subtítulo Convincente -->
-        <p class="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
-            Auditoria web avançada com IA. <span class="text-primary font-bold">Pague uma vez, use quando quiser.</span><br>
-            Transforme seu site em uma máquina de conversão com análises comportamentais profundas.
-        </p>
-    </div>
+<div id="view-precos" class="hidden w-full animate-fade-in-up">
     
-    <!-- PRICING CARDS REDESIGNADOS -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
-        <!-- PACOTE STARTER -->
-        <div class="group relative">
-            <!-- Background Glow -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-slate-700/20 to-slate-600/20 rounded-2xl blur-lg group-hover:from-slate-600/30 group-hover:to-slate-500/30 transition-all duration-500"></div>
-            <div class="relative bg-white border-2 border-blue-500/30 rounded-2xl p-8 hover:border-blue-500 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-lg">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-8">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center group-hover:from-primary/80 group-hover:to-emerald-500/80 transition-all">
-                        <i data-lucide="package" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <span class="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Starter</span>
-                </div>
-                <h3 class="text-2xl font-bold text-black mb-2">PACOTE STARTER</h3>
-                <p class="text-gray-600 mb-6">Ideal para testar a plataforma</p>
-                <!-- Price -->
-                <div class="mb-8">
-                    <!-- BADGE DE PROMOÇÃO -->
-                    <div class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold inline-block mb-3 animate-pulse">
-                        ECONOMIA 23%
-                    </div>
-                    <!-- PREÇO ANTIGO RISCADO -->
-                    <div class="flex items-baseline gap-2 mb-2">
-                        <span class="text-gray-500 text-sm">De:</span>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl text-gray-400 line-through">R$ 129</span>
-                            <span class="text-sm text-gray-400 line-through">,99</span>
-                        </div>
-                    </div>
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-gray-500 text-sm">Por:</span>
-                        <span class="text-6xl font-black text-black">R$ 99</span>
-                        <span class="text-gray-600 text-lg">,99</span>
-                    </div>
-                    <p class="text-cyan-600 text-sm mt-2 font-bold">Economize R$ 30,00!</p>
-                </div>
-                <!-- Credits Info -->
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-600 text-sm">Créditos incluídos</span>
-                        <span class="text-2xl font-black text-primary">10</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-cyan-500 h-2 rounded-full" style="width: 25%"></div>
-                    </div>
-                    <p class="text-gray-500 text-xs mt-2">R$ 9,99 por auditoria</p>
-                </div>
-                <!-- Features -->
-                <div class="space-y-4 mb-8">
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Auditoria completa de URLs</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Relatório detalhado de erros</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Histórico por 30 dias</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Suporte por e-mail</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Relatórios semanais</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Acesso à comunidade</span>
-                    </div>
-                </div>
-                <button onclick="comprarPlano('basico')" class="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-all duration-300">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 inline mr-2"></i>
-                    Comprar Pacote Starter
-                </button>
+    <section class="w-full bg-[#05070f] -mt-8 pt-20 pb-24 border-b border-slate-900/60">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-6">
+            
+            <div class="text-center space-y-6 relative max-w-4xl mx-auto mb-16">
+                <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
+                    Preços que escalam com o <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">tamanho da sua agência.</span>
+                </h1>
+                <p class="text-lg text-slate-400 leading-relaxed font-medium max-w-2xl mx-auto">
+                    Sem assinaturas mensais ocultas. Compre créditos, audite sites com Inteligência Artificial e feche contratos maiores entregando relatórios irrefutáveis.
+                </p>
             </div>
-        </div>
-        
-        <!-- PACOTE PRO (DESTAQUE) -->
-        <div class="group relative scale-105">
-            <!-- Background Glow -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-primary/30 via-emerald-500/30 to-primary/30 rounded-2xl blur-xl group-hover:from-primary/40 group-hover:via-emerald-500/40 group-hover:to-primary/40 transition-all duration-500"></div>
-            <div class="relative bg-white border-2 border-cyan-500 rounded-2xl p-8 hover:border-cyan-600 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-2xl shadow-cyan-500/20">
-                <!-- Badge Popular -->
-                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div class="bg-gradient-to-r from-primary to-emerald-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
-                        <i data-lucide="star" class="w-4 h-4"></i>
-                        MAIS POPULAR
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <div class="flex flex-col bg-[#0b0f19] border border-slate-800 rounded-3xl p-8 transition-colors hover:border-slate-600 h-full relative">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Starter</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed min-h-[40px]">Para freelancers validando o mercado de otimização web.</p>
+                    </div>
+                    <div class="mb-8">
+                        <div class="flex items-start gap-1">
+                            <span class="text-xl font-bold text-slate-500 mt-1">R$</span>
+                            <span class="text-5xl font-black text-white tracking-tighter">99</span>
+                            <span class="text-lg font-bold text-slate-500 mt-1">,99</span>
+                        </div>
+                        <p class="text-slate-500 text-sm mt-2 font-medium">Pagamento único (R$ 9,99 / crédito)</p>
+                    </div>
+                    <button onclick="comprarPlano('basico')" class="w-full py-3.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white font-bold hover:bg-slate-700 hover:border-slate-500 transition-all mb-8">
+                        Comprar Starter
+                    </button>
+                    <hr class="border-slate-800/80 mb-6">
+                    <div class="flex-1 flex flex-col">
+                        <p class="text-xs font-bold text-slate-300 uppercase tracking-widest mb-4">Essenciais incluídos:</p>
+                        <ul class="space-y-4 flex-1">
+                            <li class="flex items-start gap-3 text-slate-300 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed"><strong class="text-white">10 Créditos</strong> de auditoria</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-300 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Análise de Performance e SEO</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-300 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Histórico por 30 dias</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-8 mt-4">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center group-hover:from-primary/80 group-hover:to-emerald-500/80 transition-all">
-                        <i data-lucide="package-2" class="w-8 h-8 text-white"></i>
+                
+                <div class="flex flex-col bg-[#0b0f19] border-2 border-cyan-500/50 rounded-3xl p-8 relative h-full shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-cyan-500 text-slate-950 text-[10px] font-black uppercase tracking-widest py-1 px-4 rounded-full">
+                        Mais Escolhido
                     </div>
-                    <span class="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Pro</span>
-                </div>
-                <h3 class="text-2xl font-bold text-black mb-2">PACOTE PRO</h3>
-                <p class="text-gray-600 mb-6">Para profissionais e empresas</p>
-                <!-- Price -->
-                <div class="mb-8">
-                    <!-- BADGE DE PROMOÇÃO -->
-                    <div class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold inline-block mb-3 animate-pulse">
-                        ECONOMIA 20%
+                    <div class="mb-6 mt-1">
+                        <h3 class="text-xl font-bold text-cyan-400 mb-2">Pro</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed min-h-[40px]">O arsenal completo para agências de marketing e desenvolvedores seniores.</p>
                     </div>
-                    <div class="flex items-baseline gap-2">
-                        <!-- PREÇO ANTIGO RISCADO -->
-                        <span class="text-gray-500 text-sm">De:</span>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl text-gray-400 line-through">R$ 179</span>
-                            <span class="text-sm text-gray-400 line-through">,99</span>
+                    <div class="mb-8">
+                        <div class="flex items-start gap-1">
+                            <span class="text-xl font-bold text-cyan-500/80 mt-1">R$</span>
+                            <span class="text-5xl font-black text-white tracking-tighter">149</span>
+                            <span class="text-lg font-bold text-cyan-500/80 mt-1">,99</span>
                         </div>
+                        <p class="text-cyan-400 text-xs font-bold mt-2 bg-cyan-500/10 inline-block px-2.5 py-1 rounded-md border border-cyan-500/20">
+                            Apenas R$ 3,75 / crédito
+                        </p>
                     </div>
-                    <!-- PREÇO ATUAL -->
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-gray-500 text-sm">Por:</span>
-                        <span class="text-6xl font-black text-black">R$ 149</span>
-                        <span class="text-gray-600 text-lg">,99</span>
-                    </div>
-                    <p class="text-cyan-600 text-sm mt-2 font-bold">Economize R$ 30,00!</p>
-                </div>
-                <!-- Credits Info -->
-                <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-8">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-600 text-sm font-medium">Créditos incluídos</span>
-                        <span class="text-2xl font-black text-black">40</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-cyan-500 h-2 rounded-full" style="width: 100%"></div>
-                    </div>
-                    <p class="text-cyan-600 text-xs mt-2 font-semibold">Apenas R$ 3,75 por auditoria</p>
-                </div>
-                <!-- Features -->
-                <div class="space-y-4 mb-8">
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Tudo do Starter +</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Exportação em PDF profissional</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Histórico completo por 1 ano</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Suporte prioritário WhatsApp</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Análise comparativa avançada</span>
+                    <button onclick="comprarPlano('recomendado')" class="w-full py-3.5 rounded-xl bg-cyan-500 text-slate-950 font-black hover:bg-cyan-400 transition-all mb-8 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                        Assinar Pacote Pro
+                    </button>
+                    <hr class="border-slate-800/80 mb-6">
+                    <div class="flex-1 flex flex-col">
+                        <p class="text-xs font-bold text-white uppercase tracking-widest mb-4">Tudo do Starter, mais:</p>
+                        <ul class="space-y-4 flex-1">
+                            <li class="flex items-start gap-3 text-slate-200 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed"><strong class="text-white">40 Créditos</strong> de auditoria</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-200 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Exportação em PDF Premium</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-200 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Acesso ao Benchmarking (Comparativo)</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-200 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Histórico estendido (1 ano)</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <button onclick="comprarPlano('recomendado')" class="w-full bg-cyan-500 text-white font-bold py-4 rounded-xl hover:bg-cyan-600 transition-all duration-300 shadow-lg hover:shadow-cyan-500/50">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 inline mr-2"></i>
-                    Comprar Pacote Pro
-                </button>
+                
+                <div class="flex flex-col bg-[#0b0f19] border border-slate-800 rounded-3xl p-8 transition-colors hover:border-slate-600 h-full relative">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Enterprise</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed min-h-[40px]">Para grandes volumes operacionais, integrações e relatórios marca-branca (White-label).</p>
+                    </div>
+                    <div class="mb-8 flex items-center h-[76px]">
+                        <span class="text-3xl font-black text-white tracking-tight">Sob Consulta</span>
+                    </div>
+                    <button onclick="falarComVendas()" class="w-full py-3.5 rounded-xl border border-slate-700 bg-transparent text-white font-bold hover:bg-slate-800 hover:border-slate-500 transition-all mb-8">
+                        Falar com Vendas
+                    </button>
+                    <hr class="border-slate-800/80 mb-6">
+                    <div class="flex-1 flex flex-col">
+                        <p class="text-xs font-bold text-slate-300 uppercase tracking-widest mb-4">Soluções exclusivas:</p>
+                        <ul class="space-y-4 flex-1">
+                            <li class="flex items-start gap-3 text-slate-300 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed"><strong class="text-white">150+ Créditos</strong> por demanda</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-300 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Relatórios White-label (Sua logo)</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-slate-300 text-sm">
+                                <i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Integração com API REST</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+            
         </div>
-        
-        <!-- PACOTE ENTERPRISE -->
-        <div class="group relative">
-            <!-- Background Glow -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-primary/20 via-emerald-500/20 to-primary/20 rounded-2xl blur-lg group-hover:from-primary/30 group-hover:via-emerald-500/30 group-hover:to-primary/30 transition-all duration-500"></div>
-            <div class="relative bg-white border-4 border-blue-500/30 rounded-2xl p-8 hover:border-blue-500 transition-all duration-300 group-hover:transform group-hover:-translate-y-2 shadow-lg">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-8">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center group-hover:from-primary/80 group-hover:to-emerald-500/80 transition-all">
-                        <i data-lucide="building" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <span class="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Enterprise</span>
-                </div>
-                <h3 class="text-2xl font-bold text-black mb-2">PACOTE ENTERPRISE</h3>
-                <p class="text-gray-600 mb-6">Para grandes volumes e equipes</p>
-                <!-- Price -->
-                <div class="mb-8">
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-4xl font-black text-black">Sob</span>
-                        <span class="text-5xl font-black text-cyan-600">Consulta</span>
-                    </div>
-                    <p class="text-gray-500 text-sm mt-2">Personalizado para suas necessidades</p>
-                </div>
-                <!-- Credits Info -->
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-600 text-sm font-medium">Créditos a partir de</span>
-                        <span class="text-2xl font-black text-cyan-600">150+</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-cyan-500 h-2 rounded-full" style="width: 100%"></div>
-                    </div>
-                    <p class="text-cyan-600 text-xs mt-2 font-semibold">Preço por crédito personalizado</p>
-                </div>
-                <!-- Features -->
-                <div class="space-y-4 mb-8">
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Tudo do Pro +</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Auditoria em lote (Bulk)</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Acesso à API SSW</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">Múltiplos usuários</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">White-label (sua marca)</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-3 h-3 text-cyan-500"></i>
-                        </div>
-                        <span class="text-gray-700">SLA e suporte dedicado</span>
-                    </div>
-                </div>
-                <button onclick="falarComVendas()" class="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-all duration-300">
-                    <i data-lucide="phone" class="w-5 h-5 inline mr-2"></i>
-                    Fale com um especialista
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- COMPARISON TABLE -->
-    <div class="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-2 border-blue-500/30 rounded-2xl p-8 overflow-hidden hover:border-blue-500 transition-all duration-300 backdrop-blur-xl">
-        <h3 class="text-2xl font-bold text-white mb-8 text-center">Comparação de Recursos</h3>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-white/30">
-                        <th class="text-left py-4 px-4 text-white font-bold uppercase">RECURSOS</th>
-                        <th class="text-center py-4 px-4 text-white font-bold uppercase">STARTER</th>
-                        <th class="text-center py-4 px-4 text-white font-bold uppercase">PRO</th>
-                        <th class="text-center py-4 px-4 text-white font-bold uppercase">ENTERPRISE</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-white/30">
-                    <tr>
-                        <td class="py-4 px-4 text-white font-bold uppercase">CRÉDITOS</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">10</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">40</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">150+</td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-4 text-white font-bold uppercase">PREÇO POR AUDITORIA</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">R$ 9,99</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">R$ 3,75</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">Personalizado</td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-4 text-white font-bold uppercase">HISTÓRICO</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">30 dias</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">1 ano</td>
-                        <td class="text-center py-4 px-4 text-white font-bold">Ilimitado</td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-4 text-white font-bold uppercase">EXPORTAÇÃO PDF</td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="x" class="w-5 h-5 text-red-500 mx-auto"></i>
-                        </td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="check" class="w-5 h-5 text-green-500 mx-auto"></i>
-                        </td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="check" class="w-5 h-5 text-green-500 mx-auto"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-4 text-white font-bold uppercase">API ACCESS</td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="x" class="w-5 h-5 text-red-500 mx-auto"></i>
-                        </td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="x" class="w-5 h-5 text-red-500 mx-auto"></i>
-                        </td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="check" class="w-5 h-5 text-green-500 mx-auto"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-4 text-white font-bold uppercase">WHITE-LABEL</td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="x" class="w-5 h-5 text-red-500 mx-auto"></i>
-                        </td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="x" class="w-5 h-5 text-red-500 mx-auto"></i>
-                        </td>
-                        <td class="text-center py-4 px-4">
-                            <i data-lucide="check" class="w-5 h-5 text-green-500 mx-auto"></i>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <!-- CARROUSEL DE CARDS - BENEFÍCIOS SSW INTELLIGENCE -->
-    <div class="space-y-12 pb-16">
-        <div class="max-w-6xl mx-auto">
-            <!-- Título Principal -->
+    </section>
+
+    <section class="w-full bg-[#090c14] py-24 border-b border-slate-900/60 hidden md:block">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-6">
+            
             <div class="text-center mb-12">
-                <h4 class="text-3xl font-bold text-white mb-4">Comece sua jornada de excelência digital hoje</h4>
-                <p class="text-slate-300 text-lg">Junte-se a milhares de profissionais que confiam na SSW INTELLIGENCE</p>
+                <h2 class="text-2xl font-bold text-white mb-2">Comparação Detalhada de Recursos</h2>
+                <p class="text-slate-400 text-sm">Veja exatamente o que cada plano oferece para a sua operação.</p>
             </div>
-            <!-- Carrossel Container -->
-            <div class="relative h-[400px] overflow-hidden mb-12">
-                <!-- Seta Esquerda -->
-                <button onclick="moveCarousel(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </button>
-                <!-- Seta Direita -->
-                <button onclick="moveCarousel(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-blue-400 flex items-center justify-center hover:from-blue-600 hover:to-cyan-600 hover:border-blue-300 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-blue-500/50">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-                <div id="carousel-container" class="relative w-full h-full flex items-center justify-center">
-                    <!-- Cards do Carrossel -->
-                    <div class="carousel-track flex items-center justify-center absolute w-full h-full transition-transform duration-700 ease-in-out">
-                        <!-- Card 1 - IA Avançada -->
-                        <div class="carousel-card absolute bg-gradient-to-br from-blue-600 to-cyan-600 border-2 border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="0">
-                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4 mx-auto">
-                                <i data-lucide="brain" class="w-8 h-8 text-white"></i>
-                            </div>
-                            <h5 class="text-xl font-bold text-white mb-3 text-center">IA Avançada</h5>
-                            <p class="text-white/90 text-sm leading-relaxed text-center">
-                                Tecnologia de IA que identifica problemas e descobre oportunidades de crescimento que seus concorrentes estão ignorando.
-                            </p>
-                            <div class="mt-4 flex justify-center">
-                                <span class="text-blue-300 font-semibold text-sm">+40% Conversões</span>
-                            </div>
-                        </div>
-                        <!-- Card 2 - Auditorias Comportamentais -->
-                        <div class="carousel-card absolute bg-gradient-to-br from-emerald-600 to-green-600 border-2 border-emerald-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="1">
-                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-4 mx-auto">
-                                <i data-lucide="users" class="w-8 h-8 text-white"></i>
-                            </div>
-                            <h5 class="text-xl font-bold text-white mb-3 text-center">Análise Comportamental</h5>
-                            <p class="text-white/90 text-sm leading-relaxed text-center">
-                                Auditorias comportamentais que revelam o que seus usuários realmente pensam e sentem, permitindo experiências que convertem e encantam.
-                            </p>
-                            <div class="mt-4 flex justify-center">
-                                <span class="text-emerald-300 font-semibold text-sm">+60% Engajamento</span>
-                            </div>
-                        </div>
-                        <!-- Card 3 - Plataforma Completa -->
-                        <div class="carousel-card absolute bg-gradient-to-br from-purple-600 to-pink-600 border-2 border-purple-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="2">
-                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4 mx-auto">
-                                <i data-lucide="layers" class="w-8 h-8 text-white"></i>
-                            </div>
-                            <h5 class="text-xl font-bold text-white mb-3 text-center">Suite Completa</h5>
-                            <p class="text-white/90 text-sm leading-relaxed text-center">
-                                Análise completa cobrindo performance, acessibilidade, SEO e segurança - tudo em uma plataforma intuitiva que economiza horas de trabalho.
-                            </p>
-                            <div class="mt-4 flex justify-center">
-                                <span class="text-purple-300 font-semibold text-sm">Resultados Imediatos</span>
-                            </div>
-                        </div>
-                        <!-- Card 4 - Insights Profundos -->
-                        <div class="carousel-card absolute bg-gradient-to-br from-orange-600 to-red-600 border-2 border-orange-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="3">
-                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center mb-4 mx-auto">
-                                <i data-lucide="target" class="w-8 h-8 text-white"></i>
-                            </div>
-                            <h5 class="text-xl font-bold text-white mb-3 text-center">Insights Profundos</h5>
-                            <p class="text-white/90 text-sm leading-relaxed text-center">
-                                Deixe para trás ferramentas fragmentadas com insights superficiais. Obtenha análises profundas que entregam resultados mensuráveis desde o primeiro dia.
-                            </p>
-                            <div class="mt-4 flex justify-center">
-                                <span class="text-orange-300 font-semibold text-sm">Análise 360°</span>
-                            </div>
-                        </div>
-                        <!-- Card 5 - Otimização Inteligente -->
-                        <div class="carousel-card absolute bg-gradient-to-br from-cyan-600 to-blue-600 border-2 border-cyan-500/30 rounded-2xl p-6 backdrop-blur-xl transition-all duration-700 cursor-pointer" data-index="4">
-                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center mb-4 mx-auto">
-                                <i data-lucide="trending-up" class="w-8 h-8 text-white"></i>
-                            </div>
-                            <h5 class="text-xl font-bold text-white mb-3 text-center">Otimização Inteligente</h5>
-                            <p class="text-white/90 text-sm leading-relaxed text-center">
-                                Transforme seu site em uma máquina de conversão com recomendações baseadas em dados que seus concorrentes não conhecem.
-                            </p>
-                            <div class="mt-4 flex justify-center">
-                                <span class="text-cyan-300 font-semibold text-sm">Crescimento Acelerado</span>
-                            </div>
-                        </div>
-                    </div>
+            
+            <div class="overflow-hidden border border-slate-800/80 rounded-2xl bg-[#0b0f19] max-w-5xl mx-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="w-2/5 p-6 border-b border-slate-800/80 bg-slate-900/40 text-slate-400 font-semibold text-sm uppercase tracking-wider">Funcionalidade</th>
+                            <th class="w-1/5 p-6 border-b border-slate-800/80 bg-slate-900/40 text-white font-bold text-center">Starter</th>
+                            <th class="w-1/5 p-6 border-b border-slate-800/80 bg-cyan-900/10 text-cyan-400 font-bold text-center border-x border-slate-800/50 relative">
+                                <div class="absolute top-0 left-0 right-0 h-1 bg-cyan-500"></div>
+                                Pro
+                            </th>
+                            <th class="w-1/5 p-6 border-b border-slate-800/80 bg-slate-900/40 text-white font-bold text-center">Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-slate-300">
+                        <tr>
+                            <td colspan="4" class="p-4 bg-slate-900/80 font-bold text-white uppercase tracking-wider text-xs border-b border-slate-800/50">Capacidade de Auditoria</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Créditos de Análise</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-bold">10</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-bold text-cyan-400 border-x border-slate-800/50 bg-cyan-900/5">40</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-bold">Personalizado</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Armazenamento de Histórico</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center">30 dias</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-medium border-x border-slate-800/50 bg-cyan-900/5">1 Ano</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center">Ilimitado</td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="4" class="p-4 bg-slate-900/80 font-bold text-white uppercase tracking-wider text-xs border-b border-slate-800/50">Inteligência Artificial & Personas</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Personas Simultâneas por Análise</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-bold">3</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-bold text-white border-x border-slate-800/50 bg-cyan-900/5">3</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center font-bold">Ilimitado</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Veredito Executivo IA</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="check" class="w-4 h-4 mx-auto text-slate-500"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center border-x border-slate-800/50 bg-cyan-900/5"><i data-lucide="check" class="w-5 h-5 mx-auto text-cyan-500"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="check" class="w-4 h-4 mx-auto text-slate-500"></i></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Análise Comparativa (Benchmarking)</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="minus" class="w-4 h-4 mx-auto text-slate-600"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center border-x border-slate-800/50 bg-cyan-900/5"><i data-lucide="check" class="w-5 h-5 mx-auto text-cyan-500"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="check" class="w-4 h-4 mx-auto text-slate-500"></i></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="4" class="p-4 bg-slate-900/80 font-bold text-white uppercase tracking-wider text-xs border-b border-slate-800/50">Relatórios e Integrações</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Exportação em PDF</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="minus" class="w-4 h-4 mx-auto text-slate-600"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center border-x border-slate-800/50 bg-cyan-900/5"><i data-lucide="check" class="w-5 h-5 mx-auto text-cyan-500"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="check" class="w-4 h-4 mx-auto text-slate-500"></i></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">White-label (Sua Marca no PDF)</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="minus" class="w-4 h-4 mx-auto text-slate-600"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center border-x border-slate-800/50 bg-cyan-900/5"><i data-lucide="minus" class="w-4 h-4 mx-auto text-slate-600"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="check" class="w-4 h-4 mx-auto text-emerald-500"></i></td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="p-4 border-b border-slate-800/50 pl-6">Acesso à API REST</td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="minus" class="w-4 h-4 mx-auto text-slate-600"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center border-x border-slate-800/50 bg-cyan-900/5"><i data-lucide="minus" class="w-4 h-4 mx-auto text-slate-600"></i></td>
+                            <td class="p-4 border-b border-slate-800/50 text-center"><i data-lucide="check" class="w-4 h-4 mx-auto text-emerald-500"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="w-full bg-[#000000] py-20 border-b border-slate-900/60 overflow-hidden relative">
+        <div class="absolute inset-y-0 left-0 w-24 md:w-64 bg-gradient-to-r from-[#000000] to-transparent z-20 pointer-events-none"></div>
+        <div class="absolute inset-y-0 right-0 w-24 md:w-64 bg-gradient-to-l from-[#000000] to-transparent z-20 pointer-events-none"></div>
+
+        <div class="text-center mb-10 relative z-30 px-4">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">Motor de auditoria impulsionado pelas melhores tecnologias do mundo</p>
+        </div>
+
+        <div class="animate-marquee-infinite">
+            <div class="flex items-center gap-16 md:gap-24 px-8 md:px-12">
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="gauge" class="w-6 h-6 text-cyan-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Lighthouse API</span>
                 </div>
-                <!-- Navegação (Apenas Dots) -->
-                <div class="flex justify-center items-center gap-4 mt-8">
-                    <div class="flex gap-2" id="carousel-dots">
-                        <!-- Dots serão gerados por JavaScript -->
-                    </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="cpu" class="w-6 h-6 text-purple-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">OpenAI GPT-4</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="chrome" class="w-6 h-6 text-amber-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Chromium Engine</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="database" class="w-6 h-6 text-emerald-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Supabase Data</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="terminal" class="w-6 h-6 text-blue-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Python Engine</span>
                 </div>
             </div>
-            <!-- CTA Final -->
-            <div class="text-center mt-16">
-                <button onclick="smoothScrollTo('view-precos')" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold px-8 py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-blue-500/50">
-                    <i data-lucide="arrow-right" class="w-5 h-5 inline mr-2"></i>
-                    Ver Planos e Preços
-                </button>
+
+            <div class="flex items-center gap-16 md:gap-24 px-8 md:px-12">
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="gauge" class="w-6 h-6 text-cyan-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Lighthouse API</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="cpu" class="w-6 h-6 text-purple-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">OpenAI GPT-4</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="chrome" class="w-6 h-6 text-amber-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Chromium Engine</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="database" class="w-6 h-6 text-emerald-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Supabase Data</span>
+                </div>
+                <div class="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                    <i data-lucide="terminal" class="w-6 h-6 text-blue-400"></i>
+                    <span class="text-base font-black text-white tracking-tight whitespace-nowrap">Python Engine</span>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="w-full bg-[#050811] py-24 border-b border-slate-900/60">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-6">
+            
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-white mb-4">Perguntas Frequentes</h2>
+                    <p class="text-slate-400">Tudo o que você precisa saber sobre o sistema de créditos e análises.</p>
+                </div>
+                
+                <div class="space-y-1">
+                    <div class="border-b border-slate-800/80">
+                        <button onclick="togglePricingFAQ('faq1')" class="w-full py-5 flex items-center justify-between text-left focus:outline-none group">
+                            <span class="text-white font-medium text-base group-hover:text-cyan-400 transition-colors">Os créditos têm prazo de validade? Expiram?</span>
+                            <i data-lucide="plus" id="icon-faq1" class="w-5 h-5 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+                        <div id="content-faq1" class="pb-6 text-slate-400 text-sm leading-relaxed hidden pr-8">
+                            Não. Nós utilizamos o modelo transparente <strong>Pay-as-you-go</strong>. Os seus créditos ficam atrelados à sua conta permanentemente e não expiram no final do mês. Você só consome um crédito quando auditar ativamente uma URL.
+                        </div>
+                    </div>
+                    
+                    <div class="border-b border-slate-800/80">
+                        <button onclick="togglePricingFAQ('faq2')" class="w-full py-5 flex items-center justify-between text-left focus:outline-none group">
+                            <span class="text-white font-medium text-base group-hover:text-cyan-400 transition-colors">A plataforma serve para Agências e envio a Clientes?</span>
+                            <i data-lucide="plus" id="icon-faq2" class="w-5 h-5 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+                        <div id="content-faq2" class="pb-6 text-slate-400 text-sm leading-relaxed hidden pr-8">
+                            Absolutamente. O <strong>Pacote PRO</strong> foi desenhado especificamente para prospecção e fechamento de clientes B2B. Com a funcionalidade de Exportação em PDF, você gera um Dossiê Técnico elegante que pode ser enviado diretamente ao prospecto, provando matematicamente as falhas do site dele antes da reunião de vendas.
+                        </div>
+                    </div>
+
+                    <div class="border-b border-slate-800/80">
+                        <button onclick="togglePricingFAQ('faq3')" class="w-full py-5 flex items-center justify-between text-left focus:outline-none group">
+                            <span class="text-white font-medium text-base group-hover:text-cyan-400 transition-colors">Como funciona o Modo Comparativo (Benchmarking)?</span>
+                            <i data-lucide="plus" id="icon-faq3" class="w-5 h-5 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+                        <div id="content-faq3" class="pb-6 text-slate-400 text-sm leading-relaxed hidden pr-8">
+                            Disponível no pacote PRO e Enterprise. Permite colocar o site do seu cliente lado a lado com o do maior concorrente dele. A IA da S.S.W simula a jornada nos dois sites simultaneamente, extrai os Gaps (o que um tem que o outro não tem) e gera um plano de ataque para superar o adversário em conversão e SEO.
+                        </div>
+                    </div>
+
+                    <div class="border-b border-slate-800/80">
+                        <button onclick="togglePricingFAQ('faq4')" class="w-full py-5 flex items-center justify-between text-left focus:outline-none group">
+                            <span class="text-white font-medium text-base group-hover:text-cyan-400 transition-colors">O que são as "Personas" na auditoria?</span>
+                            <i data-lucide="plus" id="icon-faq4" class="w-5 h-5 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+                        <div id="content-faq4" class="pb-6 text-slate-400 text-sm leading-relaxed hidden pr-8">
+                            Sites não são acessados por robôs, são acessados por pessoas. O nosso sistema possui 15 "Arquétipos de IA" treinados para agir como humanos reais (ex: "O Idoso Leigo", "O Advogado Apressado"). A IA simula como essas pessoas específicas navegariam no site, apontando frustrações visuais e textuais que robôs tradicionais do Google PageSpeed não conseguem ver.
+                        </div>
+                    </div>
+                    
+                    <div class="border-b border-slate-800/80">
+                        <button onclick="togglePricingFAQ('faq5')" class="w-full py-5 flex items-center justify-between text-left focus:outline-none group">
+                            <span class="text-white font-medium text-base group-hover:text-cyan-400 transition-colors">Quais métodos de pagamento são aceitos e o acesso é imediato?</span>
+                            <i data-lucide="plus" id="icon-faq5" class="w-5 h-5 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+                        <div id="content-faq5" class="pb-6 text-slate-400 text-sm leading-relaxed hidden pr-8">
+                            Sim, a liberação via <strong>PIX</strong> e <strong>Cartão de Crédito</strong> é instantânea, integrada diretamente com a segurança do Mercado Pago. Boleto bancário pode levar até 48h úteis para compensação e liberação dos créditos.
+                        </div>
+                    </div>
+                    
+                    <div class="border-b border-slate-800/80">
+                        <button onclick="togglePricingFAQ('faq6')" class="w-full py-5 flex items-center justify-between text-left focus:outline-none group">
+                            <span class="text-white font-medium text-base group-hover:text-cyan-400 transition-colors">Vocês oferecem API ou relatórios White-label (sem a marca SSW)?</span>
+                            <i data-lucide="plus" id="icon-faq6" class="w-5 h-5 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+                        <div id="content-faq6" class="pb-6 text-slate-400 text-sm leading-relaxed hidden pr-8">
+                            Estas são funcionalidades exclusivas do pacote <strong>Enterprise</strong>. Feitas para SaaS e grandes agências que desejam embutir a nossa tecnologia de auditoria e geração de PDFs dentro do próprio software, utilizando a sua própria logotipo. Entre em contacto com a nossa equipa de vendas para cotação.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="w-full bg-[#02040a] py-24">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-6">
+            
+            <div class="max-w-4xl mx-auto text-center bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/50 rounded-3xl p-10 md:p-16 relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNykiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Pare de adivinhar onde o site perde dinheiro.</h2>
+                    <p class="text-slate-400 mb-8 max-w-2xl mx-auto">Adquira o Pacote Pro hoje, reduza o seu Custo de Aquisição de Clientes (CAC) e venda projetos web com alto valor agregado baseado em auditorias reais.</p>
+                    <button onclick="comprarPlano('recomendado')" class="px-8 py-4 rounded-xl bg-white text-slate-950 font-black hover:bg-slate-200 transition-all text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Assinar Pro Agora - R$ 149,99
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
 </div>
+
+<style>
+    /* CSS do Efeito Marquee Infinito */
+    @keyframes marquee-infinite {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-infinite {
+        animation: marquee-infinite 35s linear infinite;
+        display: flex;
+        width: max-content;
+    }
+    .animate-marquee-infinite:hover {
+        animation-play-state: paused;
+    }
+</style>
+
+<script>
+    // Lógica da Sanfona (Accordion) exclusiva para o FAQ de Preços
+    function togglePricingFAQ(id) {
+        const content = document.getElementById(`content-${id}`);
+        const icon = document.getElementById(`icon-${id}`);
+        
+        if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.style.transform = 'rotate(45deg)';
+            icon.classList.remove('text-slate-500');
+            icon.classList.add('text-cyan-400');
+        } else {
+            content.classList.add('hidden');
+            icon.style.transform = 'rotate(0deg)';
+            icon.classList.add('text-slate-500');
+            icon.classList.remove('text-cyan-400');
+        }
+    }
+</script>
