@@ -3,8 +3,8 @@
 // Variáveis globais para ranking
 let rankingData = [];
 
-// API URL - deve ser definida globalmente ou usar a do index.html
-const API_URL = window.API_URL || 'https://sswintelligence.com.br';
+// API URL - usa a mesma configuração do index.html
+const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.com";
 
 // Função para carregar o ranking
 async function loadRanking() {
@@ -289,9 +289,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
-
-// Carregar ranking quando a seção for carregada
-window.addEventListener('loadRankingSection', () => {
-    loadRanking();
 });

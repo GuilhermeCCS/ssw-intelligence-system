@@ -1365,8 +1365,10 @@ async function loadRankingSection() {
         const script = document.createElement('script');
         script.src = 'src/components/ranking/ranking-component.js';
         script.onload = () => {
-            // Dispara evento para inicializar o ranking
-            window.dispatchEvent(new Event('loadRankingSection'));
+            // Chama loadRanking diretamente após o script ser carregado
+            if (typeof loadRanking === 'function') {
+                loadRanking();
+            }
             if (window.location.pathname.replace('/', '') === 'ranking' && typeof nav === 'function') {
                 nav('ranking');
             }
@@ -2331,7 +2333,11 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 'home': 'Painel Principal'
             };
             if(view === 'personas') loadManagePersonas();
-            if(view === 'ranking') window.dispatchEvent(new Event('loadRankingSection'));
+            if(view === 'ranking') {
+                if (typeof loadRanking === 'function') {
+                    loadRanking();
+                }
+            }
             if(view === 'about') initAboutAnimations();
             // Restaura cards e esconde resultados ao voltar para home
             if(view === 'home') {
