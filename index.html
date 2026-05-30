@@ -2332,6 +2332,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                     }
                 }
             }
+            
+            // Controle de background para view de preços
+            if (view === 'precos') {
+                document.body.classList.add('pricing-view-active');
+            } else {
+                document.body.classList.remove('pricing-view-active');
+            }
             // Header Dinâmico
             const titles = { 
                 'personas': 'Gestão de Perfis', 

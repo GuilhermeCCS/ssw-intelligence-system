@@ -106,9 +106,22 @@ const sswPricingStyles = `<style>
     --ssw-cyan-dim:  rgba(34,211,238,0.12);
     --ssw-cyan-glow: rgba(34,211,238,0.22);
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-    background: var(--ssw-bg);
     color: var(--ssw-t1);
     -webkit-font-smoothing: antialiased;
+}
+
+/* Controle de background quando view de preços está ativa */
+body.pricing-view-active {
+    background: #020408 !important;
+}
+
+body.pricing-view-active #appSidebar,
+body.pricing-view-active aside {
+    background: transparent !important;
+}
+
+body.pricing-view-active #appSidebar > div {
+    background: transparent !important;
 }
 
 /* ── ANIMAÇÕES ── */
@@ -138,14 +151,14 @@ const sswPricingStyles = `<style>
     padding: 90px 24px 72px;
     text-align: center;
     position: relative;
-    background: var(--ssw-bg);
 }
 .ssw-hero-glow {
     position: absolute;
-    top: 0; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 480px;
-    background: radial-gradient(ellipse at center top, rgba(34,211,238,0.08) 0%, transparent 70%);
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 1200px; height: 600px;
+    background: radial-gradient(ellipse at center, rgba(34,211,238,0.03) 0%, rgba(34,211,238,0.01) 40%, transparent 70%);
     pointer-events: none;
+    filter: blur(60px);
 }
 .ssw-hero-inner { max-width: 820px; margin: 0 auto; }
 
@@ -214,7 +227,6 @@ const sswPricingStyles = `<style>
     padding: 0 24px 72px;
     max-width: 1140px;
     margin: 0 auto;
-    background: var(--ssw-bg);
 }
 .ssw-plans-grid {
     display: grid;
@@ -411,7 +423,6 @@ const sswPricingStyles = `<style>
     padding: 72px 24px 72px;
     max-width: 1140px;
     margin: 0 auto;
-    background: var(--ssw-bg);
     display: block;
 }
 @media (max-width: 900px) { .ssw-table-section { display: none; } }
@@ -501,7 +512,6 @@ const sswPricingStyles = `<style>
     padding: 56px 0;
     border-top: 1px solid var(--ssw-border);
     border-bottom: 1px solid var(--ssw-border);
-    background: var(--ssw-bg);
     overflow: hidden;
 }
 .ssw-marquee-label {
@@ -551,7 +561,6 @@ const sswPricingStyles = `<style>
 /* ── FAQ ── */
 .ssw-faq-section {
     padding: 72px 24px 90px;
-    background: var(--ssw-bg);
 }
 .ssw-faq-inner { max-width: 740px; margin: 0 auto; }
 .ssw-faq-item { border-bottom: 1px solid var(--ssw-border); }
@@ -604,7 +613,6 @@ const sswPricingStyles = `<style>
     padding: 0 24px 90px;
     max-width: 1140px;
     margin: 0 auto;
-    background: var(--ssw-bg);
 }
 .ssw-cta-card {
     position: relative;
