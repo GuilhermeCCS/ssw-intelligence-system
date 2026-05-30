@@ -1,14 +1,18 @@
 // ========== RANKING FUNCTIONS ==========
 
+console.log('📦 ranking-component.js carregado');
+
 // Variáveis globais para ranking
 let rankingData = [];
 
 // API URL - usa a mesma configuração do index.html
 const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.com";
 
+console.log('🌐 API_URL definida:', API_URL);
+
 // Função para carregar o ranking
 async function loadRanking() {
-    console.log("loadRanking chamado");
+    console.log("📊 loadRanking chamado");
     const firstName = document.getElementById('podiumFirstName');
     const firstScore = document.getElementById('podiumFirstScore');
     const secondName = document.getElementById('podiumSecondName');
@@ -41,9 +45,13 @@ async function loadRanking() {
 
     setLoadingState();
 
+    console.log('🔄 Iniciando fetch para:', `${API_URL}/api/ranking`);
+
     try {
         const res = await fetch(`${API_URL}/api/ranking`);
+        console.log('📡 Resposta recebida, status:', res.status);
         const data = await res.json();
+        console.log('📦 Dados recebidos:', data);
 
         if (!res.ok) {
             throw new Error("Erro na API");
@@ -87,9 +95,9 @@ async function loadRanking() {
             }
         }
 
-        console.log("ranking carregado com sucesso");
+        console.log("✅ ranking carregado com sucesso");
     } catch (e) {
-        console.error("Erro no loadRanking:", e);
+        console.error("❌ Erro no loadRanking:", e);
         if (rankingList) {
             rankingList.innerHTML = '<div class="p-4 rounded-2xl border border-red-500 bg-red-500/10 text-red-400 text-center">Erro ao carregar ranking.</div>';
         }

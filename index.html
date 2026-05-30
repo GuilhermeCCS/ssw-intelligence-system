@@ -1350,12 +1350,14 @@ document.addEventListener('DOMContentLoaded', loadPricingSection);
 <script>
 // Carrega a seção de ranking dinamicamente
 async function loadRankingSection() {
+    console.log('🚀 loadRankingSection iniciado');
     try {
         const response = await fetch('src/components/ranking/ranking-component.html');
         if (!response.ok) {
             throw new Error(`Falha ao carregar ranking: ${response.status}`);
         }
         const html = await response.text();
+        console.log('📄 HTML do ranking carregado');
         document.getElementById('view-ranking-container').innerHTML = html;
         // Recria ícones Lucide após carregar
         if (typeof lucide !== 'undefined') {
@@ -1365,13 +1367,21 @@ async function loadRankingSection() {
         const script = document.createElement('script');
         script.src = 'src/components/ranking/ranking-component.js';
         script.onload = () => {
+            console.log('✅ Script do ranking carregado');
+            console.log('🔍 Verificando se loadRanking existe:', typeof loadRanking);
             // Chama loadRanking diretamente após o script ser carregado
             if (typeof loadRanking === 'function') {
+                console.log('📊 Chamando loadRanking()');
                 loadRanking();
+            } else {
+                console.error('❌ loadRanking não é uma função');
             }
             if (window.location.pathname.replace('/', '') === 'ranking' && typeof nav === 'function') {
                 nav('ranking');
             }
+        };
+        script.onerror = () => {
+            console.error('❌ Erro ao carregar script do ranking');
         };
         document.head.appendChild(script);
     } catch (error) {
@@ -2334,8 +2344,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
             };
             if(view === 'personas') loadManagePersonas();
             if(view === 'ranking') {
+                console.log('🎯 Navegando para ranking');
+                console.log('🔍 loadRanking existe?', typeof loadRanking);
                 if (typeof loadRanking === 'function') {
+                    console.log('📊 Chamando loadRanking() da nav()');
                     loadRanking();
+                } else {
+                    console.error('❌ loadRanking não está disponível');
                 }
             }
             if(view === 'about') initAboutAnimations();
