@@ -116,12 +116,19 @@ body.pricing-view-active {
 }
 
 body.pricing-view-active #appSidebar,
-body.pricing-view-active aside {
+body.pricing-view-active aside#appSidebar {
     background: transparent !important;
 }
 
-body.pricing-view-active #appSidebar > div {
+body.pricing-view-active #appSidebar > div:first-child {
     background: transparent !important;
+}
+
+/* Garante que o modal de pagamento não seja afetado */
+body.pricing-view-active #checkout-modal,
+body.pricing-view-active #checkout-modal > div,
+body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
+    background: #0F1117 !important;
 }
 
 /* ── ANIMAÇÕES ── */
