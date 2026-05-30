@@ -5,9 +5,6 @@ console.log('📦 ranking-component.js carregado');
 // Variáveis globais para ranking
 let rankingData = [];
 
-// API URL - usa a mesma configuração do index.html
-const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.com";
-
 console.log('🌐 API_URL definida:', API_URL);
 
 // Função para carregar o ranking
