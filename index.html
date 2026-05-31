@@ -164,7 +164,7 @@
         }
         /* Sobrescreve fundo para página de tutorial - REGRAS MAIS FORTES */
         body:has(#view-tutorial:not(.hidden)) {
-            background-color: #0F1117 !important;
+            background-color: #020408 !important;
         }
         body:has(#view-tutorial:not(.hidden))::before {
             display: none !important;
@@ -172,7 +172,7 @@
             opacity: 0 !important;
         }
         #view-tutorial {
-            background-color: #0F1117 !important;
+            background-color: #020408 !important;
             position: relative;
             z-index: 1;
         }
@@ -183,7 +183,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #0F1117;
+            background-color: #020408;
             z-index: -1;
         }
         /* Efeito de luz removido */
@@ -1392,7 +1392,7 @@ async function loadRankingSection() {
 // Carrega a seção quando a página estiver pronta
 document.addEventListener('DOMContentLoaded', loadRankingSection);
 </script>
-            <div id="view-tutorial" class="hidden min-h-screen bg-[#0F1117] animate-fade-in-up">
+            <div id="view-tutorial" class="hidden min-h-screen bg-[#020408] animate-fade-in-up">
                 <!-- HEADER -->
                 <header class="max-w-7xl mx-auto px-6 py-12">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -1441,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                             <section id="auditoria-simples" class="scroll-mt-24">
                                 <div class="flex justify-between items-center mb-6">
                                     <h2 class="text-2xl font-semibold text-white">Auditoria Individual</h2>
-                                    <button onclick="printTutorialSection('auditoria-simples')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                    <button onclick="printTutorialSection('auditoria-simples')" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded border border-cyan-500 transition-colors no-print">
                                         <i data-lucide="file-down" class="w-4 h-4"></i>
                                         Gerar PDF desta Seção
                                     </button>
@@ -1551,7 +1551,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                             <section id="batalha-comparativa" class="hidden scroll-mt-24">
                                 <div class="flex justify-between items-center mb-6">
                                     <h2 class="text-2xl font-semibold text-white">Análise Comparativa</h2>
-                                    <button onclick="printTutorialSection('batalha-comparativa')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                    <button onclick="printTutorialSection('batalha-comparativa')" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded border border-cyan-500 transition-colors no-print">
                                         <i data-lucide="file-down" class="w-4 h-4"></i>
                                         Gerar PDF desta Seção
                                     </button>
@@ -1668,7 +1668,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                         <section id="gestao-personas" class="hidden scroll-mt-24">
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-2xl font-semibold text-white">Gestão de Personas</h2>
-                                <button onclick="printTutorialSection('gestao-personas')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                <button onclick="printTutorialSection('gestao-personas')" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded border border-cyan-500 transition-colors no-print">
                                     <i data-lucide="file-down" class="w-4 h-4"></i>
                                     Gerar PDF desta Seção
                                 </button>
@@ -1762,7 +1762,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                         <section id="relatorios-insights" class="hidden scroll-mt-24">
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-2xl font-semibold text-white">Relatórios e Insights</h2>
-                                <button onclick="printTutorialSection('relatorios-insights')" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded border border-slate-700 transition-colors no-print">
+                                <button onclick="printTutorialSection('relatorios-insights')" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded border border-cyan-500 transition-colors no-print">
                                     <i data-lucide="file-down" class="w-4 h-4"></i>
                                     Gerar PDF desta Seção
                                 </button>
