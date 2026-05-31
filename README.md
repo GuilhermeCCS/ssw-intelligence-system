@@ -4,12 +4,12 @@ Plataforma avançada de auditoria web e análise de performance digital com inte
 
 ## Sobre
 
-O S.S.W Intelligence System é uma solução completa e profissional para análise e avaliação de sites, fornecendo insights profundos e acionáveis sobre performance, acessibilidade, SEO, segurança e experiência do usuário. Desenvolvido com tecnologia de ponta em inteligência artificial e 15 personas personalizadas, oferece uma visão 360° e abrangente da qualidade digital de qualquer site, permitindo que empresas e profissionais tomem decisões estratégicas baseadas em dados concretos.
+O S.S.W Intelligence System é uma solução completa e profissional para análise e avaliação de sites, fornecendo insights profundos e acionáveis sobre performance, acessibilidade, SEO, segurança e experiência do usuário. Desenvolvido com tecnologia de ponta em inteligência artificial e 15 agents agentlizadas, oferece uma visão 360° e abrangente da qualidade digital de qualquer site, permitindo que empresas e profissionais tomem decisões estratégicas baseadas em dados concretos.
 
 ## Diferenciais
 
 ### Tecnologia de IA Avançada
-Algoritmos proprietários que combinam análise técnica com inteligência comportamental, proporcionando insights que vão além de métricas superficiais. O sistema utiliza 15 personas diferentes para avaliar o site sob múltiplas perspectivas, garantindo uma análise completa e contextualizada.
+Algoritmos proprietários que combinam análise técnica com inteligência comportamental, proporcionando insights que vão além de métricas superficiais. O sistema utiliza 15 agents diferentes para avaliar o site sob múltiplas perspectivas, garantindo uma análise completa e contextualizada.
 
 ### Análise em Tempo Real
 Resultados entregues em menos de 30 segundos, permitindo tomadas de decisão rápidas e eficientes. A plataforma processa mais de 50 métricas simultaneamente, cruzando dados de performance, acessibilidade, SEO e experiência do usuário em um único relatório consolidado.
@@ -22,7 +22,7 @@ Flexibilidade total com sistema de créditos que permite usar a plataforma quand
 ### Auditoria Inteligente
 - Análise completa e abrangente de sites com mais de 50 métricas técnicas
 - Processamento em tempo real com resultados em menos de 30 segundos
-- 15 personas de inteligência artificial para análise comportamental multidimensional
+- 15 agents de inteligência artificial para análise comportamental multidimensional
 - Detecção automática de erros críticos, oportunidades de melhoria e pontos de atenção
 - Avaliação de performance, acessibilidade (WCAG), SEO, segurança e UX
 - Geração de scores e índices de qualidade digital
@@ -33,7 +33,7 @@ Flexibilidade total com sistema de créditos que permite usar a plataforma quand
 - Benchmarking estratégico com métricas normalizadas
 - Insights acionáveis para superar estratégias de concorrentes
 - Visualização gráfica de diferenças e similaridades
-- Recomendações personalizadas baseadas em comparação
+- Recomendações agentlizadas baseadas em comparação
 
 ### Relatórios Profissionais
 - Relatórios detalhados e completos em formato PDF

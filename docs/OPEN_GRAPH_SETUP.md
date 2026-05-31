@@ -2,11 +2,11 @@
 
 ## Como configurar a prévia do site ao compartilhar links
 
-O sistema agora está configurado com Open Graph meta tags que permitem que quando você compartilhar o link do seu site, apareça uma prévia personalizada com:
+O sistema agora está configurado com Open Graph meta tags que permitem que quando você compartilhar o link do seu site, apareça uma prévia agentlizada com:
 
 - ✅ Título do site
 - ✅ Descrição atraente  
-- ✅ Imagem personalizada (1200x630px)
+- ✅ Imagem agentlizada (1200x630px)
 - ✅ Nome do site
 - ✅ URL canônico
 
