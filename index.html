@@ -611,27 +611,7 @@
         }
     </style>
     <style>
-        /* CSS para posicionamento do footer durante auditoria */
-        .audit-footer-position {
-            position: relative !important;
-            width: 100% !important;
-            margin: 3rem 0 0 0 !important;
-            padding: 1rem 1.5rem !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
-            background: #080d16 !important;
-            z-index: 1 !important;
-            clear: both !important;
-            box-sizing: border-box !important;
-            left: 0 !important;
-            right: 0 !important;
-        }
-        /* Garante que o container do footer ocupe toda largura */
-        #auditResults .audit-footer-position {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
+        /* Ajustes de scroll durante auditoria */
         /* Garante que o body permita scroll */
         body {
             min-height: 100vh;
@@ -667,6 +647,11 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            padding-bottom: 0 !important;
+        }
+        #footer-container {
+            margin-top: auto;
+            margin-bottom: 0;
         }
         #mainFooter {
     margin-top: auto;
@@ -5194,7 +5179,6 @@ function getCodigoHTML() {
             const footer = document.getElementById('mainFooter');
             const mainContainer = document.getElementById('mainContentWrapper');
             const main = document.getElementById('mainContent');
-            const auditResults = document.getElementById('auditResults');
             const homeFooterSpacer = document.getElementById('homeFooterSpacer');
             if (!footerHost || !mainContainer) return;
 
@@ -5202,38 +5186,30 @@ function getCodigoHTML() {
                 footerHost.appendChild(footer);
             }
 
+            if (footer) {
+                footer.classList.remove('audit-footer-position');
+                footer.style.position = '';
+                footer.style.width = '';
+                footer.style.margin = '';
+                footer.style.padding = '';
+                footer.style.zIndex = '';
+                footer.style.clear = '';
+                footer.style.background = '#000000';
+                footer.style.borderTop = '1px solid rgba(255,255,255,0.08)';
+            }
+
+            if (footerHost.parentNode !== mainContainer) {
+                mainContainer.appendChild(footerHost);
+            }
+
             if (homeFooterSpacer) {
                 homeFooterSpacer.classList.toggle('hidden', hasAuditResults);
             }
 
             if (hasAuditResults) {
-                // Mantém o footer fora do HTML do relatório, mas imediatamente após os resultados.
-                if (auditResults && footerHost.previousElementSibling !== auditResults) {
-                    auditResults.insertAdjacentElement('afterend', footerHost);
-                }
-                if (footer) {
-                    footer.classList.add('audit-footer-position');
-                }
                 document.body.classList.add('audit-active');
                 if (main) main.style.paddingBottom = '0';
             } else {
-                // Se não há auditoria, volta para posição normal dentro do container.
-                if (footerHost.parentNode !== mainContainer) {
-                    mainContainer.appendChild(footerHost);
-                }
-                // Remove classe especial
-                if (footer) footer.classList.remove('audit-footer-position');
-                // Remove estilos inline
-                if (footer) {
-                    footer.style.position = '';
-                    footer.style.width = '';
-                    footer.style.margin = '';
-                    footer.style.padding = '';
-                    footer.style.borderTop = '';
-                    footer.style.background = '';
-                    footer.style.zIndex = '';
-                    footer.style.clear = '';
-                }
                 // Remove classe do body
                 document.body.classList.remove('audit-active');
                 // Restaura overflow do body
