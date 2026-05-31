@@ -8,16 +8,16 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #020617; /* slate-950 (Fundo do site) */
+    background: #020408; /* slate-950 (Fundo do site) */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #334155; /* slate-700 */
+    background: #3d4f63; /* slate-700 */
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #475569; /* slate-600 */
+    background: #8292a8; /* slate-600 */
 }
 
 /* =========================================
@@ -25,7 +25,7 @@
    ========================================= */
 /* Use class="glass" em qualquer div para dar esse efeito */
 .glass {
-    background: rgba(15, 23, 42, 0.6); /* slate-900 com transparência */
+    background: rgba(8, 13, 22, 0.6); /* slate-900 com transparência */
     backdrop-filter: blur(12px);       /* Desfoque do fundo */
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08); /* Borda sutil */
