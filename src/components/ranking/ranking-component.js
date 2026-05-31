@@ -1,182 +1,327 @@
 // ========== RANKING FUNCTIONS ==========
-console.log('📦 ranking-component.js carregado');
+console.log('ranking-component.js carregado');
 
-// Variáveis globais para ranking
 let rankingData = [];
+let activeRankingFilter = 'todos';
+let currentRankingType = 'landing';
+let rankingInteractionsReady = false;
 
-// A variável API_URL já foi declarada no index.html ou config.js. 
-// Apagámos a declaração daqui para resolver o erro "Identifier has already been declared".
+const rankingFilterLabels = {
+    todos: 'Todos',
+    comercio: 'Comercio',
+    servicos: 'Servicos',
+    digital: 'Digital',
+    financas: 'B2B',
+    educacao: 'Educacao',
+    imoveis: 'Imoveis'
+};
 
-// Função para carregar o ranking
+const rankingFilterOptionBaseClass = 'ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white';
+const rankingFilterOptionActiveClass = 'ranking-filter-option flex w-full items-center justify-between rounded-lg bg-cyan-300/[0.12] px-3 py-2.5 text-left text-sm font-black text-white transition hover:bg-cyan-300/[0.16]';
+
+function rankingText(value, fallback = '') {
+    return value === undefined || value === null || value === '' ? fallback : String(value);
+}
+
+function escapeHtml(value) {
+    return rankingText(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function normalizeRankingText(value) {
+    return rankingText(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function scoreValue(site) {
+    const value = Number(site && site.score);
+    return Number.isFinite(value) ? value : null;
+}
+
+function formatScore(site) {
+    const value = scoreValue(site);
+    return value === null ? '--' : Math.round(value);
+}
+
+function scoreWidth(site) {
+    const value = scoreValue(site);
+    return Math.max(0, Math.min(100, value || 0));
+}
+
+function refreshRankingIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+    }
+}
+
 async function loadRanking() {
-    console.log("📊 loadRanking chamado");
+    console.log('loadRanking chamado');
     const rankingList = document.getElementById('rankingList');
-    const rankingTotalCount = document.getElementById('rankingTotalCount');
+    const topThreeList = document.getElementById('topThreeList');
 
-    // Estado inicial de "Carregando"
-    const setLoadingState = () => {
-        const elements = [
-            document.getElementById('podiumFirstName'),
-            document.getElementById('podiumFirstScore'),
-            document.getElementById('podiumSecondName'),
-            document.getElementById('podiumSecondScore'),
-            document.getElementById('podiumThirdName'),
-            document.getElementById('podiumThirdScore')
-        ];
-        elements.forEach(el => {
-            if (el) el.textContent = '--';
-        });
-        if (rankingTotalCount) rankingTotalCount.textContent = '0';
-        if (rankingList) {
-            rankingList.innerHTML = '<div class="p-6 rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-cyan-950/60 to-blue-950/40 text-center text-slate-300">Carregando dados do mercado...</div>';
-        }
-    };
-
-    setLoadingState();
-
-    console.log('🔄 Iniciando fetch para a API de ranking...');
+    initRankingInteractions();
+    setLoadingState(rankingList, topThreeList);
 
     try {
         const res = await fetch(`${API_URL}/api/ranking`);
-        console.log('📡 Resposta recebida, status:', res.status);
         const rawData = await res.json();
 
         if (!res.ok) {
-            throw new Error("Erro na API");
+            throw new Error('Erro na API');
         }
 
-        // PROTEÇÃO: Garante que os dados são lidos como array, independentemente de como a API os envie
         const data = Array.isArray(rawData) ? rawData : (rawData.ranking || rawData.data || []);
+        data.sort((a, b) => (scoreValue(b) || 0) - (scoreValue(a) || 0));
 
-        // Ordenar do maior score para o menor
-        data.sort((a, b) => b.score - a.score);
-        
-        // Armazenar os dados globalmente para uso na busca e nos filtros
         window.rankingData = data;
         rankingData = data;
+        activeRankingFilter = 'todos';
+        currentRankingType = 'landing';
+        setRankingTypeButtonState();
+        setActiveRankingFilterOption();
+        applyRankingFilters();
 
-        // Delega a renderização do HTML à função de visualização
-        renderRankingView(data);
-
-        console.log("✅ ranking carregado com sucesso");
+        console.log('ranking carregado com sucesso');
     } catch (e) {
-        console.error("❌ Erro no loadRanking:", e);
-        if (rankingList) {
-            rankingList.innerHTML = '<div class="p-4 rounded-2xl border border-red-500 bg-red-500/10 text-red-400 text-center">Erro ao carregar ranking. Verifique a conexão com a API.</div>';
-        }
-        if (rankingTotalCount) rankingTotalCount.textContent = '0';
-
-        // Reseta pódio em caso de erro
-        const setPodium = (nameId, scoreId, placeholder) => {
-            const nEl = document.getElementById(nameId);
-            const sEl = document.getElementById(scoreId);
-            if(nEl) nEl.textContent = placeholder;
-            if(sEl) sEl.textContent = '--';
-        };
-        setPodium('podiumFirstName', 'podiumFirstScore', 'Sem dados');
-        setPodium('podiumSecondName', 'podiumSecondScore', 'Sem dados');
-        setPodium('podiumThirdName', 'podiumThirdScore', 'Sem dados');
+        console.error('Erro no loadRanking:', e);
+        renderRankingError();
     }
 }
 
-// --- FUNÇÃO DE RENDERIZAÇÃO: Desenha os dados na tela ---
-function renderRankingView(dataToRender) {
-    const firstName = document.getElementById('podiumFirstName');
-    const firstScore = document.getElementById('podiumFirstScore');
-    const secondName = document.getElementById('podiumSecondName');
-    const secondScore = document.getElementById('podiumSecondScore');
-    const thirdName = document.getElementById('podiumThirdName');
-    const thirdScore = document.getElementById('podiumThirdScore');
-    const rankingList = document.getElementById('rankingList');
-    const rankingTotalCount = document.getElementById('rankingTotalCount');
-
-    // Preenche um lugar do pódio
-    const setPodium = (nameEl, scoreEl, site, placeholder) => {
-        if (!nameEl || !scoreEl) return;
-        if (!site) {
-            nameEl.textContent = placeholder;
-            scoreEl.textContent = '--';
-            return;
-        }
-        nameEl.textContent = site.site_name || 'Sem Nome';
-        scoreEl.textContent = site.score !== undefined ? site.score : '--';
-    };
-
-    if (rankingTotalCount) rankingTotalCount.textContent = `${dataToRender.length}`;
-
-    // Extrai o Top 3
-    const [first, second, third, ...others] = dataToRender;
-
-    setPodium(firstName, firstScore, first, 'Nenhum');
-    setPodium(secondName, secondScore, second, 'Nenhum');
-    setPodium(thirdName, thirdScore, third, 'Nenhum');
-
-    // Desenha a lista dos demais colocados com a nova tabela estilizada
+function setLoadingState(rankingList, topThreeList) {
+    updateRankingSummary([]);
+    if (topThreeList) {
+        topThreeList.innerHTML = `
+            <div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-4 text-sm text-slate-400">
+                Carregando destaques...
+            </div>
+        `;
+    }
     if (rankingList) {
-        if (others.length === 0) {
-            rankingList.innerHTML = '<div class="p-6 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-slate-400 text-center">Nenhum outro colocado neste nicho.</div>';
-        } else {
-            rankingList.innerHTML = others.map((site, idx) => {
-                let scoreColor = 'text-slate-300';
-                if (site.score >= 50) scoreColor = 'text-cyan-300';
-                if (site.score >= 80) scoreColor = 'text-emerald-400';
-
-                return `
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 rounded-2xl border border-slate-700/30 bg-slate-800/40 transition-all hover:bg-slate-700/40 hover:border-slate-600/50 hover:translate-x-1">
-                        <div class="flex items-center gap-4">
-                            <span class="font-mono text-slate-500 font-bold text-sm w-8 text-center bg-slate-900/50 py-1 rounded-md">#${idx + 4}</span>
-                            <div>
-                                <div class="font-bold text-white text-base">${site.site_name || 'Sem Nome'}</div>
-                                <div class="text-slate-400 text-xs mt-0.5">${site.niche || 'Nicho não informado'}</div>
-                            </div>
-                        </div>
-                        <div class="text-right mt-2 sm:mt-0">
-                            <span class="font-black ${scoreColor} text-xl">${site.score !== undefined ? site.score : '--'}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+        rankingList.innerHTML = `
+            <div class="p-8 text-center text-slate-400">
+                <div class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.07] bg-[#080d16]">
+                    <i data-lucide="loader-2" class="h-5 w-5 text-cyan-300"></i>
+                </div>
+                Carregando dados do mercado...
+            </div>
+        `;
     }
+    refreshRankingIcons();
 }
 
-// --- FUNÇÃO DE FILTRO: Acionada ao clicar nas Tabs ---
-function filterRankingData(category, btnElement) {
-    // Reseta visual dos botões
-    document.querySelectorAll('.ranking-tab').forEach(btn => {
-        btn.className = "ranking-tab px-6 py-2.5 rounded-full text-sm font-medium transition-all bg-slate-800/50 text-slate-300 border border-slate-700 hover:text-white hover:border-slate-500 hover:bg-slate-700 hover:scale-105";
-    });
-    
-    // Adiciona brilho ao botão clicado
-    if (btnElement) {
-        btnElement.className = "ranking-tab active px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.2)] hover:scale-105";
+function renderRankingError() {
+    const rankingList = document.getElementById('rankingList');
+    const topThreeList = document.getElementById('topThreeList');
+    updateRankingSummary([]);
+
+    if (topThreeList) {
+        topThreeList.innerHTML = '<div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-4 text-sm text-slate-400">Sem dados para exibir.</div>';
+    }
+    if (rankingList) {
+        rankingList.innerHTML = `
+            <div class="p-8 text-center text-red-300">
+                <div class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-red-500/30 bg-red-500/10">
+                    <i data-lucide="wifi-off" class="h-5 w-5"></i>
+                </div>
+                Erro ao carregar ranking. Verifique a conexao com a API.
+            </div>
+        `;
+    }
+    refreshRankingIcons();
+}
+
+function updateRankingSummary(dataToRender) {
+    const totalEl = document.getElementById('rankingTotalCount');
+    const activeFilterEl = document.getElementById('rankingActiveFilter');
+    if (totalEl) totalEl.textContent = `${dataToRender.length}`;
+    if (activeFilterEl) activeFilterEl.textContent = rankingFilterLabels[activeRankingFilter] || 'Todos';
+}
+
+function renderRankingView(dataToRender) {
+    updateRankingSummary(dataToRender);
+    renderTopThree(dataToRender.slice(0, 3));
+    renderRankingRows(dataToRender);
+}
+
+function renderTopThree(topSites) {
+    const topThreeList = document.getElementById('topThreeList');
+    if (!topThreeList) return;
+
+    if (!topSites.length) {
+        topThreeList.innerHTML = `
+            <div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-4 text-sm text-slate-400">
+                Nenhum competidor encontrado neste filtro.
+            </div>
+        `;
+        return;
     }
 
-    // Termos de busca de nicho
+    topThreeList.innerHTML = [0, 1, 2].map(index => {
+        const site = topSites[index];
+        const position = index + 1;
+        if (!site) {
+            return `
+                <div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-4 text-sm text-slate-500">
+                    #${position} ainda sem registro
+                </div>
+            `;
+        }
+
+        const isLeader = position === 1;
+        const rankClass = isLeader ? 'border-cyan-300/35 bg-gradient-to-br from-[#0d1825] to-[#0c1220] text-cyan-100 shadow-[0_0_22px_rgba(34,211,238,0.14)]' : 'border-white/[0.07] bg-[#080d16] text-slate-300';
+
+        return `
+            <article class="rounded-xl border ${rankClass} p-4">
+                <div class="mb-3 flex items-start justify-between gap-3">
+                    <span class="inline-flex h-8 min-w-10 items-center justify-center rounded-lg border border-white/[0.07] bg-[#020408] font-mono text-sm font-black">#${position}</span>
+                    <span class="text-2xl font-black text-white">${formatScore(site)}</span>
+                </div>
+                <h4 class="line-clamp-2 text-base font-black leading-tight text-white">${escapeHtml(site.site_name || 'Sem nome')}</h4>
+                <p class="mt-1 truncate text-sm text-slate-500">${escapeHtml(site.niche || 'Nicho nao informado')}</p>
+                <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
+                    <div class="h-full rounded-full bg-cyan-300" style="width: ${scoreWidth(site)}%"></div>
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+function renderRankingRows(dataToRender) {
+    const rankingList = document.getElementById('rankingList');
+    if (!rankingList) return;
+
+    if (!dataToRender.length) {
+        rankingList.innerHTML = `
+            <div class="p-8 text-center text-slate-400">
+                <div class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.07] bg-[#080d16]">
+                    <i data-lucide="search-x" class="h-5 w-5"></i>
+                </div>
+                Nenhum competidor encontrado neste filtro.
+            </div>
+        `;
+        refreshRankingIcons();
+        return;
+    }
+
+    rankingList.innerHTML = dataToRender.map((site, idx) => {
+        const position = idx + 1;
+        const isTopTen = position <= 10;
+        const rowTone = isTopTen ? 'hover:bg-[#101828]' : 'opacity-85 hover:opacity-100 hover:bg-[#101828]';
+
+        return `
+            <article class="grid min-h-[3.75rem] gap-3 px-4 py-3 transition ${rowTone} lg:grid-cols-[76px_minmax(0,1fr)_150px_96px] lg:items-center">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex h-8 min-w-12 items-center justify-center rounded-lg border border-white/[0.07] bg-[#020408] font-mono text-sm font-black text-slate-300">#${position}</span>
+                    <span class="text-xs font-bold uppercase tracking-[0.14em] text-slate-500 lg:hidden">Rank</span>
+                </div>
+                <div class="min-w-0">
+                    <h4 class="truncate text-sm font-black text-white">${escapeHtml(site.site_name || 'Sem nome')}</h4>
+                    <p class="mt-1 truncate text-xs text-slate-500 lg:hidden">${escapeHtml(site.niche || 'Nicho nao informado')}</p>
+                </div>
+                <div class="hidden truncate text-sm text-slate-400 lg:block">${escapeHtml(site.niche || 'Nicho nao informado')}</div>
+                <div class="lg:text-right">
+                    <div class="mb-1.5 flex items-center justify-between gap-3 lg:justify-end">
+                        <span class="text-xs font-bold uppercase tracking-[0.14em] text-slate-500 lg:hidden">Score</span>
+                        <span class="text-xl font-black text-white">${formatScore(site)}</span>
+                    </div>
+                    <div class="h-1 overflow-hidden rounded-full bg-white/[0.07]">
+                        <div class="h-full rounded-full bg-slate-300" style="width: ${scoreWidth(site)}%"></div>
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+function setActiveRankingFilterOption(btnElement) {
+    const activeLabel = rankingFilterLabels[activeRankingFilter] || 'Todos';
+    const labelEl = document.getElementById('rankingFilterButtonLabel');
+    if (labelEl) labelEl.textContent = activeLabel;
+
+    document.querySelectorAll('.ranking-filter-option').forEach(btn => {
+        const isActive = btnElement ? btn === btnElement : btn.dataset.filter === activeRankingFilter;
+        btn.className = isActive ? rankingFilterOptionActiveClass : rankingFilterOptionBaseClass;
+
+        const checkIcon = btn.querySelector('.ranking-filter-check');
+        if (checkIcon) {
+            checkIcon.classList.toggle('hidden', !isActive);
+        }
+    });
+}
+
+function toggleRankingFilterMenu(forceOpen) {
+    const menu = document.getElementById('rankingFilterMenu');
+    if (!menu) return;
+
+    const shouldOpen = forceOpen === undefined ? menu.classList.contains('hidden') : forceOpen;
+    menu.classList.toggle('hidden', !shouldOpen);
+    refreshRankingIcons();
+}
+
+function setRankingType(type) {
+    currentRankingType = type;
+    setRankingTypeButtonState();
+    applyRankingFilters();
+}
+
+function setRankingTypeButtonState() {
+    const btnLanding = document.getElementById('toggleLanding');
+    const btnComplex = document.getElementById('toggleComplex');
+    if (!btnLanding || !btnComplex) return;
+
+    const activeClass = 'flex-1 rounded-lg bg-cyan-300 px-4 py-2.5 text-sm font-black text-[#020408] shadow-[0_0_20px_rgba(34,211,238,0.20)] transition sm:flex-none';
+    const inactiveClass = 'flex-1 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-400 transition hover:bg-white/[0.04] hover:text-white sm:flex-none';
+
+    btnLanding.className = currentRankingType === 'landing' ? activeClass : inactiveClass;
+    btnComplex.className = currentRankingType === 'complex' ? activeClass : inactiveClass;
+}
+
+function filterRankingData(category, btnElement) {
+    activeRankingFilter = category;
+    setActiveRankingFilterOption(btnElement);
+    toggleRankingFilterMenu(false);
+    applyRankingFilters();
+}
+
+function applyRankingFilters() {
+    let filteredData = window.rankingData || [];
+
+    filteredData = filteredData.filter(site => {
+        const count = Number(site.page_count || 1);
+        if (currentRankingType === 'landing') return count <= 4;
+        if (currentRankingType === 'complex') return count >= 5;
+        return true;
+    });
+
     const cats = {
-        comercio:   ['roupa', 'loja', 'commerce', 'eletronico', 'farmacia', 'restaurante', 'varejo', 'produto', 'moda'],
-        servicos:   ['advogado', 'dentista', 'clinica', 'servico', 'carro', 'turismo', 'hotel', 'saude', 'médico'],
-        digital:    ['sistema', 'software', 'curso', 'landing page', 'online', 'tech', 'digital', 'saas'],
-        financas:   ['banco', 'financa', 'consultoria', 'imobiliaria', 'b2b', 'negócio']
+        comercio: ['roupa', 'loja', 'commerce', 'eletronico', 'farmacia', 'restaurante', 'varejo', 'produto', 'moda'],
+        servicos: ['advogado', 'dentista', 'clinica', 'servico', 'carro', 'turismo', 'hotel', 'saude', 'medico'],
+        digital: ['sistema', 'software', 'curso', 'landing page', 'online', 'tech', 'digital', 'saas'],
+        financas: ['banco', 'financa', 'consultoria', 'imobiliaria', 'b2b', 'negocio', 'contabilidade'],
+        educacao: ['curso', 'educacao', 'escola', 'faculdade', 'treinamento', 'ensino', 'ead'],
+        imoveis: ['imovel', 'imobiliaria', 'corretor', 'apartamento', 'casa', 'condominio']
     };
 
-    let filteredData = window.rankingData || [];
-    
-    if (category !== 'todos') {
-        filteredData = window.rankingData.filter(site => {
-            const niche = (site.niche || '').toLowerCase();
-            return cats[category].some(term => niche.includes(term));
+    if (activeRankingFilter !== 'todos') {
+        filteredData = filteredData.filter(site => {
+            const niche = normalizeRankingText(site.niche || '');
+            return cats[activeRankingFilter].some(term => niche.includes(term));
         });
     }
 
     renderRankingView(filteredData);
 }
 
-// --- FUNÇÃO DE PESQUISA (Search Bar) ---
 function searchRankingSite() {
     const searchInput = document.getElementById('searchRankingInput');
     const searchResultContainer = document.getElementById('searchResultContainer');
-    const searchTerm = searchInput.value.toLowerCase().trim();
+    if (!searchInput || !searchResultContainer) return;
+
+    const searchTerm = normalizeRankingText(searchInput.value.trim());
 
     if (!searchTerm) {
         searchResultContainer.classList.add('hidden');
@@ -187,58 +332,35 @@ function searchRankingSite() {
     if (!window.rankingData || window.rankingData.length === 0) {
         searchResultContainer.classList.remove('hidden');
         searchResultContainer.innerHTML = `
-            <div class="p-6 rounded-2xl border border-red-500/50 bg-red-500/10 text-red-400 text-center">
-                <p class="font-bold">Dados do ranking não disponíveis</p>
-                <p class="text-sm mt-1">Por favor, aguarde o carregamento do ranking.</p>
+            <div class="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300">
+                <p class="font-black">Dados do ranking nao disponiveis</p>
+                <p class="mt-1 text-sm text-red-200/80">Aguarde o carregamento do ranking e tente novamente.</p>
             </div>
         `;
         return;
     }
 
     const foundSite = window.rankingData.find(site =>
-        site.site_name.toLowerCase().includes(searchTerm)
+        normalizeRankingText(site.site_name || '').includes(searchTerm)
     );
 
     if (foundSite) {
         const position = window.rankingData.indexOf(foundSite) + 1;
-        let positionColor = 'text-slate-400';
-        let positionBgColor = 'bg-slate-900/50 border-slate-700';
-        let scoreColor = 'text-white';
-
-        // Lógica de cores baseada no Pódio
-        if (position === 1) {
-            positionColor = 'text-yellow-400';
-            positionBgColor = 'bg-yellow-900/40 border-yellow-500/50';
-            scoreColor = 'text-yellow-400';
-        } else if (position === 2) {
-            positionColor = 'text-slate-300';
-            positionBgColor = 'bg-slate-700/80 border-slate-400/40';
-            scoreColor = 'text-slate-300';
-        } else if (position === 3) {
-            positionColor = 'text-orange-400';
-            positionBgColor = 'bg-orange-950/40 border-orange-500/40';
-            scoreColor = 'text-orange-400';
-        } else {
-            if (foundSite.score >= 50) scoreColor = 'text-cyan-300';
-            if (foundSite.score >= 80) scoreColor = 'text-emerald-400';
-        }
 
         searchResultContainer.classList.remove('hidden');
         searchResultContainer.innerHTML = `
-            <div class="p-6 rounded-2xl border border-slate-600 bg-slate-800/80 backdrop-blur-sm shadow-xl animate-fade-in-up">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div class="flex items-start gap-4 flex-1">
-                        <div class="flex items-center justify-center w-16 h-16 rounded-full ${positionBgColor} border shadow-inner">
-                            <span class="text-2xl font-black ${positionColor}">#${position}</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold text-white">${foundSite.site_name || 'Sem Nome'}</h4>
-                            <p class="text-slate-400 text-sm mt-1">${foundSite.niche || 'Nicho não informado'}</p>
+            <div class="rounded-xl border border-cyan-300/35 bg-gradient-to-br from-[#0d1825] to-[#0c1220] p-4 shadow-[0_0_22px_rgba(34,211,238,0.14)]">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/[0.07] bg-[#020408] font-mono text-lg font-black text-cyan-100">#${position}</div>
+                        <div class="min-w-0">
+                            <h4 class="truncate text-lg font-black text-white">${escapeHtml(foundSite.site_name || 'Sem nome')}</h4>
+                            <p class="mt-1 truncate text-sm text-slate-400">${escapeHtml(foundSite.niche || 'Nicho nao informado')}</p>
                         </div>
                     </div>
-                    <div class="text-right mt-2 sm:mt-0">
-                        <p class="text-slate-500 text-xs mb-1 uppercase font-bold tracking-wider">Score Oficial</p>
-                        <span class="text-4xl font-black ${scoreColor}">${foundSite.score !== undefined ? foundSite.score : '--'}</span>
+                    <div class="sm:w-36 sm:text-right">
+                        <p class="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">Score</p>
+                        <p class="text-3xl font-black text-white">${formatScore(foundSite)}</p>
                     </div>
                 </div>
             </div>
@@ -246,12 +368,15 @@ function searchRankingSite() {
     } else {
         searchResultContainer.classList.remove('hidden');
         searchResultContainer.innerHTML = `
-            <div class="p-6 rounded-2xl border border-yellow-500/50 bg-yellow-500/10 text-yellow-400 text-center animate-fade-in-up">
-                <p class="font-bold text-lg"><i data-lucide="alert-triangle" class="w-5 h-5 inline-block -mt-1 mr-1"></i> Site não encontrado</p>
-                <p class="text-sm mt-2 text-yellow-200/80">A busca por "<strong>${searchTerm}</strong>" não retornou resultados no ranking global.</p>
+            <div class="rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-amber-200">
+                <p class="flex items-center gap-2 font-black">
+                    <i data-lucide="alert-triangle" class="h-5 w-5"></i>
+                    Site nao encontrado
+                </p>
+                <p class="mt-1 text-sm text-amber-100/75">A busca nao retornou resultados no ranking global.</p>
             </div>
         `;
-        lucide.createIcons();
+        refreshRankingIcons();
     }
 }
 
@@ -259,7 +384,9 @@ function showSearchSuggestions() {
     const searchInput = document.getElementById('searchRankingInput');
     const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
     const suggestionsList = document.getElementById('suggestionsList');
-    const searchTerm = searchInput.value.toLowerCase().trim();
+    if (!searchInput || !suggestionsDropdown || !suggestionsList) return;
+
+    const searchTerm = normalizeRankingText(searchInput.value.trim());
 
     if (!searchTerm || !window.rankingData || window.rankingData.length === 0) {
         suggestionsDropdown.classList.add('hidden');
@@ -267,41 +394,33 @@ function showSearchSuggestions() {
         return;
     }
 
-    const sitesStartingWith = window.rankingData.filter(site =>
-        site.site_name.toLowerCase().startsWith(searchTerm)
-    ).sort((a, b) => a.site_name.toLowerCase().localeCompare(b.site_name.toLowerCase()));
+    const filteredSites = window.rankingData
+        .filter(site => normalizeRankingText(site.site_name || '').includes(searchTerm))
+        .sort((a, b) => normalizeRankingText(a.site_name || '').localeCompare(normalizeRankingText(b.site_name || '')))
+        .slice(0, 6);
 
-    const sitesContaining = window.rankingData.filter(site =>
-        site.site_name.toLowerCase().includes(searchTerm) &&
-        !site.site_name.toLowerCase().startsWith(searchTerm)
-    ).sort((a, b) => a.site_name.toLowerCase().localeCompare(b.site_name.toLowerCase()));
-
-    const filteredSites = [...sitesStartingWith, ...sitesContaining].slice(0, 5);
-
-    if (filteredSites.length === 0) {
+    if (!filteredSites.length) {
         suggestionsDropdown.classList.add('hidden');
         suggestionsList.innerHTML = '';
         return;
     }
 
-    suggestionsList.innerHTML = filteredSites.map((site, idx) => {
+    suggestionsList.innerHTML = filteredSites.map(site => {
         const position = window.rankingData.indexOf(site) + 1;
-        let scoreColor = 'text-slate-300';
-        if (site.score >= 50) scoreColor = 'text-cyan-300';
-        if (site.score >= 80) scoreColor = 'text-emerald-400';
+        const siteName = rankingText(site.site_name, 'Sem nome');
 
         return `
-            <li class="border-b border-slate-700/50 last:border-b-0 hover:bg-slate-700/50 cursor-pointer transition p-3" onclick="selectSuggestion('${site.site_name.replace(/'/g, "\\'")}')">
-                <div class="flex items-center justify-between gap-3">
-                    <div class="flex-1">
-                        <div class="text-white font-semibold text-sm">${site.site_name}</div>
-                        <div class="text-slate-400 text-xs mt-0.5">${site.niche || 'Nicho não informado'}</div>
-                    </div>
-                    <div class="text-right flex items-center gap-2">
-                        <span class="font-mono text-xs text-slate-500 bg-slate-900/50 px-2 py-0.5 rounded">#${position}</span>
-                        <span class="font-bold ${scoreColor}">${site.score || '--'}</span>
-                    </div>
-                </div>
+            <li class="border-b border-white/[0.07] last:border-b-0">
+                <button type="button" class="flex w-full items-center justify-between gap-3 p-3 text-left transition hover:bg-[#101828]" data-site="${escapeHtml(siteName)}" onclick="selectSuggestion(this.dataset.site)">
+                    <span class="min-w-0">
+                        <span class="block truncate text-sm font-bold text-white">${escapeHtml(siteName)}</span>
+                        <span class="mt-0.5 block truncate text-xs text-slate-500">${escapeHtml(site.niche || 'Nicho nao informado')}</span>
+                    </span>
+                    <span class="flex shrink-0 items-center gap-2">
+                        <span class="rounded-lg bg-[#020408] px-2 py-1 font-mono text-xs font-black text-slate-400">#${position}</span>
+                        <span class="text-sm font-black text-white">${formatScore(site)}</span>
+                    </span>
+                </button>
             </li>
         `;
     }).join('');
@@ -311,28 +430,43 @@ function showSearchSuggestions() {
 
 function selectSuggestion(siteName) {
     const searchInput = document.getElementById('searchRankingInput');
+    const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
+    if (!searchInput) return;
+
     searchInput.value = siteName;
-    document.getElementById('searchSuggestionsDropdown').classList.add('hidden');
+    if (suggestionsDropdown) suggestionsDropdown.classList.add('hidden');
     searchRankingSite();
 }
 
-// Event Listeners base
-document.addEventListener('DOMContentLoaded', () => {
+function initRankingInteractions() {
+    if (rankingInteractionsReady) return;
+
     const searchInput = document.getElementById('searchRankingInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', showSearchSuggestions);
+    if (!searchInput) return;
 
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchRankingSite();
-                document.getElementById('searchSuggestionsDropdown').classList.add('hidden');
-            }
-        });
+    rankingInteractionsReady = true;
+    searchInput.addEventListener('input', showSearchSuggestions);
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            searchRankingSite();
+            const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
+            if (suggestionsDropdown) suggestionsDropdown.classList.add('hidden');
+        }
+    });
 
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#searchRankingInput') && !e.target.closest('#searchSuggestionsDropdown')) {
-                document.getElementById('searchSuggestionsDropdown').classList.add('hidden');
-            }
-        });
-    }
-});
+    document.addEventListener('click', (e) => {
+        const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
+        if (suggestionsDropdown && !e.target.closest('#searchRankingInput') && !e.target.closest('#searchSuggestionsDropdown')) {
+            suggestionsDropdown.classList.add('hidden');
+        }
+        if (!e.target.closest('#rankingFilter')) {
+            toggleRankingFilterMenu(false);
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRankingInteractions);
+} else {
+    initRankingInteractions();
+}
