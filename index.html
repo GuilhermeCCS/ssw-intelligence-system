@@ -1420,7 +1420,7 @@
                 <!-- Results Area -->
                 <div id="auditResults" class="hidden space-y-6"></div>
                 <!-- Espaçador para empurrar footer para baixo (apenas na view-home) -->
-                <div style="min-height: 100vh;"></div>
+                <div id="homeFooterSpacer" style="min-height: 100vh;"></div>
             </div>
             <div id="view-personas" class="hidden max-w-6xl mx-auto space-y-8 animate-fade-in-up">
                 <header class="flex justify-between items-center">
@@ -2208,6 +2208,9 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                     }
                     // Dispara evento para inicialização específica do footer
                     window.dispatchEvent(new Event('loadFooterSection'));
+                    if (typeof checkForAuditResults === 'function') {
+                        setTimeout(checkForAuditResults, 0);
+                    }
                 } catch (error) {
                     console.error('Erro ao carregar footer:', error);
                 }
@@ -2354,12 +2357,14 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 if (auditLoading) auditLoading.classList.add('hidden');
                 if (emptyState) emptyState.classList.add('hidden');
                 if (compareArea) compareArea.classList.add('hidden');
+                adjustFooterPosition(true);
             } else {
                 // Mostra inputs
                 if (auditResults) auditResults.classList.add('hidden');
                 if (auditLoading) auditLoading.classList.add('hidden');
                 if (emptyState) emptyState.classList.remove('hidden');
                 if (compareArea) compareArea.classList.remove('hidden');
+                adjustFooterPosition(false);
             }
         }
         // Suporte global a teclado - atalhos e navegação
@@ -2525,6 +2530,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 setTimeout(() => initTurnstileAudit(), 500);
                 setTimeout(() => initTurnstileCompare(), 500);
             }
+            adjustFooterPosition(false);
             // Scroll para o topo
             const mainContent = document.getElementById('mainContent');
             if (mainContent) {
@@ -3770,6 +3776,7 @@ function getCodigoHTML() {
             if (compareArea) compareArea.classList.add('hidden');
             const auditResults = document.getElementById('auditResults');
             if (auditResults) auditResults.classList.add('hidden');
+            adjustFooterPosition(false);
             const auditLoading = document.getElementById('auditLoading');
             if (auditLoading) auditLoading.classList.add('hidden');
             // Mostra o search container
@@ -4112,6 +4119,7 @@ function getCodigoHTML() {
             document.getElementById('auditLoading').classList.remove('hidden');
             startAuditLoadingAnimation(url, mode);
             document.getElementById('auditResults').classList.add('hidden');
+            adjustFooterPosition(false);
             try {
                 let data;
                 try {
@@ -5175,67 +5183,72 @@ function getCodigoHTML() {
                     `;
                 });
             }
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            adjustFooterPosition(true);
         }
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
         function adjustFooterPosition(hasAuditResults = false) {
+            const footerHost = document.getElementById('footer-container');
             const footer = document.getElementById('mainFooter');
             const mainContainer = document.getElementById('mainContentWrapper');
             const main = document.getElementById('mainContent');
-            if (!footer || !mainContainer || !main) return;
+            const auditResults = document.getElementById('auditResults');
+            const homeFooterSpacer = document.getElementById('homeFooterSpacer');
+            if (!footerHost || !mainContainer) return;
+
+            if (footer && footer.parentElement !== footerHost) {
+                footerHost.appendChild(footer);
+            }
+
+            if (homeFooterSpacer) {
+                homeFooterSpacer.classList.toggle('hidden', hasAuditResults);
+            }
+
             if (hasAuditResults) {
-                // Se há resultados de auditoria, move footer para o final do conteúdo (depois do plano de ação)
-                const actionPlanSection = document.getElementById('actionPlanSection');
-                const auditResults = document.getElementById('auditResults');
-                if (footer.parentNode !== auditResults) {
-                    // Remove de onde estiver
-                    footer.remove();
-                    // Adiciona como último elemento do container de resultados (depois do plano de ação)
-                    if (actionPlanSection) {
-                        auditResults.appendChild(footer);
-                    } else {
-                        main.appendChild(footer);
-                    }
+                // Mantém o footer fora do HTML do relatório, mas imediatamente após os resultados.
+                if (auditResults && footerHost.previousElementSibling !== auditResults) {
+                    auditResults.insertAdjacentElement('afterend', footerHost);
                 }
+                if (footer) {
+                    footer.classList.add('audit-footer-position');
+                }
+                document.body.classList.add('audit-active');
+                if (main) main.style.paddingBottom = '0';
             } else {
-                // Se não há auditoria, volta para posição normal dentro do container
-                if (footer.parentNode !== mainContainer) {
-                    // Remove da posição atual
-                    footer.remove();
-                    // Adiciona de volta ao container principal
-                    mainContainer.appendChild(footer);
+                // Se não há auditoria, volta para posição normal dentro do container.
+                if (footerHost.parentNode !== mainContainer) {
+                    mainContainer.appendChild(footerHost);
                 }
                 // Remove classe especial
-                footer.classList.remove('audit-footer-position');
+                if (footer) footer.classList.remove('audit-footer-position');
                 // Remove estilos inline
-                footer.style.position = '';
-                footer.style.width = '';
-                footer.style.margin = '';
-                footer.style.padding = '';
-                footer.style.borderTop = '';
-                footer.style.background = '';
-                footer.style.zIndex = '';
-                footer.style.clear = '';
+                if (footer) {
+                    footer.style.position = '';
+                    footer.style.width = '';
+                    footer.style.margin = '';
+                    footer.style.padding = '';
+                    footer.style.borderTop = '';
+                    footer.style.background = '';
+                    footer.style.zIndex = '';
+                    footer.style.clear = '';
+                }
                 // Remove classe do body
                 document.body.classList.remove('audit-active');
                 // Restaura overflow do body
                 document.body.style.overflow = '';
                 document.body.style.height = '';
                 // Remove padding do main
-                main.style.paddingBottom = '';
+                if (main) main.style.paddingBottom = '';
             }
         }
         function checkForAuditResults() {
             // Verifica se há resultados de auditoria na tela
             const auditResults = document.getElementById('auditResults');
-            const personasGrid = document.getElementById('personasGrid');
-            const actionPlanSection = document.getElementById('actionPlanSection');
-            const hasResults = !!(auditResults && !auditResults.classList.contains('hidden')) ||
-                             !!(personasGrid && personasGrid.children.length > 0) ||
-                             !!(actionPlanSection && !actionPlanSection.classList.contains('hidden'));
+            const hasResults = !!(auditResults && !auditResults.classList.contains('hidden'));
             console.log('=== DEBUG FOOTER ===');
             console.log('auditResults hidden:', auditResults ? auditResults.classList.contains('hidden') : 'elemento não encontrado');
-            console.log('personasGrid children:', personasGrid ? personasGrid.children.length : 'elemento não encontrado');
-            console.log('actionPlanSection hidden:', actionPlanSection ? actionPlanSection.classList.contains('hidden') : 'elemento não encontrado');
             console.log('hasResults:', hasResults);
             console.log('Footer parent:', document.getElementById('mainFooter')?.parentNode?.tagName || 'não encontrado');
             adjustFooterPosition(hasResults);
