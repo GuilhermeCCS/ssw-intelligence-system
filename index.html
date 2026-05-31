@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="env-mp-public-key" content="APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac">
-    <meta name="env-encryption-key" content="ec5a7d92ecb5111e12214c63f1ba896d7c2f9388ad74cba6120cad7d488db0fc">
     <meta name="env-api-url" content="https://ssw-intelligence-api.onrender.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Content Security Policy -->
@@ -1454,6 +1453,13 @@
         // Variável global para armazenar dados da auditoria atual
         let auditData = null;
         let currentAuditUrl = null;
+
+        function authHeaders(extra = {}) {
+            const headers = { ...extra };
+            const token = (typeof USER !== 'undefined' && USER && USER.token) ? USER.token : null;
+            if (token) headers.Authorization = `Bearer ${token}`;
+            return headers;
+        }
   
         // Função para mostrar tela de autenticação
     function showAuthScreen(type = 'login') {
@@ -2750,10 +2756,16 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
             };
             
             const saved = await loadUserFromStorage();
-            if(saved) {
+            if(saved && saved.token) {
                 USER = saved;
                 window.fromLoginFlow = true;
                     loginSuccess();
+            } else if (saved) {
+                if (typeof secureStorage !== 'undefined') {
+                    secureStorage.removeItem('USER');
+                } else {
+                    localStorage.removeItem('USER');
+                }
             }
             // Atualiza os botões
             updateUserMenuCircle();
@@ -3829,49 +3841,22 @@ function getCodigoHTML() {
                 const data = await res.json();
                 if (res.ok) {
                     // SUCESSO!
-                    Toast.success("Conta verificada com sucesso! Bem-vindo.");
+                    Toast.success(isCadastroFlow ? "Conta verificada. Faça login para continuar." : "Conta verificada com sucesso! Bem-vindo.");
                     
                     if (isCadastroFlow) {
-                        // Fluxo de cadastro: fazer login automático
-                        if (senhaTemporaria) {
-                            try {
-                                const loginRes = await fetch(`${API_URL}/api/login`, {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify({ 
-                                        email: emailTemporario, 
-                                        senha: senhaTemporaria,
-                                        turnstile_token: 'bypass' // Bypass captcha no fluxo de cadastro
-                                    })
-                                });
-                                const loginData = await loginRes.json();
-                                if (loginRes.ok) {
-                                    USER = loginData;
-                                    // Salva dados criptografados se secureStorage disponível
-                                    if (typeof secureStorage !== 'undefined') {
-                                        await secureStorage.setItem('USER', loginData);
-                                    } else {
-                                        localStorage.setItem('USER', JSON.stringify(loginData));
-                                    }
-                                    // Limpa variáveis temporárias
-                                    emailTemporario = null;
-                                    senhaTemporaria = null;
-                                    window.fromLoginFlow = true;
-                                    loginSuccess();
-                                } else {
-                                    Toast.error("Erro ao fazer login automático. Tente fazer login manualmente.");
-                                    document.getElementById('verifyModal').classList.add('hidden');
-                                    document.getElementById('authScreen').classList.remove('hidden');
-                                    document.getElementById('loginForm').classList.remove('hidden');
-                                }
-                            } catch (e) {
-                                console.error('Erro no login automático:', e);
-                                Toast.error("Erro ao fazer login automático. Tente fazer login manualmente.");
-                                document.getElementById('verifyModal').classList.add('hidden');
-                                document.getElementById('authScreen').classList.remove('hidden');
-                                document.getElementById('loginForm').classList.remove('hidden');
-                            }
-                        }
+                        const emailVerificado = emailTemporario || emailParaVerificar;
+                        emailTemporario = null;
+                        senhaTemporaria = null;
+                        document.getElementById('verifyModal').classList.add('hidden');
+                        document.getElementById('authScreen').classList.remove('hidden');
+                        document.getElementById('loginForm').classList.remove('hidden');
+                        const registerForm = document.getElementById('registerForm');
+                        if (registerForm) registerForm.classList.add('hidden');
+                        const loginEmailInput = document.getElementById('loginEmail');
+                        if (loginEmailInput && emailVerificado) loginEmailInput.value = emailVerificado;
+                        setTimeout(() => {
+                            if (typeof initTurnstileLogin === 'function') initTurnstileLogin();
+                        }, 300);
                     } else {
                         // Fluxo normal de login (usuário já logado)
                         USER.verificado = true; 
@@ -3907,7 +3892,7 @@ function getCodigoHTML() {
                 return;
             }
             try {
-                const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
+                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
                 const data = await res.json();
                 const lista = data.custom_personas || [];
                 if(lista.length === 0) div.innerHTML = "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
@@ -3932,8 +3917,8 @@ function getCodigoHTML() {
             const btn = event.target; btn.innerText = "..."; btn.disabled = true;
             try {
                 await fetch(`${API_URL}/api/personas`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ user_id: String(USER.id), nome, descricao: desc })
+                    method: 'POST', headers: authHeaders({'Content-Type': 'application/json'}),
+                    body: JSON.stringify({ nome, descricao: desc })
                 });
                 document.getElementById('newPersonaName').value = "";
                 document.getElementById('newPersonaDesc').value = "";
@@ -4004,7 +3989,7 @@ function getCodigoHTML() {
         }
         async function deletePersona(id) {
             showConfirmDialog("Deseja realmente excluir essa persona?", async () => {
-            await fetch(`${API_URL}/api/personas/${id}?user_id=${String(USER.id)}`, { method: 'DELETE' });
+            await fetch(`${API_URL}/api/personas/${id}`, { method: 'DELETE', headers: authHeaders() });
             loadManagePersonas();
             if(!document.getElementById('manualSelectArea').classList.contains('hidden')) toggleManualSelect();
             }); // Fecha o callback do showConfirmDialog
@@ -4299,7 +4284,7 @@ function getCodigoHTML() {
                         // Carrega personas customizadas apenas se usuário estiver logado
                         if (USER && USER.id) {
                             try {
-                                const res = await fetch(`${API_URL}/api/personas?user_id=${String(USER.id)}`);
+                                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
                                 const data = await res.json();
                                 custom = data.custom_personas || [];
                             } catch (e) {
@@ -4569,8 +4554,8 @@ function getCodigoHTML() {
                     }
 
                     const res = await fetch(`${API_URL}/api/auditar`, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ url, user_id: String(USER.id), modo: mode, personas: selected, cf_token: cfToken })
+                        method: 'POST', headers: authHeaders({'Content-Type': 'application/json'}),
+                        body: JSON.stringify({ url, modo: mode, personas: selected, cf_token: cfToken })
                     });
                     if(res.ok) {
                         data = await res.json();
@@ -4868,13 +4853,17 @@ function getCodigoHTML() {
             if(results) results.classList.add('hidden');
             try {
                 // 4. Tenta API Real
+                const cfToken = turnstileCompareToken || document.querySelector('#turnstile-compare [name="cf-turnstile-response"]')?.value || document.querySelector('[name="cf-turnstile-response"]')?.value;
+                if (!cfToken) {
+                    throw new Error("Resolva o captcha primeiro");
+                }
                 const res = await fetch(`${API_URL}/api/comparar`, {
                     method: 'POST', 
-                    headers: {'Content-Type': 'application/json'},
+                    headers: authHeaders({'Content-Type': 'application/json'}),
                     body: JSON.stringify({ 
                         url_a: urlA, 
                         url_b: urlB, 
-                        user_id: String(USER.id),
+                        cf_token: cfToken,
                         personas: []
                     })
                 });
@@ -6112,7 +6101,7 @@ function getCodigoHTML() {
             const loadingId = appendMsg('ai', '', true);
             try {
                 const res = await fetch(`${API_URL}/api/chat`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({
                         historico: currentChatHistory,
                         persona: { profile_name: currentPersona.profile_name, score: currentPersona.score },

@@ -4,15 +4,28 @@
  * Vanilla JS - compatível com script tags
  */
 
-const ENCRYPTION_KEY = window.ENV?.ENCRYPTION_KEY;
+const DEVICE_KEY_NAME = 'SSW_STORAGE_DEVICE_KEY';
 
-// Validação - avisa se chave não configurada, mas não quebra o site
-if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
-  console.warn('⚠️ AVISO: ENCRYPTION_KEY não configurada ou muito curta!');
-  console.warn('Configure ENCRYPTION_KEY como variável de ambiente (mínimo 32 caracteres)');
-  console.warn('Gere uma chave forte: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
-  console.warn('Rodando sem criptografia - NÃO RECOMENDADO PARA PRODUÇÃO');
+function generateStorageKey() {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
 }
+
+function getStorageEncryptionKey() {
+  try {
+    let localKey = localStorage.getItem(DEVICE_KEY_NAME);
+    if (!localKey || localKey.length < 32) {
+      localKey = generateStorageKey();
+      localStorage.setItem(DEVICE_KEY_NAME, localKey);
+    }
+    return localKey;
+  } catch (error) {
+    console.warn('Nao foi possivel persistir a chave local do storage. Usando chave de sessao.');
+    return generateStorageKey();
+  }
+}
+
+const STORAGE_ENCRYPTION_KEY = getStorageEncryptionKey();
 
 // Converte string para ArrayBuffer
 const strToBuffer = (str) => new TextEncoder().encode(str);
@@ -46,13 +59,13 @@ async function deriveKey(password) {
 
 // Criptografa dados
 async function encrypt(data) {
-  // Se chave não configurada, retorna dados codificados em base64 (sem criptografia real)
-  if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
+  // Fallback de compatibilidade caso a chave local nao esteja disponivel.
+  if (!STORAGE_ENCRYPTION_KEY || STORAGE_ENCRYPTION_KEY.length < 32) {
     return btoa(JSON.stringify(data));
   }
 
   try {
-    const key = await deriveKey(ENCRYPTION_KEY);
+    const key = await deriveKey(STORAGE_ENCRYPTION_KEY);
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const encrypted = await crypto.subtle.encrypt(
       { name: 'AES-GCM', iv },
@@ -74,8 +87,8 @@ async function encrypt(data) {
 
 // Descriptografa dados
 async function decrypt(encryptedData) {
-  // Se chave não configurada, decodifica base64 e retorna dados (sem descriptografia real)
-  if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length < 32) {
+  // Fallback de compatibilidade para dados antigos em base64.
+  if (!STORAGE_ENCRYPTION_KEY || STORAGE_ENCRYPTION_KEY.length < 32) {
     try {
       return JSON.parse(atob(encryptedData));
     } catch (error) {
@@ -85,7 +98,7 @@ async function decrypt(encryptedData) {
   }
 
   try {
-    const key = await deriveKey(ENCRYPTION_KEY);
+    const key = await deriveKey(STORAGE_ENCRYPTION_KEY);
     const combined = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
 
     const iv = combined.slice(0, 12);

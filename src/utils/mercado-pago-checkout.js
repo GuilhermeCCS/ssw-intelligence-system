@@ -23,6 +23,13 @@ class CheckoutMercadoPago {
     }
   }
 
+  authHeaders(extra = {}) {
+    const headers = { ...extra };
+    const token = this.currentUser?.token || (typeof USER !== 'undefined' && USER ? USER.token : null);
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
+  }
+
   // Inicializa o SDK do Mercado Pago v2
   async init(publicKey = null) {
     const keyToUse = publicKey || this.MP_PUBLIC_KEY;
@@ -400,7 +407,6 @@ class CheckoutMercadoPago {
     const userEmail = this.currentUser?.email || (typeof USER !== 'undefined' ? USER.email : null);
 
     const payload = {
-      user_id: this.currentUser?.id || 'user_temp_id',
       pacote_id: this.selectedPackage.id,
       payment_method_id: paymentMethodId,
       payer: payer,
@@ -413,7 +419,7 @@ class CheckoutMercadoPago {
     try {
       const response = await fetch(`${this.API_BASE_URL}/api/pagamento/processar`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify(payload)
       });
 
@@ -448,15 +454,18 @@ class CheckoutMercadoPago {
   // Atualiza os créditos do usuário buscando dados atualizados da API
   async updateUserCredits() {
     try {
-      // Buscar dados atualizados do usuário
-      const response = await fetch(`${this.API_BASE_URL}/api/personas?user_id=${this.currentUser?.id || USER?.id}`);
+      const userId = this.currentUser?.id || (typeof USER !== 'undefined' ? USER?.id : null);
+      if (!userId) return;
+
+      // Buscar saldo atualizado do usuário autenticado
+      const response = await fetch(`${this.API_BASE_URL}/api/saldo/${userId}`, { headers: this.authHeaders() });
       
       if (response.ok) {
         const data = await response.json();
         
         // Atualizar objeto global USER se existir
-        if (typeof USER !== 'undefined' && data.length > 0) {
-          USER.credits = data[0].credits;
+        if (typeof USER !== 'undefined') {
+          USER.credits = data.credits || 0;
           
           // Atualizar elementos do DOM que exibem os créditos
           const userCreditsCircle = document.getElementById('userCreditsCircle');
@@ -666,7 +675,7 @@ class CheckoutMercadoPago {
     
     window.pixPolling = setInterval(async () => {
       try {
-        const response = await fetch(`${this.API_BASE_URL}/api/pagamento/status/${paymentId}`);
+        const response = await fetch(`${this.API_BASE_URL}/api/pagamento/status/${paymentId}`, { headers: this.authHeaders() });
         
         if (response.ok) {
           const data = await response.json();

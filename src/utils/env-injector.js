@@ -18,11 +18,6 @@ if (mpMetaEnv) {
   window.ENV.VITE_MP_PUBLIC_KEY = mpMetaEnv.getAttribute('content');
 }
 
-const encryptionMetaEnv = document.querySelector('meta[name="env-encryption-key"]');
-if (encryptionMetaEnv) {
-  window.ENV.ENCRYPTION_KEY = encryptionMetaEnv.getAttribute('content');
-}
-
 const apiUrlMetaEnv = document.querySelector('meta[name="env-api-url"]');
 if (apiUrlMetaEnv) {
   window.ENV.API_URL = apiUrlMetaEnv.getAttribute('content');

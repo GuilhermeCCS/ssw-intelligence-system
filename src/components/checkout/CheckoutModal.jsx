@@ -80,8 +80,6 @@ const CheckoutModal = ({
         throw new Error("Por favor, selecione um método de pagamento válido (Pix ou Cartão).");
       }
 
-      const idDoUsuario = user?.id || localStorage.getItem('user_id');
-
       // Extração segura do payer com fallback
       const payer = formData.payer || { 
         email: user?.email || localStorage.getItem('user_email') 
@@ -89,21 +87,29 @@ const CheckoutModal = ({
 
       console.log("👤 Payer extraído:", payer);
 
+      const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value || '';
+      if (!cfToken) {
+        throw new Error('Resolva o captcha antes de continuar');
+      }
+
       const payload = {
-        user_id: String(idDoUsuario),
         pacote_id: pacoteSelecionado?.id || "pacote_basico",
         payment_method_id: methodId,
         payer: payer,
         token: formData.token || null,
         installments: Number(formData.installments || 1),
-        issuer_id: formData.issuer_id || null
+        issuer_id: formData.issuer_id || null,
+        cf_token: cfToken
       };
 
       console.log("🚀 Payload enviado para API:", payload);
 
       const response = await fetch('https://ssw-intelligence-api.onrender.com/api/pagamento/processar', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(user?.token ? { Authorization: `Bearer ${user.token}` } : {})
+        },
         body: JSON.stringify(payload)
       });
 
