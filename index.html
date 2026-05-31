@@ -628,7 +628,7 @@
         /* Rolagem horizontal para planos em telas pequenas movida para pricing-section.js */
         /* Menu Mobile Dropdown */
         #mobileMenuDropdown {
-            top: 60px;
+            top: 64px;
         }
         #mobileMenuDropdown:not(.hidden) {
             transform: translateY(0);
@@ -1077,6 +1077,14 @@
             #appSidebar {
                 position: sticky;
                 top: 0;
+                left: 0;
+                right: 0;
+                z-index: 60;
+                transform: none !important;
+            }
+
+            #appSidebar.-translate-x-full {
+                transform: none !important;
             }
 
             #appSidebar > div:first-child {
@@ -1678,17 +1686,10 @@
         </div>
     </div>
 
-    <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors">
+    <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu" aria-expanded="false" class="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors">
         <i data-lucide="menu" class="w-5 h-5"></i>
     </button>
 </div>
-                    </div>
-                </div>
-                <!-- Botão Menu Mobile -->
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
-            </div>
         </div>
     </aside>
     <!-- Menu Mobile Dropdown (aparece quando clica no botão menu) -->
@@ -2761,21 +2762,19 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
             showTutorialSection('auditoria-simples');
             }; // Fecha window.onload (async)
         // === 2. UI HELPERS ===
-        function toggleSidebar() {
+        function toggleSidebar(forceOpen) {
             const mobileMenu = document.getElementById('mobileMenuDropdown');
             const overlay = document.getElementById('sidebarOverlay');
+            const button = document.getElementById('mobileMenuButton');
             if(!mobileMenu) return;
-            // Verifica se está aberto ou fechado
+
             const isOpen = !mobileMenu.classList.contains('hidden');
-            if(isOpen) {
-                // Fecha menu mobile
-                mobileMenu.classList.add('hidden');
-                if(overlay) overlay.classList.add('hidden');
-            } else {
-                // Abre menu mobile
-                mobileMenu.classList.remove('hidden');
-                if(overlay) overlay.classList.remove('hidden');
-            }
+            const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
+
+            mobileMenu.classList.toggle('hidden', !shouldOpen);
+            if(overlay) overlay.classList.toggle('hidden', !shouldOpen);
+            if(button) button.setAttribute('aria-expanded', String(shouldOpen));
+            document.body.classList.toggle('mobile-menu-open', shouldOpen);
         }
         // Scroll suave para um elemento
         function smoothScrollTo(elementId) {
@@ -2810,12 +2809,9 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
         document.addEventListener('keydown', (e) => {
             // ESC fecha modais abertos
             if(e.key === 'Escape') {
-                // Fecha sidebar em mobile
-                const sb = document.getElementById('appSidebar');
-                const overlay = document.getElementById('sidebarOverlay');
-                if(window.innerWidth < 768 && !sb.classList.contains('-translate-x-full')) {
-                    sb.classList.add('-translate-x-full');
-                    if(overlay) overlay.classList.add('hidden');
+                const mobileMenu = document.getElementById('mobileMenuDropdown');
+                if(window.innerWidth < 768 && mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    toggleSidebar(false);
                 }
             }
             // Alt + N vai para Nova Análise
@@ -2842,19 +2838,16 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
         });
         window.addEventListener('resize', () => {
     const sb = document.getElementById('appSidebar');
-    const overlay = document.getElementById('sidebarOverlay');
     const btn = document.getElementById('floatingChatBtn');
     const isDesktop = window.innerWidth >= 768;
 
-    if(isDesktop) {
-        // Em desktop, sempre mostra o sidebar (remove translate)
+    if(sb) {
         sb.classList.remove('-translate-x-full');
-        if(overlay) overlay.classList.add('hidden');
-    } else {
-        // Em mobile, reseta para o estado fechado padrão
-        sb.classList.add('-translate-x-full');
         sb.classList.remove('sidebar-closed');
-        if(overlay) overlay.classList.add('hidden');
+    }
+
+    if(isDesktop) {
+        toggleSidebar(false);
     }
 
     // --- NOVA LÓGICA DE CONTROLE DO BOTÃO DO CHAT ---
