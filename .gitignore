@@ -51,3 +51,6 @@ out/
 
 # Deploy
 .wrangler/
+
+#txt
+projeto-ai.txt
