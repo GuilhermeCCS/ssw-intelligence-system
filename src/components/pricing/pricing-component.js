@@ -122,6 +122,9 @@ const sswPricingStyles = `<style>
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     color: var(--ssw-t1);
     -webkit-font-smoothing: antialiased;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* Controle de background quando view de preços está ativa */
@@ -179,6 +182,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     position: absolute;
     top: -100px; left: 50%; transform: translateX(-50%);
     width: 1200px; height: 600px;
+    max-width: 100vw;
     background: radial-gradient(ellipse at center, rgba(34,211,238,0.03) 0%, rgba(34,211,238,0.01) 40%, transparent 70%);
     pointer-events: none;
     filter: blur(60px);
@@ -207,10 +211,10 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     flex-shrink: 0;
 }
 .ssw-hero-title {
-    font-size: clamp(34px, 5.5vw, 66px);
+    font-size: 58px;
     font-weight: 800;
     line-height: 1.08;
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
     margin: 0 auto 12px;
 }
 .ssw-hero-title em {
@@ -248,6 +252,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 /* ── PLANS GRID ── */
 .ssw-plans-section {
     padding: 20px 24px 40px;
+    width: 100%;
     max-width: 1140px;
     margin: 0 auto;
 }
@@ -256,12 +261,15 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     align-items: stretch;
+    width: 100%;
+    min-width: 0;
 }
 
 /* CARD BASE */
 .ssw-plan-card {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     background: var(--ssw-card);
     border: 1px solid var(--ssw-border);
     border-radius: 20px;
@@ -342,15 +350,17 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 .ssw-price-row {
     display: flex;
     align-items: baseline;
+    flex-wrap: wrap;
     gap: 3px;
     margin-bottom: 5px;
+    min-width: 0;
 }
 .ssw-currency { font-size: 18px; font-weight: 700; color: var(--ssw-t3); }
 .ssw-currency-accent { color: var(--ssw-cyan) !important; }
 .ssw-amount {
     font-size: 50px;
     font-weight: 800;
-    letter-spacing: -0.04em;
+    letter-spacing: 0;
     color: var(--ssw-t1);
     line-height: 1;
 }
@@ -370,7 +380,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     margin-top: 7px;
 }
 .ssw-price-consult-wrap { display: flex; align-items: center; height: 68px; }
-.ssw-price-consult { font-size: 28px; font-weight: 800; color: var(--ssw-t1); letter-spacing: -0.02em; }
+.ssw-price-consult { font-size: 28px; font-weight: 800; color: var(--ssw-t1); letter-spacing: 0; }
 
 /* BOTÕES */
 .ssw-btn {
@@ -459,9 +469,9 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     margin-bottom: 10px;
 }
 .ssw-section-title {
-    font-size: clamp(24px, 3.5vw, 38px);
+    font-size: 34px;
     font-weight: 800;
-    letter-spacing: -0.025em;
+    letter-spacing: 0;
     color: var(--ssw-t1);
     margin-bottom: 8px;
 }
@@ -469,7 +479,8 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 .ssw-table-wrap {
     border: 1px solid var(--ssw-border);
     border-radius: 18px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     background: var(--ssw-card);
 }
 .ssw-table { width: 100%; border-collapse: collapse; }
@@ -573,7 +584,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     cursor: default;
 }
 .ssw-marquee-item:hover { opacity: 0.9; }
-.ssw-marquee-item span { font-size: 15px; font-weight: 700; color: var(--ssw-t1); letter-spacing: -0.01em; }
+.ssw-marquee-item span { font-size: 15px; font-weight: 700; color: var(--ssw-t1); letter-spacing: 0; }
 .ssw-mi-icon { width: 18px; height: 18px; }
 .ssw-mi-cyan   { color: var(--ssw-cyan); }
 .ssw-mi-purple { color: #a78bfa; }
@@ -634,6 +645,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 /* ── CTA FINAL ── */
 .ssw-cta-section {
     padding: 0 24px 90px;
+    width: 100%;
     max-width: 1140px;
     margin: 0 auto;
 }
@@ -641,6 +653,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     position: relative;
     border-radius: 24px;
     overflow: hidden;
+    min-width: 0;
     padding: 68px 48px;
     text-align: center;
     background: linear-gradient(135deg, #0a1628 0%, #0c1a2e 50%, #071220 100%);
@@ -658,14 +671,15 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     position: absolute;
     top: -100px; left: 50%; transform: translateX(-50%);
     width: 700px; height: 400px;
+    max-width: 100vw;
     background: radial-gradient(ellipse, rgba(34,211,238,0.09) 0%, transparent 70%);
     pointer-events: none;
 }
 .ssw-cta-content { position: relative; z-index: 1; }
 .ssw-cta-title {
-    font-size: clamp(24px, 3.5vw, 40px);
+    font-size: 36px;
     font-weight: 800;
-    letter-spacing: -0.025em;
+    letter-spacing: 0;
     margin-bottom: 14px;
     color: var(--ssw-t1);
 }
@@ -679,7 +693,9 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 .ssw-btn-cta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    max-width: 100%;
     padding: 15px 30px;
     border-radius: 14px;
     background: white;
@@ -702,16 +718,27 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 
 /* ── RESPONSIVO ── */
 @media (max-width: 900px) {
-    .ssw-plans-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .ssw-plans-grid { grid-template-columns: 1fr; width: 100%; max-width: min(100%, 420px); margin: 0 auto; }
     .ssw-plan-featured { transform: none !important; }
     .ssw-plan-featured:hover { transform: translateY(-3px) !important; }
     .ssw-cta-card { padding: 48px 24px; }
     .ssw-guarantees { gap: 14px; flex-direction: column; align-items: center; }
+    .ssw-hero-title { font-size: 44px; }
+    .ssw-section-title, .ssw-cta-title { font-size: 30px; }
 }
 @media (max-width: 600px) {
     .ssw-pricing-hero { padding: 40px 16px 30px; }
     .ssw-plans-section, .ssw-faq-section, .ssw-cta-section { padding-left: 16px; padding-right: 16px; }
     .ssw-hero-title { font-size: 32px; }
+    .ssw-plan-card { padding: 20px; border-radius: 16px; }
+    .ssw-plan-desc { min-height: 0; }
+    .ssw-amount { font-size: 42px; }
+    .ssw-price-consult { font-size: 24px; }
+    .ssw-marquee-section { padding: 42px 0; }
+    .ssw-marquee-fade-left, .ssw-marquee-fade-right { width: 56px; }
+    .ssw-marquee-item { padding: 0 24px; }
+    .ssw-cta-card { padding: 40px 20px; border-radius: 18px; }
+    .ssw-btn-cta { width: 100%; padding-left: 18px; padding-right: 18px; }
 }
 </style>`;
 
