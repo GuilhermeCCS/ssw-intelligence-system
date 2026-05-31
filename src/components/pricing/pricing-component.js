@@ -75,7 +75,21 @@ function initPricingSection() {
                 }
             });
         }, { threshold: 0.08 });
-        document.querySelectorAll('.ssw-plan-card, .ssw-hero-inner, .ssw-cta-card').forEach(el => {
+
+        // Hero e CTA sem delay
+        document.querySelectorAll('.ssw-hero-inner, .ssw-cta-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Cards de planos com delay sequencial
+        document.querySelectorAll('.ssw-plan-card').forEach((el, index) => {
+            el.style.transitionDelay = `${index * 0.15}s`;
+            observer.observe(el);
+        });
+
+        // Marquee e FAQ com delay
+        document.querySelectorAll('.ssw-marquee-section, .ssw-faq-section').forEach(el => {
+            el.style.transitionDelay = '0.3s';
             observer.observe(el);
         });
     }
@@ -142,20 +156,22 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 }
 @keyframes ssw-marquee {
     from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    to   { transform: translateX(-33.33%); }
 }
-.ssw-plan-card, .ssw-hero-inner, .ssw-cta-card {
+.ssw-plan-card, .ssw-hero-inner, .ssw-cta-card, .ssw-marquee-section, .ssw-faq-section {
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
 }
 .ssw-plan-card.ssw-visible,
 .ssw-hero-inner.ssw-visible,
-.ssw-cta-card.ssw-visible { opacity: 1; transform: translateY(0); }
+.ssw-cta-card.ssw-visible,
+.ssw-marquee-section.ssw-visible,
+.ssw-faq-section.ssw-visible { opacity: 1; transform: translateY(0); }
 
 /* ── HERO ── */
 .ssw-pricing-hero {
-    padding: 90px 24px 72px;
+    padding: 50px 24px 40px;
     text-align: center;
     position: relative;
 }
@@ -167,7 +183,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     pointer-events: none;
     filter: blur(60px);
 }
-.ssw-hero-inner { max-width: 820px; margin: 0 auto; }
+.ssw-hero-inner { max-width: 820px; margin: 0 auto 10px; }
 
 .ssw-badge {
     display: inline-flex;
@@ -195,7 +211,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     font-weight: 800;
     line-height: 1.08;
     letter-spacing: -0.03em;
-    margin: 0 auto 20px;
+    margin: 0 auto 12px;
 }
 .ssw-hero-title em {
     font-style: normal;
@@ -216,7 +232,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     align-items: center;
     justify-content: center;
     gap: 28px;
-    margin-top: 36px;
+    margin-top: 20px;
     flex-wrap: wrap;
 }
 .ssw-guarantee-item {
@@ -231,14 +247,14 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 
 /* ── PLANS GRID ── */
 .ssw-plans-section {
-    padding: 0 24px 72px;
+    padding: 20px 24px 40px;
     max-width: 1140px;
     margin: 0 auto;
 }
 .ssw-plans-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 14px;
     align-items: stretch;
 }
 
@@ -249,7 +265,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     background: var(--ssw-card);
     border: 1px solid var(--ssw-border);
     border-radius: 20px;
-    padding: 30px;
+    padding: 24px;
     position: relative;
     overflow: hidden;
     transition: border-color 0.3s, transform 0.3s, background 0.3s, opacity 0.6s, box-shadow 0.3s;
@@ -693,7 +709,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     .ssw-guarantees { gap: 14px; flex-direction: column; align-items: center; }
 }
 @media (max-width: 600px) {
-    .ssw-pricing-hero { padding: 64px 16px 52px; }
+    .ssw-pricing-hero { padding: 40px 16px 30px; }
     .ssw-plans-section, .ssw-faq-section, .ssw-cta-section { padding-left: 16px; padding-right: 16px; }
     .ssw-hero-title { font-size: 32px; }
 }
