@@ -3005,9 +3005,10 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
         // Inicializa o widget do Turnstile para login
         function initTurnstileLogin() {
             if (turnstileLoginWidget !== null) {
-    turnstile.reset(turnstileLoginWidget);
-    return;
-}
+                turnstileLoginToken = null;
+                turnstile.reset(turnstileLoginWidget);
+                return;
+            }
 
             const container = document.getElementById('turnstile-login');
             if (!container) {
@@ -3116,6 +3117,26 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
         function getRegisterCaptchaToken() {
             return turnstileRegisterToken || document.querySelector('#turnstile-register [name="cf-turnstile-response"]')?.value || '';
+        }
+
+        function getLoginCaptchaToken() {
+            return turnstileLoginToken || document.querySelector('#turnstile-login [name="cf-turnstile-response"]')?.value || '';
+        }
+
+        function resetLoginCaptcha() {
+            turnstileLoginToken = null;
+            if (typeof turnstile !== 'undefined' && turnstileLoginWidget !== null) {
+                turnstile.reset(turnstileLoginWidget);
+            }
+        }
+
+        function setLoginSubmitLoading(isLoading) {
+            const btn = document.getElementById('loginSubmitBtn');
+            if (!btn) return;
+            btn.disabled = isLoading;
+            btn.textContent = isLoading ? 'ACESSANDO...' : 'ACESSAR SISTEMA';
+            btn.classList.toggle('opacity-70', isLoading);
+            btn.classList.toggle('cursor-not-allowed', isLoading);
         }
 
         function resetRegisterCaptcha() {
@@ -3295,14 +3316,14 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
             const pass = document.getElementById('loginPass').value;
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
 
-            // Capturar token do Turnstile do DOM
-            const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            const cfToken = getLoginCaptchaToken();
             if (!cfToken) {
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }
 
             try {
+                setLoginSubmitLoading(true);
                 const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ email, senha: pass, cf_token: cfToken })
@@ -3318,9 +3339,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                     }
                     window.fromLoginFlow = true;
                     loginSuccess();
-                } else Toast.error(data.detail || "Erro no login");
+                } else {
+                    Toast.error(data.detail || "Erro no login");
+                    resetLoginCaptcha();
+                }
             } catch(e) {
                 console.error('Erro de login (index.html):', e);
+                resetLoginCaptcha();
                 // Verifica se é erro de rede/conexão
                 if (e.name === 'TypeError' && e.message.includes('fetch')) {
                     Toast.error("Sem conexão com o servidor.");
@@ -3329,6 +3354,8 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 } else {
                     Toast.error("Ocorreu um erro inesperado.");
                 }
+            } finally {
+                setLoginSubmitLoading(false);
             }
         }
         async function fazerCadastro() {
@@ -3542,7 +3569,7 @@ function getLoginHTML() {
                     <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
                 </div>
             </div>
-            <button onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
+            <button id="loginSubmitBtn" onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
                 Acessar Sistema
             </button>
             <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
