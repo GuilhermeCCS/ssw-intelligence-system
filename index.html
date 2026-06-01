@@ -2109,45 +2109,47 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 </header>
                 <!-- LAYOUT DE DUAS COLUNAS -->
                 <div class="max-w-7xl mx-auto px-6 pb-20">
-                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
-                        <!-- COLUNA ESQUERDA - Sidebar de Navegação -->
-                        <aside class="lg:col-span-1 no-print">
-                            <nav class="sticky top-24 space-y-1">
+                    <div class="space-y-10">
+                        <!-- Navegação de tópicos do tutorial -->
+                        <aside class="no-print">
+                            <nav id="tutorialNavPanel" class="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-[0_20px_70px_rgba(0,0,0,0.24)]">
                                 <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Conteúdo</h3>
-                                <button onclick="showTutorialSection('auditoria-simples')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    <span class="flex items-center gap-2">
-                                        <i data-lucide="search" class="w-4 h-4"></i>
-                                        Auditoria Individual
-                                    </span>
-                                </button>
-                                <button onclick="showTutorialSection('ngrok-localhost')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    <span class="flex items-center gap-2">
-                                        <i data-lucide="globe-2" class="w-4 h-4"></i>
-                                        Ngrok / Localhost
-                                    </span>
-                                </button>
-                                <button onclick="showTutorialSection('batalha-comparativa')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    <span class="flex items-center gap-2">
-                                        <i data-lucide="git-compare" class="w-4 h-4"></i>
-                                        Análise Comparativa
-                                    </span>
-                                </button>
-                                <button onclick="showTutorialSection('gestao-agents')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    <span class="flex items-center gap-2">
-                                        <i data-lucide="users" class="w-4 h-4"></i>
-                                        Gestão de Agents
-                                    </span>
-                                </button>
-                                <button onclick="showTutorialSection('relatorios-insights')" class="block text-slate-400 hover:text-white border-l-2 border-transparent hover:border-blue-500 pl-4 py-2 transition-all text-left w-full">
-                                    <span class="flex items-center gap-2">
-                                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-                                        Relatórios e Insights
-                                    </span>
-                                </button>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
+                                    <button onclick="showTutorialSection('auditoria-simples')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
+                                        <span class="flex items-center gap-2">
+                                            <i data-lucide="search" class="w-4 h-4"></i>
+                                            Auditoria Individual
+                                        </span>
+                                    </button>
+                                    <button onclick="showTutorialSection('ngrok-localhost')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
+                                        <span class="flex items-center gap-2">
+                                            <i data-lucide="globe-2" class="w-4 h-4"></i>
+                                            Ngrok / Localhost
+                                        </span>
+                                    </button>
+                                    <button onclick="showTutorialSection('batalha-comparativa')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
+                                        <span class="flex items-center gap-2">
+                                            <i data-lucide="git-compare" class="w-4 h-4"></i>
+                                            Análise Comparativa
+                                        </span>
+                                    </button>
+                                    <button onclick="showTutorialSection('gestao-agents')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
+                                        <span class="flex items-center gap-2">
+                                            <i data-lucide="users" class="w-4 h-4"></i>
+                                            Gestão de Agents
+                                        </span>
+                                    </button>
+                                    <button onclick="showTutorialSection('relatorios-insights')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
+                                        <span class="flex items-center gap-2">
+                                            <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                                            Relatórios e Insights
+                                        </span>
+                                    </button>
+                                </div>
                             </nav>
                         </aside>
-                        <!-- COLUNA DIREITA - Conteúdo Principal -->
-                        <main class="lg:col-span-3">
+                        <!-- Conteúdo Principal -->
+                        <main class="max-w-5xl mx-auto w-full">
                             <!-- SEÇÃO 1: Auditoria Individual -->
                             <section id="auditoria-simples" class="scroll-mt-24">
                                 <div class="flex justify-between items-center mb-6">
@@ -2995,17 +2997,17 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 if (targetSection) {
                     targetSection.classList.remove('hidden');
                 }
-                // Atualizar navegação lateral
-                const navButtons = document.querySelectorAll('aside nav button');
+                // Atualizar navegação de tópicos
+                const navButtons = document.querySelectorAll('#tutorialNavPanel .tutorial-nav-btn');
                 navButtons.forEach(button => {
-                    button.classList.remove('border-blue-500', 'text-white');
+                    button.classList.remove('border-blue-500', 'text-white', 'bg-cyan-400/10');
                     button.classList.add('border-transparent', 'text-slate-400');
                 });
                 // Destacar botão ativo
-                const activeButton = document.querySelector(`aside nav button[onclick*="${sectionId}"]`);
+                const activeButton = document.querySelector(`#tutorialNavPanel .tutorial-nav-btn[onclick*="${sectionId}"]`);
                 if (activeButton) {
                     activeButton.classList.remove('border-transparent', 'text-slate-400');
-                    activeButton.classList.add('border-blue-500', 'text-white');
+                    activeButton.classList.add('border-blue-500', 'text-white', 'bg-cyan-400/10');
                 }
                 // Scroll suave para o topo
                 window.scrollTo({ top: 0, behavior: 'smooth' });
