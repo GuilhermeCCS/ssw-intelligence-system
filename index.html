@@ -1550,23 +1550,6 @@
                 showAuthScreen();
             }
         }
-        // Função para limitar seleção de agents a no máximo 3
-        function filterAgentCards(category, btnEl) {
-            document.querySelectorAll('.pcard-wrapper').forEach(function(card) {
-                var setor = card.getAttribute('data-setor') || '';
-                var cats = {
-                    comercio:   ['lojas_de_roupas','grandes_lojas_virtuais','e_commerce_geral','eletronicos_e_celulares','farmacias_e_suplementos','restaurantes_e_delivery'],
-                    servicos:   ['advogados','dentistas','clinicas_medicas','servicos_locais','lojas_de_carros','turismo_e_hoteis'],
-                    digital:    ['sistemas_e_software','cursos_online','paginas_de_vendas'],
-                    financas:   ['bancos_e_financas','consultoria_para_empresas','imobiliarias'],
-                    universal:  ['geral','agentlizada']
-                };
-                var show = category === 'todos' || (cats[category] && cats[category].indexOf(setor) !== -1);
-                card.style.display = show ? '' : 'none';
-            });
-            document.querySelectorAll('.pcard-filter-btn').forEach(function(b) { b.setAttribute('data-active','0'); b.style.background='rgba(8,13,22,0.72)'; b.style.color='#8292a8'; b.style.borderColor='rgba(255,255,255,0.12)'; });
-            if (btnEl) { btnEl.setAttribute('data-active','1'); btnEl.style.background='rgba(6,182,212,0.18)'; btnEl.style.color='#67e8f9'; btnEl.style.borderColor='rgba(6,182,212,0.4)'; }
-        }
         function togglePerfilCard(id) {
             var el = document.getElementById(id);
             var btn = document.getElementById(id + '_btn');
@@ -1575,6 +1558,7 @@
             el.style.display = isHidden ? 'block' : 'none';
             if (btn) btn.textContent = isHidden ? 'Ocultar \u25b4' : 'Ver perfil \u25be';
         }
+        // Função para limitar seleção de agents a no máximo 3
         function limitAgentSelection(checkbox) {
             const checkedBoxes = document.querySelectorAll('.agent-checkbox:checked');
             if (checkedBoxes.length > 3) {
@@ -1602,9 +1586,6 @@
                 badge.style.borderColor = count > 0 ? 'rgba(6,182,212,0.4)' : '';
             }
         }
-        // Personas e nichos agora sao roteados automaticamente pelo backend.
-        const AGENTS_ESPECIALISTAS = {};
-        const SYSTEM_AGENTS = [];
     </script>
     <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
         <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -1816,12 +1797,17 @@
                                 <span>Automático</span>
                             </label>
                             <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
+                                <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
+                                <span>Manual</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
                                 <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
                                 <span>Comparativo</span>
                             </label>
                         </div>
                         <select id="auditMode" class="hidden">
                             <option value="auto">Seleção Automática</option>
+                            <option value="manual">Seleção Manual</option>
                             <option value="compare">Modo Comparativo</option>
                         </select>
                     </div>
@@ -1830,8 +1816,8 @@
                 <div id="manualSelectArea" class="hidden p-5 rounded-2xl" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,0.16);box-shadow:0 8px 32px rgba(0,0,0,0.25);">
                     <div class="flex justify-between items-start mb-5">
                         <div>
-                            <h3 class="text-sm font-bold text-white tracking-wide">Especialistas por Setor</h3>
-                            <p class="text-[11px] text-slate-500 mt-1">Selecione até <strong class="text-slate-400">3 especialistas</strong> para uma análise focada no seu nicho de mercado</p>
+                            <h3 class="text-sm font-bold text-white tracking-wide">Personas Criadas</h3>
+                            <p class="text-[11px] text-slate-500 mt-1">Selecione até <strong class="text-slate-400">3 personas</strong> salvas na sua conta para uma análise manual exclusiva</p>
                         </div>
                         <span id="agentSelCount" class="text-[10px] font-semibold bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/50 whitespace-nowrap ml-4 mt-0.5">0 / 3</span>
                     </div>
@@ -1871,7 +1857,7 @@
                             <i data-lucide="users" class="w-6 h-6"></i>
                         </div>
                         <h3 class="empty-state-title">Gerenciar Agents</h3>
-                        <p class="empty-state-desc">Configure perfis agentlizados para análises mais precisas</p>
+                        <p class="empty-state-desc">Configure perfis personalizados para análises mais precisas</p>
                     </div>
                     <div class="empty-state-card" onclick="nav('ranking')">
                         <div class="empty-state-icon">
@@ -1919,7 +1905,7 @@
                             <input type="text" id="newAgentDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
                         </div>
                         <div class="md:col-span-2">
-                            <button onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
+                            <button id="createAgentBtn" onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
                         </div>
                     </div>
                 </div>
@@ -2100,7 +2086,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                                         <div class="border-l-2 border-slate-700 pl-4">
                                             <h4 class="text-white font-semibold mb-2">3. Seleção de Agents (Modo Manual)</h4>
                                             <p class="text-slate-300 text-sm leading-relaxed">
-                                                Ao selecionar o modo manual, escolha até 3 agents que representarão diferentes perfis de usuários durante a análise.
+                                                Ao selecionar o modo manual, escolha até 3 personas criadas na sua conta. Sem personas salvas, o modo manual permanece indisponível.
                                             </p>
                                         </div>
 
@@ -2276,7 +2262,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                                         <div class="border-l-2 border-slate-700 pl-4">
                                             <h4 class="text-white font-semibold mb-2">Conteúdo Dinâmico</h4>
                                             <p class="text-slate-300 text-sm leading-relaxed">
-                                                Sites com conteúdo agentlizado ou A/B testing podem apresentar variações. A análise considera o conteúdo padrão apresentado.
+                                                Sites com conteúdo personalizado ou A/B testing podem apresentar variações. A análise considera o conteúdo padrão apresentado.
                                             </p>
                                         </div>
                                         <div class="border-l-2 border-slate-700 pl-4">
@@ -2300,7 +2286,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
                             <div class="prose prose-invert max-w-none">
                                 <p class="text-slate-300 text-lg leading-relaxed mb-8">
-                                    Crie e gerencie agents agentlizadas para análises mais precisas. Cada agent representa um perfil de usuário com características específicas, permitindo análises sob diferentes perspectivas.
+                                    Crie e gerencie agents personalizados para análises mais precisas. Cada agent representa um perfil de usuário com características específicas, permitindo análises sob diferentes perspectivas.
                                 </p>
 
                                 <h3 class="text-xl font-semibold text-white mb-4">Como Gerenciar Agents</h3>
@@ -4025,19 +4011,21 @@ function getCodigoHTML() {
                 return;
             }
             try {
-                const res = await fetch(`${API_URL}/api/agents`, { headers: authHeaders() });
+                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
                 const data = await res.json();
-                const lista = data.custom_agents || [];
+                const lista = data.custom_personas || data.custom_agents || [];
                 if(lista.length === 0) div.innerHTML = "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
                 lista.forEach(p => {
+                    const safeName = safeAuditText(p.name);
+                    const safeDescription = safeAuditText(p.description);
                     div.innerHTML += `
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative group">
                             <div class="flex justify-between items-start mb-2">
                                 <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-accent"><i data-lucide="user" class="w-4 h-4"></i></div>
                                 <button onclick="deleteAgent('${p.id}')" class="text-slate-600 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                             </div>
-                            <h4 class="font-bold text-white">${p.name}</h4>
-                            <p class="text-xs text-slate-400 mt-2 line-clamp-3">${p.description}</p>
+                            <h4 class="font-bold text-white">${safeName}</h4>
+                            <p class="text-xs text-slate-400 mt-2 line-clamp-3">${safeDescription}</p>
                         </div>`;
                 });
                 lucide.createIcons();
@@ -4047,22 +4035,26 @@ function getCodigoHTML() {
             const nome = document.getElementById('newAgentName').value;
             const desc = document.getElementById('newAgentDesc').value;
             if(!nome || !desc) return Toast.warning("Preencha todos os campos");
-            const btn = event.target; btn.innerText = "..."; btn.disabled = true;
+            const btn = document.getElementById('createAgentBtn');
+            if (btn) { btn.innerText = "..."; btn.disabled = true; }
             try {
-                await fetch(`${API_URL}/api/agents`, {
+                const res = await fetch(`${API_URL}/api/personas`, {
                     method: 'POST', headers: authHeaders({'Content-Type': 'application/json'}),
                     body: JSON.stringify({ nome, descricao: desc })
                 });
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    throw new Error(data.detail || "Erro ao criar perfil");
+                }
                 document.getElementById('newAgentName').value = "";
                 document.getElementById('newAgentDesc').value = "";
                 await loadManageAgents();
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
                 Toast.success("Perfil salvo com sucesso!");
-            } catch(e) { Toast.error("Erro ao criar perfil"); }
-            btn.innerText = "SALVAR"; btn.disabled = false;
+            } catch(e) { Toast.error(e.message || "Erro ao criar perfil"); }
+            if (btn) { btn.innerText = "SALVAR"; btn.disabled = false; }
         }
-        // Função de confirmação agentlizada
-// Função de confirmação agentlizada
+        // Função de confirmação personalizada
         function showConfirmDialog(message, onConfirm, onCancel) {
             // Remove modal anterior se existir
             const existingModal = document.getElementById('confirmModal');
@@ -4122,9 +4114,9 @@ function getCodigoHTML() {
         }
         async function deleteAgent(id) {
             showConfirmDialog("Deseja realmente excluir essa agent?", async () => {
-            await fetch(`${API_URL}/api/agents/${id}`, { method: 'DELETE', headers: authHeaders() });
-            loadManageAgents();
-            if(!document.getElementById('manualSelectArea').classList.contains('hidden')) toggleManualSelect();
+                await fetch(`${API_URL}/api/personas/${id}`, { method: 'DELETE', headers: authHeaders() });
+                loadManageAgents();
+                if(!document.getElementById('manualSelectArea').classList.contains('hidden')) toggleManualSelect();
             }); // Fecha o callback do showConfirmDialog
         }
         // === 5. AUDIT LOGIC (CORE) ===
@@ -4429,36 +4421,24 @@ function getCodigoHTML() {
                         // Carrega agents customizadas apenas se usuário estiver logado
                         if (USER && USER.id) {
                             try {
-                                const res = await fetch(`${API_URL}/api/agents`, { headers: authHeaders() });
+                                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
                                 const data = await res.json();
-                                custom = data.custom_agents || [];
+                                custom = data.custom_personas || data.custom_agents || [];
                             } catch (e) {
                                 console.log("Erro ao carregar agents customizadas:", e);
                             }
                         }
                         cont.innerHTML = "";
-                        const SETOR_META = {
-                            bancos_e_financas:        'Bancos e Finanças',
-                            turismo_e_hoteis:         'Turismo e Hotéis',
-                            lojas_de_roupas:          'Moda e Vestuário',
-                            farmacias_e_suplementos:  'Farmácias e Saúde',
-                            sistemas_e_software:      'Sistemas e Software',
-                            cursos_online:            'Cursos Online',
-                            grandes_lojas_virtuais:   'Grandes Lojas',
-                            consultoria_para_empresas:'Consultoria B2B',
-                            clinicas_medicas:         'Clínicas Médicas',
-                            eletronicos_e_celulares:  'Eletrônicos',
-                            lojas_de_carros:          'Lojas de Carros',
-                            advogados:                'Advocacia',
-                            dentistas:                'Odontologia',
-                            imobiliarias:             'Imobiliárias',
-                            e_commerce_geral:         'E-commerce',
-                            paginas_de_vendas:        'Landing Pages',
-                            servicos_locais:          'Serviços Locais',
-                            restaurantes_e_delivery:  'Restaurantes',
-                            geral:                    'Universal',
-                            agentlizada:            'Agentlizada'
-                        };
+                        var _oldBar = document.getElementById('pcard-filter-bar');
+                        if (_oldBar) _oldBar.remove();
+                        if (custom.length === 0) {
+                            cont.innerHTML = '<div class="md:col-span-2 lg:col-span-3 text-center border border-dashed border-slate-700 rounded-xl p-7">'
+                                + '<p class="text-sm font-semibold text-white">Nenhuma persona criada ainda.</p>'
+                                + '<p class="text-xs text-slate-500 mt-2">Crie personas na seção Agents para liberar a análise manual.</p>'
+                                + '<button onclick="nav(\'agents\')" class="mt-4 px-4 py-2 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 text-xs font-bold hover:bg-cyan-500/25 transition">Criar persona</button>'
+                                + '</div>';
+                            return;
+                        }
                         // Inject flip card CSS once
                         if (!document.getElementById('pcard-flip-css')) {
                             var st = document.createElement('style');
@@ -4466,55 +4446,41 @@ function getCodigoHTML() {
                             st.textContent = '.pcard-inner{transform-style:preserve-3d;transition:transform 0.52s cubic-bezier(.4,0,.2,1);}.pcard-inner.flipped{transform:rotateY(180deg);}.pcard-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:13px;}.pcard-back{transform:rotateY(180deg);}.pcard-wrapper:hover .pcard-inner:not(.flipped){box-shadow:0 4px 24px rgba(6,182,212,0.18);}';
                             document.head.appendChild(st);
                         }
-                        // Filter bar HTML
-                        var fbBase = 'class="pcard-filter-btn" style="padding:6px 15px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.18s;font-family:inherit;border:1px solid rgba(255,255,255,0.12);';
-                        var fbActive = fbBase + 'background:rgba(6,182,212,0.18);color:#67e8f9;border-color:rgba(6,182,212,0.4);"';
-                        var fbIdle   = fbBase + 'background:rgba(8,13,22,0.72);color:#8292a8;"';
-                        var _oldBar = document.getElementById('pcard-filter-bar');
-                        if (_oldBar) _oldBar.remove();
-                        var filterBarHtml = '<div id="pcard-filter-bar" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">'
-                            + '<button ' + fbActive + ' onclick="filterAgentCards(\'todos\',this)">Todos</button>'
-                            + '<button ' + fbIdle   + ' onclick="filterAgentCards(\'comercio\',this)">Comércio &amp; Varejo</button>'
-                            + '<button ' + fbIdle   + ' onclick="filterAgentCards(\'servicos\',this)">Serviços &amp; Saúde</button>'
-                            + '<button ' + fbIdle   + ' onclick="filterAgentCards(\'digital\',this)">Digital &amp; Tech</button>'
-                            + '<button ' + fbIdle   + ' onclick="filterAgentCards(\'financas\',this)">Finanças &amp; B2B</button>'
-                            + '<button ' + fbIdle   + ' onclick="filterAgentCards(\'universal\',this)">Universal</button>'
-                            + '</div>';
-                        cont.insertAdjacentHTML('beforebegin', filterBarHtml);
+                        function _escapeHtml(value) {
+                            return String(value || '').replace(/[&<>"']/g, function(ch) {
+                                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
+                            });
+                        }
                         var cardIdx = 0;
-                        function _buildCard(name, setor, perfil) {
+                        function _buildCard(name, perfil) {
                             var idx = cardIdx++;
-                            var pid = 'pfc_' + idx;
-                            var setorLabel = SETOR_META[setor] || (setor || 'Geral');
-                            var initial = name.charAt(0).toUpperCase();
+                            var safeName = _escapeHtml(name);
+                            var safeProfile = _escapeHtml(perfil || '');
+                            var value = _escapeHtml(name + (perfil ? ': ' + perfil : ''));
+                            var initial = String(name || 'P').charAt(0).toUpperCase();
                             var frontBg = 'background:linear-gradient(140deg,rgba(34,211,238,0.22) 0%,rgba(129,140,248,0.12) 100%);border:1px solid rgba(34,211,238,0.28);';
                             var backBg  = 'background:linear-gradient(140deg,rgba(12,18,32,0.94) 0%,rgba(16,24,40,0.9) 100%);border:1px solid rgba(34,211,238,0.32);';
                             var flipJs  = 'this.closest(\'.pcard-wrapper\').querySelector(\'.pcard-inner\').classList.toggle(\'flipped\')';
-                            return '<div class="pcard-wrapper" data-setor="' + setor + '" style="position:relative;height:168px;perspective:900px;border-radius:13px;">'
-                                + '<input type="checkbox" value="' + name + '" data-color="#06b6d4" class="agent-checkbox" onclick="event.stopPropagation();limitAgentSelection(this)" style="position:absolute;top:10px;right:10px;z-index:20;width:15px;height:15px;cursor:pointer;accent-color:#06b6d4;">'
+                            return '<div class="pcard-wrapper" data-setor="custom" style="position:relative;height:168px;perspective:900px;border-radius:13px;">'
+                                + '<input type="checkbox" value="' + value + '" data-color="#06b6d4" class="agent-checkbox" onclick="event.stopPropagation();limitAgentSelection(this)" style="position:absolute;top:10px;right:10px;z-index:20;width:15px;height:15px;cursor:pointer;accent-color:#06b6d4;">'
                                 + '<div class="pcard-inner" style="position:relative;width:100%;height:100%;cursor:pointer;" onclick="' + flipJs + '">'
                                 // --- FRONT ---
                                 + '<div class="pcard-face" style="' + frontBg + 'padding:13px 36px 13px 13px;display:flex;align-items:flex-start;gap:11px;">'
                                 + '<div style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:rgba(6,182,212,0.18);border:1.5px solid rgba(6,182,212,0.45);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:#ffffff;">' + initial + '</div>'
                                 + '<div style="flex:1;min-width:0;">'
-                                + '<span style="display:inline-block;padding:2px 9px;border-radius:999px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.28);font-size:11px;font-weight:700;letter-spacing:0.05em;color:#a5f3fc;text-transform:uppercase;">' + setorLabel + '</span>'
-                                + '<p style="color:#ffffff;font-size:15px;font-weight:700;line-height:1.3;margin:5px 0 0;">' + name + '</p>'
+                                + '<span style="display:inline-block;padding:2px 9px;border-radius:999px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.28);font-size:11px;font-weight:700;letter-spacing:0.05em;color:#a5f3fc;text-transform:uppercase;">Persona criada</span>'
+                                + '<p style="color:#ffffff;font-size:15px;font-weight:700;line-height:1.3;margin:5px 0 0;">' + safeName + '</p>'
                                 + '<p style="color:rgba(165,243,252,0.6);font-size:11px;margin-top:10px;">Clique para ver o perfil &#8635;</p>'
                                 + '</div></div>'
                                 // --- BACK ---
                                 + '<div class="pcard-face pcard-back" style="' + backBg + 'padding:12px 36px 12px 13px;overflow-y:auto;">'
-                                + '<p style="color:#ffffff;font-size:12.5px;font-weight:500;line-height:1.65;margin:0;">' + (perfil || '') + '</p>'
+                                + '<p style="color:#ffffff;font-size:12.5px;font-weight:500;line-height:1.65;margin:0;">' + safeProfile + '</p>'
                                 + '<p style="color:rgba(165,243,252,0.5);font-size:10.5px;margin-top:8px;">&#8634; Clique para voltar</p>'
                                 + '</div>'
                                 + '</div></div>';
                         }
-                        // SISTEMA - Sempre carrega
-                        SYSTEM_AGENTS.forEach(function(p) {
-                            cont.innerHTML += _buildCard(p.name, p.setor, p.perfil);
-                        });
-                        // CUSTOM - Apenas se logado
                         custom.forEach(function(p) {
-                            cont.innerHTML += _buildCard(p.name, 'agentlizada', p.description || '');
+                            cont.innerHTML += _buildCard(p.name, p.description || '');
                         });
                     } catch (e) {
                         console.error(e);
@@ -4764,9 +4730,15 @@ function getCodigoHTML() {
         async function runAudit() {
             if(USER.credits <= 0) return comprarCreditos();
             const url = document.getElementById('auditUrl').value;
-            const mode = 'auto';
-            let selected = [];
+            const mode = document.getElementById('auditMode')?.value || 'auto';
+            const selected = mode === 'manual'
+                ? Array.from(document.querySelectorAll('.agent-checkbox:checked')).map(el => el.value).filter(Boolean)
+                : [];
             if(!url) return Toast.warning("Digite uma URL para analisar");
+            if(mode === 'compare') return runCompare();
+            if(mode === 'manual' && selected.length === 0) {
+                return Toast.warning("Selecione pelo menos 1 agent para a análise manual.");
+            }
             // Esconde toda a interface anterior e mostra apenas o loading centralizado
             document.getElementById('heroSection').classList.add('hidden');
             document.getElementById('emptyStateCards').classList.add('hidden');
@@ -4780,13 +4752,13 @@ function getCodigoHTML() {
                 let data;
                 try {
                     // Capturar token do Turnstile do DOM
-                    const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+                    const cfToken = turnstileAuditToken || document.querySelector('#turnstile-audit [name="cf-turnstile-response"]')?.value || document.querySelector('[name="cf-turnstile-response"]')?.value;
                     if (!cfToken) {
                         Toast.warning("Resolva o captcha primeiro");
                         document.getElementById('heroSection').classList.remove('hidden');
                         document.getElementById('emptyStateCards').classList.remove('hidden');
-                        document.getElementById('manualSelectArea').classList.add('hidden');
-                        document.getElementById('compareArea').classList.remove('hidden');
+                        document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
+                        document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
                         stopAuditLoadingAnimation();
                         document.getElementById('auditLoading').classList.add('hidden');
                         return;
@@ -4794,15 +4766,15 @@ function getCodigoHTML() {
 
                     const res = await fetch(`${API_URL}/api/auditar`, {
                         method: 'POST', headers: authHeaders({'Content-Type': 'application/json'}),
-                        body: JSON.stringify({ url, modo: "auto", personas: [], cf_token: cfToken })
+                        body: JSON.stringify({ url, modo: mode, personas: selected, cf_token: cfToken })
                     });
                     if(res.ok) {
                         data = await res.json();
                     } else if(res.status === 402) {
                         document.getElementById('heroSection').classList.remove('hidden');
                         document.getElementById('emptyStateCards').classList.remove('hidden');
-                        document.getElementById('manualSelectArea').classList.add('hidden');
-                        document.getElementById('compareArea').classList.remove('hidden');
+                        document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
+                        document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
                         stopAuditLoadingAnimation();
                         document.getElementById('auditLoading').classList.add('hidden');
                         comprarCreditos();
@@ -5800,8 +5772,9 @@ function getCodigoHTML() {
             const pDiv = document.getElementById('agentsTableBody');
             if (pDiv) {
                 pDiv.innerHTML = "";
-                const agentsToUse = selected.length > 0 ? selected : SYSTEM_AGENTS.slice(0, 3);
+                const agentsToUse = selected.length > 0 ? selected : [];
                 agentsToUse.forEach((agent, index) => {
+                    const agentName = typeof agent === 'string' ? agent.split(':')[0] : agent.name;
                     const agentScore = Math.floor(Math.random() * 4) + 6; // 6-9
                     const quotes = [
                         "Site funcional mas poderia ser mais intuitivo.",
@@ -5814,7 +5787,7 @@ function getCodigoHTML() {
                     pDiv.innerHTML += `
                         <tr class="border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
                             <td class="p-4 border-r border-slate-700">
-                                <div class="font-semibold text-white">${agent.name}</div>
+                                <div class="font-semibold text-white">${agentName}</div>
                                 <div class="text-sm ${agentScore >= 8 ? "text-green-400" : agentScore <= 6 ? "text-red-500" : "text-yellow-500"} font-bold">Score: ${agentScore}/10</div>
                             </td>
                             <td class="p-4 border-r border-slate-700">
@@ -6476,7 +6449,7 @@ function getCodigoHTML() {
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">4.</span>
                                     <div>
-                                        <strong class="text-white">Selecione as agents (no modo manual)</strong> - escolha até 3 perfis de usuários
+                                        <strong class="text-white">Selecione suas personas (no modo manual)</strong> - escolha até 3 perfis criados na sua conta
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -6520,7 +6493,7 @@ function getCodigoHTML() {
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">3.</span>
                                     <div>
-                                        <strong class="text-white">Selecione até 3 agents</strong> que representam seu público-alvo
+                                        <strong class="text-white">Selecione até 3 personas criadas</strong> que representam seu público-alvo
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -6531,7 +6504,7 @@ function getCodigoHTML() {
                                 </li>
                             </ol>
                             <div class="bg-primary/10 p-3 rounded-lg border border-primary/20">
-                                <p class="text-primary text-sm font-medium"> Dica: Use agents diferentes para obter visões variadas do seu site!</p>
+                                <p class="text-primary text-sm font-medium"> Dica: crie personas diferentes para obter visões variadas do seu site!</p>
                             </div>
                         </div>
                     `
@@ -6541,7 +6514,7 @@ function getCodigoHTML() {
                     icon: 'users',
                     content: `
                         <div class="space-y-4">
-                            <p class="text-slate-300">Gerencie agents para agentlizar suas análises:</p>
+                            <p class="text-slate-300">Gerencie agents para personalizar suas análises:</p>
                             <ol class="space-y-3 text-slate-300">
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">1.</span>
@@ -6552,7 +6525,7 @@ function getCodigoHTML() {
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">2.</span>
                                     <div>
-                                        <strong class="text-white">Visualize todas as 15 agents</strong> disponíveis no sistema
+                                        <strong class="text-white">Visualize suas personas salvas</strong> e mantenha o painel organizado
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -6823,7 +6796,7 @@ function getCodigoHTML() {
                                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
                             </button>
                             <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
-                                A SSW INTELLIGENCE é uma plataforma avançada de análise inteligente de sites que identifica erros visuais e técnicos, gerando relatórios profissionais sobre velocidade de carregamento, SEO, performance e experiência do usuário. Nosso diferencial exclusivo são as agents - agentlidades baseadas em pessoas reais que interagem e fornecem feedback agentlizado ao final de cada análise.
+                                A SSW INTELLIGENCE é uma plataforma avançada de análise inteligente de sites que identifica erros visuais e técnicos, gerando relatórios profissionais sobre velocidade de carregamento, SEO, performance e experiência do usuário. Nosso diferencial exclusivo são as agents - personalidades baseadas em pessoas reais que interagem e fornecem feedback personalizado ao final de cada análise.
                             </div>
                         </div>
                         <!-- FAQ Item 2 -->
@@ -6833,7 +6806,7 @@ function getCodigoHTML() {
                                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
                             </button>
                             <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
-                                Nossa sistema analisa sites completos, identificando erros visuais e técnicos, problemas de performance, SEO, velocidade de carregamento e experiência do usuário. Ao final, nossas agents exclusivas interagem com você, fornecendo feedback agentlizado baseado em suas características reais. Basta informar a URL do site para obter uma análise completa.
+                                Nosso sistema analisa sites completos, identificando erros visuais e técnicos, problemas de performance, SEO, velocidade de carregamento e experiência do usuário. Ao final, nossas agents exclusivas interagem com você, fornecendo feedback personalizado baseado em suas características reais. Basta informar a URL do site para obter uma análise completa.
                             </div>
                         </div>
                         <!-- FAQ Item 3 -->
@@ -6863,7 +6836,7 @@ function getCodigoHTML() {
                                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
                             </button>
                             <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
-                                Nossas Agents são o diferencial exclusivo da SSW! São agentlidades baseadas em pessoas reais que interagem com você ao final de cada análise, fornecendo feedback agentlizado e insights únicos. Cada Agent tem características diferentes, oferecendo perspectivas variadas sobre os resultados da análise do seu site.
+                                Nossas Agents são o diferencial exclusivo da SSW! São personalidades baseadas em pessoas reais que interagem com você ao final de cada análise, fornecendo feedback personalizado e insights únicos. Cada Agent tem características diferentes, oferecendo perspectivas variadas sobre os resultados da análise do seu site.
                             </div>
                         </div>
                         <!-- FAQ Item 6 -->
@@ -6920,7 +6893,7 @@ function getCodigoHTML() {
                     <div class="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
                         <p class="text-slate-300 text-sm text-center">
                             <i data-lucide="info" class="w-4 h-4 inline mr-2"></i>
-                            Não encontrou sua dúvida? Entre em contato conosco pelo WhatsApp ou email para suporte agentlizado.
+                            Não encontrou sua dúvida? Entre em contato conosco pelo WhatsApp ou email para suporte personalizado.
                         </p>
                     </div>
                 </div>
@@ -7115,7 +7088,7 @@ function getCodigoHTML() {
                         </div>
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">4. Uso das Agents</h4>
-                            <p class="mb-4">O sistema oferece 15 agents pré-configuradas para diferentes perfis de usuários. Você pode selecionar até 3 agents por auditoria para obter análises mais completas e diversificadas. As agents são ferramentas para simular diferentes tipos de comportamento e expectativas dos usuários.</p>
+                            <p class="mb-4">O sistema permite criar personas próprias e selecionar até 3 por auditoria manual para obter análises mais completas e diversificadas. As personas ficam vinculadas à sua conta e simulam diferentes tipos de comportamento e expectativas dos usuários.</p>
                         </div>
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">5. Resultados e Relatórios</h4>
