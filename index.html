@@ -7472,13 +7472,14 @@ async function reenviarCodigo() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ email: emailParaReenviar })
         });
+        const data = await res.json().catch(() => ({}));
         if (res.ok) {
             Toast.success("Novo código enviado! Verifique seu e-mail.");
             // Reinicia a contagem de 30s
             link.innerHTML = 'Reenviar código em <span id="timerReenvio">30</span>s';
             iniciarContagemReenvio();
         } else {
-            Toast.error("Erro ao reenviar. Tente novamente.");
+            Toast.error(data.detail || "Erro ao reenviar. Tente novamente.");
             link.innerHTML = "Tentar novamente";
             link.classList.remove('pointer-events-none', 'opacity-50');
         }
