@@ -1538,6 +1538,55 @@
             return headers;
         }
 
+        function uniquePersonas(personas) {
+            const seen = new Set();
+            return (personas || []).filter(persona => {
+                if (!persona) return false;
+                const key = String(persona.id || persona.name || persona.profile_name || persona.agent || '').trim();
+                if (!key || seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+        }
+
+        function extractPersonasPayload(data, includeSystem = true) {
+            const systemPersonas = includeSystem ? [
+                ...(data.system_personas || []),
+                ...(data.system_agents || [])
+            ] : [];
+            const customPersonas = [
+                ...(data.custom_personas || []),
+                ...(data.custom_agents || [])
+            ];
+            const mixedPersonas = includeSystem ? (data.personas || data.agents || []) : [];
+            return uniquePersonas([...systemPersonas, ...customPersonas, ...mixedPersonas]);
+        }
+
+        async function fetchBackendPersonas(options = {}) {
+            const { includeSystem = true, requireAuth = false } = options;
+            const hasToken = typeof USER !== 'undefined' && USER && USER.token;
+
+            if (hasToken) {
+                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok) {
+                    return extractPersonasPayload(data, includeSystem);
+                }
+                if (requireAuth || !includeSystem) {
+                    throw new Error(data.detail || `Erro ao carregar personas (${res.status})`);
+                }
+            } else if (requireAuth || !includeSystem) {
+                throw new Error("Faça login para carregar suas personas.");
+            }
+
+            const catalogRes = await fetch(`${API_URL}/api/personas/catalog`);
+            const catalogData = await catalogRes.json().catch(() => ({}));
+            if (!catalogRes.ok) {
+                throw new Error(catalogData.detail || `Erro ao carregar catálogo de personas (${catalogRes.status})`);
+            }
+            return extractPersonasPayload(catalogData, true);
+        }
+
         // Função para mostrar tela de autenticação
     function setAuthBackdropState(isActive) {
         const opacity = isActive ? '0.3' : '';
@@ -4057,15 +4106,8 @@ function getCodigoHTML() {
         async function loadManageAgents() {
             const div = document.getElementById('manageAgentsList');
             div.innerHTML = "<p class='text-slate-500 animate-pulse'>Sincronizando...</p>";
-            // Verifica se USER está disponível
-            if (!USER || !USER.id) {
-                console.error('USER não disponível em loadManageAgents');
-                return;
-            }
             try {
-                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
-                const data = await res.json();
-                const lista = data.custom_personas || data.custom_agents || [];
+                const lista = await fetchBackendPersonas({ includeSystem: false, requireAuth: true });
                 if(lista.length === 0) div.innerHTML = "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
                 lista.forEach(p => {
                     const safeName = safeAuditText(p.name);
@@ -4087,7 +4129,10 @@ function getCodigoHTML() {
                         </div>`;
                 });
                 lucide.createIcons();
-            } catch(e) { console.error(e); }
+            } catch(e) {
+                console.error(e);
+                div.innerHTML = `<div class='text-red-300 col-span-3 text-center border border-red-500/20 bg-red-500/10 p-8 rounded-xl'>${safeAuditText(e.message || 'Erro ao carregar personas.')}</div>`;
+            }
         }
         async function createAgent() {
             const nome = document.getElementById('newAgentName').value;
@@ -4480,24 +4525,15 @@ function getCodigoHTML() {
                     cont.innerHTML = "<span class='text-xs text-slate-500'>Carregando perfis...</span>";
                     try {
                         let custom = [];
-                        // Carrega agents customizadas apenas se usuário estiver logado
-                        if (USER && USER.id) {
-                            try {
-                                const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
-                                const data = await res.json();
-                                custom = data.custom_personas || data.custom_agents || [];
-                            } catch (e) {
-                                console.log("Erro ao carregar agents customizadas:", e);
-                            }
-                        }
+                        custom = await fetchBackendPersonas();
                         manualPersonaCache = custom.map(normalizeManualPersona);
                         populateManualPersonaFilters(manualPersonaCache);
                         cont.innerHTML = "";
                         if (manualPersonaCache.length === 0) {
                             cont.innerHTML = '<div class="md:col-span-2 lg:col-span-3 text-center border border-dashed border-slate-700 rounded-xl p-7">'
-                                + '<p class="text-sm font-semibold text-white">Nenhuma persona criada ainda.</p>'
-                                + '<p class="text-xs text-slate-500 mt-2">Crie personas na seção Agents para liberar a análise manual.</p>'
-                                + '<button onclick="nav(\'agents\')" class="mt-4 px-4 py-2 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 text-xs font-bold hover:bg-cyan-500/25 transition">Criar persona</button>'
+                                + '<p class="text-sm font-semibold text-white">Nenhuma persona retornada pela API.</p>'
+                                + '<p class="text-xs text-slate-500 mt-2">Verifique se o backend está expondo o catálogo oficial de personas.</p>'
+                                + '<button onclick="toggleManualSelect()" class="mt-4 px-4 py-2 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 text-xs font-bold hover:bg-cyan-500/25 transition">Tentar novamente</button>'
                                 + '</div>';
                             updateManualPersonaCount();
                             return;
@@ -4505,7 +4541,11 @@ function getCodigoHTML() {
                         renderManualPersonaList();
                     } catch (e) {
                         console.error(e);
-                        cont.innerHTML = "<span class='text-xs text-red-400'>Erro ao carregar perfis</span>";
+                        cont.innerHTML = '<div class="text-center border border-red-500/20 bg-red-500/10 rounded-xl p-7">'
+                            + '<p class="text-sm font-semibold text-red-200">Não consegui carregar suas personas.</p>'
+                            + '<p class="text-xs text-red-100/80 mt-2">' + safeAuditText(e.message || 'Verifique seu login e a API.') + '</p>'
+                            + '<button onclick="toggleManualSelect()" class="mt-4 px-4 py-2 rounded-lg bg-red-500/15 border border-red-400/30 text-red-100 text-xs font-bold hover:bg-red-500/25 transition">Tentar novamente</button>'
+                            + '</div>';
                     }
                 }
             } else if(mode === 'compare') {
