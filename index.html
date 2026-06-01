@@ -689,6 +689,60 @@
             border-radius: 18px !important;
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45) !important;
         }
+        .user-avatar-button,
+        .user-avatar-large {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0;
+            border-radius: 9999px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #22d3ee 0%, #0ea5e9 58%, #1d4ed8 100%) !important;
+            color: #020408 !important;
+            box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.42), 0 14px 32px rgba(14, 165, 233, 0.26) !important;
+        }
+        .user-avatar-button {
+            width: 48px;
+            height: 48px;
+            border: 2px solid rgba(255, 255, 255, 0.1) !important;
+            cursor: pointer;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+        }
+        .user-avatar-button:hover {
+            border-color: rgba(34, 211, 238, 0.72) !important;
+            box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.55), 0 16px 36px rgba(34, 211, 238, 0.34) !important;
+            transform: translateY(-1px);
+        }
+        .user-avatar-large {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(34, 211, 238, 0.44) !important;
+            box-shadow: 0 10px 22px rgba(14, 165, 233, 0.18) !important;
+        }
+        .user-avatar-initial,
+        .user-avatar-large-initial {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: inherit;
+            background: transparent !important;
+            color: #020408 !important;
+            font-weight: 900;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        .user-avatar-initial {
+            font-size: 17px;
+        }
+        .user-avatar-large-initial {
+            font-size: 15px;
+        }
     </style>
     <style>
         /* Forçar formato circular nas logos */
@@ -1676,14 +1730,14 @@
     </div>
 
     <div id="userAvatarContainer" class="relative hidden">
-        <button onclick="toggleUserMenuCircle()" class="relative w-12 h-12 rounded-full bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white font-medium text-base border-2 border-slate-700 hover:border-primary transition-all shadow-lg hover:shadow-primary/50 cursor-pointer" id="avatarCircleBtn">
-            <span id="userAvatarCircle">U</span>
+        <button onclick="toggleUserMenuCircle()" class="user-avatar-button" id="avatarCircleBtn" aria-label="Abrir menu do usuário">
+            <span id="userAvatarCircle" class="user-avatar-initial">U</span>
         </button>
         <div id="userMenuCircleDropdown" class="absolute right-0 mt-3 w-64 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-2 border-blue-500/30 rounded-2xl shadow-2xl z-50 hidden overflow-hidden backdrop-blur-xl">
             <div id="userInfoCircleSection" class="border border-blue-500/30 rounded-lg p-4 bg-blue-600/10 hidden">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white/5 text-slate-300 font-medium flex items-center justify-center rounded-full">
-                        <span id="userAvatarLarge">U</span>
+                    <div class="user-avatar-large">
+                        <span id="userAvatarLarge" class="user-avatar-large-initial">U</span>
                     </div>
                     <div>
                         <p class="text-sm font-medium text-slate-200" id="userNameCircle">...</p>
@@ -3745,7 +3799,7 @@ function getCodigoHTML() {
             document.getElementById('verifyModal').classList.add('hidden'); // Garante que sumiu
             document.getElementById('appSidebar').classList.remove('hidden');
             document.getElementById('appSidebar').classList.add('flex');
-            document.getElementById('userAvatarCircle').innerText = USER.name.charAt(0).toUpperCase();
+            document.getElementById('userAvatarCircle').innerText = getUserInitial();
             loadManageAgents();
             // Atualiza os botões
             updateUserMenuCircle();
@@ -3782,6 +3836,11 @@ function getCodigoHTML() {
                 document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
             }
         }
+        function getUserInitial() {
+            const source = USER?.name || USER?.email || 'U';
+            return String(source).trim().charAt(0).toUpperCase() || 'U';
+        }
+
         // Função para atualizar a barra superior e o menu circular
     function updateUserMenuCircle() {
     const userInfoSection = document.getElementById('userInfoCircleSection');
@@ -3806,8 +3865,9 @@ function getCodigoHTML() {
 
         // Preenche dados do avatar
         if (userInfoSection) userInfoSection.classList.remove('hidden');
-        if (userAvatarCircle) userAvatarCircle.textContent = USER.name.charAt(0).toUpperCase();
-        if (userAvatarLarge) userAvatarLarge.textContent = USER.name.charAt(0).toUpperCase();
+        const initial = getUserInitial();
+        if (userAvatarCircle) userAvatarCircle.textContent = initial;
+        if (userAvatarLarge) userAvatarLarge.textContent = initial;
         if (userNameCircle) userNameCircle.textContent = USER.name || USER.email.split('@')[0];
         if (userEmailCircle) userEmailCircle.textContent = USER.email;
         if (userCreditsCircle) userCreditsCircle.textContent = USER.credits || 0;
@@ -4206,11 +4266,11 @@ function getCodigoHTML() {
                             <p class="text-slate-300 leading-relaxed" id="resSummary">Carregando resumo...</p>
                         </div>
                     </section>
-                    <!-- Dossiê dos 4 Pilares -->
+                    <!-- Análise estratégica dos 4 Pilares -->
                     <section class="mt-8 print:break-inside-avoid">
                         <div class="flex items-center justify-between gap-4 mb-4">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-300 print:break-inside-avoid">Dossiê dos 4 Pilares</h3>
+                                <h3 class="text-lg font-bold text-slate-300 print:break-inside-avoid">Análise estratégica dos 4 Pilares</h3>
                                 <p class="text-xs text-slate-500 mt-1">Leitura executiva das áreas que sustentam a qualidade do site.</p>
                             </div>
                         </div>
@@ -4947,11 +5007,12 @@ function getCodigoHTML() {
                         `;
                     });
                 }
-                        // Determina cor do score
+                // Determina cor do score
                 const pGrid = document.getElementById('agentsTableBody');
+                const agentsResults = data.resultado.agents_results || data.resultado.personas_results || [];
                 if (pGrid) {
                     pGrid.innerHTML = "";
-                    data.resultado.agents_results.forEach(p => {
+                    agentsResults.forEach(p => {
                         // Determina cor do score
                         let scoreColor = "text-green-400";
                         if (p.score <= 4) scoreColor = "text-red-500";
@@ -4993,7 +5054,7 @@ function getCodigoHTML() {
                 // Recria ícones Lucide para os novos botões de chat
                 lucide.createIcons();
                 // Adiciona botão flutuante de chat
-                addFloatingChatButton(data.resultado.agents_results);
+                addFloatingChatButton(agentsResults);
                 // Ajusta posição do footer para não sobrepor resultados
                 adjustFooterPosition(true);
                 // Verificação adicional para garantir o posicionamento
@@ -6182,19 +6243,20 @@ function getCodigoHTML() {
             // Preenche a lista de agents com botões criados dinamicamente para evitar problemas com JSON inline
             const list = document.getElementById('agentsList');
             agents.forEach(function(agent) {
+                const normalizedAgent = normalizeChatPersona(agent);
                 const btn = document.createElement('button');
                 btn.className = 'agent-select-card';
                 btn.style.cssText = 'width:100%; background: rgba(8, 13, 22, 0.95); border: 1px solid rgba(255, 255, 255, 0.65); color: white; padding: 18px; border-radius: 20px; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; text-align: left; display: grid; gap: 8px;';
                 const title = document.createElement('div');
                 title.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;';
-                title.innerHTML = `<span class="agent-select-card-title">${agent.profile_name}</span><span class="agent-select-card-meta">Score ${agent.score || '--'}/10</span>`;
+                title.innerHTML = `<span class="agent-select-card-title">${safeAuditText(normalizedAgent.profile_name)}</span><span class="agent-select-card-meta">Score ${normalizedAgent.score || '--'}/10</span>`;
                 const desc = document.createElement('div');
                 desc.style.cssText = 'font-size:13px; color: #cbd5e1; line-height:1.6;';
-                desc.innerText = agent.description || 'Perspectiva projetada para análise estratégica e recomendações rápidas.';
+                desc.innerText = normalizedAgent.description || 'Perspectiva projetada para análise estratégica e recomendações rápidas.';
                 btn.appendChild(title);
                 btn.appendChild(desc);
                 btn.addEventListener('click', function() {
-                    selectAgentForChat(agent);
+                    selectAgentForChat(normalizedAgent);
                     const m = document.getElementById('agentSelectorModal');
                     if (m) m.remove();
                 });
@@ -6202,7 +6264,7 @@ function getCodigoHTML() {
             });
         }
         function selectAgentForChat(agent) {
-            openChat(agent);
+            openChat(normalizeChatPersona(agent));
         }
         // === FUNÇÕES DE CHAT COM AGENTS ===
         // Armazena históricos por agent (id ou nome)
@@ -6224,6 +6286,24 @@ function getCodigoHTML() {
             const parts = agent.profile_name.trim().split(/\s+/);
             if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
             return agent.profile_name.substring(0, 2).toUpperCase();
+        }
+        function getCurrentChatMeta() {
+            return {
+                title: currentAuditUrl || document.getElementById('reportUrl')?.innerText || 'Site Auditado',
+                url: currentAuditUrl || '',
+                audit_data: auditData || {}
+            };
+        }
+        function normalizeChatPersona(agent) {
+            const profileName = agent?.profile_name || agent?.name || agent?.agent || 'Persona SSW';
+            return {
+                ...agent,
+                profile_name: profileName,
+                name: agent?.name || profileName,
+                score: agent?.score ?? null,
+                direct_quote: agent?.direct_quote || agent?.feedback || '',
+                description: agent?.description || agent?.profile_description || ''
+            };
         }
         function formatChatText(text) {
             return String(text)
@@ -6332,11 +6412,12 @@ function getCodigoHTML() {
                     method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({
                         historico: currentChatHistory,
-                        agent: { profile_name: currentAgent.profile_name, score: currentAgent.score },
-                        meta: window.CURRENT_META || { title: "Site Auditado" }
+                        persona: normalizeChatPersona(currentAgent),
+                        meta: getCurrentChatMeta()
                     })
                 });
                 const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Falha no chat');
                 // Remove typing indicator e põe resposta
                 const loadingEl = document.getElementById(loadingId);
                 if (loadingEl) loadingEl.remove();
@@ -7173,7 +7254,7 @@ function getCodigoHTML() {
                 doc.setFontSize(18);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(...colors.black);
-                doc.text('SSW INTELLIGENCE - Dossiê de Auditoria Técnica', 105, yPosition, { align: 'center' });
+                doc.text('SSW INTELLIGENCE - Análise Estratégica', 105, yPosition, { align: 'center' });
                 yPosition += 12;
                 // URL analisada
                 doc.setFontSize(11);
@@ -7230,21 +7311,22 @@ function getCodigoHTML() {
                 yPosition += 15;
                 // === TABELA DE VULNERABILIDADES (Página Separada) ===
                 // 2. EXTRAÇÃO DE VULNERABILIDADES com fallbacks
+                const limitPdfText = (value, max = 130) => {
+                    const text = String(value ?? '').replace(/\s+/g, ' ').trim();
+                    return text.length > max ? `${text.substring(0, max - 3)}...` : text;
+                };
                 const vulns = dados?.technical_audit?.vulnerabilities || [];
                 if (vulns.length > 0) {
-                    // Força nova página para vulnerabilidades
-                    doc.addPage();
-                    yPosition = 20;
                     doc.setFontSize(14);
                     doc.setFont('helvetica', 'bold');
                     doc.setTextColor(...colors.black);
                     doc.text('Vulnerabilidades Identificadas', 20, yPosition);
                     yPosition += 8;
                     // Preparar dados para a tabela
-                    const bodyVulns = vulns.map(v => [
-                        v.severity || "Atenção",
-                        v.title || "Não especificado",
-                        v.description || "Sem detalhes"
+                    const bodyVulns = vulns.slice(0, 4).map(v => [
+                        limitPdfText(v.severity || "Atenção", 22),
+                        limitPdfText(v.title || "Não especificado", 48),
+                        limitPdfText(v.description || "Sem detalhes", 145)
                     ]);
                     // Criar tabela de vulnerabilidades
                     doc.autoTable({
@@ -7260,7 +7342,9 @@ function getCodigoHTML() {
                         },
                         bodyStyles: {
                             textColor: colors.darkGray,
-                            fontSize: 9
+                            fontSize: 8,
+                            cellPadding: 1.5,
+                            overflow: 'linebreak'
                         },
                         alternateRowStyles: {
                             fillColor: colors.lightGray
@@ -7276,19 +7360,17 @@ function getCodigoHTML() {
                 // 3. MAPEAMENTO UNIVERSAL DE AGENTS
                 const agents = dados?.agents_results || dados?.battle_data?.agent_battleground || dados?.behavioral_analysis || [];
                 if (agents.length > 0) {
-                    // Força nova página para agents
-                    doc.addPage();
-                    yPosition = 20;
+                    yPosition += 10;
                     doc.setFontSize(14);
                     doc.setFont('helvetica', 'bold');
                     doc.setTextColor(...colors.black);
                     doc.text('Análise de Agents', 20, yPosition);
                     yPosition += 8;
                     // Preparar dados para a tabela de agents
-                    const bodyAgents = agents.map(p => [
-                        p.profile_name || p.agent || "Usuário Geral",
-                        (p.score ? `Nota: ${p.score}/10` : null) || p.sentiment || p.preference || "Neutro",
-                        p.direct_quote || p.feedback || p.reason || "Sem análise detalhada."
+                    const bodyAgents = agents.slice(0, 3).map(p => [
+                        limitPdfText(p.profile_name || p.agent || "Usuário Geral", 42),
+                        limitPdfText((p.score ? `Nota: ${p.score}/10` : null) || p.sentiment || p.preference || "Neutro", 36),
+                        limitPdfText(p.direct_quote || p.feedback || p.reason || "Sem análise detalhada.", 145)
                     ]);
                     // Criar tabela de agents
                     doc.autoTable({
@@ -7304,7 +7386,9 @@ function getCodigoHTML() {
                         },
                         bodyStyles: {
                             textColor: colors.darkGray,
-                            fontSize: 9
+                            fontSize: 8,
+                            cellPadding: 1.5,
+                            overflow: 'linebreak'
                         },
                         alternateRowStyles: {
                             fillColor: colors.lightGray
@@ -7322,47 +7406,49 @@ function getCodigoHTML() {
                     });
                 }
                 // === PLANO DE AÇÃO ===
-                // 4. RENDERIZAR O PLANO DE AÇÃO com autoTable para paginação automática
-                let actions = dados?.technical_audit?.action_plan?.week_1 ||
-                           dados?.technical_audit?.action_plan?.month_1 ||
-                           dados?.action_plan ||
-                           dados?.battle_data?.action_plan_for_a || [];
-                // Achatar arrays aninhados se existirem
-                if (Array.isArray(actions) && actions.length > 0 && Array.isArray(actions[0])) {
-                    actions = actions.flat();
-                }
-                if (actions.length > 0) {
-                    if (yPosition > 180) {
-                        doc.addPage();
-                        yPosition = 20;
-                    } else {
-                        yPosition += 15;
+                // 4. O plano começa sempre em uma folha própria.
+                const normalizeActions = (plan) => {
+                    if (!plan) return [];
+                    if (Array.isArray(plan)) return plan.flat().filter(Boolean);
+                    if (typeof plan === 'object') {
+                        return Object.values(plan).flat().filter(Boolean);
                     }
-                    doc.setFontSize(14);
-                    doc.setFont('helvetica', 'bold');
-                    doc.setTextColor(...colors.black);
-                    doc.text('Plano de Ação Recomendado', 20, yPosition);
-                    yPosition += 10;
-                    // Preparar dados para o plano de ação como tabela de 1 coluna (apenas os 4 primeiros)
-                    const bodyActions = actions.slice(0, 4).map((act, index) => [`${index + 1}. ${act}`]);
-                    // Criar tabela para o plano de ação (sem bordas visíveis, apenas para paginação)
-                    doc.autoTable({
-                        head: [], // Sem cabeçalho
-                        body: bodyActions,
-                        startY: yPosition,
-                        showHead: 'never',
-                        theme: 'plain',
-                        styles: {
-                            textColor: colors.black,
-                            fontSize: 10,
-                            cellPadding: 2
-                        },
-                        margin: { left: 20, right: 20 },
-                        didDrawPage: function(data) {
-                            yPosition = data.cursor.y;
-                        }
-                    });
-                }
+                    return [plan];
+                };
+                let actions = [
+                    ...normalizeActions(dados?.technical_audit?.action_plan),
+                    ...normalizeActions(dados?.action_plan),
+                    ...normalizeActions(dados?.battle_data?.action_plan_for_a)
+                ];
+                actions = [...new Set(actions.map(action => String(action).trim()).filter(Boolean))];
+
+                doc.addPage();
+                yPosition = 24;
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...colors.black);
+                doc.text('Plano de Ação Recomendado', 20, yPosition);
+                yPosition += 10;
+                const bodyActions = actions.length > 0
+                    ? actions.map((act, index) => [`${index + 1}. ${limitPdfText(act, 240)}`])
+                    : [["Nenhuma ação recomendada foi retornada pela análise."]];
+                doc.autoTable({
+                    head: [],
+                    body: bodyActions,
+                    startY: yPosition,
+                    showHead: 'never',
+                    theme: 'plain',
+                    styles: {
+                        textColor: colors.black,
+                        fontSize: 10,
+                        cellPadding: 2.5,
+                        overflow: 'linebreak'
+                    },
+                    margin: { left: 20, right: 20 },
+                    didDrawPage: function(data) {
+                        yPosition = data.cursor.y;
+                    }
+                });
                 // === RODAPÉ ===
                 const pageCount = doc.internal.getNumberOfPages();
                 for (let i = 1; i <= pageCount; i++) {
@@ -7374,9 +7460,9 @@ function getCodigoHTML() {
                     doc.text('Gerado por SSW INTELLIGENCE - Plataforma de Auditoria Web', 105, 290, { align: 'center' });
                 }
                 // Salvar o PDF
-                const fileName = `dossie-auditoria-${dados.url ? dados.url.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 30) : 'site'}-${Date.now()}.pdf`;
+                const fileName = `analise-estrategica-${dados.url ? dados.url.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 30) : 'site'}-${Date.now()}.pdf`;
                 doc.save(fileName);
-                Toast.success('Dossiê executivo gerado com sucesso!');
+                Toast.success('Análise estratégica gerada com sucesso!');
             } catch (error) {
                 console.error('Erro ao gerar PDF:', error);
                 Toast.error('Erro ao gerar PDF. Tente novamente.');
