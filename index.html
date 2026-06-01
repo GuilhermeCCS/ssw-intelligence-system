@@ -659,6 +659,36 @@
             background: #000000 !important;
             border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
+        body.auth-page-active {
+            min-height: 100vh;
+            overflow: hidden;
+            background: #020408 !important;
+        }
+        body.auth-page-active #appSidebar,
+        body.auth-page-active #mainContent,
+        body.auth-page-active #footer-container,
+        body.auth-page-active #mainFooter,
+        body.auth-page-active #floatingChatBtn {
+            display: none !important;
+        }
+        body.auth-page-active #authScreen {
+            background: #020408 !important;
+            z-index: 100 !important;
+        }
+        body.auth-page-active #authScreen > .absolute:nth-child(-n+3) {
+            display: none !important;
+        }
+        body.auth-page-active #authScreen > .absolute.inset-0 {
+            background: #020408 !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        body.auth-page-active #authScreen .glass-panel {
+            background: rgba(8, 13, 22, 0.96) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45) !important;
+        }
     </style>
     <style>
         /* Forçar formato circular nas logos */
@@ -1467,9 +1497,23 @@
         if (appSidebar) appSidebar.style.opacity = opacity;
     }
 
-    function showAuthScreen(type = 'login') {
+    function setAuthPageState(isActive) {
+        document.body.classList.toggle('auth-page-active', isActive);
+        const mobileMenu = document.getElementById('mobileMenuDropdown');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (mobileMenu) mobileMenu.classList.add('hidden');
+        if (overlay) overlay.classList.add('hidden');
+        document.body.classList.remove('mobile-menu-open');
+        setAuthBackdropState(false);
+    }
+
+    function showAuthScreen(type = 'login', pushRoute = true) {
+    const route = type === 'register' ? '/cadastro' : '/login';
+    if (pushRoute && window.location.pathname !== route) {
+        window.history.pushState({}, '', route);
+    }
+    setAuthPageState(true);
     document.getElementById('authScreen').classList.remove('hidden');
-    setAuthBackdropState(true);
 
     // Abre a aba correta (Login ou Cadastro) dependendo de qual botão foi clicado
     if (type === 'register') {
@@ -1480,13 +1524,15 @@
     } else {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('registerForm').classList.add('hidden');
+        authView = 'login';
+        if (typeof renderAuthView === 'function') renderAuthView();
         setTimeout(() => initTurnstileLogin(), 500);
     }
 }
         // Função para esconder tela de autenticação
         function hideAuthScreen() {
             document.getElementById('authScreen').classList.add('hidden');
-            setAuthBackdropState(false);
+            setAuthPageState(false);
         }
         // Verificar se clique foi em botão que não é do footer
         function handleButtonClick(event) {
@@ -1570,7 +1616,7 @@
                 <div class="mb-6 flex justify-center">
                     <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
                 </div>
-                <a href="#" onclick="nav('home')" class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg hover:text-primary transition-colors cursor-pointer block">SSW <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELLIGENCE</span></a>
+                <div class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg block">SSW <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELLIGENCE</span></div>
                 <p class="text-xs text-slate-400 uppercase tracking-[0.2em] font-medium">Enterprise Analytics Platform</p>
             </div>
                         <div class="space-y-6" id="loginForm">
@@ -1582,7 +1628,12 @@
                 <h3 class="text-center text-white font-bold text-lg mb-4">Novo Cadastro</h3>
                 <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
                 <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
-                <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl p-3 text-white text-sm" oninput="updateRegisterPasswordStrength()" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
+                <div class="relative">
+                    <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl py-3 pl-3 pr-11 text-white text-sm" oninput="updateRegisterPasswordStrength()" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
+                    <button type="button" onclick="togglePasswordVisibility('regPass', this)" aria-label="Mostrar senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
+                        <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                    </button>
+                </div>
                 <div id="regPasswordStrength" class="space-y-2">
                     <div class="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                         <div id="regPasswordStrengthBar" class="h-full w-0 rounded-full transition-all duration-300" style="background:#ef4444;"></div>
@@ -1598,7 +1649,7 @@
                     </div>
                 </div>
                 <button id="registerSubmitBtn" onclick="event.preventDefault(); fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
-                <button onclick="toggleRegister()" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
+                <button onclick="showAuthScreen('login')" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
                     <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar para Login
                 </button>
             </div>
@@ -1850,7 +1901,7 @@
                         <h2 class="text-3xl font-bold text-white">Gestão de Perfis</h2>
                         <p class="text-slate-400 mt-1">Defina os arquétipos (ICPs) para suas simulações.</p>
                     </div>
-                    <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.remove('hidden');document.getElementById('registerForm').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}loadManageAgents()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
+                    <button onclick="if(!USER||!USER.email){showAuthScreen('login');return;}loadManageAgents()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
                         <i data-lucide="refresh-cw" class="w-3 h-3"></i> Atualizar Lista
                     </button>
                 </header>
@@ -1865,10 +1916,10 @@
                         </div>
                         <div class="md:col-span-6 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
-                            <input type="text" id="newAgentDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createAgent();}">
+                            <input type="text" id="newAgentDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
                         </div>
                         <div class="md:col-span-2">
-                            <button onclick="if(!USER||!USER.email){document.getElementById('loginForm').classList.remove('hidden');document.getElementById('registerForm').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
+                            <button onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
                         </div>
                     </div>
                 </div>
@@ -2652,9 +2703,15 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
             // Navegação baseada em pathname (History API)
             function handlePopState() {
                 const pathname = window.location.pathname.replace('/', '');
-                if (pathname && ['home', 'agents', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
+                if (pathname === 'login') {
+                    showAuthScreen('login', false);
+                } else if (pathname === 'cadastro') {
+                    showAuthScreen('register', false);
+                } else if (pathname && ['home', 'agents', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
+                    hideAuthScreen();
                     nav(pathname);
                 } else if (!pathname || pathname === '') {
+                    hideAuthScreen();
                     nav('home');
                 }
             }
@@ -2846,11 +2903,12 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
     }
 });
         function toggleRegister() {
-            document.getElementById('loginForm').classList.toggle('hidden');
-            document.getElementById('registerForm').classList.toggle('hidden');
+            const registerForm = document.getElementById('registerForm');
+            const nextType = registerForm && registerForm.classList.contains('hidden') ? 'register' : 'login';
+            showAuthScreen(nextType);
 
             // Inicializa Turnstile quando o formulário de registro for exibido
-            if (!document.getElementById('registerForm').classList.contains('hidden')) {
+            if (nextType === 'register') {
                 updateRegisterPasswordStrength();
                 setTimeout(() => initTurnstileRegister(), 500);
             }
@@ -3137,6 +3195,17 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
             btn.textContent = isLoading ? 'ACESSANDO...' : 'ACESSAR SISTEMA';
             btn.classList.toggle('opacity-70', isLoading);
             btn.classList.toggle('cursor-not-allowed', isLoading);
+        }
+
+        function togglePasswordVisibility(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const shouldShow = input.type === 'password';
+            input.type = shouldShow ? 'text' : 'password';
+            button.setAttribute('aria-label', shouldShow ? 'Ocultar senha' : 'Mostrar senha');
+            button.innerHTML = `<i data-lucide="${shouldShow ? 'eye-off' : 'eye'}" class="w-4 h-4 pointer-events-none"></i>`;
+            lucide.createIcons();
+            input.focus();
         }
 
         function resetRegisterCaptcha() {
@@ -3561,7 +3630,10 @@ function getLoginHTML() {
                 <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Senha de Acesso</label>
                 <div class="relative">
                     <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
+                    <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-11 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
+                    <button type="button" onclick="togglePasswordVisibility('loginPass', this)" aria-label="Mostrar senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
+                        <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                    </button>
                 </div>
             </div>
             <div class="mt-4">
@@ -3573,7 +3645,7 @@ function getLoginHTML() {
                 Acessar Sistema
             </button>
             <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
-                <button onclick="toggleRegister()" class="text-xs text-slate-400 hover:text-white transition-colors font-medium flex items-center gap-1">
+                <button onclick="showAuthScreen('register')" class="text-xs text-slate-400 hover:text-white transition-colors font-medium flex items-center gap-1">
                     <i data-lucide="user-plus" class="w-3 h-3"></i> Criar Conta
                 </button>
                 <button onclick="setAuthView('email')" class="text-xs text-slate-400 hover:text-[#00D4FF] transition-colors font-medium">
@@ -3672,10 +3744,10 @@ function getCodigoHTML() {
         function loginSuccess() {
             // 1. Esconde tela de login
             document.getElementById('authScreen').classList.add('hidden');
-            setAuthBackdropState(false);
             // 2. VERIFICAÇÃO DE SEGURANÇA (NOVO)
             // Se o usuário não tiver a flag 'verificado' ou ela for falsa/0
             if (!USER.verificado || USER.verificado === 0 || USER.verificado === 'false') {
+                setAuthPageState(true);
                 // Mostra o Modal de Bloqueio
                 document.getElementById('verifyModal').classList.remove('hidden');
                 lucide.createIcons(); // Garante que os ícones do modal apareçam
@@ -3683,6 +3755,7 @@ function getCodigoHTML() {
                 return; // PARA AQUI. Não carrega o resto do site.
             }
             // 3. Se estiver verificado, segue o fluxo normal
+            setAuthPageState(false);
             document.getElementById('verifyModal').classList.add('hidden'); // Garante que sumiu
             document.getElementById('appSidebar').classList.remove('hidden');
             document.getElementById('appSidebar').classList.add('flex');
@@ -3701,6 +3774,9 @@ function getCodigoHTML() {
             } else {
                 console.log(' Usuário já carregado do storage - sem reload necessário');
                 window.fromLoginFlow = false; // Reseta a flag
+            }
+            if (window.location.pathname === '/login' || window.location.pathname === '/cadastro') {
+                nav('home');
             }
         }
         function toggleUserMenuCircle() {
@@ -3758,9 +3834,7 @@ function getCodigoHTML() {
         function handleLoginLogout() {
             if (!USER || !USER.email) {
                 // Mostra tela de login
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('registerForm').classList.add('hidden');
-                document.getElementById('authScreen').classList.remove('hidden');
+                showAuthScreen('login');
             } else {
                 // Faz logout
                 logout();
@@ -3780,15 +3854,17 @@ function getCodigoHTML() {
             toggleUserMenuCircle();
             // Se não estiver logado, redireciona para login
             if (!USER || !USER.email) {
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('registerForm').classList.add('hidden');
-                document.getElementById('authScreen').classList.remove('hidden');
+                showAuthScreen('login');
                 return;
             }
             // Inicia o fluxo de recuperação de senha com o email do usuário logado
             emailTemporario = USER.email;
             setAuthView('email');
+            window.history.pushState({}, '', '/login');
+            setAuthPageState(true);
             document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
             document.getElementById('recuperarEmail').value = USER.email;
             Toast.info('Enviaremos um código para seu email para redefinir sua senha');
         }
@@ -3815,9 +3891,7 @@ function getCodigoHTML() {
                 // Usuário não logado - mostrar Login
                 btn.className = 'w-full bg-white text-black text-xs font-medium py-2 rounded-md hover:bg-slate-200 transition-colors mt-2';
                 btn.onclick = () => {
-                    document.getElementById('loginForm').classList.remove('hidden');
-                    document.getElementById('registerForm').classList.add('hidden');
-                    document.getElementById('authScreen').classList.remove('hidden');
+                    showAuthScreen('login');
                     toggleUserMenuCircle();
                 };
                 text.textContent = 'Login';
@@ -3910,10 +3984,7 @@ function getCodigoHTML() {
                         emailTemporario = null;
                         senhaTemporaria = null;
                         document.getElementById('verifyModal').classList.add('hidden');
-                        document.getElementById('authScreen').classList.remove('hidden');
-                        document.getElementById('loginForm').classList.remove('hidden');
-                        const registerForm = document.getElementById('registerForm');
-                        if (registerForm) registerForm.classList.add('hidden');
+                        showAuthScreen('login');
                         const loginEmailInput = document.getElementById('loginEmail');
                         if (loginEmailInput && emailVerificado) loginEmailInput.value = emailVerificado;
                         setTimeout(() => {
