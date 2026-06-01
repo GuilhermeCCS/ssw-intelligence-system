@@ -1459,10 +1459,17 @@
         }
 
         // Função para mostrar tela de autenticação
+    function setAuthBackdropState(isActive) {
+        const opacity = isActive ? '0.3' : '';
+        const mainContent = document.getElementById('mainContent');
+        const appSidebar = document.getElementById('appSidebar');
+        if (mainContent) mainContent.style.opacity = opacity;
+        if (appSidebar) appSidebar.style.opacity = opacity;
+    }
+
     function showAuthScreen(type = 'login') {
     document.getElementById('authScreen').classList.remove('hidden');
-    document.getElementById('mainContent').style.opacity = '0.3';
-    document.getElementById('appSidebar').style.opacity = '0.3';
+    setAuthBackdropState(true);
 
     // Abre a aba correta (Login ou Cadastro) dependendo de qual botão foi clicado
     if (type === 'register') {
@@ -1478,8 +1485,7 @@
         // Função para esconder tela de autenticação
         function hideAuthScreen() {
             document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('mainContent').style.opacity = '1';
-            document.getElementById('appSidebar').style.opacity = '1';
+            setAuthBackdropState(false);
         }
         // Verificar se clique foi em botão que não é do footer
         function handleButtonClick(event) {
@@ -3566,6 +3572,7 @@ function getCodigoHTML() {
         function loginSuccess() {
             // 1. Esconde tela de login
             document.getElementById('authScreen').classList.add('hidden');
+            setAuthBackdropState(false);
             // 2. VERIFICAÇÃO DE SEGURANÇA (NOVO)
             // Se o usuário não tiver a flag 'verificado' ou ela for falsa/0
             if (!USER.verificado || USER.verificado === 0 || USER.verificado === 'false') {
