@@ -815,10 +815,6 @@
             background: linear-gradient(90deg, #22d3ee 0%, #67e8f9 50%, #bae6fd 100%);
             box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
         }
-        /* Efeito hover */
-        .agent-checkbox:checked + .agent-content .status-bar-fill {
-            animation: pulse-glow 1.5s ease-in-out infinite alternate;
-        }
         @keyframes pulse-glow {
             from { filter: brightness(1); }
             to { filter: brightness(1.2); }
@@ -1612,34 +1608,6 @@
             el.style.display = isHidden ? 'block' : 'none';
             if (btn) btn.textContent = isHidden ? 'Ocultar \u25b4' : 'Ver perfil \u25be';
         }
-        // Função para limitar seleção de agents a no máximo 3
-        function limitAgentSelection(checkbox) {
-            const checkedBoxes = document.querySelectorAll('.agent-checkbox:checked');
-            if (checkedBoxes.length > 3) {
-                checkbox.checked = false;
-                Toast.warning('Você pode selecionar no máximo 3 especialistas.');
-            }
-            document.querySelectorAll('.agent-checkbox').forEach(function(cb) {
-                var wrapper = cb.closest('.pcard-wrapper');
-                if (!wrapper) return;
-                var inner = wrapper.querySelector('.pcard-inner');
-                if (cb.checked) {
-                    wrapper.style.outline = '2px solid rgba(6,182,212,0.7)';
-                    wrapper.style.outlineOffset = '2px';
-                    if (inner) inner.style.boxShadow = '0 0 18px rgba(6,182,212,0.25)';
-                } else {
-                    wrapper.style.outline = 'none';
-                    if (inner) inner.style.boxShadow = 'none';
-                }
-            });
-            var count = document.querySelectorAll('.agent-checkbox:checked').length;
-            var badge = document.getElementById('agentSelCount');
-            if (badge) {
-                badge.textContent = count + ' / 3';
-                badge.style.color = count > 0 ? '#e2e8f0' : '';
-                badge.style.borderColor = count > 0 ? 'rgba(6,182,212,0.4)' : '';
-            }
-        }
     </script>
     <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
         <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -1871,11 +1839,23 @@
                     <div class="flex justify-between items-start mb-5">
                         <div>
                             <h3 class="text-sm font-bold text-white tracking-wide">Personas Criadas</h3>
-                            <p class="text-[11px] text-slate-500 mt-1">Selecione até <strong class="text-slate-400">3 personas</strong> salvas na sua conta para uma análise manual exclusiva</p>
+                            <p class="text-[11px] text-slate-500 mt-1">Selecione <strong class="text-slate-400">1 persona</strong> salva no backend para uma análise manual exclusiva</p>
                         </div>
-                        <span id="agentSelCount" class="text-[10px] font-semibold bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/50 whitespace-nowrap ml-4 mt-0.5">0 / 3</span>
+                        <span id="agentSelCount" class="text-[10px] font-semibold bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/50 whitespace-nowrap ml-4 mt-0.5">0 / 1</span>
                     </div>
-                    <div id="checklistContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                        <div class="md:col-span-1">
+                            <input id="manualPersonaSearch" type="text" placeholder="Buscar persona..." oninput="renderManualPersonaList()" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                        </div>
+                        <select id="manualPersonaNiche" onchange="renderManualPersonaList()" class="input-pro rounded-xl p-3 text-white text-sm">
+                            <option value="all">Todos os nichos</option>
+                        </select>
+                        <select id="manualPersonaType" onchange="renderManualPersonaList()" class="input-pro rounded-xl p-3 text-white text-sm">
+                            <option value="all">Todos os tipos</option>
+                        </select>
+                    </div>
+                    <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
+                    <div id="checklistContainer" class="space-y-2"></div>
                 </div>
                 <!-- Compare Area -->
                 <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
@@ -1950,13 +1930,21 @@
                         <i data-lucide="plus-circle" class="w-4 h-4"></i> Cadastrar Novo Perfil
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
-                        <div class="md:col-span-4 space-y-2">
+                        <div class="md:col-span-3 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
                             <input type="text" id="newAgentName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newAgentDesc').focus();}">
                         </div>
-                        <div class="md:col-span-6 space-y-2">
+                        <div class="md:col-span-4 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
                             <input type="text" id="newAgentDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
+                        </div>
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nicho</label>
+                            <input type="text" id="newAgentNiche" placeholder="Ex: saas_b2b" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                        </div>
+                        <div class="md:col-span-1 space-y-2">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Tipo</label>
+                            <input type="text" id="newAgentType" placeholder="ICP" class="input-pro w-full rounded-xl p-3 text-white text-sm">
                         </div>
                         <div class="md:col-span-2">
                             <button id="createAgentBtn" onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
@@ -2140,7 +2128,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                                         <div class="border-l-2 border-slate-700 pl-4">
                                             <h4 class="text-white font-semibold mb-2">3. Seleção de Agents (Modo Manual)</h4>
                                             <p class="text-slate-300 text-sm leading-relaxed">
-                                                Ao selecionar o modo manual, escolha até 3 personas criadas na sua conta. Sem personas salvas, o modo manual permanece indisponível.
+                                                Ao selecionar o modo manual, escolha 1 persona criada na sua conta. Sem personas salvas, o modo manual permanece indisponível.
                                             </p>
                                         </div>
 
@@ -2388,7 +2376,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                                     <div class="border-l-2 border-slate-700 pl-4">
                                         <h4 class="text-white font-semibold mb-2">Combine Perspectivas</h4>
                                         <p class="text-slate-300 text-sm leading-relaxed">
-                                            Combine agents diferentes para obter visões complementares. Uma análise com 3 agents distintas revela insights que uma única agent não captaria.
+                                            Crie agents diferentes para obter visões complementares ao longo de análises separadas. Cada análise manual usa uma persona principal para manter o diagnóstico focado.
                                         </p>
                                     </div>
                                     <div class="border-l-2 border-slate-700 pl-4">
@@ -2409,7 +2397,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                                 <div class="space-y-4 mb-8">
                                     <div class="border border-slate-800 rounded-lg p-4">
                                         <h4 class="text-white font-semibold mb-2">Máximo de 3 Agents por Análise</h4>
-                                        <p class="text-slate-400 text-sm">O sistema permite selecionar até 3 agents por análise para manter o relatório focado e acionável. Mais agents podem diluir as recomendações.</p>
+                                        <p class="text-slate-400 text-sm">O sistema permite selecionar 1 agent por análise manual para manter o relatório focado e acionável. Use análises separadas para comparar perspectivas.</p>
                                     </div>
                                     <div class="border border-slate-800 rounded-lg p-4">
                                         <h4 class="text-white font-semibold mb-2">Consistência entre Análises</h4>
@@ -4078,11 +4066,17 @@ function getCodigoHTML() {
                 lista.forEach(p => {
                     const safeName = safeAuditText(p.name);
                     const safeDescription = safeAuditText(p.description);
+                    const safeNiche = safeAuditText(getPersonaNiche(p));
+                    const safeType = safeAuditText(getPersonaType(p));
                     div.innerHTML += `
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative group">
                             <div class="flex justify-between items-start mb-2">
                                 <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-accent"><i data-lucide="user" class="w-4 h-4"></i></div>
                                 <button onclick="deleteAgent('${p.id}')" class="text-slate-600 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-[10px] font-bold uppercase tracking-wide rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2 py-1 text-cyan-200">${safeNiche}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wide rounded-full border border-white/10 bg-white/5 px-2 py-1 text-slate-300">${safeType}</span>
                             </div>
                             <h4 class="font-bold text-white">${safeName}</h4>
                             <p class="text-xs text-slate-400 mt-2 line-clamp-3">${safeDescription}</p>
@@ -4094,13 +4088,15 @@ function getCodigoHTML() {
         async function createAgent() {
             const nome = document.getElementById('newAgentName').value;
             const desc = document.getElementById('newAgentDesc').value;
+            const niche = document.getElementById('newAgentNiche')?.value || 'geral';
+            const type = document.getElementById('newAgentType')?.value || 'perfil';
             if(!nome || !desc) return Toast.warning("Preencha todos os campos");
             const btn = document.getElementById('createAgentBtn');
             if (btn) { btn.innerText = "..."; btn.disabled = true; }
             try {
                 const res = await fetch(`${API_URL}/api/personas`, {
                     method: 'POST', headers: authHeaders({'Content-Type': 'application/json'}),
-                    body: JSON.stringify({ nome, descricao: desc })
+                    body: JSON.stringify({ nome, descricao: desc, niche, type })
                 });
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}));
@@ -4108,6 +4104,8 @@ function getCodigoHTML() {
                 }
                 document.getElementById('newAgentName').value = "";
                 document.getElementById('newAgentDesc').value = "";
+                if (document.getElementById('newAgentNiche')) document.getElementById('newAgentNiche').value = "";
+                if (document.getElementById('newAgentType')) document.getElementById('newAgentType').value = "";
                 await loadManageAgents();
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
                 Toast.success("Perfil salvo com sucesso!");
@@ -4488,60 +4486,19 @@ function getCodigoHTML() {
                                 console.log("Erro ao carregar agents customizadas:", e);
                             }
                         }
+                        manualPersonaCache = custom.map(normalizeManualPersona);
+                        populateManualPersonaFilters(manualPersonaCache);
                         cont.innerHTML = "";
-                        var _oldBar = document.getElementById('pcard-filter-bar');
-                        if (_oldBar) _oldBar.remove();
-                        if (custom.length === 0) {
+                        if (manualPersonaCache.length === 0) {
                             cont.innerHTML = '<div class="md:col-span-2 lg:col-span-3 text-center border border-dashed border-slate-700 rounded-xl p-7">'
                                 + '<p class="text-sm font-semibold text-white">Nenhuma persona criada ainda.</p>'
                                 + '<p class="text-xs text-slate-500 mt-2">Crie personas na seção Agents para liberar a análise manual.</p>'
                                 + '<button onclick="nav(\'agents\')" class="mt-4 px-4 py-2 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 text-xs font-bold hover:bg-cyan-500/25 transition">Criar persona</button>'
                                 + '</div>';
+                            updateManualPersonaCount();
                             return;
                         }
-                        // Inject flip card CSS once
-                        if (!document.getElementById('pcard-flip-css')) {
-                            var st = document.createElement('style');
-                            st.id = 'pcard-flip-css';
-                            st.textContent = '.pcard-inner{transform-style:preserve-3d;transition:transform 0.52s cubic-bezier(.4,0,.2,1);}.pcard-inner.flipped{transform:rotateY(180deg);}.pcard-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:13px;}.pcard-back{transform:rotateY(180deg);}.pcard-wrapper:hover .pcard-inner:not(.flipped){box-shadow:0 4px 24px rgba(6,182,212,0.18);}';
-                            document.head.appendChild(st);
-                        }
-                        function _escapeHtml(value) {
-                            return String(value || '').replace(/[&<>"']/g, function(ch) {
-                                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
-                            });
-                        }
-                        var cardIdx = 0;
-                        function _buildCard(name, perfil) {
-                            var idx = cardIdx++;
-                            var safeName = _escapeHtml(name);
-                            var safeProfile = _escapeHtml(perfil || '');
-                            var value = _escapeHtml(name + (perfil ? ': ' + perfil : ''));
-                            var initial = String(name || 'P').charAt(0).toUpperCase();
-                            var frontBg = 'background:linear-gradient(140deg,rgba(34,211,238,0.22) 0%,rgba(129,140,248,0.12) 100%);border:1px solid rgba(34,211,238,0.28);';
-                            var backBg  = 'background:linear-gradient(140deg,rgba(12,18,32,0.94) 0%,rgba(16,24,40,0.9) 100%);border:1px solid rgba(34,211,238,0.32);';
-                            var flipJs  = 'this.closest(\'.pcard-wrapper\').querySelector(\'.pcard-inner\').classList.toggle(\'flipped\')';
-                            return '<div class="pcard-wrapper" data-setor="custom" style="position:relative;height:168px;perspective:900px;border-radius:13px;">'
-                                + '<input type="checkbox" value="' + value + '" data-color="#06b6d4" class="agent-checkbox" onclick="event.stopPropagation();limitAgentSelection(this)" style="position:absolute;top:10px;right:10px;z-index:20;width:15px;height:15px;cursor:pointer;accent-color:#06b6d4;">'
-                                + '<div class="pcard-inner" style="position:relative;width:100%;height:100%;cursor:pointer;" onclick="' + flipJs + '">'
-                                // --- FRONT ---
-                                + '<div class="pcard-face" style="' + frontBg + 'padding:13px 36px 13px 13px;display:flex;align-items:flex-start;gap:11px;">'
-                                + '<div style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:rgba(6,182,212,0.18);border:1.5px solid rgba(6,182,212,0.45);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:#ffffff;">' + initial + '</div>'
-                                + '<div style="flex:1;min-width:0;">'
-                                + '<span style="display:inline-block;padding:2px 9px;border-radius:999px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.28);font-size:11px;font-weight:700;letter-spacing:0.05em;color:#a5f3fc;text-transform:uppercase;">Persona criada</span>'
-                                + '<p style="color:#ffffff;font-size:15px;font-weight:700;line-height:1.3;margin:5px 0 0;">' + safeName + '</p>'
-                                + '<p style="color:rgba(165,243,252,0.6);font-size:11px;margin-top:10px;">Clique para ver o perfil &#8635;</p>'
-                                + '</div></div>'
-                                // --- BACK ---
-                                + '<div class="pcard-face pcard-back" style="' + backBg + 'padding:12px 36px 12px 13px;overflow-y:auto;">'
-                                + '<p style="color:#ffffff;font-size:12.5px;font-weight:500;line-height:1.65;margin:0;">' + safeProfile + '</p>'
-                                + '<p style="color:rgba(165,243,252,0.5);font-size:10.5px;margin-top:8px;">&#8634; Clique para voltar</p>'
-                                + '</div>'
-                                + '</div></div>';
-                        }
-                        custom.forEach(function(p) {
-                            cont.innerHTML += _buildCard(p.name, p.description || '');
-                        });
+                        renderManualPersonaList();
                     } catch (e) {
                         console.error(e);
                         cont.innerHTML = "<span class='text-xs text-red-400'>Erro ao carregar perfis</span>";
@@ -4703,6 +4660,162 @@ function getCodigoHTML() {
             }[char]));
         }
 
+        var manualPersonaCache = [];
+        var manualNicheCache = {};
+
+        function normalizeTaxonomyValue(value, fallback) {
+            return String(value || fallback || '').trim().toLowerCase().replace(/\s+/g, '_');
+        }
+
+        function getPersonaNiche(persona) {
+            return normalizeTaxonomyValue(persona?.niche || persona?.nicho || persona?.segment || persona?.segmento, 'geral');
+        }
+
+        function getPersonaType(persona) {
+            return normalizeTaxonomyValue(persona?.type || persona?.tipo || persona?.category || persona?.categoria, 'perfil');
+        }
+
+        function normalizeManualPersona(persona) {
+            const name = persona?.name || persona?.profile_name || persona?.agent || 'Persona';
+            return {
+                ...persona,
+                id: String(persona?.id || name),
+                name,
+                description: persona?.description || persona?.profile_description || '',
+                niche: getPersonaNiche(persona),
+                type: getPersonaType(persona)
+            };
+        }
+
+        function humanizeTaxonomy(value) {
+            return String(value || 'geral').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        function populateManualPersonaFilters(personas) {
+            const nicheSelect = document.getElementById('manualPersonaNiche');
+            const typeSelect = document.getElementById('manualPersonaType');
+            if (!nicheSelect || !typeSelect) return;
+
+            const currentNiche = nicheSelect.value || 'all';
+            const currentType = typeSelect.value || 'all';
+            const niches = [...new Set(personas.map(getPersonaNiche))].sort();
+            const types = [...new Set(personas.map(getPersonaType))].sort();
+
+            nicheSelect.innerHTML = '<option value="all">Todos os nichos</option>' + niches.map(n => `<option value="${safeAuditText(n)}">${safeAuditText(humanizeTaxonomy(n))}</option>`).join('');
+            typeSelect.innerHTML = '<option value="all">Todos os tipos</option>' + types.map(t => `<option value="${safeAuditText(t)}">${safeAuditText(humanizeTaxonomy(t))}</option>`).join('');
+            nicheSelect.value = niches.includes(currentNiche) ? currentNiche : 'all';
+            typeSelect.value = types.includes(currentType) ? currentType : 'all';
+        }
+
+        function updateManualPersonaCount() {
+            const selected = document.querySelector('.agent-radio:checked');
+            const badge = document.getElementById('agentSelCount');
+            if (!badge) return;
+            badge.textContent = selected ? '1 / 1' : '0 / 1';
+            badge.style.color = selected ? '#e2e8f0' : '';
+            badge.style.borderColor = selected ? 'rgba(6,182,212,0.4)' : '';
+        }
+
+        function setManualPersonaSelected(input) {
+            document.querySelectorAll('.manual-persona-row').forEach(row => {
+                row.style.borderColor = 'rgba(255,255,255,0.1)';
+                row.style.background = 'rgba(8,13,22,0.72)';
+                row.style.boxShadow = 'none';
+            });
+            const row = input?.closest('.manual-persona-row');
+            if (row) {
+                row.style.borderColor = 'rgba(34,211,238,0.55)';
+                row.style.background = 'rgba(34,211,238,0.08)';
+                row.style.boxShadow = '0 0 0 1px rgba(34,211,238,0.18), 0 18px 50px rgba(0,0,0,0.22)';
+            }
+            updateManualPersonaCount();
+            validateManualPersonaNiche(input?.value);
+        }
+
+        function renderManualPersonaList() {
+            const cont = document.getElementById('checklistContainer');
+            if (!cont) return;
+            const search = (document.getElementById('manualPersonaSearch')?.value || '').toLowerCase().trim();
+            const niche = document.getElementById('manualPersonaNiche')?.value || 'all';
+            const type = document.getElementById('manualPersonaType')?.value || 'all';
+            const selectedValue = document.querySelector('.agent-radio:checked')?.value || '';
+
+            const filtered = manualPersonaCache.filter(p => {
+                const haystack = `${p.name} ${p.description} ${p.niche} ${p.type}`.toLowerCase();
+                return (!search || haystack.includes(search)) &&
+                    (niche === 'all' || p.niche === niche) &&
+                    (type === 'all' || p.type === type);
+            });
+
+            if (filtered.length === 0) {
+                cont.innerHTML = '<div class="text-center border border-dashed border-slate-700 rounded-xl p-7">'
+                    + '<p class="text-sm font-semibold text-white">Nenhuma persona encontrada.</p>'
+                    + '<p class="text-xs text-slate-500 mt-2">Ajuste a busca ou os filtros para encontrar uma persona do backend.</p>'
+                    + '</div>';
+                updateManualPersonaCount();
+                return;
+            }
+
+            cont.innerHTML = filtered.map(p => {
+                const checked = selectedValue === p.id ? 'checked' : '';
+                return `
+                    <label class="manual-persona-row block rounded-xl border border-white/10 bg-slate-950/70 p-4 cursor-pointer transition-all hover:border-cyan-400/35 hover:bg-cyan-400/[0.06]">
+                        <div class="flex items-start gap-4">
+                            <input type="radio" name="manualPersona" class="agent-radio mt-1 accent-cyan-400" value="${safeAuditText(p.id)}" ${checked} onchange="setManualPersonaSelected(this)">
+                            <div class="min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h4 class="text-sm font-bold text-white">${safeAuditText(p.name)}</h4>
+                                    <span class="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-200">${safeAuditText(humanizeTaxonomy(p.niche))}</span>
+                                    <span class="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-300">${safeAuditText(humanizeTaxonomy(p.type))}</span>
+                                </div>
+                                <p class="mt-2 text-xs leading-relaxed text-slate-400">${safeAuditText(p.description || 'Sem descrição comportamental.')}</p>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            }).join('');
+            const selected = Array.from(document.querySelectorAll('.agent-radio')).find(el => el.value === selectedValue);
+            if (selected) setManualPersonaSelected(selected);
+            updateManualPersonaCount();
+        }
+
+        async function validateManualPersonaNiche(personaId) {
+            const warning = document.getElementById('manualPersonaWarning');
+            if (!warning) return;
+            warning.classList.add('hidden');
+            warning.textContent = '';
+
+            const persona = manualPersonaCache.find(p => p.id === personaId);
+            const url = document.getElementById('auditUrl')?.value?.trim();
+            if (!persona || !url || persona.niche === 'geral') return;
+
+            try {
+                const cacheKey = url.toLowerCase();
+                let detected = manualNicheCache[cacheKey];
+                if (!detected) {
+                    const res = await fetch(`${API_URL}/api/detectar-nicho`, {
+                        method: 'POST',
+                        headers: authHeaders({ 'Content-Type': 'application/json' }),
+                        body: JSON.stringify({ url })
+                    });
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    detected = data.niche || 'geral';
+                    manualNicheCache[cacheKey] = detected;
+                }
+
+                const personaNiche = persona.niche;
+                const compatible = detected === 'geral' || personaNiche === detected || personaNiche.includes(detected) || detected.includes(personaNiche);
+                if (!compatible) {
+                    warning.textContent = `Atenção: esta URL parece ser do nicho "${humanizeTaxonomy(detected)}", mas a persona selecionada é do nicho "${humanizeTaxonomy(personaNiche)}". Ela pode gerar uma análise menos precisa.`;
+                    warning.classList.remove('hidden');
+                    Toast.warning("A persona selecionada pode não ser adequada para o nicho da URL.");
+                }
+            } catch (e) {
+                console.warn('Não foi possível validar nicho da persona:', e);
+            }
+        }
+
         function getPillarScoreColor(score) {
             const value = Number(score);
             if (!Number.isFinite(value)) return 'text-slate-300';
@@ -4792,12 +4905,15 @@ function getCodigoHTML() {
             const url = document.getElementById('auditUrl').value;
             const mode = document.getElementById('auditMode')?.value || 'auto';
             const selected = mode === 'manual'
-                ? Array.from(document.querySelectorAll('.agent-checkbox:checked')).map(el => el.value).filter(Boolean)
+                ? Array.from(document.querySelectorAll('.agent-radio:checked')).map(el => el.value).filter(Boolean)
                 : [];
             if(!url) return Toast.warning("Digite uma URL para analisar");
             if(mode === 'compare') return runCompare();
             if(mode === 'manual' && selected.length === 0) {
-                return Toast.warning("Selecione pelo menos 1 agent para a análise manual.");
+                return Toast.warning("Selecione 1 persona do backend para a análise manual.");
+            }
+            if (mode === 'manual' && selected[0]) {
+                validateManualPersonaNiche(selected[0]);
             }
             // Esconde toda a interface anterior e mostra apenas o loading centralizado
             document.getElementById('heroSection').classList.add('hidden');
@@ -4840,9 +4956,22 @@ function getCodigoHTML() {
                         comprarCreditos();
                         return;
                     } else {
-                        throw new Error('API não disponível');
+                        const errorData = await res.json().catch(() => ({}));
+                        const apiError = new Error(errorData.detail || 'API não disponível');
+                        apiError.isHttpError = true;
+                        throw apiError;
                     }
                 } catch (apiError) {
+                    if (apiError.isHttpError) {
+                        document.getElementById('heroSection').classList.remove('hidden');
+                        document.getElementById('emptyStateCards').classList.remove('hidden');
+                        document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
+                        document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
+                        stopAuditLoadingAnimation();
+                        document.getElementById('auditLoading').classList.add('hidden');
+                        Toast.error(apiError.message || 'Erro ao iniciar auditoria.');
+                        return;
+                    }
                     console.log('API não disponível, usando modo fallback');
                     generateFallbackAudit(url, mode, selected);
                     return;
@@ -5835,7 +5964,8 @@ function getCodigoHTML() {
                 pDiv.innerHTML = "";
                 const agentsToUse = selected.length > 0 ? selected : [];
                 agentsToUse.forEach((agent, index) => {
-                    const agentName = typeof agent === 'string' ? agent.split(':')[0] : agent.name;
+                    const fallbackPersona = typeof agent === 'string' ? manualPersonaCache.find(p => p.id === agent) : null;
+                    const agentName = fallbackPersona?.name || (typeof agent === 'string' ? agent.split(':')[0] : agent.name);
                     const agentScore = Math.floor(Math.random() * 4) + 6; // 6-9
                     const quotes = [
                         "Site funcional mas poderia ser mais intuitivo.",
@@ -6530,7 +6660,7 @@ function getCodigoHTML() {
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">4.</span>
                                     <div>
-                                        <strong class="text-white">Selecione suas personas (no modo manual)</strong> - escolha até 3 perfis criados na sua conta
+                                        <strong class="text-white">Selecione sua persona (no modo manual)</strong> - escolha 1 perfil criado na sua conta
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -6574,7 +6704,7 @@ function getCodigoHTML() {
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">3.</span>
                                     <div>
-                                        <strong class="text-white">Selecione até 3 personas criadas</strong> que representam seu público-alvo
+                                        <strong class="text-white">Selecione 1 persona criada</strong> que representa o público-alvo da análise
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -7169,7 +7299,7 @@ function getCodigoHTML() {
                         </div>
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">4. Uso das Agents</h4>
-                            <p class="mb-4">O sistema permite criar personas próprias e selecionar até 3 por auditoria manual para obter análises mais completas e diversificadas. As personas ficam vinculadas à sua conta e simulam diferentes tipos de comportamento e expectativas dos usuários.</p>
+                            <p class="mb-4">O sistema permite criar personas próprias e selecionar 1 por auditoria manual para obter análises focadas. As personas ficam vinculadas à sua conta e simulam diferentes tipos de comportamento e expectativas dos usuários.</p>
                         </div>
                         <div>
                             <h4 class="text-white font-bold text-lg mb-3">5. Resultados e Relatórios</h4>
