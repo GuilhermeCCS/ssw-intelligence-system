@@ -1788,6 +1788,10 @@
                                 Analisar
                             </button>
                         </div>
+                        <p id="localAuditHelp" class="text-xs text-slate-400 mt-2 text-left flex items-center justify-center sm:justify-start gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                            <span>Testando um site local? Veja o nosso <span onclick="abrirModalNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
+                        </p>
                         <!-- Cloudflare Turnstile Widget -->
                         <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
                             <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
@@ -4900,9 +4904,40 @@ function getCodigoHTML() {
             return String(pillar);
         }
 
+        function abrirModalNgrok() {
+            const modal = document.getElementById('modalNgrok');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function fecharModalNgrok() {
+            const modal = document.getElementById('modalNgrok');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function isLocalAuditUrl(url) {
+            const value = String(url || '').trim().toLowerCase();
+            if (!value) return false;
+            return value.includes('localhost') ||
+                value.includes('127.0.0.1') ||
+                value.includes('0.0.0.0') ||
+                value.includes('[::1]') ||
+                value.includes('://::1') ||
+                /^https?:\/\/10\./.test(value) ||
+                /^https?:\/\/192\.168\./.test(value) ||
+                /^https?:\/\/172\.(1[6-9]|2\d|3[0-1])\./.test(value);
+        }
+
+        function bloquearUrlLocalSeNecessario(url) {
+            if (!isLocalAuditUrl(url)) return false;
+            alert("Ambiente Local Detectado!\n\nA nossa IA precisa de uma URL pública.\n\nPor favor, use o Tutorial Ngrok abaixo da barra de pesquisa para gerar um link temporário.");
+            abrirModalNgrok();
+            return true;
+        }
+
         async function runAudit() {
-            if(USER.credits <= 0) return comprarCreditos();
             const url = document.getElementById('auditUrl').value;
+            if (bloquearUrlLocalSeNecessario(url)) return;
+            if(USER.credits <= 0) return comprarCreditos();
             const mode = document.getElementById('auditMode')?.value || 'auto';
             const selected = mode === 'manual'
                 ? Array.from(document.querySelectorAll('.agent-radio:checked')).map(el => el.value).filter(Boolean)
@@ -5252,6 +5287,13 @@ function getCodigoHTML() {
                 document.getElementById('heroSection').classList.remove('hidden');
                 document.getElementById('manualSelectArea').classList.add('hidden');
                 return alert("As URLs devem ser diferentes.");
+            }
+            if (bloquearUrlLocalSeNecessario(urlA) || bloquearUrlLocalSeNecessario(urlB)) {
+                document.getElementById('emptyStateCards').classList.remove('hidden');
+                document.getElementById('heroSection').classList.remove('hidden');
+                document.getElementById('manualSelectArea').classList.add('hidden');
+                if(compareArea) compareArea.classList.remove('hidden');
+                return;
             }
             // 3. UI Loading
             const loading = document.getElementById('auditLoading');
@@ -7758,6 +7800,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<div id="modalNgrok" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)fecharModalNgrok()">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-lg p-6 shadow-2xl relative">
+        <button onclick="fecharModalNgrok()" class="absolute top-4 right-4 text-slate-400 hover:text-white" aria-label="Fechar tutorial Ngrok">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+
+        <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2 pr-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            Como auditar o seu Localhost
+        </h2>
+        <p class="text-slate-400 text-sm mb-6 border-b border-slate-800 pb-4">A nossa IA precisa que o seu site esteja acessível na internet. Use o Ngrok para criar um link seguro em 2 minutos.</p>
+
+        <ol class="text-slate-300 text-sm space-y-4 pl-4 list-decimal marker:text-blue-500 marker:font-bold">
+            <li><strong>Faça o Download:</strong> acesse <a href="https://ngrok.com" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">ngrok.com</a>, crie uma conta gratuita e instale no seu computador.</li>
+            <li><strong>Autentique-se:</strong> copie o seu token no painel do Ngrok e rode no terminal:<br><code class="block bg-slate-800 p-2 mt-1 rounded text-xs border border-slate-700">ngrok config add-authtoken SEU_TOKEN</code></li>
+            <li><strong>Crie o Túnel:</strong> rode o comando apontando para a porta do seu projeto, por exemplo:<br><code class="block bg-slate-800 p-2 mt-1 rounded text-xs border border-slate-700">ngrok http 3000</code></li>
+            <li><strong>Copie o Link:</strong> o terminal mostrará uma linha "Forwarding" com um link público, como <span class="text-blue-300">https://abc1234.ngrok-free.app</span>.</li>
+            <li><strong>Pronto:</strong> cole esse link gerado aqui no sistema e inicie a auditoria.</li>
+        </ol>
+
+        <div class="mt-8 text-right">
+            <button onclick="fecharModalNgrok()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-colors">Entendi</button>
+        </div>
+    </div>
+</div>
 </body>
 <script>
 // SCRIPT DE CONTAGEM REGRESSIVA DA PROMOÇÃO
