@@ -439,7 +439,10 @@ class CheckoutMercadoPago {
       } else if (result.acao_requerida === 'sucesso_cartao') {
         // Cartão aprovado - mostrar sucesso imediatamente
         console.log('💳 Cartão aprovado! Chamando showSuccessScreen()...');
-        this.showSuccessScreen();
+        await this.showSuccessScreen(result);
+      } else if (result.acao_requerida === 'pendente') {
+        this.showState('processing');
+        if (result.payment_id) this.startPixPolling(result.payment_id);
       } else if (result.acao_requerida === 'erro') {
         this.showError(result.mensagem || 'Ocorreu um erro ao processar o pagamento');
       } else {
@@ -451,47 +454,57 @@ class CheckoutMercadoPago {
     }
   }
 
+  async persistUser() {
+    if (typeof USER === 'undefined' || !USER) return;
+    if (typeof secureStorage !== 'undefined') {
+      await secureStorage.setItem('USER', USER);
+    } else {
+      localStorage.setItem('USER', JSON.stringify(USER));
+    }
+  }
+
+  async applyCreditBalance(credits, showToast = true) {
+    const parsedCredits = Number(credits);
+    if (!Number.isFinite(parsedCredits)) return false;
+
+    if (typeof USER !== 'undefined' && USER) {
+      USER.credits = parsedCredits;
+      await this.persistUser();
+    }
+    if (this.currentUser) this.currentUser.credits = parsedCredits;
+
+    if (typeof updateUserMenuCircle === 'function') {
+      updateUserMenuCircle();
+    } else {
+      const userCreditsCircle = document.getElementById('userCreditsCircle');
+      if (userCreditsCircle) userCreditsCircle.textContent = parsedCredits;
+    }
+
+    window.dispatchEvent(new CustomEvent('ssw:credits-updated', { detail: { credits: parsedCredits } }));
+
+    if (showToast && typeof Toast !== 'undefined') {
+      Toast.success('Pagamento aprovado! Saldo atualizado automaticamente.');
+    }
+    return true;
+  }
+
   // Atualiza os créditos do usuário buscando dados atualizados da API
-  async updateUserCredits() {
+  async updateUserCredits(showToast = true) {
     try {
       const userId = this.currentUser?.id || (typeof USER !== 'undefined' ? USER?.id : null);
-      if (!userId) return;
+      if (!userId) return false;
 
       // Buscar saldo atualizado do usuário autenticado
       const response = await fetch(`${this.API_BASE_URL}/api/saldo/${userId}`, { headers: this.authHeaders() });
       
       if (response.ok) {
         const data = await response.json();
-        
-        // Atualizar objeto global USER se existir
-        if (typeof USER !== 'undefined') {
-          USER.credits = data.credits || 0;
-          
-          // Atualizar elementos do DOM que exibem os créditos
-          const userCreditsCircle = document.getElementById('userCreditsCircle');
-          if (userCreditsCircle) {
-            userCreditsCircle.textContent = USER.credits || 0;
-          }
-          
-          // Atualizar outros elementos que possam exibir créditos
-          const creditElements = document.querySelectorAll('[id*="credit"], [id*="Credit"]');
-          creditElements.forEach(element => {
-            if (element.textContent !== undefined) {
-              element.textContent = USER.credits || 0;
-            }
-          });
-          
-          console.log('Créditos atualizados:', USER.credits);
-          
-          // Disparar toast de sucesso
-          if (typeof Toast !== 'undefined') {
-            Toast.success('Pagamento Aprovado! Seus créditos foram atualizados.');
-          } else {
-            alert('Pagamento Aprovado! Seus créditos foram atualizados.');
-          }
-        }
+        await this.applyCreditBalance(data.credits || 0, showToast);
+        console.log('Créditos atualizados:', data.credits);
+        return true;
       } else {
         console.warn('Não foi possível buscar dados atualizados do usuário');
+        if (!showToast) return false;
         // Mesmo assim, mostrar sucesso
         if (typeof Toast !== 'undefined') {
           Toast.success('Pagamento Aprovado! Os créditos serão atualizados em breve.');
@@ -500,6 +513,7 @@ class CheckoutMercadoPago {
     } catch (error) {
       console.error('Erro ao atualizar créditos:', error);
       // Não mostrar erro para o usuário, apenas log
+      return false;
     }
   }
 
@@ -514,7 +528,7 @@ class CheckoutMercadoPago {
   }
 
   // Mostra tela de sucesso sem reload automático
-  showSuccessScreen() {
+  async showSuccessScreen(paymentResult = {}) {
     console.log('🎉 showSuccessScreen() chamada - Mostrando tela de sucesso...');
     console.log('📊 Timestamp:', new Date().toISOString());
     console.log('🔍 Modal:', this.modal ? 'encontrado' : 'NÃO ENCONTRADO');
@@ -527,6 +541,14 @@ class CheckoutMercadoPago {
     }
     
     // IMPORTANTE: Força o estado para 'initial' para garantir que o container seja visível
+    if (paymentResult.credits !== undefined && paymentResult.credits !== null) {
+      await this.applyCreditBalance(paymentResult.credits, true);
+    } else {
+      await this.updateUserCredits(false);
+    }
+
+    const saldoAtual = (typeof USER !== 'undefined' && USER) ? USER.credits : paymentResult.credits;
+
     this.showState('initial');
     console.log('🔄 Estado alterado para initial - Container agora visível');
     
@@ -550,7 +572,7 @@ class CheckoutMercadoPago {
           <div class="bg-slate-800/50 rounded-lg p-4 mb-8 w-full max-w-sm">
             <div class="text-slate-400 text-sm mb-2">Resumo da transação</div>
             <div class="text-white font-medium">Pagamento processado com sucesso</div>
-            <div class="text-slate-400 text-sm mt-1">Créditos disponíveis para uso</div>
+            <div class="text-slate-400 text-sm mt-1">Saldo atual: ${saldoAtual ?? '--'} créditos</div>
           </div>
           
           <!-- Botões de ação -->
@@ -558,8 +580,8 @@ class CheckoutMercadoPago {
             <button onclick="checkoutMP.closeModal()" class="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors font-medium">
               Fechar
             </button>
-            <button onclick="window.location.reload()" class="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium">
-              Atualizar Saldo
+            <button onclick="checkoutMP.updateUserCredits()" class="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium">
+              Sincronizar Saldo
             </button>
           </div>
         </div>
@@ -690,7 +712,7 @@ class CheckoutMercadoPago {
             console.log('✅ Pix aprovado! Chamando showSuccessScreen()...');
             
             // Mostra tela de sucesso
-            this.showSuccessScreen();
+            await this.showSuccessScreen(data);
           }
         }
       } catch (error) {
