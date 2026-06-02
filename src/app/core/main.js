@@ -2435,6 +2435,29 @@ function getCodigoHTML() {
             return true;
         }
 
+        function formatAuditApiError(detail, status) {
+            const raw = String(detail || '').trim();
+            const clean = raw.replace(/^(Erro IA|Erro de captura):\s*/i, '').trim();
+            const lower = clean.toLowerCase();
+
+            if (status === 403 || lower.includes('captcha')) {
+                return 'A verificação de segurança expirou ou ficou inválida. Recarregue o captcha e tente novamente.';
+            }
+
+            if (
+                lower.includes('site inacess') ||
+                lower.includes('bloqueio') ||
+                lower.includes('offline') ||
+                lower.includes('timeout') ||
+                lower.includes('playwright') ||
+                lower.includes('captura')
+            ) {
+                return 'Não conseguimos abrir esse site para a auditoria. Ele pode estar offline, lento ou bloqueando acessos automatizados. Teste outra URL pública, tente novamente em alguns minutos ou use o Ngrok se for um projeto local.';
+            }
+
+            return clean || 'Erro ao iniciar auditoria.';
+        }
+
         async function runAudit() {
             const url = document.getElementById('auditUrl').value;
             if (bloquearUrlLocalSeNecessario(url)) return;
@@ -2496,8 +2519,10 @@ function getCodigoHTML() {
                     } else {
                         resetAuditCaptcha();
                         const errorData = await res.json().catch(() => ({}));
-                        const apiError = new Error(errorData.detail || 'API não disponível');
+                        const apiError = new Error(formatAuditApiError(errorData.detail, res.status));
                         apiError.isHttpError = true;
+                        apiError.status = res.status;
+                        apiError.rawDetail = errorData.detail || '';
                         throw apiError;
                     }
                 } catch (apiError) {
