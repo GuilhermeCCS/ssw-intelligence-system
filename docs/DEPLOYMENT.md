@@ -114,7 +114,7 @@ npm start
 **Causa**: Script `mercado-pago-checkout.js` não carregou
 
 **Solução**:
-- Verifique se `src/utils/mercado-pago-checkout.js` existe
+- Verifique se `src/app/payments/mercado-pago-checkout.js` existe
 - Verifique se `env-injector.js` está carregando antes
 - Verifique console para outros erros
 
