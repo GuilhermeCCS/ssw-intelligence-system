@@ -6,6 +6,9 @@ class CheckoutMercadoPago {
     this.modal = null;
     this.currentUser = null;
     this.selectedPackage = null;
+    this.turnstileWidget = null;
+    this.turnstileToken = null;
+    this.turnstileRendering = false;
     
     // Carrega variáveis de ambiente
     this.API_BASE_URL = 'https://ssw-intelligence-api.onrender.com';
@@ -198,6 +201,99 @@ class CheckoutMercadoPago {
     this.modal = document.getElementById('checkout-modal');
   }
 
+  renderCheckoutTurnstile() {
+    const container = document.getElementById('turnstile-checkout');
+    if (!container) return;
+
+    if (typeof window.turnstile !== 'undefined' && this.turnstileWidget !== null) {
+      if (!container.querySelector('iframe') && !container.querySelector('[name="cf-turnstile-response"]')) {
+        this.turnstileWidget = null;
+        this.turnstileToken = null;
+      } else {
+        try {
+          this.turnstileToken = null;
+          window.turnstile.reset(this.turnstileWidget);
+          return;
+        } catch (error) {
+          console.warn('Falha ao resetar Turnstile do checkout:', error);
+          this.turnstileWidget = null;
+          this.turnstileToken = null;
+        }
+      }
+    }
+
+    if (this.turnstileRendering) return;
+    this.turnstileRendering = true;
+    container.innerHTML = '<div class="text-xs text-slate-500 animate-pulse">Carregando verificacao de seguranca...</div>';
+    const startedAt = Date.now();
+
+    const tryRender = () => {
+      if (typeof window.turnstile === 'undefined') {
+        if (Date.now() - startedAt >= 15000) {
+          this.turnstileRendering = false;
+          container.innerHTML = `
+            <button type="button" onclick="checkoutMP.renderCheckoutTurnstile()" class="px-4 py-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-200 text-sm font-semibold hover:bg-cyan-400/20 transition">
+              Recarregar captcha
+            </button>
+          `;
+          if (typeof Toast !== 'undefined') Toast.error('Nao foi possivel carregar o captcha. Tente recarregar a verificacao.');
+          return;
+        }
+        setTimeout(tryRender, 350);
+        return;
+      }
+
+      try {
+        container.innerHTML = '';
+        this.turnstileWidget = window.turnstile.render('#turnstile-checkout', {
+          sitekey: '0x4AAAAAADU_DaUQEsTW3GMs',
+          theme: 'dark',
+          callback: token => {
+            this.turnstileToken = token;
+          },
+          'error-callback': () => {
+            this.turnstileToken = null;
+            if (typeof Toast !== 'undefined') Toast.error('Erro na verificacao do captcha. Tente novamente.');
+          },
+          'expired-callback': () => {
+            this.turnstileToken = null;
+          }
+        });
+      } catch (error) {
+        console.error('Erro ao renderizar Turnstile do checkout:', error);
+        this.turnstileWidget = null;
+        this.turnstileToken = null;
+        container.innerHTML = `
+          <button type="button" onclick="checkoutMP.renderCheckoutTurnstile()" class="px-4 py-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-200 text-sm font-semibold hover:bg-cyan-400/20 transition">
+            Recarregar captcha
+          </button>
+        `;
+      } finally {
+        this.turnstileRendering = false;
+      }
+    };
+
+    tryRender();
+  }
+
+  resetCheckoutTurnstile() {
+    this.turnstileToken = null;
+    if (typeof window.turnstile !== 'undefined' && this.turnstileWidget !== null) {
+      try {
+        window.turnstile.reset(this.turnstileWidget);
+      } catch (error) {
+        this.turnstileWidget = null;
+        this.renderCheckoutTurnstile();
+      }
+    } else {
+      this.renderCheckoutTurnstile();
+    }
+  }
+
+  getCheckoutCaptchaToken() {
+    return this.turnstileToken || document.querySelector('#turnstile-checkout [name="cf-turnstile-response"]')?.value || '';
+  }
+
   // Renderiza o Payment Brick usando SDK v2
   async renderPaymentBrick() {
     const container = document.getElementById('payment-brick-container');
@@ -294,8 +390,10 @@ class CheckoutMercadoPago {
       );
       console.log('Payment Brick criado com sucesso');
 
+      this.renderCheckoutTurnstile();
+
       // Renderizar widget do Cloudflare Turnstile no checkout
-      if (typeof turnstile !== 'undefined') {
+      if (false && typeof turnstile !== 'undefined') {
         const turnstileContainer = document.getElementById('turnstile-checkout');
         if (turnstileContainer) {
           turnstile.render('#turnstile-checkout', {
@@ -347,8 +445,10 @@ class CheckoutMercadoPago {
           );
           console.log('Payment Brick simplificado criado com sucesso');
 
+          this.renderCheckoutTurnstile();
+
           // Renderizar widget do Cloudflare Turnstile no checkout (fallback)
-          if (typeof turnstile !== 'undefined') {
+          if (false && typeof turnstile !== 'undefined') {
             const turnstileContainer = document.getElementById('turnstile-checkout');
             if (turnstileContainer) {
               turnstile.render('#turnstile-checkout', {
@@ -395,11 +495,13 @@ class CheckoutMercadoPago {
     // Extração das parcelas
     const installments = extractedFormData.installments || 1;
 
-    // Capturar token do Turnstile do DOM
-    const cfToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    // Capturar apenas o token do Turnstile do checkout.
+    const cfToken = this.getCheckoutCaptchaToken();
     if (!cfToken) {
-      this.showError('Resolva o captcha primeiro');
+      this.renderCheckoutTurnstile();
       this.showState('initial');
+      if (typeof Toast !== 'undefined') Toast.warning('Resolva o captcha primeiro');
+      else this.showError('Resolva o captcha primeiro');
       return;
     }
 
@@ -427,6 +529,7 @@ class CheckoutMercadoPago {
       if (!response.ok) {
         const errorText = await response.text(); // Pega como texto para não quebrar o JSON parse
         console.error("Erro do servidor:", response.status, errorText);
+        this.resetCheckoutTurnstile();
         throw new Error(`Falha na API: ${response.status} - ${errorText || 'Erro interno do servidor'}`);
       }
       
@@ -444,12 +547,15 @@ class CheckoutMercadoPago {
         this.showState('processing');
         if (result.payment_id) this.startPixPolling(result.payment_id);
       } else if (result.acao_requerida === 'erro') {
+        this.resetCheckoutTurnstile();
         this.showError(result.mensagem || 'Ocorreu um erro ao processar o pagamento');
       } else {
+        this.resetCheckoutTurnstile();
         this.showError('Resposta inesperada do servidor');
       }
     } catch (error) {
       console.error('Erro no pagamento:', error);
+      this.resetCheckoutTurnstile();
       this.showError(error.message || 'Erro de conexão com o servidor de pagamento');
     }
   }

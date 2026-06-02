@@ -1530,7 +1530,7 @@
     <script>
         // Toast Notification System - Substitui window.alert()
         const Toast = {
-            show(message, type = 'info', duration = 4000) {
+            show(message, type = 'info', duration = 10000) {
                 const container = document.getElementById('toastContainer');
                 const icons = { success: 'check-circle', error: 'x-circle', warning: 'alert-triangle', info: 'info' };
                 const colors = { success: '#10B981', error: '#EF4444', warning: '#F59E0B', info: '#22d3ee' };
@@ -2985,6 +2985,9 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
         // Variável global de usuário
         let USER = null;
         let isFloatingButtonVisible = true;
+        let hasUnsavedAuditSession = false;
+        let auditSnapshotTabOpened = false;
+        const AUDIT_LEAVE_MESSAGE = 'Voce esta saindo da auditoria atual. Se sair agora, pode perder o relatorio e o chat com as personas. O ideal e salvar o PDF ou fazer suas perguntas a persona antes de sair.';
         // Variável temporária para senha no fluxo de cadastro
         let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
@@ -3204,7 +3207,82 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 setTimeout(() => initTurnstileRegister(), 500);
             }
         }
+
+        function hasVisibleAuditResults() {
+            const auditResults = document.getElementById('auditResults');
+            return !!(auditResults && !auditResults.classList.contains('hidden'));
+        }
+
+        function hideAuditChatSurfaces() {
+            const floatingButton = document.getElementById('floatingChatBtn');
+            const selectorModal = document.getElementById('agentSelectorModal');
+            const chatModal = document.getElementById('chatModal');
+            if (floatingButton) floatingButton.remove();
+            if (selectorModal) selectorModal.remove();
+            if (chatModal) chatModal.classList.add('hidden');
+            isFloatingButtonVisible = false;
+            if (typeof agentChatActive !== 'undefined') agentChatActive = false;
+        }
+
+        function clearActiveAuditSession() {
+            hasUnsavedAuditSession = false;
+            hideAuditChatSurfaces();
+        }
+
+        function warnBeforeLeavingAudit() {
+            return hasUnsavedAuditSession && hasVisibleAuditResults();
+        }
+
+        function confirmLeavingAudit() {
+            return window.confirm(AUDIT_LEAVE_MESSAGE);
+        }
+
+        window.addEventListener('beforeunload', function(event) {
+            if (!warnBeforeLeavingAudit()) return;
+            event.preventDefault();
+            event.returnValue = AUDIT_LEAVE_MESSAGE;
+            return AUDIT_LEAVE_MESSAGE;
+        });
+
+        function openAuditSnapshotTab() {
+            const auditResults = document.getElementById('auditResults');
+            if (!auditResults || auditResults.classList.contains('hidden') || auditSnapshotTabOpened) return;
+            auditSnapshotTabOpened = true;
+
+            const snapshot = window.open('', '_blank');
+            if (!snapshot) {
+                Toast.info('Seu navegador bloqueou a aba de backup. Salve o PDF ou converse com a persona antes de sair desta tela.');
+                return;
+            }
+
+            const reportTitle = currentAuditUrl || 'Auditoria SSW Intelligence';
+            snapshot.document.open();
+            snapshot.document.write(`<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${safeAuditText(reportTitle)} - SSW Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link rel="stylesheet" href="/src/styles/cyber-theme.css">
+  <style>body{margin:0;background:#020408;color:#f8fafc;font-family:Inter,Arial,sans-serif;padding:32px;} .no-print,button{display:none!important;} #auditResults{display:block!important;max-width:1200px;margin:0 auto;}</style>
+</head>
+<body>
+  <main>${auditResults.outerHTML}</main>
+</body>
+</html>`);
+            snapshot.document.close();
+        }
+
         function nav(view) {
+            if (warnBeforeLeavingAudit()) {
+                if (!confirmLeavingAudit()) return;
+                clearActiveAuditSession();
+            } else if (view !== 'home') {
+                hideAuditChatSurfaces();
+            }
+            window.currentView = view;
+
             // Atualiza a URL com caminho limpo (sem hash)
             if (window.location.pathname !== `/${view}`) {
                 window.history.pushState({}, '', `/${view}`);
@@ -3350,9 +3428,99 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
         let turnstileAuditWidget = null;
         let turnstileCompareToken = null;
         let turnstileCompareWidget = null;
+        const TURNSTILE_RETRY_MS = 350;
+        const TURNSTILE_MAX_WAIT_MS = 15000;
+
+        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark' }) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const retryButton = `
+                <button type="button" onclick="${containerId === 'turnstile-login' ? 'initTurnstileLogin()' : containerId === 'turnstile-register' ? 'initTurnstileRegister()' : containerId === 'turnstile-compare' ? 'initTurnstileCompare()' : 'initTurnstileAudit()'}" class="px-4 py-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-200 text-sm font-semibold hover:bg-cyan-400/20 transition">
+                    Recarregar captcha
+                </button>
+            `;
+
+            const resetExistingWidget = () => {
+                if (typeof window.turnstile === 'undefined' || getWidget() === null) return false;
+                if (!container.querySelector('iframe') && !container.querySelector('[name="cf-turnstile-response"]')) {
+                    setWidget(null);
+                    setToken(null);
+                    container.innerHTML = '';
+                    return false;
+                }
+                try {
+                    setToken(null);
+                    window.turnstile.reset(getWidget());
+                    return true;
+                } catch (error) {
+                    console.warn('Falha ao resetar Turnstile, renderizando novamente:', error);
+                    setWidget(null);
+                    setToken(null);
+                    container.innerHTML = '';
+                    return false;
+                }
+            };
+
+            if (resetExistingWidget()) return;
+            if (container.dataset.turnstileRendering === '1') return;
+
+            container.dataset.turnstileRendering = '1';
+            container.innerHTML = '<div class="text-xs text-slate-500 animate-pulse">Carregando verificacao de seguranca...</div>';
+            const startedAt = Date.now();
+
+            const tryRender = () => {
+                if (typeof window.turnstile === 'undefined') {
+                    if (Date.now() - startedAt >= TURNSTILE_MAX_WAIT_MS) {
+                        delete container.dataset.turnstileRendering;
+                        container.innerHTML = retryButton;
+                        Toast.error('Nao foi possivel carregar o captcha. Verifique sua conexao e tente novamente.');
+                        return;
+                    }
+                    setTimeout(tryRender, TURNSTILE_RETRY_MS);
+                    return;
+                }
+
+                try {
+                    container.innerHTML = '';
+                    const widgetId = window.turnstile.render(`#${containerId}`, {
+                        sitekey: TURNSTILE_SITE_KEY,
+                        theme,
+                        callback: function(token) {
+                            setToken(token);
+                        },
+                        'error-callback': function() {
+                            setToken(null);
+                            Toast.error('Erro na verificacao do captcha. Tente novamente.');
+                        },
+                        'expired-callback': function() {
+                            setToken(null);
+                        }
+                    });
+                    setWidget(widgetId);
+                } catch (error) {
+                    console.error('Erro ao carregar Turnstile:', error);
+                    setWidget(null);
+                    setToken(null);
+                    container.innerHTML = retryButton;
+                    Toast.error('Erro ao carregar captcha. Clique em recarregar e tente novamente.');
+                } finally {
+                    delete container.dataset.turnstileRendering;
+                }
+            };
+
+            tryRender();
+        }
 
         // Inicializa o widget do Turnstile para login
         function initTurnstileLogin() {
+            renderTurnstileWidget({
+                containerId: 'turnstile-login',
+                getWidget: () => turnstileLoginWidget,
+                setWidget: widget => { turnstileLoginWidget = widget; },
+                setToken: token => { turnstileLoginToken = token; }
+            });
+            return;
             if (turnstileLoginWidget !== null) {
                 turnstileLoginToken = null;
                 turnstile.reset(turnstileLoginWidget);
@@ -3410,6 +3578,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
         // Inicializa o widget do Turnstile para registro
         function initTurnstileRegister() {
+            renderTurnstileWidget({
+                containerId: 'turnstile-register',
+                getWidget: () => turnstileRegisterWidget,
+                setWidget: widget => { turnstileRegisterWidget = widget; },
+                setToken: token => { turnstileRegisterToken = token; }
+            });
+            return;
             if (turnstileRegisterWidget !== null) {
                 turnstileRegisterToken = null;
                 turnstile.reset(turnstileRegisterWidget);
@@ -3474,8 +3649,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
         function resetLoginCaptcha() {
             turnstileLoginToken = null;
-            if (typeof turnstile !== 'undefined' && turnstileLoginWidget !== null) {
-                turnstile.reset(turnstileLoginWidget);
+            if (typeof window.turnstile !== 'undefined' && turnstileLoginWidget !== null) {
+                try {
+                    window.turnstile.reset(turnstileLoginWidget);
+                } catch (error) {
+                    turnstileLoginWidget = null;
+                    initTurnstileLogin();
+                }
             }
         }
 
@@ -3501,8 +3681,41 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
         function resetRegisterCaptcha() {
             turnstileRegisterToken = null;
-            if (typeof turnstile !== 'undefined' && turnstileRegisterWidget !== null) {
-                turnstile.reset(turnstileRegisterWidget);
+            if (typeof window.turnstile !== 'undefined' && turnstileRegisterWidget !== null) {
+                try {
+                    window.turnstile.reset(turnstileRegisterWidget);
+                } catch (error) {
+                    turnstileRegisterWidget = null;
+                    initTurnstileRegister();
+                }
+            }
+        }
+
+        function resetAuditCaptcha() {
+            turnstileAuditToken = null;
+            if (typeof window.turnstile !== 'undefined' && turnstileAuditWidget !== null) {
+                try {
+                    window.turnstile.reset(turnstileAuditWidget);
+                } catch (error) {
+                    turnstileAuditWidget = null;
+                    initTurnstileAudit();
+                }
+            } else {
+                initTurnstileAudit();
+            }
+        }
+
+        function resetCompareCaptcha() {
+            turnstileCompareToken = null;
+            if (typeof window.turnstile !== 'undefined' && turnstileCompareWidget !== null) {
+                try {
+                    window.turnstile.reset(turnstileCompareWidget);
+                } catch (error) {
+                    turnstileCompareWidget = null;
+                    initTurnstileCompare();
+                }
+            } else {
+                initTurnstileCompare();
             }
         }
 
@@ -3561,6 +3774,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
         // Inicializa o widget do Turnstile para auditoria
         function initTurnstileAudit() {
+            renderTurnstileWidget({
+                containerId: 'turnstile-audit',
+                getWidget: () => turnstileAuditWidget,
+                setWidget: widget => { turnstileAuditWidget = widget; },
+                setToken: token => { turnstileAuditToken = token; }
+            });
+            return;
             if (turnstileAuditWidget !== null) {
     turnstile.reset(turnstileAuditWidget);
     return;
@@ -3617,6 +3837,13 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
         // Inicializa o widget do Turnstile para modo comparativo
         function initTurnstileCompare() {
+            renderTurnstileWidget({
+                containerId: 'turnstile-compare',
+                getWidget: () => turnstileCompareWidget,
+                setWidget: widget => { turnstileCompareWidget = widget; },
+                setToken: token => { turnstileCompareToken = token; }
+            });
+            return;
             if (turnstileCompareWidget !== null) {
     turnstile.reset(turnstileCompareWidget);
     return;
@@ -3678,6 +3905,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
             const cfToken = getLoginCaptchaToken();
             if (!cfToken) {
+                initTurnstileLogin();
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }
@@ -3734,6 +3962,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
 
             const cfToken = getRegisterCaptchaToken();
             if (!cfToken) {
+                initTurnstileRegister();
                 Toast.warning("Resolva o captcha primeiro");
                 return;
             }
@@ -5219,8 +5448,9 @@ function getCodigoHTML() {
                 let data;
                 try {
                     // Capturar token do Turnstile do DOM
-                    const cfToken = turnstileAuditToken || document.querySelector('#turnstile-audit [name="cf-turnstile-response"]')?.value || document.querySelector('[name="cf-turnstile-response"]')?.value;
+                    const cfToken = turnstileAuditToken || document.querySelector('#turnstile-audit [name="cf-turnstile-response"]')?.value || '';
                     if (!cfToken) {
+                        initTurnstileAudit();
                         Toast.warning("Resolva o captcha primeiro");
                         document.getElementById('heroSection').classList.remove('hidden');
                         document.getElementById('emptyStateCards').classList.remove('hidden');
@@ -5238,6 +5468,7 @@ function getCodigoHTML() {
                     if(res.ok) {
                         data = await res.json();
                     } else if(res.status === 402) {
+                        resetAuditCaptcha();
                         document.getElementById('heroSection').classList.remove('hidden');
                         document.getElementById('emptyStateCards').classList.remove('hidden');
                         document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
@@ -5247,6 +5478,7 @@ function getCodigoHTML() {
                         comprarCreditos();
                         return;
                     } else {
+                        resetAuditCaptcha();
                         const errorData = await res.json().catch(() => ({}));
                         const apiError = new Error(errorData.detail || 'API não disponível');
                         apiError.isHttpError = true;
@@ -5475,6 +5707,9 @@ function getCodigoHTML() {
                 lucide.createIcons();
                 // Adiciona botão flutuante de chat
                 addFloatingChatButton(agentsResults);
+                hasUnsavedAuditSession = true;
+                auditSnapshotTabOpened = false;
+                openAuditSnapshotTab();
                 // Ajusta posição do footer para não sobrepor resultados
                 adjustFooterPosition(true);
                 // Verificação adicional para garantir o posicionamento
@@ -5561,8 +5796,9 @@ function getCodigoHTML() {
             if(results) results.classList.add('hidden');
             try {
                 // 4. Tenta API Real
-                const cfToken = turnstileCompareToken || document.querySelector('#turnstile-compare [name="cf-turnstile-response"]')?.value || document.querySelector('[name="cf-turnstile-response"]')?.value;
+                const cfToken = turnstileCompareToken || document.querySelector('#turnstile-compare [name="cf-turnstile-response"]')?.value || '';
                 if (!cfToken) {
+                    initTurnstileCompare();
                     throw new Error("Resolva o captcha primeiro");
                 }
                 const res = await fetch(`${API_URL}/api/comparar`, {
@@ -5588,6 +5824,7 @@ function getCodigoHTML() {
                 stopAuditLoadingAnimation();
                 displayCompareResults(data);
             } catch (e) {
+                resetCompareCaptcha();
                 console.warn("⚠️ Ativando MODO SIMULAÇÃO (Fallback). Motivo:", e.message);
                 stopAuditLoadingAnimation();
                 // 5. MODO SIMULAÇÃO - Novo Formato Enriquecido
@@ -5720,6 +5957,11 @@ function getCodigoHTML() {
                 console.error("❌ Formato de dados não reconhecido");
                 alert("Formato de resposta inesperado. Contacte o suporte.");
                 updateCompareUI(false);  // Volta para mostrar inputs
+            }
+            if (!resDiv.classList.contains('hidden')) {
+                hasUnsavedAuditSession = true;
+                auditSnapshotTabOpened = false;
+                openAuditSnapshotTab();
             }
         }
         // ===== RENDERIZADOR RELATÓRIO EXECUTIVO =====
@@ -6324,6 +6566,9 @@ function getCodigoHTML() {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+            hasUnsavedAuditSession = true;
+            auditSnapshotTabOpened = false;
+            openAuditSnapshotTab();
             adjustFooterPosition(true);
         }
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
