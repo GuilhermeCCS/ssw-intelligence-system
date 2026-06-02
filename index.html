@@ -195,6 +195,37 @@
             background-color: #020408;
             z-index: -1;
         }
+        .tutorial-layout {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            gap: 32px;
+            align-items: start;
+        }
+        .tutorial-sidebar {
+            position: sticky;
+            top: 96px;
+        }
+        #tutorialNavPanel .tutorial-nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #tutorialNavPanel .tutorial-nav-btn {
+            min-height: 52px;
+        }
+        .tutorial-content {
+            min-width: 0;
+        }
+        @media (max-width: 900px) {
+            .tutorial-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .tutorial-sidebar {
+                position: relative;
+                top: auto;
+            }
+        }
         /* Efeito de luz removido */
         body::before {
             display: none;
@@ -2109,12 +2140,12 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                 </header>
                 <!-- LAYOUT DE DUAS COLUNAS -->
                 <div class="max-w-7xl mx-auto px-6 pb-20">
-                    <div class="space-y-10">
+                    <div class="tutorial-layout">
                         <!-- Navegação de tópicos do tutorial -->
-                        <aside class="no-print">
+                        <aside class="tutorial-sidebar no-print">
                             <nav id="tutorialNavPanel" class="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-[0_20px_70px_rgba(0,0,0,0.24)]">
                                 <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Conteúdo</h3>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
+                                <div class="tutorial-nav-list">
                                     <button onclick="showTutorialSection('auditoria-simples')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
                                         <span class="flex items-center gap-2">
                                             <i data-lucide="search" class="w-4 h-4"></i>
@@ -2149,7 +2180,7 @@ document.addEventListener('DOMContentLoaded', loadRankingSection);
                             </nav>
                         </aside>
                         <!-- Conteúdo Principal -->
-                        <main class="max-w-5xl mx-auto w-full">
+                        <main class="tutorial-content max-w-5xl w-full">
                             <!-- SEÇÃO 1: Auditoria Individual -->
                             <section id="auditoria-simples" class="scroll-mt-24">
                                 <div class="flex justify-between items-center mb-6">
