@@ -281,7 +281,8 @@
   <title>${safeAuditText(reportTitle)} - SSW Intelligence</title>
   <script src="https://cdn.tailwindcss.com"><\/script>
   <link rel="stylesheet" href="/src/styles/cyber-theme.css">
-  <style>body{margin:0;background:#020408;color:#f8fafc;font-family:Inter,Arial,sans-serif;padding:32px;} .no-print,button{display:none!important;} #auditResults{display:block!important;max-width:1200px;margin:0 auto;}</style>
+  <link rel="stylesheet" href="/src/styles/app.css">
+  <style>body{margin:0;background:#020408;color:#f8fafc;font-family:Inter,Arial,sans-serif;padding:32px;} .no-print,button{display:none!important;} #auditResults{display:block!important;max-width:1200px;margin:0 auto;} .audit-progress-nav{display:none!important;} .audit-reveal{opacity:1!important;transform:none!important;}</style>
 </head>
 <body>
   <main>${auditResults.outerHTML}</main>
@@ -1848,6 +1849,223 @@ function getCodigoHTML() {
                 </div>
             `;
         }
+
+        function createAuditResultsStructureModern() {
+            const resultsContainer = document.getElementById('auditResults');
+            if (!resultsContainer) return;
+            const displayDate = new Date().toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            const blankPixel = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+
+            resultsContainer.innerHTML = `
+                <article class="audit-experience-shell">
+                    <section class="audit-hero-panel audit-reveal is-visible">
+                        <div class="audit-hero-copy">
+                            <p class="audit-kicker">Análise estratégica concluída</p>
+                            <h1>O que a captura revelou sobre este site.</h1>
+                            <p id="resSummary" class="audit-hero-summary">Carregando resumo executivo...</p>
+                            <div class="audit-hero-actions">
+                                <button onclick="gerarPDFOficial()" class="audit-primary-action">
+                                    <i data-lucide="file-down" class="w-4 h-4"></i>
+                                    Baixar PDF
+                                </button>
+                                <button onclick="showSimplifiedSearch()" class="audit-secondary-action">
+                                    Nova análise
+                                </button>
+                            </div>
+                        </div>
+                        <aside class="audit-score-board">
+                            <span class="audit-score-label">Score geral</span>
+                            <strong id="resScore">--</strong>
+                            <span id="reportUrl" class="audit-score-url">URL analisada</span>
+                            <span id="reportDate" class="audit-score-date">${displayDate}</span>
+                        </aside>
+                    </section>
+
+                    <nav class="audit-progress-nav audit-reveal" aria-label="Mapa da auditoria">
+                        <a href="#audit-capturas">Capturas</a>
+                        <a href="#audit-metricas">Diagnóstico</a>
+                        <a href="#audit-pilares">Pilares</a>
+                        <a href="#audit-riscos">Riscos</a>
+                        <a href="#audit-agents">Agents</a>
+                        <a href="#audit-plano">Plano</a>
+                    </nav>
+
+                    <section id="audit-capturas" class="audit-story-section audit-reveal">
+                        <div class="audit-section-heading">
+                            <span>01</span>
+                            <div>
+                                <h2>A evidência visual da auditoria</h2>
+                                <p>As imagens abaixo são a leitura real feita pelo Playwright. Elas ajudam a conectar a nota técnica com o que o usuário realmente encontra na tela.</p>
+                            </div>
+                        </div>
+                        <div class="audit-screens-grid">
+                            <figure class="audit-shot-frame audit-shot-desktop">
+                                <div class="audit-shot-topbar">
+                                    <span></span><span></span><span></span>
+                                    <em>Desktop</em>
+                                </div>
+                                <div class="audit-shot-placeholder">A captura desktop aparece aqui quando a auditoria termina.</div>
+                                <img id="printDesktop" class="audit-shot-img" src="${blankPixel}" alt="Captura desktop do site auditado">
+                            </figure>
+                            <figure class="audit-shot-frame audit-shot-mobile">
+                                <div class="audit-phone-shell">
+                                    <div class="audit-phone-notch"></div>
+                                    <div class="audit-shot-placeholder">Mobile</div>
+                                    <img id="printMobile" class="audit-shot-img" src="${blankPixel}" alt="Captura mobile do site auditado">
+                                </div>
+                            </figure>
+                        </div>
+                    </section>
+
+                    <section id="audit-metricas" class="audit-story-section audit-reveal">
+                        <div class="audit-section-heading">
+                            <span>02</span>
+                            <div>
+                                <h2>Diagnóstico técnico, sem ruído</h2>
+                                <p>Esta camada mostra se a experiência tem base técnica para carregar rápido, ser encontrada e funcionar bem em dispositivos reais.</p>
+                            </div>
+                        </div>
+                        <div class="audit-metrics-grid">
+                            <div class="audit-metric-card">
+                                <span>Performance</span>
+                                <strong id="realPerformanceScore">--</strong>
+                                <p>Velocidade percebida e estabilidade durante o carregamento.</p>
+                            </div>
+                            <div class="audit-metric-card">
+                                <span>SEO</span>
+                                <strong id="realSeoScore">--</strong>
+                                <p>Estrutura de descoberta, semântica e leitura por buscadores.</p>
+                            </div>
+                            <div class="audit-metric-card">
+                                <span>Acessibilidade</span>
+                                <strong id="realA11yScore">--</strong>
+                                <p>Base para uso claro, legível e inclusivo.</p>
+                            </div>
+                            <div class="audit-metric-card audit-metric-wide">
+                                <span>Primeira impressão visual</span>
+                                <strong id="realLcp">--</strong>
+                                <p>Tempo até o principal conteúdo aparecer para o usuário.</p>
+                            </div>
+                            <div class="audit-metric-card audit-metric-wide">
+                                <span>Carregamento total</span>
+                                <strong id="realLoadTime">--</strong>
+                                <p>Quanto tempo a página leva para entregar uma experiência utilizável.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="audit-pilares" class="audit-story-section audit-reveal">
+                        <div class="audit-section-heading">
+                            <span>03</span>
+                            <div>
+                                <h2>Os 4 pilares do laudo</h2>
+                                <p>Cada pilar traduz a auditoria em uma dimensão de decisão: onde há confiança, onde há fricção e onde há perda de conversão.</p>
+                            </div>
+                        </div>
+                        <div id="pillarsDashboard" class="audit-pillars-grid"></div>
+                    </section>
+
+                    <section id="audit-riscos" class="audit-story-section audit-reveal">
+                        <div class="audit-section-heading">
+                            <span>04</span>
+                            <div>
+                                <h2>Riscos que merecem ação</h2>
+                                <p>Em vez de uma tabela fria, cada item abaixo explica qual problema foi encontrado, qual pilar ele afeta e por que ele reduz a qualidade da experiência.</p>
+                            </div>
+                        </div>
+                        <div id="vulnerabilitiesTableBody" class="audit-risk-list"></div>
+                    </section>
+
+                    <section id="audit-agents" class="audit-story-section audit-reveal">
+                        <div class="audit-section-heading">
+                            <span>05</span>
+                            <div>
+                                <h2>Como as agents interpretaram a jornada</h2>
+                                <p>As personas não avaliam só a tela: elas ajudam a entender intenção, confiança, fricção e probabilidade de avanço no funil.</p>
+                            </div>
+                        </div>
+                        <div id="agentsTableBody" class="audit-agent-grid"></div>
+                    </section>
+
+                    <section id="audit-plano" class="audit-story-section audit-reveal">
+                        <div class="audit-section-heading">
+                            <span>06</span>
+                            <div>
+                                <h2>Plano de ação recomendado</h2>
+                                <p>Uma sequência prática para transformar o diagnóstico em melhoria real, começando pelo que tende a gerar mais impacto.</p>
+                            </div>
+                        </div>
+                        <div id="actionPlanList" class="audit-action-timeline"></div>
+                        <div class="audit-final-actions">
+                            <button onclick="gerarPDFOficial()" class="audit-primary-action">
+                                <i data-lucide="file-down" class="w-4 h-4"></i>
+                                Baixar análise estratégica
+                            </button>
+                            <button onclick="showSimplifiedSearch()" class="audit-secondary-action">
+                                Analisar outra URL
+                            </button>
+                        </div>
+                    </section>
+                </article>
+            `;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            initAuditResultReveal();
+        }
+
+        function initAuditResultReveal() {
+            const elements = document.querySelectorAll('#auditResults .audit-reveal');
+            if (!elements.length) return;
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(el => el.classList.add('is-visible'));
+                return;
+            }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.16, rootMargin: '0px 0px -80px 0px' });
+            elements.forEach(el => observer.observe(el));
+        }
+
+        function getAuditScoreTone(score) {
+            const value = Number(score);
+            if (!Number.isFinite(value)) return 'neutral';
+            if (value >= 80) return 'strong';
+            if (value >= 50) return 'attention';
+            return 'critical';
+        }
+
+        function getSeverityMeta(severity) {
+            const raw = String(severity || '').toUpperCase();
+            if (raw.includes('CRÍTICO') || raw.includes('CRITICO') || raw.includes('CRITICAL')) {
+                return { label: severity || 'Crítico', tone: 'critical' };
+            }
+            if (raw.includes('ALTO') || raw.includes('HIGH')) {
+                return { label: severity || 'Alto', tone: 'high' };
+            }
+            if (raw.includes('MÉDIO') || raw.includes('MEDIO') || raw.includes('MEDIUM')) {
+                return { label: severity || 'Médio', tone: 'attention' };
+            }
+            if (raw.includes('SUCESSO') || raw.includes('OK')) {
+                return { label: severity || 'Sucesso', tone: 'strong' };
+            }
+            return { label: severity || 'Atenção', tone: 'neutral' };
+        }
+
+        function humanizeActionPeriod(period) {
+            const key = String(period || '').toLowerCase();
+            if (key.includes('week')) return 'Primeira semana';
+            if (key.includes('month')) return 'Primeiro mês';
+            if (key.includes('day')) return 'Hoje';
+            return key.replace(/_/g, ' ') || 'Próxima ação';
+        }
         function showSimplifiedSearch() {
             // Primeiro, navega para home se não estiver lá
             if (!USER || !USER.email) {
@@ -2369,21 +2587,22 @@ function getCodigoHTML() {
             const container = document.getElementById('pillarsDashboard');
             if (!container) return;
             const pillars = normalizePillarsEvaluation(technicalAudit);
-            container.innerHTML = Object.entries(pillars).map(([key, value]) => {
+            container.innerHTML = Object.entries(pillars).map(([key, value], index) => {
                 const meta = getPillarMeta(key);
                 const score = Number(value.score);
                 const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+                const tone = getAuditScoreTone(score);
                 return `
-                    <div class="rounded-lg border border-slate-700 bg-slate-800/80 p-4 print:break-inside-avoid">
-                        <div class="flex items-center justify-between gap-3 mb-3">
-                            <div class="flex items-center gap-2 min-w-0">
-                                <i data-lucide="${meta.icon}" class="w-4 h-4 text-cyan-300 flex-shrink-0"></i>
-                                <span class="text-xs font-bold uppercase tracking-wide text-slate-400">${safeAuditText(meta.title)}</span>
+                    <article class="audit-pillar-card audit-pillar-${tone}">
+                        <div class="audit-pillar-index">${String(index + 1).padStart(2, '0')}</div>
+                        <div class="audit-pillar-body">
+                            <div class="audit-pillar-top">
+                                <h3>${safeAuditText(meta.title)}</h3>
+                                <strong class="${getPillarScoreColor(score)}">${scoreLabel}</strong>
                             </div>
-                            <span class="text-2xl font-black ${getPillarScoreColor(score)}">${scoreLabel}</span>
+                            <p>${safeAuditText(value.brief)}</p>
                         </div>
-                        <p class="text-xs leading-relaxed text-slate-400">${safeAuditText(value.brief)}</p>
-                    </div>
+                    </article>
                 `;
             }).join('');
             if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -2543,7 +2762,7 @@ function getCodigoHTML() {
                 stopAuditLoadingAnimation();
                 document.getElementById('auditLoading').classList.add('hidden');
                 // Criar estrutura HTML inicial para todas as seções
-                createAuditResultsStructure();
+                createAuditResultsStructureModern();
                 // Armazenar dados globalmente para exportação PDF
                 auditData = data.resultado;
                 currentAuditUrl = url;
@@ -2560,6 +2779,7 @@ function getCodigoHTML() {
                 const technicalAudit = data.resultado.technical_audit || {};
                 const resScoreEl = document.getElementById('resScore');
                 if (resScoreEl) resScoreEl.innerText = technicalAudit.score;
+                document.querySelector('.audit-score-board')?.setAttribute('data-score-tone', getAuditScoreTone(technicalAudit.score));
                 const reportUrlEl = document.getElementById('reportUrl');
                 if (reportUrlEl) reportUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
                 const resSummaryEl = document.getElementById('resSummary');
@@ -2619,10 +2839,12 @@ function getCodigoHTML() {
                     const printMobileEl = document.getElementById('printMobile');
                     if (printMobileEl && data.images.mobile) {
                         printMobileEl.src = "data:image/jpeg;base64," + data.images.mobile;
+                        printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
                     }
                     const printDesktopEl = document.getElementById('printDesktop');
                     if (printDesktopEl && data.images.desktop) {
                         printDesktopEl.src = "data:image/jpeg;base64," + data.images.desktop;
+                        printDesktopEl.closest('.audit-shot-frame')?.classList.add('has-capture');
                     }
                 }
                 // ===============================================
@@ -2632,118 +2854,91 @@ function getCodigoHTML() {
     // Vulnerabilidades
     const vDiv = document.getElementById('vulnerabilitiesTableBody');
     if (vDiv) {
-        vDiv.innerHTML="";
-        // Dados reais da API - usa vulnerabilidades do backend
         const vulnerabilities = technicalAudit.vulnerabilities || [];
         console.log("Vulnerabilidades da API:", vulnerabilities);
-        // Filtra ou mostra todos (aqui mostramos todos para ficar "cheio")
-        vulnerabilities.forEach((v, index) => {
-            console.log(`Vulnerabilidade ${index}:`, v);
-            // Lógica de cores dinâmica baseada na severidade
-            let corClasse = "text-blue-400"; // padrão azul
-            if (v.severity) {
-                const severity = v.severity.toUpperCase();
-                if (severity.includes("CRÍTICO") || severity.includes("CRITICAL")) {
-                    corClasse = "text-red-500";
-                } else if (severity.includes("ALTO") || severity.includes("HIGH")) {
-                    corClasse = "text-orange-500";
-                } else if (severity.includes("MÉDIO") || severity.includes("MEDIUM")) {
-                    corClasse = "text-yellow-500";
-                } else {
-                    corClasse = "text-blue-400";
-                }
-            }
-            console.log(`Severity: "${v.severity}" - Cor: ${corClasse}`);
-            const pillarLabel = getVulnerabilityPillarLabel(v.pillar);
-            const pillarBadge = pillarLabel ? `<span class="inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-200">${safeAuditText(pillarLabel)}</span>` : '';
-            vDiv.innerHTML += `
-                <tr class="border-b border-slate-700 print:table-row print:break-inside-avoid hover:bg-slate-800/50 transition">
-                    <td class="p-4 font-semibold ${corClasse} border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">${safeAuditText(v.severity || 'N/A')}</td>
-                    <td class="p-4 text-white font-medium border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span>${safeAuditText(v.title || 'Sem titulo')}</span>
-                            ${pillarBadge}
-                        </div>
-                    </td>
-                    <td class="p-4 text-slate-300 text-sm print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">${safeAuditText(v.description || 'Sem descricao')}</td>
-                </tr>
-            `;
-        });
+        if (!vulnerabilities.length) {
+            vDiv.innerHTML = '<div class="audit-empty-block"><strong>Nenhum risco cr?tico foi retornado.</strong><p>A auditoria n?o encontrou problemas relevantes o suficiente para compor uma matriz de vulnerabilidades.</p></div>';
+        } else {
+            vDiv.innerHTML = vulnerabilities.map((v, index) => {
+                const severity = getSeverityMeta(v.severity);
+                const pillarLabel = getVulnerabilityPillarLabel(v.pillar) || 'Pilar n?o informado';
+                return [
+                    '<article class="audit-risk-card audit-risk-' + severity.tone + '">',
+                        '<div class="audit-risk-number">' + String(index + 1).padStart(2, '0') + '</div>',
+                        '<div class="audit-risk-content">',
+                            '<div class="audit-risk-meta">',
+                                '<span class="audit-severity audit-severity-' + severity.tone + '">' + safeAuditText(severity.label) + '</span>',
+                                '<span>' + safeAuditText(pillarLabel) + '</span>',
+                            '</div>',
+                            '<h3>' + safeAuditText(v.title || 'Problema sem t?tulo') + '</h3>',
+                            '<p>' + safeAuditText(v.description || 'A API n?o retornou uma descri??o t?cnica para este item.') + '</p>',
+                        '</div>',
+                    '</article>'
+                ].join('');
+            }).join('');
+        }
     }
-                // Renderiza Plano de Ação
+                // Renderiza Plano de A??o
                 const actionPlanList = document.getElementById('actionPlanList');
                 if (actionPlanList) {
-                    actionPlanList.innerHTML = "";
-                    // Dados reais da API - usa action_plan do backend
                     const actionPlan = data.resultado.technical_audit.action_plan || {};
                     console.log("Action Plan da API:", actionPlan);
-                    // Combina todos os períodos (week_1, month_1, etc) em uma única lista
                     const realSteps = [];
                     Object.keys(actionPlan).forEach(period => {
                         if (Array.isArray(actionPlan[period])) {
-                            realSteps.push(...actionPlan[period]);
+                            actionPlan[period].forEach(step => realSteps.push({ period, step }));
                         }
                     });
                     console.log("Steps combinados:", realSteps);
-                    // Renderiza os passos como lista ordenada (apenas os 4 primeiros)
-                    // Renderiza os passos como lista ordenada (apenas os 4 primeiros)
-          realSteps.slice(0, 4).forEach((stepText, i) => {
-                        actionPlanList.innerHTML += `
-                            <li class="flex items-start gap-4 p-4 border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
-                                <span class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                    ${i + 1}
-                                </span>
-                                <div class="flex-1">
-                                    <p class="text-slate-300 leading-relaxed">${stepText}</p>
-                                </div>
-                            </li>
-                        `;
-                    });
+                    if (!realSteps.length) {
+                        actionPlanList.innerHTML = '<div class="audit-empty-block"><strong>Plano n?o retornado.</strong><p>A auditoria n?o trouxe a??es espec?ficas, mas voc? ainda pode baixar o PDF e revisar os pilares do diagn?stico.</p></div>';
+                    } else {
+                        actionPlanList.innerHTML = realSteps.map((item, i) => [
+                            '<article class="audit-action-card">',
+                                '<div class="audit-action-index">' + String(i + 1).padStart(2, '0') + '</div>',
+                                '<div>',
+                                    '<span>' + safeAuditText(humanizeActionPeriod(item.period)) + '</span>',
+                                    '<p>' + safeAuditText(item.step) + '</p>',
+                                '</div>',
+                            '</article>'
+                        ].join('')).join('');
+                    }
                 }
-                // Determina cor do score
                 const pGrid = document.getElementById('agentsTableBody');
                 const agentsResults = data.resultado.agents_results || data.resultado.personas_results || [];
                 if (pGrid) {
-                    pGrid.innerHTML = "";
-                    agentsResults.forEach(p => {
-                        // Determina cor do score
-                        let scoreColor = "text-green-400";
-                        if (p.score <= 4) scoreColor = "text-red-500";
-                        // Determina sentimento
-                        let sentiment = "Neutro";
-                        let sentimentColor = "text-slate-300";
-                        if (p.score >= 8) {
-                            sentiment = "Positivo";
-                            sentimentColor = "text-green-400";
-                        } else if (p.score <= 4) {
-                            sentiment = "Negativo";
-                            sentimentColor = "text-red-400";
-                        }
-                        pGrid.innerHTML += `
-                            <tr class="border-b border-slate-700 print:table-row print:break-inside-avoid hover:bg-slate-800/50 transition">
-                                <td class="p-4 border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
-                                    <div class="font-semibold text-white">${p.profile_name}</div>
-                                    <div class="text-sm ${scoreColor} font-bold">Score: ${p.score}/10</div>
-                                </td>
-                                <td class="p-4 border-r border-slate-700 print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
-                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${sentimentColor} bg-slate-800 border border-slate-600">
-                                        ${sentiment}
-                                    </span>
-                                </td>
-                                <td class="p-4 text-slate-300 text-sm print:table-cell print:border print:border-slate-300 print:p-3 print:text-black print:break-inside-avoid">
-                                    <div class="mb-2">
-                                        <span class="text-xs text-slate-500 font-semibold uppercase">Citação Direta:</span>
-                                        <p class="italic text-white mt-1">"${p.direct_quote}"</p>
-                                    </div>
-                                    <div class="text-xs text-slate-500">
-                                        <i data-lucide="activity" class="w-3 h-3 inline mr-1"></i>
-                                        Análise de Jornada Concluída
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    });
+                    if (!agentsResults.length) {
+                        pGrid.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>A auditoria seguiu somente pela an?lise t?cnica. Para uma leitura comportamental, selecione uma persona compat?vel no modo manual.</p></div>';
+                    } else {
+                        pGrid.innerHTML = agentsResults.map(p => {
+                            const score = Number(p.score);
+                            const tone = score >= 8 ? 'strong' : score <= 4 ? 'critical' : 'attention';
+                            const logs = Array.isArray(p.journey_log) ? p.journey_log.slice(0, 3) : [];
+                            const journeyHtml = logs.length ?
+                                '<div class="audit-agent-journey">' + logs.map(log => [
+                                    '<div>',
+                                        '<span>' + safeAuditText(log.action || 'A??o observada') + '</span>',
+                                        '<p>' + safeAuditText(log.status || 'Sem status detalhado.') + '</p>',
+                                    '</div>'
+                                ].join('')).join('') + '</div>' : '';
+                            return [
+                                '<article class="audit-agent-card audit-agent-' + tone + '">',
+                                    '<div class="audit-agent-header">',
+                                        '<div>',
+                                            '<h3>' + safeAuditText(p.profile_name || 'Persona SSW') + '</h3>',
+                                            '<span>Score ' + (Number.isFinite(score) ? score : '--') + '/10</span>',
+                                        '</div>',
+                                        '<strong>' + (Number.isFinite(score) ? score : '--') + '</strong>',
+                                    '</div>',
+                                    '<blockquote>"' + safeAuditText(p.direct_quote || 'A persona n?o retornou uma cita??o direta.') + '"</blockquote>',
+                                    journeyHtml,
+                                '</article>'
+                            ].join('');
+                        }).join('');
+                    }
                 }
+                initAuditResultReveal();
+
                 // Recria ícones Lucide para os novos botões de chat
                 lucide.createIcons();
                 // Adiciona botão flutuante de chat
@@ -3403,7 +3598,7 @@ function getCodigoHTML() {
             stopAuditLoadingAnimation();
             document.getElementById('auditLoading').classList.add('hidden');
             // Criar estrutura HTML inicial para todas as seções
-            createAuditResultsStructure();
+            createAuditResultsStructureModern();
             // Armazenar dados globalmente para exportação PDF (fallback)
             auditData = {
                 url: url,
@@ -3437,6 +3632,7 @@ function getCodigoHTML() {
             // Popula Dados Fallback com verificações de segurança
             const resScoreEl = document.getElementById('resScore');
             if (resScoreEl) resScoreEl.innerText = score;
+            document.querySelector('.audit-score-board')?.setAttribute('data-score-tone', getAuditScoreTone(score));
             const resUrlEl = document.getElementById('reportUrl');
             if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
             const resSummaryEl = document.getElementById('resSummary');
@@ -3492,10 +3688,12 @@ function getCodigoHTML() {
             const printMobileEl = document.getElementById('printMobile');
             if (printMobileEl) {
                 printMobileEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
+                printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
             }
             const printDesktopEl = document.getElementById('printDesktop');
             if (printDesktopEl) {
                 printDesktopEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
+                printDesktopEl.closest('.audit-shot-frame')?.classList.add('has-capture');
             }
             renderPillarsDashboard({
                 score,
@@ -3510,100 +3708,79 @@ function getCodigoHTML() {
             // Vulnerabilidades baseadas no score
             const vDiv = document.getElementById('vulnerabilitiesTableBody');
             if (vDiv) {
-                vDiv.innerHTML="";
                 const listaVulnerabilidades = [
                     {
-                        nivel: score < 70 ? "CRÍTICO" : score < 80 ? "ALTO" : "MÉDIO",
-                        cor: score < 70 ? "text-red-500" : score < 80 ? "text-orange-500" : "text-yellow-500",
-                        titulo: score < 70 ? "Performance Geral Baixa" : score < 80 ? "Otimizações de Performance Necessárias" : "Pequenas Otimizações Sugeridas",
-                        desc: "A análise detectou oportunidades de melhoria na performance geral do site."
+                        severity: score < 70 ? 'CR?TICO' : score < 80 ? 'ALTO' : 'M?DIO',
+                        pillar: 'Performance',
+                        title: score < 70 ? 'Performance geral baixa' : score < 80 ? 'Otimiza??es de performance necess?rias' : 'Pequenas otimiza??es sugeridas',
+                        description: 'A an?lise em modo de conting?ncia detectou oportunidades de melhoria na performance geral do site.'
                     },
-                    {
-                        nivel: "MÉDIO", cor: "text-yellow-500",
-                        titulo: "SEO Técnico",
-                        desc: "Existem melhorias a serem implementadas nos aspectos técnicos de SEO."
-                    },
-                    {
-                        nivel: "BAIXO", cor: "text-blue-400",
-                        titulo: "Acessibilidade",
-                        desc: "Algumas práticas de acessibilidade poderiam ser melhoradas."
-                    }
+                    { severity: 'M?DIO', pillar: 'SEO', title: 'SEO t?cnico', description: 'Existem melhorias a serem implementadas nos aspectos t?cnicos de descoberta e estrutura da p?gina.' },
+                    { severity: 'BAIXO', pillar: 'Acessibilidade', title: 'Acessibilidade e clareza', description: 'Algumas pr?ticas de acessibilidade poderiam ser revisadas para tornar a experi?ncia mais previs?vel.' }
                 ];
-                listaVulnerabilidades.forEach(v => {
-                    vDiv.innerHTML += `
-                        <tr class="border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
-                            <td class="p-4 font-semibold ${v.cor} border-r border-slate-700">${v.nivel}</td>
-                            <td class="p-4 text-white font-medium border-r border-slate-700">${v.titulo}</td>
-                            <td class="p-4 text-slate-300 text-sm">${v.desc}</td>
-                        </tr>
-                    `;
-                });
+                vDiv.innerHTML = listaVulnerabilidades.map((v, index) => {
+                    const severity = getSeverityMeta(v.severity);
+                    return [
+                        '<article class="audit-risk-card audit-risk-' + severity.tone + '">',
+                            '<div class="audit-risk-number">' + String(index + 1).padStart(2, '0') + '</div>',
+                            '<div class="audit-risk-content">',
+                                '<div class="audit-risk-meta">',
+                                    '<span class="audit-severity audit-severity-' + severity.tone + '">' + safeAuditText(severity.label) + '</span>',
+                                    '<span>' + safeAuditText(v.pillar) + '</span>',
+                                '</div>',
+                                '<h3>' + safeAuditText(v.title) + '</h3>',
+                                '<p>' + safeAuditText(v.description) + '</p>',
+                            '</div>',
+                        '</article>'
+                    ].join('');
+                }).join('');
             }
             // Agents simuladas
             const pDiv = document.getElementById('agentsTableBody');
             if (pDiv) {
-                pDiv.innerHTML = "";
                 const agentsToUse = selected.length > 0 ? selected : [];
-                agentsToUse.forEach((agent, index) => {
-                    const fallbackPersona = typeof agent === 'string' ? manualPersonaCache.find(p => p.id === agent) : null;
-                    const agentName = fallbackPersona?.name || (typeof agent === 'string' ? agent.split(':')[0] : agent.name);
-                    const agentScore = Math.floor(Math.random() * 4) + 6; // 6-9
+                if (!agentsToUse.length) {
+                    pDiv.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>O modo de conting?ncia entregou apenas uma leitura t?cnica b?sica.</p></div>';
+                } else {
                     const quotes = [
-                        "Site funcional mas poderia ser mais intuitivo.",
-                        "Navegação ok, mas alguns elementos poderiam ser mais claros.",
-                        "Funciona bem no meu dispositivo.",
-                        "Consigo usar sem grandes dificuldades."
+                        'Site funcional, mas poderia ser mais intuitivo.',
+                        'Navega??o aceit?vel, mas alguns elementos poderiam ser mais claros.',
+                        'Consigo usar sem grandes dificuldades, embora existam pontos de fric??o.'
                     ];
-                    const sentiment = agentScore >= 8 ? "Positivo" : agentScore <= 6 ? "Negativo" : "Neutro";
-                    const sentimentColor = agentScore >= 8 ? "text-green-400" : agentScore <= 6 ? "text-red-400" : "text-slate-300";
-                    pDiv.innerHTML += `
-                        <tr class="border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
-                            <td class="p-4 border-r border-slate-700">
-                                <div class="font-semibold text-white">${agentName}</div>
-                                <div class="text-sm ${agentScore >= 8 ? "text-green-400" : agentScore <= 6 ? "text-red-500" : "text-yellow-500"} font-bold">Score: ${agentScore}/10</div>
-                            </td>
-                            <td class="p-4 border-r border-slate-700">
-                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${sentimentColor} bg-slate-800 border border-slate-600">
-                                    ${sentiment}
-                                </span>
-                            </td>
-                            <td class="p-4 text-slate-300 text-sm">
-                                <div class="mb-2">
-                                    <span class="text-xs text-slate-500 font-semibold uppercase">Citação Direta:</span>
-                                    <p class="italic text-white mt-1">"${quotes[index]}"</p>
-                                </div>
-                                <div class="text-xs text-slate-500">
-                                    <i data-lucide="activity" class="w-3 h-3 inline mr-1"></i>
-                                    Análise de Jornada Concluída
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
+                    pDiv.innerHTML = agentsToUse.map((agent, index) => {
+                        const fallbackPersona = typeof agent === 'string' ? manualPersonaCache.find(p => p.id === agent) : null;
+                        const agentName = fallbackPersona?.name || (typeof agent === 'string' ? agent.split(':')[0] : agent.name) || 'Persona SSW';
+                        const agentScore = Math.floor(Math.random() * 4) + 6;
+                        const tone = agentScore >= 8 ? 'strong' : agentScore <= 6 ? 'critical' : 'attention';
+                        return [
+                            '<article class="audit-agent-card audit-agent-' + tone + '">',
+                                '<div class="audit-agent-header">',
+                                    '<div><h3>' + safeAuditText(agentName) + '</h3><span>Score ' + agentScore + '/10</span></div>',
+                                    '<strong>' + agentScore + '</strong>',
+                                '</div>',
+                                '<blockquote>"' + safeAuditText(quotes[index % quotes.length]) + '"</blockquote>',
+                            '</article>'
+                        ].join('');
+                    }).join('');
+                }
             }
-            // Plano de Ação Fallback
+            // Plano de A??o Fallback
             const actionPlanList = document.getElementById('actionPlanList');
             if (actionPlanList) {
-                actionPlanList.innerHTML = "";
                 const fallbackSteps = [
-                    "Otimizar imagens e implementar lazy loading para melhorar performance",
-                    "Revisar meta tags e estrutura SEO para melhor posicionamento",
-                    "Melhorar contraste e navegação por teclado para acessibilidade",
-                    "Implementar cache de navegador para reduzir tempo de carregamento"
+                    'Otimizar imagens e implementar lazy loading para melhorar performance.',
+                    'Revisar meta tags e estrutura SEO para melhorar leitura por buscadores.',
+                    'Melhorar contraste, foco e navega??o por teclado para acessibilidade.',
+                    'Implementar cache de navegador para reduzir tempo de carregamento.'
                 ];
-                fallbackSteps.forEach((stepText, i) => {
-                    actionPlanList.innerHTML += `
-                        <li class="flex items-start gap-4 p-4 border-b border-slate-700 print:break-inside-avoid hover:bg-slate-800/50 transition">
-                            <span class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                ${i + 1}
-                            </span>
-                            <div class="flex-1">
-                                <p class="text-slate-300 leading-relaxed">${stepText}</p>
-                            </div>
-                        </li>
-                    `;
-                });
+                actionPlanList.innerHTML = fallbackSteps.map((stepText, i) => [
+                    '<article class="audit-action-card">',
+                        '<div class="audit-action-index">' + String(i + 1).padStart(2, '0') + '</div>',
+                        '<div><span>Conting?ncia</span><p>' + safeAuditText(stepText) + '</p></div>',
+                    '</article>'
+                ].join('')).join('');
             }
+            initAuditResultReveal();
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }

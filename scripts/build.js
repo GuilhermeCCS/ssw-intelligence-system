@@ -33,14 +33,20 @@ htmlPaths.forEach(htmlPath => {
 
   // Lê o HTML
   let html = fs.readFileSync(htmlPath, 'utf8');
+  const eol = html.includes('\r\n') ? '\r\n' : '\n';
 
   // Injeta meta tags com as variáveis de ambiente
   const mpMetaTag = `<meta name="env-mp-public-key" content="${mpPublicKey}">`;
   const apiUrlMetaTag = `<meta name="env-api-url" content="${apiUrl}">`;
 
+  // Remove injeções anteriores para o build ser idempotente em desenvolvimento
+  html = html
+    .replace(/^\s*<meta name="env-mp-public-key" content="[^"]*">\r?\n?/gm, '')
+    .replace(/^\s*<meta name="env-api-url" content="[^"]*">\r?\n?/gm, '');
+
   // Adiciona meta tags após o charset
-  const metaTags = [mpMetaTag, apiUrlMetaTag].filter(tag => tag).join('\n    ');
-  html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">\n    ${metaTags}`);
+  const metaTags = [mpMetaTag, apiUrlMetaTag].filter(tag => tag).join(`${eol}    `);
+  html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">${eol}    ${metaTags}`);
 
   // Escreve o HTML modificado
   fs.writeFileSync(htmlPath, html);
