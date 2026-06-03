@@ -23,6 +23,13 @@ if (apiUrlMetaEnv) {
   window.ENV.API_URL = apiUrlMetaEnv.getAttribute('content');
 }
 
+const googleClientMetaEnv = document.querySelector('meta[name="env-google-client-id"]');
+if (googleClientMetaEnv) {
+  const googleClientId = googleClientMetaEnv.getAttribute('content');
+  window.ENV.GOOGLE_CLIENT_ID = googleClientId;
+  window.ENV.VITE_GOOGLE_CLIENT_ID = googleClientId;
+}
+
 // Método 2: Tenta ler de headers (se disponível via fetch)
 if (!window.ENV.VITE_MP_PUBLIC_KEY) {
   fetch(window.location.href, { method: 'HEAD' })

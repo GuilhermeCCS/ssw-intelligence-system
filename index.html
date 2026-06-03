@@ -6,7 +6,7 @@
     <meta name="env-api-url" content="https://ssw-intelligence-api.onrender.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://sdk.mercadopago.com https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://js.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://ssw-intelligence-api.onrender.com https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://unpkg.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://challenges.cloudflare.com; worker-src 'self' blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://sdk.mercadopago.com https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://js.cloudflare.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://ssw-intelligence-api.onrender.com https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://unpkg.com https://accounts.google.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://challenges.cloudflare.com https://accounts.google.com; worker-src 'self' blob:;">
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Environment Variables Injector (carrega primeiro) -->
@@ -25,6 +25,8 @@
     <script src="src/components/footer/footer-component.js" defer></script>
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="SSW INTELLIGENCE - Plataforma de Auditoria Web">
     <meta property="og:description" content="Plataforma de auditoria web e benchmarking competitivo impulsionada por IA. Analise sites, compare concorrentes e gere insights valiosos.">
@@ -87,6 +89,13 @@
             </div>
             <div class="space-y-4 hidden" id="registerForm">
                 <h3 class="text-center text-white font-bold text-lg mb-4">Novo Cadastro</h3>
+                <div id="googleSignInRegister" class="google-auth-slot"></div>
+                <p id="googleSignInRegisterHint" class="google-auth-hint hidden"></p>
+                <div class="google-auth-divider" aria-hidden="true">
+                    <span></span>
+                    <small>ou crie com e-mail</small>
+                    <span></span>
+                </div>
                 <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
                 <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
                 <div class="relative">

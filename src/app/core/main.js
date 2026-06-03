@@ -447,6 +447,7 @@
         let turnstileCompareWidget = null;
         const TURNSTILE_RETRY_MS = 350;
         const TURNSTILE_MAX_WAIT_MS = 15000;
+        let googleAuthInitializedClientId = '';
 
         function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark' }) {
             const container = document.getElementById(containerId);
@@ -695,6 +696,126 @@
             lucide.createIcons();
             input.focus();
         }
+
+        function getGoogleClientId() {
+            const env = window.ENV || {};
+            return env.GOOGLE_CLIENT_ID || env.VITE_GOOGLE_CLIENT_ID || '';
+        }
+
+        function setGoogleAuthBusy(isBusy) {
+            document.querySelectorAll('.google-auth-slot').forEach(slot => {
+                slot.style.pointerEvents = isBusy ? 'none' : '';
+                slot.classList.toggle('opacity-60', isBusy);
+            });
+        }
+
+        function renderGoogleSignInButton(containerId = 'googleSignInLogin', attempt = 0) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const hint = document.getElementById(`${containerId}Hint`);
+            const clientId = getGoogleClientId();
+            if (!clientId) {
+                container.innerHTML = '';
+                if (hint) {
+                    hint.textContent = '';
+                    hint.classList.add('hidden');
+                }
+                return;
+            }
+
+            if (!window.google?.accounts?.id) {
+                if (attempt < 40) {
+                    setTimeout(() => renderGoogleSignInButton(containerId, attempt + 1), 250);
+                    return;
+                }
+                container.innerHTML = '<div class="google-auth-disabled">Google indisponivel no momento.</div>';
+                if (hint) {
+                    hint.textContent = 'Use e-mail e senha enquanto o provedor carrega.';
+                    hint.classList.remove('hidden');
+                }
+                return;
+            }
+
+            try {
+                if (googleAuthInitializedClientId !== clientId) {
+                    window.google.accounts.id.initialize({
+                        client_id: clientId,
+                        callback: handleGoogleCredentialResponse,
+                        cancel_on_tap_outside: true
+                    });
+                    googleAuthInitializedClientId = clientId;
+                }
+
+                const width = Math.min(360, Math.max(280, container.clientWidth || 320));
+                container.innerHTML = '';
+                window.google.accounts.id.renderButton(container, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    shape: 'rectangular',
+                    text: containerId.toLowerCase().includes('register') ? 'signup_with' : 'signin_with',
+                    logo_alignment: 'left',
+                    width
+                });
+                if (hint) {
+                    hint.textContent = '';
+                    hint.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Erro ao renderizar Google Sign-In:', error);
+                container.innerHTML = '<div class="google-auth-disabled">Nao foi possivel carregar o Google.</div>';
+                if (hint) {
+                    hint.textContent = 'Continue com e-mail e senha.';
+                    hint.classList.remove('hidden');
+                }
+            }
+        }
+
+        async function handleGoogleCredentialResponse(response) {
+            const token = response?.credential;
+            if (!token) {
+                Toast.error('O Google nao retornou uma credencial valida.');
+                return;
+            }
+
+            try {
+                setGoogleAuthBusy(true);
+                const res = await fetch(`${API_URL}/api/login/google`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.token) {
+                    throw new Error(data.detail || 'Nao foi possivel entrar com Google.');
+                }
+
+                USER = {
+                    ...data,
+                    verificado: data.verificado ?? data.verified ?? true,
+                    verified: data.verified ?? data.verificado ?? true
+                };
+
+                if (typeof secureStorage !== 'undefined') {
+                    await secureStorage.setItem('USER', USER);
+                } else {
+                    localStorage.setItem('USER', JSON.stringify(USER));
+                }
+
+                window.fromLoginFlow = true;
+                Toast.success('Login com Google realizado com sucesso.');
+                loginSuccess();
+            } catch (error) {
+                console.error('Erro no login com Google:', error);
+                Toast.error(error.message || 'Nao foi possivel entrar com Google.');
+            } finally {
+                setGoogleAuthBusy(false);
+            }
+        }
+
+        window.renderGoogleSignInButton = renderGoogleSignInButton;
+        window.handleGoogleCredentialResponse = handleGoogleCredentialResponse;
 
         function resetRegisterCaptcha() {
             turnstileRegisterToken = null;
@@ -1140,6 +1261,7 @@ function renderAuthView() {
         loginContent.innerHTML = getLoginHTML();
         // Inicializa Turnstile após renderizar o HTML
         setTimeout(() => initTurnstileLogin(), 500);
+        setTimeout(() => renderGoogleSignInButton('googleSignInLogin'), 250);
     } else if(authView === 'email') {
         loginContent.innerHTML = getEmailHTML();
     } else if(authView === 'codigo') {
@@ -1156,6 +1278,13 @@ function getLoginHTML() {
             <p class="text-slate-400 text-sm">Entre com suas credenciais para continuar</p>
         </div>
         <div class="space-y-4">
+            <div id="googleSignInLogin" class="google-auth-slot"></div>
+            <p id="googleSignInLoginHint" class="google-auth-hint hidden"></p>
+            <div class="google-auth-divider" aria-hidden="true">
+                <span></span>
+                <small>ou entre com e-mail</small>
+                <span></span>
+            </div>
             <div class="group">
                 <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">E-mail Corporativo</label>
                 <div class="relative">

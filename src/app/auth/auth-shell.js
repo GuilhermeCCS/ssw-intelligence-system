@@ -91,13 +91,23 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('registerForm').classList.remove('hidden');
         updateRegisterPasswordStrength();
-        setTimeout(() => initTurnstileRegister(), 500);
+        setTimeout(() => {
+            initTurnstileRegister();
+            if (typeof renderGoogleSignInButton === 'function') {
+                renderGoogleSignInButton('googleSignInRegister');
+            }
+        }, 500);
     } else {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('registerForm').classList.add('hidden');
         authView = 'login';
         if (typeof renderAuthView === 'function') renderAuthView();
-        setTimeout(() => initTurnstileLogin(), 500);
+        setTimeout(() => {
+            initTurnstileLogin();
+            if (typeof renderGoogleSignInButton === 'function') {
+                renderGoogleSignInButton('googleSignInLogin');
+            }
+        }, 500);
     }
 }
         // Função para esconder tela de autenticação

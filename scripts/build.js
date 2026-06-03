@@ -10,6 +10,7 @@ require('dotenv').config(); // Carrega variáveis de ambiente do .env
 // Lê variáveis de ambiente
 const mpPublicKey = process.env.VITE_MP_PUBLIC_KEY;
 const apiUrl = process.env.API_URL || 'https://ssw-intelligence-api.onrender.com';
+const googleClientId = process.env.VITE_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '';
 
 // Validação crítica para VITE_MP_PUBLIC_KEY
 if (!mpPublicKey) {
@@ -38,14 +39,16 @@ htmlPaths.forEach(htmlPath => {
   // Injeta meta tags com as variáveis de ambiente
   const mpMetaTag = `<meta name="env-mp-public-key" content="${mpPublicKey}">`;
   const apiUrlMetaTag = `<meta name="env-api-url" content="${apiUrl}">`;
+  const googleClientMetaTag = googleClientId ? `<meta name="env-google-client-id" content="${googleClientId}">` : '';
 
   // Remove injeções anteriores para o build ser idempotente em desenvolvimento
   html = html
     .replace(/^\s*<meta name="env-mp-public-key" content="[^"]*">\r?\n?/gm, '')
-    .replace(/^\s*<meta name="env-api-url" content="[^"]*">\r?\n?/gm, '');
+    .replace(/^\s*<meta name="env-api-url" content="[^"]*">\r?\n?/gm, '')
+    .replace(/^\s*<meta name="env-google-client-id" content="[^"]*">\r?\n?/gm, '');
 
   // Adiciona meta tags após o charset
-  const metaTags = [mpMetaTag, apiUrlMetaTag].filter(tag => tag).join(`${eol}    `);
+  const metaTags = [mpMetaTag, apiUrlMetaTag, googleClientMetaTag].filter(tag => tag).join(`${eol}    `);
   html = html.replace('<meta charset="UTF-8">', `<meta charset="UTF-8">${eol}    ${metaTags}`);
 
   // Escreve o HTML modificado
