@@ -2899,8 +2899,19 @@ function getCodigoHTML() {
             return true;
         }
 
+        const AUDIT_CANCEL_MESSAGE = 'A análise foi finalizada por um erro externo. Isso pode acontecer por bloqueio de bots, instabilidade temporária, timeout ou indisponibilidade do site. Fique tranquilo: seu saldo foi mantido. Tente novamente daqui a 5 minutos e, se o erro persistir, fale conosco pelo contato, pelo formulário de dúvidas ou pelo WhatsApp.';
+
+        function getAuditErrorDetailText(detail) {
+            if (!detail) return '';
+            if (typeof detail === 'string') return detail;
+            if (typeof detail === 'object') {
+                return detail.message || detail.detail || detail.erro || JSON.stringify(detail);
+            }
+            return String(detail);
+        }
+
         function formatAuditApiError(detail, status) {
-            const raw = String(detail || '').trim();
+            const raw = getAuditErrorDetailText(detail).trim();
             const clean = raw.replace(/^(Erro IA|Erro de captura):\s*/i, '').trim();
             const lower = clean.toLowerCase();
 
@@ -2920,6 +2931,75 @@ function getCodigoHTML() {
             }
 
             return clean || 'Erro ao iniciar auditoria.';
+        }
+
+        function restoreAuditInputState(mode = 'auto') {
+            stopAuditLoadingAnimation();
+            document.getElementById('auditLoading')?.classList.add('hidden');
+            document.getElementById('auditResults')?.classList.add('hidden');
+            document.getElementById('heroSection')?.classList.remove('hidden');
+            document.getElementById('manualSelectArea')?.classList.toggle('hidden', mode !== 'manual');
+            document.getElementById('compareArea')?.classList.add('hidden');
+
+            const normalSearchBar = document.getElementById('normalSearchBar');
+            const compareSearchBar = document.getElementById('compareSearchBar');
+            const turnstileAudit = document.getElementById('turnstile-audit');
+            const turnstileCompare = document.getElementById('turnstile-compare');
+
+            if (normalSearchBar) normalSearchBar.classList.toggle('hidden', mode === 'compare');
+            if (compareSearchBar) compareSearchBar.classList.toggle('hidden', mode !== 'compare');
+            if (turnstileAudit) turnstileAudit.classList.toggle('hidden', mode === 'compare');
+            if (turnstileCompare) turnstileCompare.classList.toggle('hidden', mode !== 'compare');
+
+            positionLocalAuditHelp(mode);
+            setModeOnlyCardsVisibility(mode);
+            adjustFooterPosition(false);
+            updateUserMenuCircle();
+        }
+
+        function showAuditCancelledNotice(reason = '', mode = 'auto') {
+            const searchContainer = document.querySelector('.search-container');
+            if (!searchContainer) {
+                Toast.warning(AUDIT_CANCEL_MESSAGE, 10000);
+                return;
+            }
+
+            const oldNotice = document.getElementById('auditCancelNotice');
+            if (oldNotice) oldNotice.remove();
+
+            const reasonText = String(reason || '').trim();
+            const technicalReason = reasonText && !reasonText.toLowerCase().includes('captcha')
+                ? `<p class="audit-cancel-reason">Motivo técnico informado: ${safeAuditText(reasonText)}</p>`
+                : '';
+
+            const notice = document.createElement('div');
+            notice.id = 'auditCancelNotice';
+            notice.className = 'audit-cancel-notice';
+            notice.innerHTML = `
+                <div class="audit-cancel-icon"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                <div class="audit-cancel-copy">
+                    <strong>Análise cancelada com saldo preservado</strong>
+                    <p>${AUDIT_CANCEL_MESSAGE}</p>
+                    ${technicalReason}
+                    <div class="audit-cancel-actions">
+                        <button type="button" onclick="document.getElementById('auditCancelNotice')?.remove();">Entendi</button>
+                        <button type="button" onclick="openSupportForm()">Abrir formulário</button>
+                        <a href="https://wa.me/5582991301991" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    </div>
+                </div>
+            `;
+            searchContainer.appendChild(notice);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            Toast.warning('Análise cancelada por erro externo. Seu saldo foi mantido.', 10000);
+        }
+
+        function cancelAuditDueToApiError({ mode = 'auto', reason = '', resetCaptcha = true } = {}) {
+            if (resetCaptcha) {
+                if (mode === 'compare') resetCompareCaptcha();
+                else resetAuditCaptcha();
+            }
+            restoreAuditInputState(mode);
+            showAuditCancelledNotice(reason, mode);
         }
 
         async function runAudit() {
@@ -2991,17 +3071,18 @@ function getCodigoHTML() {
                     }
                 } catch (apiError) {
                     if (apiError.isHttpError) {
-                        document.getElementById('heroSection').classList.remove('hidden');
-                        document.getElementById('emptyStateCards').classList.remove('hidden');
-                        document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
-                        document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
-                        stopAuditLoadingAnimation();
-                        document.getElementById('auditLoading').classList.add('hidden');
-                        Toast.error(apiError.message || 'Erro ao iniciar auditoria.');
+                        cancelAuditDueToApiError({
+                            mode,
+                            reason: apiError.message || apiError.rawDetail || 'Erro ao iniciar auditoria.',
+                            resetCaptcha: true
+                        });
                         return;
                     }
-                    console.log('API não disponível, usando modo fallback');
-                    generateFallbackAudit(url, mode, selected);
+                    cancelAuditDueToApiError({
+                        mode,
+                        reason: apiError.message || 'Falha de conexão com a API.',
+                        resetCaptcha: true
+                    });
                     return;
                 }
                 stopAuditLoadingAnimation();
@@ -3203,15 +3284,12 @@ function getCodigoHTML() {
                 }, 500);
             } catch(e) {
                 console.error("Erro na auditoria:", e);
-                stopAuditLoadingAnimation();
-                document.getElementById('auditLoading').classList.add('hidden');
-                document.getElementById('emptyStateCards').classList.remove('hidden');
-                // Verifica se é erro de conexão ou servidor
-                if(e.name === 'TypeError' || e.message.includes('fetch')) {
-                    alert("Erro de conexão com o servidor. Verifique sua internet e tente novamente.");
-                } else {
-                    alert("Erro ao processar auditoria. Tente novamente em alguns minutos.");
-                }
+                cancelAuditDueToApiError({
+                    mode,
+                    reason: e.message || 'Erro inesperado durante a auditoria.',
+                    resetCaptcha: true
+                });
+                return;
             }
         }
         // === FUNÇÃO DE COMPARAÇÃO ===
@@ -3295,7 +3373,10 @@ function getCodigoHTML() {
                         agents: []
                     })
                 });
-                if (!res.ok) throw new Error("API Indisponível");
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(formatAuditApiError(errorData.detail, res.status));
+                }
                 const response = await res.json();
                 console.log("📡 Resposta da API:", response);
                 // Extrai battle_data se existir (novo formato), ou usa response diretamente
@@ -3308,6 +3389,18 @@ function getCodigoHTML() {
                 stopAuditLoadingAnimation();
                 displayCompareResults(data);
             } catch (e) {
+                if (String(e.message || '').toLowerCase().includes('captcha')) {
+                    restoreAuditInputState('compare');
+                    initTurnstileCompare();
+                    Toast.warning('Resolva o captcha primeiro');
+                    return;
+                }
+                cancelAuditDueToApiError({
+                    mode: 'compare',
+                    reason: e.message || 'Falha de conexão com a API comparativa.',
+                    resetCaptcha: true
+                });
+                return;
                 resetCompareCaptcha();
                 console.warn("⚠️ Ativando MODO SIMULAÇÃO (Fallback). Motivo:", e.message);
                 stopAuditLoadingAnimation();

@@ -310,6 +310,73 @@
             text-align: center;
             font-size: 11px;
         }
+        .audit-cancel-notice {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 14px;
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.10), rgba(12, 18, 32, 0.76));
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+            text-align: left;
+        }
+        .audit-cancel-icon {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #fbbf24;
+            background: rgba(245, 158, 11, 0.13);
+            border: 1px solid rgba(245, 158, 11, 0.20);
+        }
+        .audit-cancel-copy strong {
+            display: block;
+            color: #fff7ed;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .audit-cancel-copy p {
+            margin: 0;
+            color: #cbd5e1;
+            font-size: 12px;
+            line-height: 1.65;
+        }
+        .audit-cancel-reason {
+            margin-top: 8px !important;
+            color: #94a3b8 !important;
+        }
+        .audit-cancel-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .audit-cancel-actions button,
+        .audit-cancel-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .audit-cancel-actions button:hover,
+        .audit-cancel-actions a:hover {
+            border-color: rgba(34, 211, 238, 0.38);
+            background: rgba(34, 211, 238, 0.10);
+        }
         @media (max-width: 640px) {
             .support-help-button {
                 left: 16px;
@@ -322,6 +389,9 @@
             }
             .support-form-grid {
                 flex-direction: column;
+            }
+            .audit-cancel-notice {
+                grid-template-columns: 1fr;
             }
         }
         /* Botão Primário com Brilho */
