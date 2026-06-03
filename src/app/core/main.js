@@ -2255,6 +2255,7 @@ function getCodigoHTML() {
             // Reseta para modo automático
             document.getElementById('auditMode').value = 'auto';
             document.querySelector('input[name="auditMode"][value="auto"]').checked = true;
+            positionLocalAuditHelp('auto');
             // Marca navegação como ativa
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('active', 'bg-primary/10', 'border-primary/30');
@@ -2293,30 +2294,37 @@ function getCodigoHTML() {
             const compareSearchBar = document.getElementById('compareSearchBar');
             const turnstileAudit = document.getElementById('turnstile-audit');
             const turnstileCompare = document.getElementById('turnstile-compare');
+            const localAuditHelp = document.getElementById('localAuditHelp');
             // Elementos do hero que devem ser controlados
             const titleContainer = document.querySelector('.hero-title-container');
             const subtitleContainer = document.querySelector('.hero-subtitle-container');
             const statsContainer = document.querySelector('.stats-container-premium');
+            const emptyStateCards = document.getElementById('emptyStateCards');
             console.log("Elementos encontrados:", { manualArea, compareArea, normalSearchBar, compareSearchBar });
             // Reset all areas
             if (manualArea) manualArea.classList.add('hidden');
             if (compareArea) compareArea.classList.add('hidden');
             if (normalSearchBar) normalSearchBar.classList.remove('hidden');
             if (compareSearchBar) compareSearchBar.classList.add('hidden');
+            if (localAuditHelp) localAuditHelp.classList.remove('hidden');
             // Reset CAPTCHAs - mostra o do modo normal, esconde o do compare
             if (turnstileAudit) turnstileAudit.classList.remove('hidden');
             if (turnstileCompare) turnstileCompare.classList.add('hidden');
+            positionLocalAuditHelp(mode);
+            setModeOnlyCardsVisibility(mode);
             // Controle dos elementos do hero baseado no modo
             if (mode === 'auto') {
                 // Mostra elementos no modo automático
                 if (titleContainer) titleContainer.classList.remove('hidden');
                 if (subtitleContainer) subtitleContainer.classList.remove('hidden');
                 if (statsContainer) statsContainer.classList.remove('hidden');
+                if (emptyStateCards) emptyStateCards.classList.remove('hidden');
             } else {
                 // Esconde elementos nos modos manual e compare
                 if (titleContainer) titleContainer.classList.add('hidden');
                 if (subtitleContainer) subtitleContainer.classList.add('hidden');
                 if (statsContainer) statsContainer.classList.add('hidden');
+                if (emptyStateCards) emptyStateCards.classList.add('hidden');
             }
             if(mode === 'manual') {
                 console.log("Entrando no modo manual");
@@ -2759,6 +2767,114 @@ function getCodigoHTML() {
             }, 60);
         }
 
+        function positionLocalAuditHelp(mode = 'auto') {
+            const help = document.getElementById('localAuditHelp');
+            const normalSearchBar = document.getElementById('normalSearchBar');
+            const compareSearchBar = document.getElementById('compareSearchBar');
+            if (!help) return;
+
+            const anchor = mode === 'compare' ? compareSearchBar : normalSearchBar;
+            if (anchor && anchor.parentNode) {
+                anchor.insertAdjacentElement('afterend', help);
+            }
+            help.classList.remove('hidden');
+        }
+
+        function setModeOnlyCardsVisibility(mode = 'auto') {
+            const showCards = mode === 'auto';
+            const statsContainer = document.querySelector('.stats-container-premium');
+            const emptyStateCards = document.getElementById('emptyStateCards');
+            if (statsContainer) statsContainer.classList.toggle('hidden', !showCards);
+            if (emptyStateCards) emptyStateCards.classList.toggle('hidden', !showCards);
+        }
+
+        function setAuditPillarsVisibility(show) {
+            const section = document.getElementById('audit-pilares');
+            const navLink = document.querySelector('.audit-progress-nav a[href="#audit-pilares"]');
+            if (section) section.classList.toggle('hidden', !show);
+            if (navLink) navLink.classList.toggle('hidden', !show);
+        }
+
+        function openSupportForm() {
+            const modal = document.getElementById('supportFormModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('support-modal-open');
+
+            const nameInput = document.getElementById('supportName');
+            const emailInput = document.getElementById('supportEmail');
+            if (nameInput && USER?.name && !nameInput.value) nameInput.value = USER.name;
+            if (emailInput && USER?.email && !emailInput.value) emailInput.value = USER.email;
+            setTimeout(() => document.getElementById('supportSubject')?.focus(), 80);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function closeSupportForm() {
+            const modal = document.getElementById('supportFormModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('support-modal-open');
+        }
+
+        function setSupportSubmitLoading(isLoading) {
+            const button = document.getElementById('supportSubmitBtn');
+            if (!button) return;
+            button.disabled = isLoading;
+            button.textContent = isLoading ? 'Enviando...' : 'Enviar para suporte';
+            button.classList.toggle('opacity-70', isLoading);
+            button.classList.toggle('cursor-not-allowed', isLoading);
+        }
+
+        async function submitSupportQuestion(event) {
+            event.preventDefault();
+            const nome = document.getElementById('supportName')?.value.trim() || '';
+            const email = document.getElementById('supportEmail')?.value.trim() || '';
+            const assunto = document.getElementById('supportSubject')?.value.trim() || '';
+            const mensagem = document.getElementById('supportMessage')?.value.trim() || '';
+
+            if (!email || !assunto || !mensagem) {
+                Toast.warning('Preencha e-mail, assunto e mensagem.');
+                return;
+            }
+            if (mensagem.length < 10) {
+                Toast.warning('Descreva sua dúvida com pelo menos 10 caracteres.');
+                return;
+            }
+
+            try {
+                setSupportSubmitLoading(true);
+                const res = await fetch(`${API_URL}/api/suporte/duvida`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome,
+                        email,
+                        assunto,
+                        mensagem,
+                        pagina: window.location.href
+                    })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.detail || 'Nao foi possivel enviar sua duvida agora.');
+
+                Toast.success('Dúvida enviada para o suporte.');
+                document.getElementById('supportSubject').value = '';
+                document.getElementById('supportMessage').value = '';
+                closeSupportForm();
+            } catch (error) {
+                console.error('Erro ao enviar dúvida ao suporte:', error);
+                Toast.error(error.message || 'Nao foi possivel enviar sua duvida agora.');
+            } finally {
+                setSupportSubmitLoading(false);
+            }
+        }
+
+        window.openSupportForm = openSupportForm;
+        window.closeSupportForm = closeSupportForm;
+        window.submitSupportQuestion = submitSupportQuestion;
+
         function abrirModalNgrok() {
             abrirTutorialNgrok();
         }
@@ -2892,6 +3008,7 @@ function getCodigoHTML() {
                 document.getElementById('auditLoading').classList.add('hidden');
                 // Criar estrutura HTML inicial para todas as seções
                 createAuditResultsStructureModern();
+                setAuditPillarsVisibility(mode === 'auto');
                 // Armazenar dados globalmente para exportação PDF
                 auditData = data.resultado;
                 currentAuditUrl = url;
@@ -2963,7 +3080,9 @@ function getCodigoHTML() {
                     loadTimeEl.innerText = loadTime;
                     loadTimeEl.className = `text-2xl font-bold ${typeof loadTime === 'string' ? getTimeColor(loadTime) : 'text-white'}`;
                 }
-                renderPillarsDashboard(technicalAudit);
+                if (mode === 'auto') {
+                    renderPillarsDashboard(technicalAudit);
+                }
                 if(data.images) {
                     const printMobileEl = document.getElementById('printMobile');
                     if (printMobileEl && data.images.mobile) {
@@ -3728,6 +3847,7 @@ function getCodigoHTML() {
             document.getElementById('auditLoading').classList.add('hidden');
             // Criar estrutura HTML inicial para todas as seções
             createAuditResultsStructureModern();
+            setAuditPillarsVisibility(mode === 'auto');
             // Armazenar dados globalmente para exportação PDF (fallback)
             auditData = {
                 url: url,
@@ -3824,16 +3944,18 @@ function getCodigoHTML() {
                 printDesktopEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
                 printDesktopEl.closest('.audit-shot-frame')?.classList.add('has-capture');
             }
-            renderPillarsDashboard({
-                score,
-                real_metrics: fallbackMetrics,
-                pillars_evaluation: {
-                    accessibility_performance: { score: fallbackMetrics.accessibility_score, brief: 'Performance e acessibilidade estimadas em modo de contingencia.' },
-                    security: { score: Math.max(55, score - 8), brief: 'Sinais de confianca avaliados por heuristicas basicas.' },
-                    functional_integrity: { score: Math.max(50, score - 5), brief: 'Fluxos e links exigem validacao detalhada na proxima auditoria completa.' },
-                    conversion_ux: { score, brief: 'Clareza da oferta e chamadas de acao avaliadas por regras gerais.' }
-                }
-            });
+            if (mode === 'auto') {
+                renderPillarsDashboard({
+                    score,
+                    real_metrics: fallbackMetrics,
+                    pillars_evaluation: {
+                        accessibility_performance: { score: fallbackMetrics.accessibility_score, brief: 'Performance e acessibilidade estimadas em modo de contingencia.' },
+                        security: { score: Math.max(55, score - 8), brief: 'Sinais de confianca avaliados por heuristicas basicas.' },
+                        functional_integrity: { score: Math.max(50, score - 5), brief: 'Fluxos e links exigem validacao detalhada na proxima auditoria completa.' },
+                        conversion_ux: { score, brief: 'Clareza da oferta e chamadas de acao avaliadas por regras gerais.' }
+                    }
+                });
+            }
             // Vulnerabilidades baseadas no score
             const vDiv = document.getElementById('vulnerabilitiesTableBody');
             if (vDiv) {

@@ -203,6 +203,127 @@
             text-align: center;
             padding: 0 14px;
         }
+        .support-help-button {
+            position: fixed;
+            left: 22px;
+            bottom: 22px;
+            z-index: 45;
+            width: 52px;
+            height: 52px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.34);
+            background: radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.18), transparent 32%), linear-gradient(135deg, #07111f 0%, #020408 100%);
+            color: #e6faff;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), 0 0 28px rgba(34, 211, 238, 0.18);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .support-help-button:hover {
+            transform: translateY(-2px);
+            border-color: rgba(34, 211, 238, 0.72);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.52), 0 0 34px rgba(34, 211, 238, 0.28);
+        }
+        .support-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+        .support-modal.hidden {
+            display: none;
+        }
+        .support-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 4, 8, 0.74);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .support-form-panel {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 520px);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: linear-gradient(180deg, rgba(12, 18, 32, 0.96), rgba(2, 4, 8, 0.98));
+            box-shadow: 0 32px 90px rgba(0, 0, 0, 0.58);
+        }
+        .support-form-head,
+        .support-form-grid {
+            display: flex;
+            gap: 12px;
+        }
+        .support-form-head {
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        .support-form-head span {
+            color: #22d3ee;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .support-form-head h2 {
+            margin: 4px 0 0;
+            color: #f0f4ff;
+            font-size: 22px;
+            font-weight: 800;
+        }
+        .support-form-head button {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #8292a8;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .support-form-head button:hover {
+            color: #fff;
+            border-color: rgba(34, 211, 238, 0.38);
+        }
+        .support-form-grid > * {
+            flex: 1;
+            min-width: 0;
+        }
+        .support-form-panel textarea {
+            min-height: 132px;
+            resize: vertical;
+        }
+        .support-form-note {
+            margin: -2px 0 0;
+            color: #8292a8;
+            text-align: center;
+            font-size: 11px;
+        }
+        @media (max-width: 640px) {
+            .support-help-button {
+                left: 16px;
+                bottom: 16px;
+                width: 48px;
+                height: 48px;
+            }
+            .support-form-panel {
+                padding: 20px;
+            }
+            .support-form-grid {
+                flex-direction: column;
+            }
+        }
         /* Botão Primário com Brilho */
         .btn-primary {
             background: linear-gradient(135deg, #22d3ee 0%, #0ea5e9 100%);
