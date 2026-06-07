@@ -171,6 +171,10 @@
                     <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
                     <span class="hidden lg:inline">Agents</span>
                 </button>
+                <button onclick="nav('history')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
+                    <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
+                    <span class="hidden lg:inline">Historico</span>
+                </button>
                 <button onclick="nav('ranking')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
                     <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
                     <span class="hidden lg:inline">Ranking</span>
@@ -241,6 +245,9 @@
             </button>
             <button onclick="nav('agents'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
                 <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-accent"></i> Gerenciar Agents
+            </button>
+            <button onclick="nav('history'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Historico
             </button>
             <button onclick="nav('ranking'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
                 <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-yellow-400"></i> Ranking Global
@@ -451,6 +458,41 @@
                     </div>
                 </div>
                 <div id="manageAgentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            </div>
+            <div id="view-history" class="hidden max-w-6xl mx-auto space-y-7 animate-fade-in-up">
+                <header class="history-hero">
+                    <div class="history-hero-copy">
+                        <span>Workspace privado</span>
+                        <h2>Historico de analises</h2>
+                        <p>Revise auditorias concluidas, compare evolucao entre formatos e retome rapidamente os principais achados de cada diagnostico.</p>
+                    </div>
+                    <button onclick="loadAuditHistory(true)" class="history-refresh-btn">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        Atualizar
+                    </button>
+                </header>
+
+                <section class="history-toolbar" aria-label="Filtros do historico">
+                    <div class="history-filter-group" id="auditHistoryFilters">
+                        <button type="button" class="history-filter-btn active" data-history-filter="all" onclick="setAuditHistoryFilter('all')">Todas</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="auto" onclick="setAuditHistoryFilter('auto')">Automaticas</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="manual" onclick="setAuditHistoryFilter('manual')">Manuais</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="compare" onclick="setAuditHistoryFilter('compare')">Comparativas</button>
+                    </div>
+                    <div class="history-toolbar-note">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        <span>Somente analises finalizadas com sucesso sao salvas.</span>
+                    </div>
+                </section>
+
+                <section id="auditHistoryList" class="history-list" aria-live="polite">
+                    <div class="history-empty-state">
+                        <span class="history-loading-dot"></span>
+                        Carregando historico...
+                    </div>
+                </section>
+
+                <section id="auditHistoryDetail" class="history-detail hidden" aria-live="polite"></section>
             </div>
 <!-- Placeholder para a seção de ranking - será carregada dinamicamente -->
 <div id="view-ranking-container"></div>

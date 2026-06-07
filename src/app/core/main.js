@@ -17,7 +17,7 @@
                     showAuthScreen('login', false);
                 } else if (pathname === 'cadastro') {
                     showAuthScreen('register', false);
-                } else if (pathname && ['home', 'agents', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
+                } else if (pathname && ['home', 'agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
                     hideAuthScreen();
                     nav(pathname);
                 } else if (!pathname || pathname === '') {
@@ -322,7 +322,7 @@
                 }
             }
             // Esconde todas as views
-            const views = ['home', 'agents', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            const views = ['home', 'agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) {
@@ -362,6 +362,7 @@
             // Header Dinâmico
             const titles = {
                 'agents': 'Gestão de Perfis',
+                'history': 'Historico de Analises',
                 'ranking': 'Ranking Global',
                 'precos': 'Planos e Preços',
                 'about': 'Sobre Nós',
@@ -370,6 +371,7 @@
                 'home': 'Painel Principal'
             };
             if(view === 'agents') loadManageAgents();
+            if(view === 'history') loadAuditHistory();
             if(view === 'ranking') {
                 console.log('🎯 Navegando para ranking');
                 console.log('🔍 loadRanking existe?', typeof loadRanking);
@@ -2874,6 +2876,266 @@ function getCodigoHTML() {
         window.openSupportForm = openSupportForm;
         window.closeSupportForm = closeSupportForm;
         window.submitSupportQuestion = submitSupportQuestion;
+
+        let auditHistoryFilter = 'all';
+
+        function getAuditHistoryTypeMeta(type) {
+            const normalized = String(type || 'auto').toLowerCase();
+            const map = {
+                auto: { label: 'Automatica', icon: 'sparkles', tone: 'auto' },
+                manual: { label: 'Manual', icon: 'user-check', tone: 'manual' },
+                compare: { label: 'Comparativa', icon: 'git-compare', tone: 'compare' }
+            };
+            return map[normalized] || { label: 'Analise', icon: 'file-search', tone: 'auto' };
+        }
+
+        function formatHistoryDate(value) {
+            if (!value) return 'Data indisponivel';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return 'Data indisponivel';
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getHistoryScoreTone(score) {
+            const value = Number(score);
+            if (!Number.isFinite(value)) return 'muted';
+            if (value >= 80) return 'strong';
+            if (value >= 50) return 'attention';
+            return 'critical';
+        }
+
+        function toHistoryInlineArg(value) {
+            return encodeURIComponent(String(value ?? ''));
+        }
+
+        function setAuditHistoryFilter(type = 'all') {
+            auditHistoryFilter = type;
+            document.querySelectorAll('[data-history-filter]').forEach(button => {
+                button.classList.toggle('active', button.dataset.historyFilter === type);
+            });
+            loadAuditHistory(true);
+        }
+
+        async function loadAuditHistory(showToast = false) {
+            const list = document.getElementById('auditHistoryList');
+            const detail = document.getElementById('auditHistoryDetail');
+            if (!list) return;
+
+            if (!USER || !USER.token) {
+                list.innerHTML = '<div class="history-empty-state"><strong>Login necessario</strong><p>Entre na sua conta para visualizar o historico privado das suas analises.</p><button onclick="showAuthScreen(\'login\')">Fazer login</button></div>';
+                if (detail) detail.classList.add('hidden');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
+
+            list.innerHTML = '<div class="history-empty-state"><span class="history-loading-dot"></span>Carregando historico...</div>';
+            if (detail) detail.classList.add('hidden');
+
+            try {
+                const params = new URLSearchParams({ tipo: auditHistoryFilter, limit: '60' });
+                const res = await fetch(`${API_URL}/api/audits/history?${params.toString()}`, {
+                    headers: authHeaders()
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.detail || 'Nao foi possivel carregar o historico.');
+                renderAuditHistoryList(data.items || []);
+                if (showToast) Toast.success('Historico atualizado.');
+            } catch (error) {
+                console.error('Erro ao carregar historico:', error);
+                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Historico indisponivel</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p><button onclick="loadAuditHistory(true)">Tentar novamente</button></div>`;
+            } finally {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        function renderAuditHistoryList(items) {
+            const list = document.getElementById('auditHistoryList');
+            if (!list) return;
+
+            if (!items.length) {
+                list.innerHTML = [
+                    '<div class="history-empty-state">',
+                        '<i data-lucide="archive" class="w-6 h-6"></i>',
+                        '<strong>Nenhuma analise salva ainda</strong>',
+                        '<p>Assim que uma auditoria for concluida com sucesso, ela aparece aqui automaticamente.</p>',
+                        '<button onclick="nav(\'home\')">Iniciar uma analise</button>',
+                    '</div>'
+                ].join('');
+                return;
+            }
+
+            list.innerHTML = items.map(item => {
+                const meta = getAuditHistoryTypeMeta(item.audit_type);
+                const score = Number(item.score);
+                const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+                const scoreTone = getHistoryScoreTone(score);
+                const urlLine = item.audit_type === 'compare'
+                    ? `${item.url_a || 'Site A'} vs ${item.url_b || 'Site B'}`
+                    : (item.url || 'URL nao informada');
+
+                return [
+                    `<article class="history-card history-card-${meta.tone}">`,
+                        '<div class="history-card-top">',
+                            `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
+                            `<time>${safeAuditText(formatHistoryDate(item.created_at))}</time>`,
+                        '</div>',
+                        '<div class="history-card-body">',
+                            '<div class="history-card-main">',
+                                `<h3>${safeAuditText(item.title || 'Analise SSW')}</h3>`,
+                                `<p class="history-card-url">${safeAuditText(urlLine)}</p>`,
+                                `<p class="history-card-summary">${safeAuditText(item.summary || 'Resumo executivo nao informado.')}</p>`,
+                            '</div>',
+                            `<div class="history-score history-score-${scoreTone}"><strong>${scoreLabel}</strong><span>score</span></div>`,
+                        '</div>',
+                        '<div class="history-card-actions">',
+                            `<button onclick="openAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Ver detalhes</button>`,
+                            item.url && item.audit_type !== 'compare' ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Analisar novamente</button>` : '',
+                        '</div>',
+                    '</article>'
+                ].join('');
+            }).join('');
+        }
+
+        function normalizeHistoryArray(value) {
+            if (!value) return [];
+            if (Array.isArray(value)) return value;
+            if (typeof value === 'object') {
+                return Object.keys(value).flatMap(key => Array.isArray(value[key]) ? value[key].map(item => ({ period: key, step: item })) : []);
+            }
+            return [];
+        }
+
+        async function openAuditHistoryItem(historyId) {
+            const detail = document.getElementById('auditHistoryDetail');
+            if (!detail) return;
+            detail.classList.remove('hidden');
+            detail.innerHTML = '<div class="history-detail-loading"><span class="history-loading-dot"></span>Carregando detalhes...</div>';
+            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            try {
+                const res = await fetch(`${API_URL}/api/audits/history/${encodeURIComponent(historyId)}`, {
+                    headers: authHeaders()
+                });
+                const item = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(item.detail || 'Nao foi possivel abrir esta analise.');
+                renderAuditHistoryDetail(item);
+            } catch (error) {
+                console.error('Erro ao abrir item do historico:', error);
+                detail.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Detalhe indisponivel</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p></div>`;
+            } finally {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        function renderAuditHistoryDetail(item) {
+            const detail = document.getElementById('auditHistoryDetail');
+            if (!detail) return;
+            const meta = getAuditHistoryTypeMeta(item.audit_type);
+            const payload = item.payload || {};
+
+            if (String(item.audit_type).toLowerCase() === 'compare') {
+                renderCompareHistoryDetail(item, payload, meta);
+                return;
+            }
+
+            const result = payload.resultado || payload.result || payload.audit || payload;
+            const technical = result.technical_audit || {};
+            const vulnerabilities = normalizeHistoryArray(technical.vulnerabilities).slice(0, 6);
+            const agents = normalizeHistoryArray(result.agents_results || result.personas_results).slice(0, 4);
+            const actions = normalizeHistoryArray(technical.action_plan).slice(0, 6);
+            const score = Number(item.score ?? technical.score);
+            const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+
+            detail.innerHTML = [
+                '<article class="history-detail-panel">',
+                    '<div class="history-detail-head">',
+                        '<div>',
+                            `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
+                            `<h3>${safeAuditText(item.title || 'Analise SSW')}</h3>`,
+                            `<p>${safeAuditText(item.url || 'URL nao informada')}</p>`,
+                        '</div>',
+                        `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>score</span></div>`,
+                    '</div>',
+                    `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo nao informado.')}</div>`,
+                    '<div class="history-detail-grid">',
+                        renderHistoryDetailBlock('Vulnerabilidades principais', vulnerabilities, value => value.title || value.description || value.step || value),
+                        renderHistoryDetailBlock('Analise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name),
+                        renderHistoryDetailBlock('Plano recomendado', actions, value => value.step || value),
+                    '</div>',
+                    '<div class="history-detail-actions">',
+                        item.url ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Rodar novamente</button>` : '',
+                        '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
+                    '</div>',
+                '</article>'
+            ].join('');
+        }
+
+        function renderCompareHistoryDetail(item, payload, meta) {
+            const detail = document.getElementById('auditHistoryDetail');
+            const battle = payload.battle_data || payload.comparativo || payload;
+            const verdict = battle.executive_verdict || {};
+            const agents = normalizeHistoryArray(battle.agent_battleground).slice(0, 5);
+            const technical = normalizeHistoryArray(battle.technical_faceoff).slice(0, 5);
+            const actions = normalizeHistoryArray(battle.action_plan_for_a || battle.action_plan).slice(0, 6);
+            const score = Number(item.score);
+            const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+
+            detail.innerHTML = [
+                '<article class="history-detail-panel">',
+                    '<div class="history-detail-head">',
+                        '<div>',
+                            `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
+                            `<h3>${safeAuditText(item.title || 'Comparativo SSW')}</h3>`,
+                            `<p>${safeAuditText((item.url_a || 'Site A') + ' vs ' + (item.url_b || 'Site B'))}</p>`,
+                        '</div>',
+                        `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>media</span></div>`,
+                    '</div>',
+                    `<div class="history-detail-summary"><strong>${safeAuditText(verdict.winner_site || 'Resultado comparativo')}</strong><p>${safeAuditText(verdict.summary || item.summary || 'Resumo comparativo nao informado.')}</p></div>`,
+                    '<div class="history-detail-grid">',
+                        renderHistoryDetailBlock('Preferencia dos agents', agents, value => `${value.agent || 'Agent'}: ${value.preference || value.reason || ''}`),
+                        renderHistoryDetailBlock('Confronto tecnico', technical, value => `${value.criteria || 'Criterio'}: ${value.analysis || value.winner || ''}`),
+                        renderHistoryDetailBlock('Plano para superar', actions, value => value.step || value),
+                    '</div>',
+                    '<div class="history-detail-actions">',
+                        '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
+                    '</div>',
+                '</article>'
+            ].join('');
+        }
+
+        function renderHistoryDetailBlock(title, items, getText) {
+            const content = items.length
+                ? items.map((item, index) => `<li><span>${String(index + 1).padStart(2, '0')}</span><p>${safeAuditText(getText(item) || 'Item sem descricao.')}</p></li>`).join('')
+                : '<li class="history-detail-muted"><p>Nenhum item retornado para esta secao.</p></li>';
+            return `<section class="history-detail-block"><h4>${safeAuditText(title)}</h4><ul>${content}</ul></section>`;
+        }
+
+        function rerunAuditFromHistory(url, type = 'auto') {
+            nav('home');
+            setTimeout(() => {
+                const input = document.getElementById('auditUrl');
+                if (input) input.value = url;
+                const mode = type === 'manual' ? 'manual' : 'auto';
+                const modeInput = document.getElementById('auditMode');
+                if (modeInput) modeInput.value = mode;
+                document.querySelectorAll('input[name="auditMode"]').forEach(radio => {
+                    radio.checked = radio.value === mode;
+                });
+                if (typeof toggleManualSelect === 'function') toggleManualSelect();
+                Toast.info('URL carregada para uma nova analise.');
+            }, 80);
+        }
+
+        window.setAuditHistoryFilter = setAuditHistoryFilter;
+        window.loadAuditHistory = loadAuditHistory;
+        window.openAuditHistoryItem = openAuditHistoryItem;
+        window.rerunAuditFromHistory = rerunAuditFromHistory;
 
         function abrirModalNgrok() {
             abrirTutorialNgrok();
