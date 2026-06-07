@@ -735,6 +735,183 @@
         .history-detail-muted {
             display: block !important;
         }
+        .history-vulnerability-detail {
+            grid-column: span 2;
+        }
+        .history-action-checklist {
+            grid-column: 1 / -1;
+        }
+        .history-vulnerability-item {
+            display: block !important;
+            padding: 13px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 13, 22, 0.62);
+        }
+        .history-vulnerability-top,
+        .history-action-head,
+        .history-action-footer,
+        .history-verification-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .history-vulnerability-top strong {
+            color: #f0f4ff;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+        .history-vulnerability-top span,
+        .history-action-status,
+        .history-verification-row > span {
+            flex-shrink: 0;
+            border-radius: 999px;
+            border: 1px solid rgba(34, 211, 238, 0.22);
+            background: rgba(34, 211, 238, 0.1);
+            color: #a5f3fc;
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 850;
+            text-transform: uppercase;
+        }
+        .history-vulnerability-item > p {
+            margin: 9px 0 0 !important;
+            color: #cbd5e1 !important;
+            font-size: 12px !important;
+            line-height: 1.65 !important;
+        }
+        .history-vulnerability-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .history-vulnerability-meta span {
+            color: #94a3b8 !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+        }
+        .history-action-head p,
+        .history-action-footer span,
+        .history-verification-head p {
+            margin: 4px 0 0;
+            color: #8292a8;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+        .history-action-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .history-action-tools button,
+        .history-action-footer button {
+            border: 1px solid rgba(34, 211, 238, 0.22);
+            background: rgba(34, 211, 238, 0.08);
+            color: #d9fbff;
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 11px;
+            font-weight: 800;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+        .history-action-tools button:hover,
+        .history-action-footer button:hover {
+            border-color: rgba(34, 211, 238, 0.48);
+            background: rgba(34, 211, 238, 0.15);
+            transform: translateY(-1px);
+        }
+        .history-action-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .history-action-check {
+            display: grid;
+            grid-template-columns: 18px 1fr;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 13px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 13, 22, 0.62);
+            cursor: pointer;
+        }
+        .history-action-check input {
+            margin-top: 2px;
+            accent-color: #22d3ee;
+        }
+        .history-action-check strong {
+            display: block;
+            color: #e2e8f0;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+        .history-action-status {
+            display: inline-flex;
+            margin-top: 8px;
+        }
+        .history-action-status-corrigida,
+        .history-verification-corrigida > span {
+            border-color: rgba(16, 185, 129, 0.35);
+            background: rgba(16, 185, 129, 0.12);
+            color: #bbf7d0;
+        }
+        .history-action-status-parcial,
+        .history-verification-parcial > span {
+            border-color: rgba(251, 191, 36, 0.35);
+            background: rgba(251, 191, 36, 0.12);
+            color: #fde68a;
+        }
+        .history-action-status-nao_corrigida,
+        .history-verification-nao_corrigida > span {
+            border-color: rgba(248, 113, 113, 0.35);
+            background: rgba(248, 113, 113, 0.12);
+            color: #fecaca;
+        }
+        .history-action-footer {
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .history-verification-result {
+            margin-top: 16px;
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            background: rgba(34, 211, 238, 0.055);
+        }
+        .history-verification-head h4 {
+            margin: 0;
+        }
+        .history-verification-head strong {
+            color: #f8fafc;
+            font-size: 18px;
+        }
+        .history-verification-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(8, 13, 22, 0.58);
+        }
+        .history-verification-row strong {
+            color: #f0f4ff;
+            font-size: 12px;
+        }
+        .history-verification-row p,
+        .history-verification-row small {
+            display: block;
+            margin: 6px 0 0;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.55;
+        }
         .history-detail-actions {
             margin-top: 18px;
         }
@@ -836,8 +1013,20 @@
             .history-list,
             .history-detail-grid,
             .history-chat-agents,
-            .history-chat-agent-list {
+            .history-chat-agent-list,
+            .history-action-list {
                 grid-template-columns: 1fr;
+            }
+            .history-vulnerability-detail,
+            .history-action-checklist {
+                grid-column: 1 / -1;
+            }
+            .history-action-head,
+            .history-action-footer,
+            .history-verification-head,
+            .history-verification-row {
+                flex-direction: column;
+                align-items: stretch;
             }
             .history-toolbar-note {
                 align-items: flex-start;

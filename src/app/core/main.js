@@ -3102,9 +3102,194 @@ function getCodigoHTML() {
             if (!value) return [];
             if (Array.isArray(value)) return value;
             if (typeof value === 'object') {
-                return Object.keys(value).flatMap(key => Array.isArray(value[key]) ? value[key].map(item => ({ period: key, step: item })) : []);
+                return Object.keys(value).flatMap(key => Array.isArray(value[key]) ? value[key].map((item, index) => ({ period: key, index, step: item })) : []);
             }
             return [];
+        }
+
+        function getHistoryActionText(action) {
+            if (typeof action === 'string') return action;
+            if (!action || typeof action !== 'object') return String(action || '');
+            return action.step || action.action || action.title || action.description || action.text || '';
+        }
+
+        function getHistoryActionKey(action, index) {
+            const period = action?.period || 'item';
+            const actionIndex = Number.isFinite(Number(action?.index)) ? Number(action.index) : index;
+            return `${period}:${actionIndex}`;
+        }
+
+        function getHistoryVerificationMap(verification) {
+            const map = new Map();
+            (verification?.items || []).forEach(item => {
+                if (item?.key) map.set(String(item.key), item);
+            });
+            return map;
+        }
+
+        function renderHistoryVulnerabilitiesDetailed(vulnerabilities) {
+            const items = normalizeHistoryArray(vulnerabilities);
+            if (!items.length) {
+                return '<section class="history-detail-block history-vulnerability-detail"><h4>Vulnerabilidades identificadas</h4><ul><li class="history-detail-muted"><p>Nenhuma vulnerabilidade retornada para esta analise.</p></li></ul></section>';
+            }
+
+            const content = items.map((value, index) => {
+                const vuln = (value && typeof value === 'object') ? value : { description: value };
+                const title = vuln.title || vuln.name || `Vulnerabilidade ${index + 1}`;
+                const severity = vuln.severity || vuln.risk || vuln.level || 'NAO INFORMADO';
+                const pillar = vuln.pillar || vuln.category || vuln.period || 'Pilar nao informado';
+                const description = vuln.description || vuln.detail || vuln.explanation || vuln.step || '';
+                const extraRows = Object.entries(vuln)
+                    .filter(([key, val]) => val !== null && val !== undefined && !['id', 'title', 'name', 'severity', 'risk', 'level', 'pillar', 'category', 'period', 'description', 'detail', 'explanation', 'step'].includes(key))
+                    .slice(0, 6)
+                    .map(([key, val]) => `<span><strong>${safeAuditText(humanizeTaxonomy(key))}:</strong> ${safeAuditText(typeof val === 'object' ? JSON.stringify(val) : val)}</span>`)
+                    .join('');
+
+                return [
+                    '<li class="history-vulnerability-item">',
+                        '<div class="history-vulnerability-top">',
+                            `<strong>${safeAuditText(title)}</strong>`,
+                            `<span>${safeAuditText(severity)}</span>`,
+                        '</div>',
+                        `<p>${safeAuditText(description || 'Descricao nao informada pelo backend.')}</p>`,
+                        `<div class="history-vulnerability-meta"><span><strong>Pilar:</strong> ${safeAuditText(pillar)}</span>${vuln.id ? `<span><strong>ID:</strong> ${safeAuditText(vuln.id)}</span>` : ''}${extraRows}</div>`,
+                    '</li>'
+                ].join('');
+            }).join('');
+
+            return `<section class="history-detail-block history-vulnerability-detail"><h4>Vulnerabilidades identificadas</h4><ul>${content}</ul></section>`;
+        }
+
+        function renderHistoryActionVerification(verification) {
+            if (!verification || !Array.isArray(verification.items) || !verification.items.length) {
+                return '';
+            }
+            const scoreLine = `${verification.score_before ?? '--'} -> ${verification.score_effective ?? verification.score_after_detected ?? '--'}`;
+            const rows = verification.items.map(item => {
+                const status = String(item.status || 'nao_corrigida');
+                const label = status === 'corrigida' ? 'Corrigida' : status === 'parcial' ? 'Parcial' : status === 'inconclusiva' ? 'Inconclusiva' : 'Nao corrigida';
+                return [
+                    `<div class="history-verification-row history-verification-${safeAuditText(status)}">`,
+                        `<div><strong>${safeAuditText(item.action || 'Acao marcada')}</strong><p>${safeAuditText(item.evidence || '')}</p>${item.recommendation ? `<small>${safeAuditText(item.recommendation)}</small>` : ''}</div>`,
+                        `<span>${safeAuditText(label)}</span>`,
+                    '</div>'
+                ].join('');
+            }).join('');
+
+            return [
+                '<section class="history-verification-result">',
+                    '<div class="history-verification-head">',
+                        '<div>',
+                            '<h4>Validacao de correcoes</h4>',
+                            `<p>${safeAuditText(verification.message || verification.summary || 'Resultado da ultima rechecagem.')}</p>`,
+                        '</div>',
+                        `<strong>${safeAuditText(scoreLine)}</strong>`,
+                    '</div>',
+                    rows,
+                '</section>'
+            ].join('');
+        }
+
+        function renderHistoryActionChecklist(item, actions, verification) {
+            const historyId = item.id || '';
+            const verificationMap = getHistoryVerificationMap(verification);
+            const actionItems = normalizeHistoryArray(actions);
+            if (!actionItems.length) {
+                return '<section class="history-detail-block history-action-checklist"><h4>Plano recomendado</h4><p class="history-detail-muted">Nenhuma acao retornada pelo backend.</p></section>';
+            }
+
+            const rows = actionItems.map((action, index) => {
+                const key = getHistoryActionKey(action, index);
+                const text = getHistoryActionText(action);
+                const verified = verificationMap.get(key);
+                const checked = verified ? 'checked' : '';
+                const status = verified?.status || '';
+                const payload = safeAuditText(JSON.stringify({
+                    key,
+                    period: action?.period || 'item',
+                    index: Number.isFinite(Number(action?.index)) ? Number(action.index) : index,
+                    text
+                }));
+                return [
+                    '<label class="history-action-check">',
+                        `<input type="checkbox" data-history-action-checkbox data-action="${payload}" ${checked}>`,
+                        '<span>',
+                            `<strong>${safeAuditText(text)}</strong>`,
+                            status ? `<small class="history-action-status history-action-status-${safeAuditText(status)}">${safeAuditText(status === 'corrigida' ? 'corrigida' : status === 'parcial' ? 'parcial' : status === 'inconclusiva' ? 'inconclusiva' : 'nao corrigida')}</small>` : '',
+                        '</span>',
+                    '</label>'
+                ].join('');
+            }).join('');
+
+            return [
+                '<section class="history-detail-block history-action-checklist">',
+                    '<div class="history-action-head">',
+                        '<div>',
+                            '<h4>Plano recomendado</h4>',
+                            '<p>Marque as acoes que voce ja corrigiu para a IA validar novamente a URL.</p>',
+                        '</div>',
+                        '<div class="history-action-tools">',
+                            '<button type="button" onclick="setHistoryActionChecks(true)">Marcar todas</button>',
+                            '<button type="button" onclick="setHistoryActionChecks(false)">Limpar</button>',
+                        '</div>',
+                    '</div>',
+                    `<div class="history-action-list">${rows}</div>`,
+                    '<div class="history-action-footer">',
+                        '<span>Esta rechecagem consome 1 credito e reembolsa em caso de erro externo.</span>',
+                        `<button type="button" id="historyVerifyActionsBtn" onclick="verifyHistoryActions(decodeURIComponent('${toHistoryInlineArg(historyId)}'))">Validar correcoes com IA</button>`,
+                    '</div>',
+                    renderHistoryActionVerification(verification),
+                '</section>'
+            ].join('');
+        }
+
+        function setHistoryActionChecks(checked) {
+            document.querySelectorAll('[data-history-action-checkbox]').forEach(input => {
+                input.checked = Boolean(checked);
+            });
+        }
+
+        async function verifyHistoryActions(historyId) {
+            const btn = document.getElementById('historyVerifyActionsBtn');
+            const selected = Array.from(document.querySelectorAll('[data-history-action-checkbox]:checked'))
+                .map(input => {
+                    try { return JSON.parse(input.dataset.action || '{}'); }
+                    catch { return null; }
+                })
+                .filter(item => item && item.text);
+
+            if (!selected.length) {
+                Toast.warning('Marque pelo menos uma acao do plano recomendado.');
+                return;
+            }
+
+            try {
+                if (btn) { btn.disabled = true; btn.innerText = 'Validando...'; }
+                Toast.info ? Toast.info('A IA esta reanalisando a URL e comparando as correcoes marcadas.', 10000) : Toast.warning('A IA esta reanalisando a URL.', 10000);
+                const res = await fetch(`${API_URL}/api/audits/history/${encodeURIComponent(historyId)}/verify-actions`, {
+                    method: 'POST',
+                    headers: authHeaders({ 'Content-Type': 'application/json' }),
+                    body: JSON.stringify({ actions: selected })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.detail || 'Nao foi possivel validar as correcoes.');
+                if (USER && typeof data.novo_saldo !== 'undefined') {
+                    USER.credits = data.novo_saldo;
+                    if (typeof secureStorage !== 'undefined') await secureStorage.setItem('USER', USER);
+                    else localStorage.setItem('USER', JSON.stringify(USER));
+                    updateUserMenuCircle();
+                }
+                renderAuditHistoryDetail(data.history || window.currentHistoryChatItem);
+                const confirmed = Number(data.verification?.confirmed_count || 0);
+                if (confirmed > 0) Toast.success(data.verification?.message || 'Correcoes confirmadas pela IA.', 10000);
+                else Toast.warning(data.verification?.message || 'A IA nao confirmou mudancas suficientes na URL.', 10000);
+            } catch (error) {
+                console.error('Erro ao validar correcoes:', error);
+                Toast.error(error.message || 'Erro ao validar correcoes.');
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerText = 'Validar correcoes com IA'; }
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
         }
 
         async function openAuditHistoryItem(historyId) {
@@ -3142,10 +3327,11 @@ function getCodigoHTML() {
 
             const result = payload.resultado || payload.result || payload.audit || payload;
             const technical = result.technical_audit || {};
-            const vulnerabilities = normalizeHistoryArray(technical.vulnerabilities).slice(0, 6);
+            const vulnerabilities = normalizeHistoryArray(technical.vulnerabilities);
             const chatAgents = normalizeHistoryArray(result.agents_results || result.personas_results).map(normalizeChatPersona).filter(agent => agent.profile_name);
             const agents = chatAgents.slice(0, 4);
-            const actions = normalizeHistoryArray(technical.action_plan).slice(0, 6);
+            const actions = normalizeHistoryArray(technical.action_plan);
+            const verification = payload.action_verification || null;
             const score = Number(item.score ?? technical.score);
             const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
             window.currentHistoryChatItem = item;
@@ -3163,9 +3349,9 @@ function getCodigoHTML() {
                     '</div>',
                     `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo nao informado.')}</div>`,
                     '<div class="history-detail-grid">',
-                        renderHistoryDetailBlock('Vulnerabilidades principais', vulnerabilities, value => value.title || value.description || value.step || value),
+                        renderHistoryVulnerabilitiesDetailed(vulnerabilities),
                         renderHistoryDetailBlock('Analise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name),
-                        renderHistoryDetailBlock('Plano recomendado', actions, value => value.step || value),
+                        renderHistoryActionChecklist(item, actions, verification),
                     '</div>',
                     renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
