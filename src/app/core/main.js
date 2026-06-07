@@ -245,6 +245,17 @@
             hideAuditChatSurfaces();
         }
 
+        function showOnlyAuditHomeView() {
+            const views = ['agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+            });
+            const home = document.getElementById('view-home');
+            if (home) home.classList.remove('hidden');
+            window.currentView = 'home';
+        }
+
         function warnBeforeLeavingAudit() {
             return hasUnsavedAuditSession && hasVisibleAuditResults();
         }
@@ -1516,8 +1527,15 @@ function getCodigoHTML() {
         }
         // Função para atualizar o estado do botão Login/Sair
         function logout() {
+            clearActiveAuditSession();
+            auditSnapshotTabOpened = false;
+            if (typeof secureStorage !== 'undefined') {
+                secureStorage.removeItem('USER');
+            }
             localStorage.removeItem('USER');
             USER = null;
+            updateUserMenuCircle();
+            updateAuthButton();
             Toast.success('Logout realizado com sucesso!');
             setTimeout(() => location.reload(), 1000);
         }
@@ -1573,11 +1591,7 @@ function getCodigoHTML() {
                 // Usuário logado - mostrar Logout
                 btn.className = 'w-full bg-red-500 text-white text-xs font-medium py-2 rounded-md hover:bg-red-600 transition-colors mt-2';
                 btn.onclick = () => {
-                    USER = null;
-                    localStorage.removeItem('USER');
-                    updateAuthButton();
-                    Toast.success('Logout realizado com sucesso!');
-                    setTimeout(() => window.location.reload(), 1500);
+                    logout();
                 };
                 text.textContent = 'Sair';
             }
@@ -3265,6 +3279,7 @@ function getCodigoHTML() {
         }
 
         async function runAudit() {
+            showOnlyAuditHomeView();
             const url = document.getElementById('auditUrl').value;
             if (bloquearUrlLocalSeNecessario(url)) return;
             if(USER.credits <= 0) return comprarCreditos();
@@ -3350,6 +3365,7 @@ function getCodigoHTML() {
                 stopAuditLoadingAnimation();
                 document.getElementById('auditLoading').classList.add('hidden');
                 // Criar estrutura HTML inicial para todas as seções
+                showOnlyAuditHomeView();
                 createAuditResultsStructureModern();
                 setAuditPillarsVisibility(mode === 'auto');
                 // Armazenar dados globalmente para exportação PDF
@@ -3556,6 +3572,7 @@ function getCodigoHTML() {
         }
         // === FUNÇÃO DE COMPARAÇÃO ===
         async function runCompare() {
+            showOnlyAuditHomeView();
             console.log("Iniciando processo de comparação...");
             // Oculta os cards IMEDIATAMENTE ao iniciar comparação
             const emptyStateCards = document.getElementById('emptyStateCards');
