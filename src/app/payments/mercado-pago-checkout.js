@@ -569,6 +569,27 @@ class CheckoutMercadoPago {
     }
   }
 
+  async applyUserPlan(plan, limits = null) {
+    if (!plan) return false;
+    const normalizedPlan = String(plan).trim().toLowerCase() === 'pro' ? 'pro' : 'starter';
+
+    if (typeof USER !== 'undefined' && USER) {
+      USER.plan = normalizedPlan;
+      if (limits) USER.plan_limits = limits;
+      await this.persistUser();
+    }
+
+    if (this.currentUser) {
+      this.currentUser.plan = normalizedPlan;
+      if (limits) this.currentUser.plan_limits = limits;
+    }
+
+    window.dispatchEvent(new CustomEvent('ssw:plan-updated', {
+      detail: { plan: normalizedPlan, limits }
+    }));
+    return true;
+  }
+
   async applyCreditBalance(credits, showToast = true) {
     const parsedCredits = Number(credits);
     if (!Number.isFinite(parsedCredits)) return false;
@@ -605,6 +626,7 @@ class CheckoutMercadoPago {
       
       if (response.ok) {
         const data = await response.json();
+        await this.applyUserPlan(data.plan, data.limits || null);
         await this.applyCreditBalance(data.credits || 0, showToast);
         console.log('Créditos atualizados:', data.credits);
         return true;
@@ -648,6 +670,7 @@ class CheckoutMercadoPago {
     
     // IMPORTANTE: Força o estado para 'initial' para garantir que o container seja visível
     if (paymentResult.credits !== undefined && paymentResult.credits !== null) {
+      await this.applyUserPlan(paymentResult.plan, paymentResult.limits || null);
       await this.applyCreditBalance(paymentResult.credits, true);
     } else {
       await this.updateUserCredits(false);

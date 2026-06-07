@@ -4,6 +4,33 @@
         let hasUnsavedAuditSession = false;
         let auditSnapshotTabOpened = false;
         const AUDIT_LEAVE_MESSAGE = 'Voce esta saindo da auditoria atual. Se sair agora, pode perder o relatorio e o chat com as personas. O ideal e salvar o PDF ou fazer suas perguntas a persona antes de sair.';
+        const FRONTEND_PLAN_LIMITS = {
+            starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 15 },
+            pro: { chatInputTokens: 6000, chatOutputTokens: 450, historyLimit: 100 }
+        };
+        function normalizeUserPlan(plan) {
+            const value = String(plan || 'starter').trim().toLowerCase();
+            return value === 'pro' ? 'pro' : 'starter';
+        }
+        function getUserPlan() {
+            return normalizeUserPlan(USER?.plan);
+        }
+        function getUserPlanLabel(plan) {
+            return normalizeUserPlan(plan) === 'pro' ? 'Pro' : 'Starter';
+        }
+        function getFrontendPlanLimits(plan) {
+            return FRONTEND_PLAN_LIMITS[normalizeUserPlan(plan || getUserPlan())] || FRONTEND_PLAN_LIMITS.starter;
+        }
+        function applyUserPlanState(plan, limits) {
+            if (!plan || !USER) return;
+            USER.plan = normalizeUserPlan(plan);
+            if (limits) USER.plan_limits = limits;
+            currentChatTokenLimit = getFrontendPlanLimits(USER.plan).chatInputTokens;
+            updateUserMenuCircle();
+        }
+        window.addEventListener('ssw:plan-updated', function(event) {
+            applyUserPlanState(event.detail?.plan, event.detail?.limits);
+        });
         // Variável temporária para senha no fluxo de cadastro
         let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
@@ -1486,6 +1513,7 @@ function getCodigoHTML() {
     const userNameCircle = document.getElementById('userNameCircle');
     const userEmailCircle = document.getElementById('userEmailCircle');
     const userCreditsCircle = document.getElementById('userCreditsCircle');
+    const userPlanCircle = document.getElementById('userPlanCircle');
     const userAvatarLarge = document.getElementById('userAvatarLarge');
     const userAvatarCircle = document.getElementById('userAvatarCircle');
 
@@ -1510,6 +1538,7 @@ function getCodigoHTML() {
         if (userNameCircle) userNameCircle.textContent = USER.name || USER.email.split('@')[0];
         if (userEmailCircle) userEmailCircle.textContent = USER.email;
         if (userCreditsCircle) userCreditsCircle.textContent = USER.credits || 0;
+        if (userPlanCircle) userPlanCircle.textContent = getUserPlanLabel(USER.plan);
     }
 
     // Recriar ícones Lucide
@@ -4864,7 +4893,7 @@ function getCodigoHTML() {
         var agentChatActive = false;
         var currentChatMetaOverride = null;
         var currentChatConversationId = null;
-        var currentChatTokenLimit = 6000;
+        var currentChatTokenLimit = getFrontendPlanLimits().chatInputTokens;
         function getAgentColor(agent) {
             const colors = ['#22d3ee','#818cf8','#67e8f9','#0ea5e9','#bae6fd','#c8d3e2','#8292a8','#3d4f63'];
             if (!agent || !agent.profile_name) return colors[0];
@@ -4909,9 +4938,11 @@ function getCodigoHTML() {
             const base = label.dataset.baseLabel || label.innerText || 'Perfil analitico';
             const estimated = usage?.estimated_input_tokens ?? estimateChatTokensFromHistory(currentChatHistory);
             const limit = usage?.input_token_limit || currentChatTokenLimit;
+            const plan = normalizeUserPlan(usage?.plan || usage?.plan_limits?.plan || getUserPlan());
+            const planLabel = getUserPlanLabel(plan);
             currentChatTokenLimit = limit;
             label.dataset.baseLabel = base;
-            label.innerText = `${base} | ${estimated}/${limit} tokens`;
+            label.innerText = `${base} | ${planLabel} | ${estimated}/${limit} tokens`;
             if (estimated >= limit * 0.85) {
                 label.style.color = '#fbbf24';
             } else {
@@ -4949,6 +4980,7 @@ function getCodigoHTML() {
             if (btn) btn.style.display = 'none';
             agentChats = agentChats || {};
             currentAgent = agent;
+            currentChatTokenLimit = getFrontendPlanLimits().chatInputTokens;
             window.currentAgentColor = getAgentColor(agent);
             const agentColor = window.currentAgentColor;
             const agentInitials = getAgentInitials(agent);
