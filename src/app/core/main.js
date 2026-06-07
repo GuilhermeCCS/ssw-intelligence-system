@@ -5,8 +5,8 @@
         let auditSnapshotTabOpened = false;
         const AUDIT_LEAVE_MESSAGE = 'Voce esta saindo da auditoria atual. Se sair agora, pode perder o relatorio e o chat com as personas. O ideal e salvar o PDF ou fazer suas perguntas a persona antes de sair.';
         const FRONTEND_PLAN_LIMITS = {
-            starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 15 },
-            pro: { chatInputTokens: 6000, chatOutputTokens: 450, historyLimit: 100 }
+            starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 15, personaLimit: 3 },
+            pro: { chatInputTokens: 6000, chatOutputTokens: 450, historyLimit: 100, personaLimit: 8 }
         };
         function normalizeUserPlan(plan) {
             const value = String(plan || 'starter').trim().toLowerCase();
@@ -1733,12 +1733,52 @@ function getCodigoHTML() {
             btn.innerHTML = textoOriginal;
             btn.disabled = false;
         }
+        function getPersonaUsage(fallbackCount = 0) {
+            const usage = window.SSW_PERSONA_USAGE || {};
+            const plan = normalizeUserPlan(usage.plan || getUserPlan());
+            const limits = getFrontendPlanLimits(plan);
+            const count = Number.isFinite(Number(usage.count)) ? Number(usage.count) : fallbackCount;
+            const limit = Number.isFinite(Number(usage.limit)) && Number(usage.limit) > 0 ? Number(usage.limit) : limits.personaLimit;
+            return { count, limit, plan };
+        }
+
+        function renderPersonaLimitStatus(fallbackCount = 0) {
+            const usage = getPersonaUsage(fallbackCount);
+            const percent = Math.min(100, Math.round((usage.count / Math.max(usage.limit, 1)) * 100));
+            const reached = usage.count >= usage.limit;
+            return `
+                <div class="md:col-span-2 lg:col-span-3 rounded-2xl border ${reached ? 'border-amber-400/30 bg-amber-400/10' : 'border-cyan-400/20 bg-cyan-400/5'} p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.18em] ${reached ? 'text-amber-200' : 'text-cyan-200'} font-bold">Limite do plano ${getUserPlanLabel(usage.plan)}</p>
+                            <p class="text-sm text-slate-300 mt-1">${usage.count}/${usage.limit} personas criadas ${reached ? '- limite atingido' : '- disponivel para uso'}</p>
+                        </div>
+                        <div class="w-full sm:w-48 h-2 rounded-full bg-slate-900 border border-white/10 overflow-hidden">
+                            <div class="h-full ${reached ? 'bg-amber-300' : 'bg-cyan-300'}" style="width:${percent}%"></div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function updateCreateAgentButtonByLimit(fallbackCount = 0) {
+            const btn = document.getElementById('createAgentBtn');
+            if (!btn) return;
+            const usage = getPersonaUsage(fallbackCount);
+            const reached = usage.count >= usage.limit;
+            btn.disabled = reached;
+            btn.innerText = reached ? 'LIMITE ATINGIDO' : 'SALVAR';
+            btn.classList.toggle('opacity-60', reached);
+            btn.classList.toggle('cursor-not-allowed', reached);
+        }
+
         async function loadManageAgents() {
             const div = document.getElementById('manageAgentsList');
             div.innerHTML = "<p class='text-slate-500 animate-pulse'>Sincronizando...</p>";
             try {
                 const lista = await fetchBackendPersonas({ includeSystem: false, requireAuth: true });
-                if(lista.length === 0) div.innerHTML = "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
+                div.innerHTML = renderPersonaLimitStatus(lista.length);
+                updateCreateAgentButtonByLimit(lista.length);
+                if(lista.length === 0) div.innerHTML += "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
                 lista.forEach(p => {
                     const safeName = safeAuditText(p.name);
                     const safeDescription = safeAuditText(p.description);
@@ -1770,6 +1810,10 @@ function getCodigoHTML() {
             const niche = document.getElementById('newAgentNiche')?.value || 'geral';
             const type = document.getElementById('newAgentType')?.value || 'perfil';
             if(!nome || !desc) return Toast.warning("Preencha todos os campos");
+            const usage = getPersonaUsage();
+            if (usage.count >= usage.limit) {
+                return Toast.warning(`Limite de personas do plano ${getUserPlanLabel(usage.plan)} atingido (${usage.count}/${usage.limit}). Exclua uma persona ou faça upgrade.`);
+            }
             const btn = document.getElementById('createAgentBtn');
             if (btn) { btn.innerText = "..."; btn.disabled = true; }
             try {
@@ -1781,6 +1825,15 @@ function getCodigoHTML() {
                     const data = await res.json().catch(() => ({}));
                     throw new Error(data.detail || "Erro ao criar perfil");
                 }
+                const data = await res.json().catch(() => ({}));
+                if (data.plan || data.custom_limit) {
+                    window.SSW_PERSONA_USAGE = {
+                        count: Number(data.custom_count ?? (usage.count + 1)),
+                        limit: Number(data.custom_limit ?? usage.limit),
+                        plan: data.plan || usage.plan,
+                        limits: data.limits || null
+                    };
+                }
                 document.getElementById('newAgentName').value = "";
                 document.getElementById('newAgentDesc').value = "";
                 if (document.getElementById('newAgentNiche')) document.getElementById('newAgentNiche').value = "";
@@ -1789,7 +1842,7 @@ function getCodigoHTML() {
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
                 Toast.success("Perfil salvo com sucesso!");
             } catch(e) { Toast.error(e.message || "Erro ao criar perfil"); }
-            if (btn) { btn.innerText = "SALVAR"; btn.disabled = false; }
+            updateCreateAgentButtonByLimit();
         }
         // Função de confirmação personalizada
         function showConfirmDialog(message, onConfirm, onCancel) {

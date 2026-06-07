@@ -42,6 +42,12 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
                 const res = await fetch(`${API_URL}/api/personas`, { headers: authHeaders() });
                 const data = await res.json().catch(() => ({}));
                 if (res.ok) {
+                    window.SSW_PERSONA_USAGE = {
+                        count: Number(data.custom_count ?? (data.custom_personas || data.custom_agents || []).length ?? 0),
+                        limit: Number(data.custom_limit ?? data.limits?.persona_limit ?? 0),
+                        plan: data.plan || data.limits?.plan || 'starter',
+                        limits: data.limits || null
+                    };
                     return extractPersonasPayload(data, includeSystem);
                 }
                 if (requireAuth || !includeSystem) {
