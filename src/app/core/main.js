@@ -3061,10 +3061,13 @@ function getCodigoHTML() {
             const result = payload.resultado || payload.result || payload.audit || payload;
             const technical = result.technical_audit || {};
             const vulnerabilities = normalizeHistoryArray(technical.vulnerabilities).slice(0, 6);
-            const agents = normalizeHistoryArray(result.agents_results || result.personas_results).slice(0, 4);
+            const chatAgents = normalizeHistoryArray(result.agents_results || result.personas_results).map(normalizeChatPersona).filter(agent => agent.profile_name);
+            const agents = chatAgents.slice(0, 4);
             const actions = normalizeHistoryArray(technical.action_plan).slice(0, 6);
             const score = Number(item.score ?? technical.score);
             const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+            window.currentHistoryChatItem = item;
+            window.currentHistoryChatAgents = chatAgents;
 
             detail.innerHTML = [
                 '<article class="history-detail-panel">',
@@ -3082,6 +3085,7 @@ function getCodigoHTML() {
                         renderHistoryDetailBlock('Analise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name),
                         renderHistoryDetailBlock('Plano recomendado', actions, value => value.step || value),
                     '</div>',
+                    renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
                         item.url ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Rodar novamente</button>` : '',
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
@@ -3095,10 +3099,19 @@ function getCodigoHTML() {
             const battle = payload.battle_data || payload.comparativo || payload;
             const verdict = battle.executive_verdict || {};
             const agents = normalizeHistoryArray(battle.agent_battleground).slice(0, 5);
+            const chatAgents = agents.map(agent => normalizeChatPersona({
+                id: agent.agent || agent.preference || 'comparativo',
+                profile_name: agent.agent || 'Persona comparativa',
+                score: null,
+                direct_quote: agent.reason || '',
+                description: agent.reason || agent.preference || ''
+            }));
             const technical = normalizeHistoryArray(battle.technical_faceoff).slice(0, 5);
             const actions = normalizeHistoryArray(battle.action_plan_for_a || battle.action_plan).slice(0, 6);
             const score = Number(item.score);
             const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+            window.currentHistoryChatItem = item;
+            window.currentHistoryChatAgents = chatAgents;
 
             detail.innerHTML = [
                 '<article class="history-detail-panel">',
@@ -3116,6 +3129,7 @@ function getCodigoHTML() {
                         renderHistoryDetailBlock('Confronto tecnico', technical, value => `${value.criteria || 'Criterio'}: ${value.analysis || value.winner || ''}`),
                         renderHistoryDetailBlock('Plano para superar', actions, value => value.step || value),
                     '</div>',
+                    renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
                     '</div>',
@@ -3129,6 +3143,66 @@ function getCodigoHTML() {
                 : '<li class="history-detail-muted"><p>Nenhum item retornado para esta secao.</p></li>';
             return `<section class="history-detail-block"><h4>${safeAuditText(title)}</h4><ul>${content}</ul></section>`;
         }
+
+        function renderHistoryChatAgents(agents) {
+            if (!agents || !agents.length) {
+                return '<section class="history-chat-agents history-chat-agents-empty"><h4>Conversar com personas</h4><p>Esta analise nao retornou personas disponiveis para chat.</p></section>';
+            }
+            return [
+                '<section class="history-chat-agents">',
+                    '<div>',
+                        '<h4>Conversar com personas desta analise</h4>',
+                        '<p>O chat abre com o contexto salvo deste historico, sem consumir uma nova auditoria.</p>',
+                    '</div>',
+                    '<div class="history-chat-agent-list">',
+                        agents.slice(0, 8).map((agent, index) => [
+                            `<button type="button" onclick="openHistoryPersonaChat(${index})">`,
+                                `<strong>${safeAuditText(agent.profile_name || agent.name || 'Persona')}</strong>`,
+                                `<span>${safeAuditText(agent.direct_quote || agent.description || 'Abrir conversa contextual')}</span>`,
+                            '</button>'
+                        ].join('')).join(''),
+                    '</div>',
+                '</section>'
+            ].join('');
+        }
+
+        function getHistoryChatPayload(item) {
+            const payload = item?.payload || {};
+            if (String(item?.audit_type).toLowerCase() === 'compare') {
+                return {
+                    audit_data: payload.site_a || {},
+                    compare_data: payload.battle_data || payload.comparativo || payload
+                };
+            }
+            return {
+                audit_data: payload.resultado || payload.result || payload.audit || payload,
+                compare_data: null
+            };
+        }
+
+        function openHistoryPersonaChat(index) {
+            const item = window.currentHistoryChatItem;
+            const agents = window.currentHistoryChatAgents || [];
+            const rawAgent = agents[index];
+            if (!item || !rawAgent) {
+                Toast.warning('Nao foi possivel abrir esta persona do historico.');
+                return;
+            }
+            const agent = normalizeChatPersona(rawAgent);
+            const payload = getHistoryChatPayload(item);
+            currentChatMetaOverride = {
+                title: item.title || 'Historico SSW',
+                url: item.url || item.url_a || '',
+                history_id: item.id,
+                audit_type: item.audit_type,
+                audit_data: payload.audit_data,
+                compare_data: payload.compare_data
+            };
+            currentChatConversationId = `history:${item.id}:${agent.id || agent.profile_name || index}`;
+            openChat(agent);
+        }
+
+        window.openHistoryPersonaChat = openHistoryPersonaChat;
 
         function rerunAuditFromHistory(url, type = 'auto') {
             nav('home');
@@ -4778,7 +4852,9 @@ function getCodigoHTML() {
             });
         }
         function selectAgentForChat(agent) {
-            openChat(normalizeChatPersona(agent));
+            const normalized = normalizeChatPersona(agent);
+            setLiveChatContext(normalized);
+            openChat(normalized);
         }
         // === FUNÇÕES DE CHAT COM AGENTS ===
         // Armazena históricos por agent (id ou nome)
@@ -4786,6 +4862,9 @@ function getCodigoHTML() {
         var currentChatHistory = [];
         var currentAgent = null;
         var agentChatActive = false;
+        var currentChatMetaOverride = null;
+        var currentChatConversationId = null;
+        var currentChatTokenLimit = 6000;
         function getAgentColor(agent) {
             const colors = ['#22d3ee','#818cf8','#67e8f9','#0ea5e9','#bae6fd','#c8d3e2','#8292a8','#3d4f63'];
             if (!agent || !agent.profile_name) return colors[0];
@@ -4802,11 +4881,47 @@ function getCodigoHTML() {
             return agent.profile_name.substring(0, 2).toUpperCase();
         }
         function getCurrentChatMeta() {
+            if (currentChatMetaOverride) {
+                return currentChatMetaOverride;
+            }
             return {
                 title: currentAuditUrl || document.getElementById('reportUrl')?.innerText || 'Site Auditado',
                 url: currentAuditUrl || '',
                 audit_data: auditData || {}
             };
+        }
+        function getChatSessionKey(agent) {
+            const agentKey = agent?.id || agent?.profile_name || agent?.name || 'persona';
+            const base = currentChatConversationId || currentAuditUrl || 'live-audit';
+            return `${base}::${agentKey}`;
+        }
+        function estimateChatTokensFromHistory(history) {
+            const text = JSON.stringify({
+                meta: getCurrentChatMeta(),
+                persona: currentAgent || {},
+                historico: history || []
+            });
+            return Math.ceil(text.length / 4);
+        }
+        function updateChatTokenStatus(usage) {
+            const label = document.getElementById('chatAgentScore');
+            if (!label) return;
+            const base = label.dataset.baseLabel || label.innerText || 'Perfil analitico';
+            const estimated = usage?.estimated_input_tokens ?? estimateChatTokensFromHistory(currentChatHistory);
+            const limit = usage?.input_token_limit || currentChatTokenLimit;
+            currentChatTokenLimit = limit;
+            label.dataset.baseLabel = base;
+            label.innerText = `${base} | ${estimated}/${limit} tokens`;
+            if (estimated >= limit * 0.85) {
+                label.style.color = '#fbbf24';
+            } else {
+                label.style.color = '#3d4f63';
+            }
+        }
+        function setLiveChatContext(agent) {
+            currentChatMetaOverride = null;
+            const agentKey = agent?.id || agent?.profile_name || agent?.name || 'persona';
+            currentChatConversationId = `audit:${currentAuditUrl || 'current'}:${agentKey}`;
         }
         function normalizeChatPersona(agent) {
             const profileName = agent?.profile_name || agent?.name || agent?.agent || 'Persona SSW';
@@ -4837,11 +4952,18 @@ function getCodigoHTML() {
             window.currentAgentColor = getAgentColor(agent);
             const agentColor = window.currentAgentColor;
             const agentInitials = getAgentInitials(agent);
-            currentChatHistory = [];
+            const sessionKey = getChatSessionKey(agent);
+            currentChatHistory = agentChats[sessionKey] ? [...agentChats[sessionKey]] : [];
             document.getElementById('chatModal').classList.remove('hidden');
             document.getElementById('chatAgentName').innerText = agent.profile_name;
             document.getElementById('chatAgentScore').innerText = agent.score ? `Score ${agent.score}/10` : 'Perfil analítico';
             // Atualiza avatar no header
+            const scoreEl = document.getElementById('chatAgentScore');
+            if (scoreEl) {
+                const scoreLabel = agent.score ? `Score ${agent.score}/10` : 'Perfil analitico';
+                scoreEl.dataset.baseLabel = scoreLabel;
+                scoreEl.innerText = scoreLabel;
+            }
             const headerAvatar = document.getElementById('chatHeaderAvatar');
             if (headerAvatar) {
                 headerAvatar.style.background = agentColor + '20';
@@ -4851,6 +4973,19 @@ function getCodigoHTML() {
             }
             const container = document.getElementById('chatHistory');
             container.innerHTML = '';
+            if (currentChatHistory.length) {
+                currentChatHistory.forEach(message => {
+                    appendMsg(message.role === 'assistant' ? 'ai' : 'user', message.content || '');
+                });
+                const backBtn = document.getElementById('chatBackBtn');
+                if (backBtn) backBtn.style.display = 'none';
+                updateChatTokenStatus();
+                setTimeout(function() {
+                    const inp = document.getElementById('chatInput');
+                    if (inp) inp.focus();
+                }, 150);
+                return;
+            }
             // Mensagem de boas-vindas
             const welcomeDiv = document.createElement('div');
             welcomeDiv.style.cssText = 'display:flex; justify-content:flex-start; margin-bottom:12px; align-items:flex-end; gap:8px;';
@@ -4890,6 +5025,7 @@ function getCodigoHTML() {
             const backBtn = document.getElementById('chatBackBtn');
             if (backBtn) backBtn.style.display = 'none';
             container.scrollTop = container.scrollHeight;
+            updateChatTokenStatus();
             setTimeout(function() {
                 const inp = document.getElementById('chatInput');
                 if (inp) inp.focus();
@@ -4919,6 +5055,15 @@ function getCodigoHTML() {
             if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.45'; }
             // 3. Prepara histórico para API
             currentChatHistory.push({ role: "user", content: msg });
+            const estimatedBeforeSend = estimateChatTokensFromHistory(currentChatHistory);
+            if (estimatedBeforeSend > currentChatTokenLimit) {
+                appendMsg('ai', `Esta conversa chegou ao limite de ${currentChatTokenLimit} tokens. Limpe a conversa para continuar com esta persona.`);
+                currentChatHistory.pop();
+                input.disabled = false;
+                if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
+                updateChatTokenStatus();
+                return;
+            }
             // 4. Typing indicator animado
             const loadingId = appendMsg('ai', '', true);
             try {
@@ -4927,7 +5072,8 @@ function getCodigoHTML() {
                     body: JSON.stringify({
                         historico: currentChatHistory,
                         persona: normalizeChatPersona(currentAgent),
-                        meta: getCurrentChatMeta()
+                        meta: getCurrentChatMeta(),
+                        conversation_id: currentChatConversationId
                     })
                 });
                 const data = await res.json();
@@ -4938,13 +5084,14 @@ function getCodigoHTML() {
                 const resposta = data.resposta || 'Desculpe, não consegui processar sua mensagem.';
                 appendMsg('ai', resposta);
                 currentChatHistory.push({ role: "assistant", content: resposta });
+                updateChatTokenStatus(data.usage);
                 // Persiste histórico por agent
-                const key = currentAgent?.id || currentAgent?.profile_name;
+                const key = getChatSessionKey(currentAgent);
                 if (key) agentChats[key] = [...currentChatHistory];
             } catch (e) {
                 const loadingEl = document.getElementById(loadingId);
                 if (loadingEl) loadingEl.remove();
-                appendMsg('ai', 'Erro de conexão. Tente novamente.');
+                appendMsg('ai', e.message || 'Erro de conexao. Tente novamente.');
             } finally {
                 input.disabled = false;
                 if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
@@ -4999,7 +5146,7 @@ function getCodigoHTML() {
         function clearChatHistory() {
             if (!currentAgent) return;
             currentChatHistory = [];
-            const key = currentAgent?.id || currentAgent?.profile_name;
+            const key = getChatSessionKey(currentAgent);
             if (key) delete agentChats[key];
             openChat(currentAgent);
         }

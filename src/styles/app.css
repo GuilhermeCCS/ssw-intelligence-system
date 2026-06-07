@@ -738,6 +738,71 @@
         .history-detail-actions {
             margin-top: 18px;
         }
+        .history-chat-agents {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+            gap: 16px;
+            margin-top: 16px;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.075), rgba(255, 255, 255, 0.025));
+        }
+        .history-chat-agents h4 {
+            margin: 0;
+            color: #f0f4ff;
+            font-size: 14px;
+            font-weight: 850;
+        }
+        .history-chat-agents p {
+            margin: 8px 0 0;
+            color: #8292a8;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .history-chat-agent-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .history-chat-agent-list button {
+            min-width: 0;
+            padding: 13px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            background: rgba(8, 13, 22, 0.72);
+            text-align: left;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+        .history-chat-agent-list button:hover {
+            transform: translateY(-1px);
+            border-color: rgba(34, 211, 238, 0.42);
+            background: rgba(34, 211, 238, 0.08);
+        }
+        .history-chat-agent-list strong,
+        .history-chat-agent-list span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .history-chat-agent-list strong {
+            color: #f0f4ff;
+            font-size: 12px;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+        .history-chat-agent-list span {
+            margin-top: 5px;
+            color: #8292a8;
+            font-size: 11px;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .history-chat-agents-empty {
+            display: block;
+        }
         .history-detail-loading {
             display: inline-flex;
             align-items: center;
@@ -769,7 +834,9 @@
                 align-items: stretch;
             }
             .history-list,
-            .history-detail-grid {
+            .history-detail-grid,
+            .history-chat-agents,
+            .history-chat-agent-list {
                 grid-template-columns: 1fr;
             }
             .history-toolbar-note {
