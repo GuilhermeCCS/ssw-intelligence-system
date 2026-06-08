@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://sdk.mercadopago.com https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://js.cloudflare.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://ssw-intelligence-api.onrender.com https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://unpkg.com https://accounts.google.com; media-src 'self' blob:; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://challenges.cloudflare.com https://accounts.google.com; worker-src 'self' blob:;">
+    <!-- Console cleaner: use localStorage.SSW_DEBUG = "1" or ?debug to re-enable logs -->
+    <script src="src/app/ui/console-cleaner.js"></script>
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Environment Variables Injector (carrega primeiro) -->

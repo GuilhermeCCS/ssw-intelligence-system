@@ -3898,13 +3898,29 @@ function getCodigoHTML() {
 
         const AUDIT_CANCEL_MESSAGE = 'A análise foi finalizada por um erro externo. Isso pode acontecer por bloqueio de bots, instabilidade temporária, timeout ou indisponibilidade do site. Fique tranquilo: seu saldo foi mantido. Tente novamente daqui a 5 minutos e, se o erro persistir, fale conosco pelo contato, pelo formulário de dúvidas ou pelo WhatsApp.';
 
+        function getAuditErrorPayload(detail) {
+            if (!detail) return {};
+            if (typeof detail === 'object') return detail;
+            return { message: String(detail) };
+        }
+
         function getAuditErrorDetailText(detail) {
             if (!detail) return '';
             if (typeof detail === 'string') return detail;
             if (typeof detail === 'object') {
-                return detail.message || detail.detail || detail.erro || JSON.stringify(detail);
+                if (typeof detail.detail === 'object') return getAuditErrorDetailText(detail.detail);
+                return detail.message || detail.raw_message || detail.error || detail.detail || detail.erro || JSON.stringify(detail);
             }
             return String(detail);
+        }
+
+        function getAuditErrorStage(detail) {
+            const payload = getAuditErrorPayload(detail);
+            if (payload.stage) return String(payload.stage).toLowerCase();
+            if (payload.detail && typeof payload.detail === 'object' && payload.detail.stage) {
+                return String(payload.detail.stage).toLowerCase();
+            }
+            return '';
         }
 
         function isAntiBotAuditError(value) {
@@ -3930,7 +3946,8 @@ function getCodigoHTML() {
 
         function formatAuditApiError(detail, status) {
             const raw = getAuditErrorDetailText(detail).trim();
-            const clean = raw.replace(/^(Erro IA|Erro de captura):\s*/i, '').trim();
+            const stage = getAuditErrorStage(detail);
+            const clean = raw.replace(/^(Erro IA|Erro de captura|Erro de metricas oficiais|Erro de métricas oficiais|Erro de historico|Erro interno):\s*/i, '').trim();
             const lower = clean.toLowerCase();
 
             const platformCaptchaError = status === 403 ||
@@ -3946,6 +3963,22 @@ function getCodigoHTML() {
 
             if (lower.includes('captcha') || isAntiBotAuditError(clean)) {
                 return 'O site parece estar bloqueando automações legítimas por anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para auditar esse domínio, valide a propriedade e libere o header secreto da SSW no firewall do site.';
+            }
+
+            if (stage === 'pagespeed' || lower.includes('pagespeed') || lower.includes('metricas oficiais') || lower.includes('métricas oficiais')) {
+                return 'A etapa de métricas oficiais do Google falhou e a análise foi cancelada automaticamente para não entregar um relatório incompleto. Seu saldo foi mantido. Tente novamente em alguns minutos.';
+            }
+
+            if (stage === 'ia' || lower.includes('gemini') || lower.includes('ia indispon') || lower.includes('etapa de ia')) {
+                return 'A etapa de IA não conseguiu concluir a leitura do site e a análise foi cancelada automaticamente. Seu saldo foi mantido. Tente novamente em alguns minutos.';
+            }
+
+            if (stage === 'historico') {
+                return 'Não foi possível consultar o histórico necessário para a auditoria, então a análise foi cancelada automaticamente. Seu saldo foi mantido.';
+            }
+
+            if (stage === 'servidor' || status >= 500) {
+                return 'O backend interrompeu a análise por um erro interno antes de gerar o relatório. Seu saldo foi mantido. Tente novamente em alguns minutos.';
             }
 
             if (
@@ -3986,13 +4019,13 @@ function getCodigoHTML() {
             updateUserMenuCircle();
         }
 
-        function showAuditCancelledNotice(reason = '', mode = 'auto') {
+        function showAuditCancelledNotice(reason = '', mode = 'auto', displayMessage = '') {
             const searchContainer = document.querySelector('.search-container');
             const reasonText = String(reason || '').trim();
             const antiBotDetected = isAntiBotAuditError(reasonText);
             const message = antiBotDetected
                 ? 'O site bloqueou a auditoria por uma proteção anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para liberar esse domínio, valide a propriedade e configure o header secreto da SSW no firewall do site.'
-                : AUDIT_CANCEL_MESSAGE;
+                : (String(displayMessage || '').trim() || AUDIT_CANCEL_MESSAGE);
 
             if (!searchContainer) {
                 Toast.warning(message, 10000);
@@ -4034,16 +4067,16 @@ function getCodigoHTML() {
             `;
             searchContainer.appendChild(notice);
             if (typeof lucide !== 'undefined') lucide.createIcons();
-            Toast.warning(antiBotDetected ? 'Bloqueio anti-bot detectado. Seu saldo foi mantido.' : 'Análise cancelada por erro externo. Seu saldo foi mantido.', 10000);
+            Toast.warning(antiBotDetected ? 'Bloqueio anti-bot detectado. Seu saldo foi mantido.' : message, 10000);
         }
 
-        function cancelAuditDueToApiError({ mode = 'auto', reason = '', resetCaptcha = true } = {}) {
+        function cancelAuditDueToApiError({ mode = 'auto', reason = '', displayMessage = '', resetCaptcha = true } = {}) {
             if (resetCaptcha) {
                 if (mode === 'compare') resetCompareCaptcha();
                 else resetAuditCaptcha();
             }
             restoreAuditInputState(mode);
-            showAuditCancelledNotice(reason, mode);
+            showAuditCancelledNotice(reason, mode, displayMessage);
         }
 
         function renderHighScorePraise(data, url) {
@@ -4168,17 +4201,20 @@ function getCodigoHTML() {
                     } else {
                         resetAuditCaptcha();
                         const errorData = await res.json().catch(() => ({}));
-                        const apiError = new Error(formatAuditApiError(errorData.detail, res.status));
+                        const errorDetail = errorData.detail || errorData.error || errorData;
+                        const apiError = new Error(formatAuditApiError(errorDetail, res.status));
                         apiError.isHttpError = true;
                         apiError.status = res.status;
-                        apiError.rawDetail = errorData.detail || '';
+                        apiError.rawDetail = getAuditErrorDetailText(errorDetail);
+                        apiError.userMessage = apiError.message;
                         throw apiError;
                     }
                 } catch (apiError) {
                     if (apiError.isHttpError) {
                         cancelAuditDueToApiError({
                             mode,
-                            reason: apiError.message || apiError.rawDetail || 'Erro ao iniciar auditoria.',
+                            reason: apiError.rawDetail || apiError.message || 'Erro ao iniciar auditoria.',
+                            displayMessage: apiError.userMessage || apiError.message,
                             resetCaptcha: true
                         });
                         return;
@@ -4186,6 +4222,7 @@ function getCodigoHTML() {
                     cancelAuditDueToApiError({
                         mode,
                         reason: apiError.message || 'Falha de conexão com a API.',
+                        displayMessage: 'Não foi possível conectar com a API da SSW agora. A análise foi cancelada antes de gerar o relatório.',
                         resetCaptcha: true
                     });
                     return;
@@ -4402,10 +4439,11 @@ function getCodigoHTML() {
                     checkForAuditResults();
                 }, 500);
             } catch(e) {
-                console.error("Erro na auditoria:", e);
+                window.SSWConsole?.capture?.('error', ['Erro na auditoria', e]);
                 cancelAuditDueToApiError({
                     mode,
                     reason: e.message || 'Erro inesperado durante a auditoria.',
+                    displayMessage: 'A interface interrompeu a renderização do relatório por um erro inesperado. A análise foi cancelada antes de mostrar dados incompletos.',
                     resetCaptcha: true
                 });
                 return;
@@ -4495,7 +4533,10 @@ function getCodigoHTML() {
                 });
                 if (!res.ok) {
                     const errorData = await res.json().catch(() => ({}));
-                    throw new Error(formatAuditApiError(errorData.detail, res.status));
+                    const errorDetail = errorData.detail || errorData.error || errorData;
+                    const compareError = new Error(formatAuditApiError(errorDetail, res.status));
+                    compareError.rawDetail = getAuditErrorDetailText(errorDetail);
+                    throw compareError;
                 }
                 const response = await res.json();
                 console.log("📡 Resposta da API:", response);
@@ -4517,7 +4558,8 @@ function getCodigoHTML() {
                 }
                 cancelAuditDueToApiError({
                     mode: 'compare',
-                    reason: e.message || 'Falha de conexão com a API comparativa.',
+                    reason: e.rawDetail || e.message || 'Falha de conexão com a API comparativa.',
+                    displayMessage: e.message || 'Não foi possível conectar com a API comparativa. A análise foi cancelada.',
                     resetCaptcha: true
                 });
                 return;
