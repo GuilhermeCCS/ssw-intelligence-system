@@ -44,7 +44,7 @@
                     showAuthScreen('login', false);
                 } else if (pathname === 'cadastro') {
                     showAuthScreen('register', false);
-                } else if (pathname && ['home', 'agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
+                } else if (pathname && ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
                     hideAuthScreen();
                     nav(pathname);
                 } else if (!pathname || pathname === '') {
@@ -281,7 +281,7 @@
         }
 
         function showOnlyAuditHomeView() {
-            const views = ['agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            const views = ['agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) el.classList.add('hidden');
@@ -369,7 +369,7 @@
                 }
             }
             // Esconde todas as views
-            const views = ['home', 'agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) {
@@ -409,6 +409,7 @@
             // Header Dinâmico
             const titles = {
                 'agents': 'Gestão de Perfis',
+                'domains': 'Domínios Autorizados',
                 'history': 'Histórico de Análises',
                 'ranking': 'Ranking Global',
                 'precos': 'Planos e Preços',
@@ -418,6 +419,7 @@
                 'home': 'Painel Principal'
             };
             if(view === 'agents') loadManageAgents();
+            if(view === 'domains') loadAuthorizedDomains();
             if(view === 'history') loadAuditHistory();
             if(view === 'ranking') {
                 console.log('🎯 Navegando para ranking');
@@ -2313,7 +2315,7 @@ function getCodigoHTML() {
                 window.history.pushState({}, '', '/home');
             }
             // Esconde TODAS as views primeiro
-            const views = ['home', 'agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) {
@@ -2981,6 +2983,218 @@ function getCodigoHTML() {
         window.openSupportForm = openSupportForm;
         window.closeSupportForm = closeSupportForm;
         window.submitSupportQuestion = submitSupportQuestion;
+
+        let authorizedDomainsCache = [];
+
+        function getAuthorizedDomainApiError(data, fallback) {
+            const detail = data?.detail;
+            if (typeof detail === 'string') return detail;
+            if (detail && typeof detail === 'object') return detail.message || fallback;
+            return fallback;
+        }
+
+        async function copyAuthorizedDomainValue(value) {
+            const text = decodeURIComponent(String(value || ''));
+            try {
+                await navigator.clipboard.writeText(text);
+                Toast.success('Copiado para a área de transferência.');
+            } catch (_) {
+                Toast.info(text, 10000);
+            }
+        }
+
+        function renderAuthorizedDomainSetup(item) {
+            const token = item.verification_token || '';
+            const auditToken = item.audit_token || '';
+            const domain = item.domain || '';
+            const dnsName = item.dns_record_name || `_ssw-verify.${domain}`;
+            const fileUrl = `https://${domain}/.well-known/ssw-verification.txt`;
+            const metaTag = `<meta name="ssw-verification" content="${token}">`;
+            const wafRule = `${item.header_name || 'X-SSW-Audit-Token'} = ${auditToken}`;
+            const inline = value => encodeURIComponent(String(value || ''));
+
+            return [
+                '<div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-5">',
+                    '<div class="rounded-xl border border-white/10 bg-black/20 p-4">',
+                        '<p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Verificação por DNS TXT</p>',
+                        `<p class="mt-2 text-xs text-slate-400">Nome: <code class="text-cyan-200">${safeAuditText(dnsName)}</code></p>`,
+                        `<p class="mt-1 text-xs text-slate-400">Valor: <code class="break-all text-cyan-200">${safeAuditText(token)}</code></p>`,
+                        `<button class="mt-3 text-xs font-bold text-cyan-200 hover:text-white" onclick="copyAuthorizedDomainValue('${inline(`Nome: ${dnsName}\nValor: ${token}`)}')">Copiar DNS</button>`,
+                    '</div>',
+                    '<div class="rounded-xl border border-white/10 bg-black/20 p-4">',
+                        '<p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Verificação por arquivo</p>',
+                        `<p class="mt-2 text-xs text-slate-400">URL: <code class="break-all text-cyan-200">${safeAuditText(fileUrl)}</code></p>`,
+                        `<p class="mt-1 text-xs text-slate-400">Conteúdo: <code class="break-all text-cyan-200">${safeAuditText(token)}</code></p>`,
+                        `<button class="mt-3 text-xs font-bold text-cyan-200 hover:text-white" onclick="copyAuthorizedDomainValue('${inline(token)}')">Copiar token</button>`,
+                    '</div>',
+                    '<div class="rounded-xl border border-white/10 bg-black/20 p-4">',
+                        '<p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Verificação por meta tag</p>',
+                        `<code class="mt-2 block break-all text-xs text-cyan-200">${safeAuditText(metaTag)}</code>`,
+                        `<button class="mt-3 text-xs font-bold text-cyan-200 hover:text-white" onclick="copyAuthorizedDomainValue('${inline(metaTag)}')">Copiar meta tag</button>`,
+                    '</div>',
+                    '<div class="rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-4">',
+                        '<p class="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-200">Regra no firewall/WAF</p>',
+                        `<p class="mt-2 text-xs text-slate-300">Permitir quando o header secreto for:</p>`,
+                        `<code class="mt-2 block break-all text-xs text-emerald-100">${safeAuditText(wafRule)}</code>`,
+                        `<p class="mt-2 text-xs text-slate-400">E quando o User-Agent contiver <code>${safeAuditText(item.user_agent || 'SSW-Intelligence-Auditor/1.0')}</code>.</p>`,
+                        `<button class="mt-3 text-xs font-bold text-emerald-200 hover:text-white" onclick="copyAuthorizedDomainValue('${inline(`${wafRule}\nUser-Agent contém: ${item.user_agent || 'SSW-Intelligence-Auditor/1.0'}`)}')">Copiar regra</button>`,
+                    '</div>',
+                '</div>'
+            ].join('');
+        }
+
+        function renderAuthorizedDomains(items = []) {
+            const list = document.getElementById('authorizedDomainsList');
+            if (!list) return;
+
+            if (!items.length) {
+                list.innerHTML = [
+                    '<div class="history-empty-state">',
+                        '<i data-lucide="shield-check" class="w-6 h-6"></i>',
+                        '<strong>Nenhum domínio autorizado ainda</strong>',
+                        '<p>Adicione o domínio do cliente para gerar o token de verificação e o header secreto da auditoria.</p>',
+                    '</div>'
+                ].join('');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
+
+            list.innerHTML = items.map(item => {
+                const statusClass = item.verified ? 'border-emerald-400/25 bg-emerald-400/[0.04]' : 'border-amber-400/25 bg-amber-400/[0.04]';
+                const statusLabel = item.verified ? 'Verificado' : 'Pendente';
+                const statusText = item.verified
+                    ? `Validado por ${safeAuditText(item.verification_method || 'token')}. As auditorias já usam o header autorizado.`
+                    : 'Publique o token por DNS, arquivo ou meta tag e clique em verificar.';
+                const idArg = encodeURIComponent(String(item.id || ''));
+
+                return [
+                    `<article class="rounded-2xl border ${statusClass} p-5 md:p-6">`,
+                        '<div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">',
+                            '<div>',
+                                `<span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${item.verified ? 'text-emerald-200' : 'text-amber-200'}"><i data-lucide="${item.verified ? 'badge-check' : 'clock'}" class="w-3.5 h-3.5"></i>${statusLabel}</span>`,
+                                `<h3 class="mt-3 text-2xl font-black text-white">${safeAuditText(item.domain)}</h3>`,
+                                `<p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">${statusText}</p>`,
+                            '</div>',
+                            '<div class="flex flex-wrap gap-2">',
+                                `<button class="rounded-lg border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-xs font-bold text-cyan-100 hover:bg-cyan-400/20" onclick="verifyAuthorizedDomain(decodeURIComponent('${idArg}'))">Verificar</button>`,
+                                `<button class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[0.08]" onclick="rotateAuthorizedDomainToken(decodeURIComponent('${idArg}'))">Rotacionar token</button>`,
+                                `<button class="rounded-lg border border-red-400/25 bg-red-400/10 px-3 py-2 text-xs font-bold text-red-100 hover:bg-red-400/20" onclick="deleteAuthorizedDomain(decodeURIComponent('${idArg}'))">Excluir</button>`,
+                            '</div>',
+                        '</div>',
+                        renderAuthorizedDomainSetup(item),
+                    '</article>'
+                ].join('');
+            }).join('');
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        async function loadAuthorizedDomains(showToast = false) {
+            const list = document.getElementById('authorizedDomainsList');
+            if (!list) return;
+
+            if (!USER || !USER.token) {
+                list.innerHTML = `<div class="history-empty-state"><strong>Login necessário</strong><p>Entre na sua conta para gerenciar domínios autorizados.</p><button onclick="showAuthScreen('login')">Fazer login</button></div>`;
+                return;
+            }
+
+            list.innerHTML = '<div class="history-empty-state"><span class="history-loading-dot"></span>Carregando domínios...</div>';
+            try {
+                const res = await fetch(`${API_URL}/api/authorized-domains`, { headers: authHeaders() });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível carregar os domínios.'));
+                authorizedDomainsCache = data.items || [];
+                renderAuthorizedDomains(authorizedDomainsCache);
+                if (showToast) Toast.success('Domínios atualizados.');
+            } catch (error) {
+                console.error('Erro ao carregar domínios autorizados:', error);
+                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Domínios indisponíveis</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p><button onclick="loadAuthorizedDomains(true)">Tentar novamente</button></div>`;
+            }
+        }
+
+        async function createAuthorizedDomain() {
+            if (!USER || !USER.token) {
+                showAuthScreen('login');
+                return;
+            }
+            const input = document.getElementById('authorizedDomainInput');
+            const domain = String(input?.value || '').trim();
+            if (!domain) {
+                Toast.warning('Informe um domínio para autorizar.');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/api/authorized-domains`, {
+                    method: 'POST',
+                    headers: authHeaders({ 'Content-Type': 'application/json' }),
+                    body: JSON.stringify({ domain })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível adicionar este domínio.'));
+                if (input) input.value = '';
+                Toast.success('Domínio adicionado. Publique o token e clique em verificar.');
+                await loadAuthorizedDomains(false);
+            } catch (error) {
+                Toast.error(error.message || 'Erro ao adicionar domínio.');
+            }
+        }
+
+        async function verifyAuthorizedDomain(domainId) {
+            try {
+                Toast.info('Verificando DNS, arquivo e meta tag...', 10000);
+                const res = await fetch(`${API_URL}/api/authorized-domains/${encodeURIComponent(domainId)}/verify`, {
+                    method: 'POST',
+                    headers: authHeaders({ 'Content-Type': 'application/json' }),
+                    body: JSON.stringify({ method: 'all' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Token ainda não encontrado no domínio.'));
+                Toast.success('Domínio verificado. A auditoria autorizada está ativa.');
+                await loadAuthorizedDomains(false);
+            } catch (error) {
+                Toast.warning(error.message || 'Não encontramos o token neste domínio.', 10000);
+            }
+        }
+
+        async function rotateAuthorizedDomainToken(domainId) {
+            if (!confirm('Rotacionar o token de auditoria? Você precisará atualizar a regra no firewall/WAF.')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/authorized-domains/${encodeURIComponent(domainId)}/rotate-token`, {
+                    method: 'POST',
+                    headers: authHeaders()
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível rotacionar o token.'));
+                Toast.success('Token rotacionado. Atualize a regra no firewall.');
+                await loadAuthorizedDomains(false);
+            } catch (error) {
+                Toast.error(error.message || 'Erro ao rotacionar token.');
+            }
+        }
+
+        async function deleteAuthorizedDomain(domainId) {
+            if (!confirm('Excluir este domínio autorizado? As auditorias deixarão de enviar o header secreto para ele.')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/authorized-domains/${encodeURIComponent(domainId)}`, {
+                    method: 'DELETE',
+                    headers: authHeaders()
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível excluir este domínio.'));
+                Toast.success(data.msg || 'Domínio autorizado removido.');
+                await loadAuthorizedDomains(false);
+            } catch (error) {
+                Toast.error(error.message || 'Erro ao excluir domínio.');
+            }
+        }
+
+        window.loadAuthorizedDomains = loadAuthorizedDomains;
+        window.createAuthorizedDomain = createAuthorizedDomain;
+        window.verifyAuthorizedDomain = verifyAuthorizedDomain;
+        window.rotateAuthorizedDomainToken = rotateAuthorizedDomainToken;
+        window.deleteAuthorizedDomain = deleteAuthorizedDomain;
+        window.copyAuthorizedDomainValue = copyAuthorizedDomainValue;
 
         let auditHistoryFilter = 'all';
 
