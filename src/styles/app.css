@@ -377,6 +377,152 @@
             border-color: rgba(34, 211, 238, 0.38);
             background: rgba(34, 211, 238, 0.10);
         }
+        .audit-excellence-result {
+            position: relative;
+            max-width: 980px;
+            margin: 24px auto 72px;
+            padding: clamp(26px, 5vw, 52px);
+            border-radius: 24px;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.11), rgba(255, 255, 255, 0.035)), rgba(2, 6, 14, 0.94);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+            overflow: hidden;
+        }
+        .audit-excellence-result::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 18% 0%, rgba(34, 211, 238, 0.18), transparent 32%);
+        }
+        .audit-excellence-score,
+        .audit-excellence-copy,
+        .audit-excellence-points,
+        .audit-excellence-note,
+        .audit-excellence-actions {
+            position: relative;
+        }
+        .audit-excellence-score {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 132px;
+            height: 132px;
+            border-radius: 999px;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            background: rgba(34, 211, 238, 0.09);
+            margin-bottom: 28px;
+        }
+        .audit-excellence-score strong {
+            color: #f8fafc;
+            font-size: 42px;
+            line-height: 1;
+            font-weight: 950;
+        }
+        .audit-excellence-score span,
+        .audit-excellence-kicker {
+            color: #a5f3fc;
+            font-size: 10px;
+            font-weight: 850;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .audit-excellence-score span {
+            margin-top: 8px;
+            text-align: center;
+        }
+        .audit-excellence-kicker {
+            display: inline-flex;
+            margin-bottom: 12px;
+        }
+        .audit-excellence-copy h2 {
+            max-width: 780px;
+            margin: 0;
+            color: #ffffff;
+            font-size: clamp(32px, 6vw, 58px);
+            line-height: 1.02;
+            font-weight: 950;
+        }
+        .audit-excellence-copy p {
+            max-width: 760px;
+            margin: 18px 0 0;
+            color: #cbd5e1;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+        .audit-excellence-copy small {
+            display: block;
+            margin-top: 14px;
+            color: #8292a8;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .audit-excellence-points {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 30px;
+        }
+        .audit-excellence-points article {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.035);
+            color: #dbeafe;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+        .audit-excellence-points i {
+            flex-shrink: 0;
+            margin-top: 2px;
+            color: #22d3ee;
+        }
+        .audit-excellence-note {
+            margin-top: 22px;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 13, 22, 0.72);
+        }
+        .audit-excellence-note strong {
+            color: #f8fafc;
+            font-size: 13px;
+        }
+        .audit-excellence-note p {
+            margin: 6px 0 0;
+            color: #8292a8;
+            font-size: 12px;
+            line-height: 1.65;
+        }
+        .audit-excellence-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .audit-excellence-actions button {
+            border: 1px solid rgba(34, 211, 238, 0.28);
+            background: rgba(34, 211, 238, 0.1);
+            color: #e0faff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 850;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+        .audit-excellence-actions button:first-child {
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            color: #020617;
+            border-color: transparent;
+        }
+        .audit-excellence-actions button:hover {
+            transform: translateY(-1px);
+            border-color: rgba(34, 211, 238, 0.55);
+        }
         .history-hero,
         .history-toolbar,
         .history-card,
@@ -1014,8 +1160,17 @@
             .history-detail-grid,
             .history-chat-agents,
             .history-chat-agent-list,
-            .history-action-list {
+            .history-action-list,
+            .audit-excellence-points {
                 grid-template-columns: 1fr;
+            }
+            .audit-excellence-result {
+                margin: 16px auto 48px;
+                border-radius: 18px;
+            }
+            .audit-excellence-score {
+                width: 108px;
+                height: 108px;
             }
             .history-vulnerability-detail,
             .history-action-checklist {

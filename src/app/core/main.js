@@ -3620,6 +3620,65 @@ function getCodigoHTML() {
             showAuditCancelledNotice(reason, mode);
         }
 
+        function renderHighScorePraise(data, url) {
+            const results = document.getElementById('auditResults');
+            if (!results) return;
+            const technical = data?.resultado?.technical_audit || {};
+            const praise = data?.praise || {};
+            const score = Number(technical.score);
+            const scoreLabel = Number.isFinite(score) ? Math.round(score) : '90+';
+            const points = Array.isArray(praise.positive_points) && praise.positive_points.length
+                ? praise.positive_points.slice(0, 5)
+                : [
+                    'Experiencia consistente e acima da media.',
+                    'Estrutura tecnica madura para navegacao e confianca.',
+                    'Base visual e funcional preparada para sustentar conversao.'
+                ];
+            const host = String(url || '').replace(/^https?:\/\//, '').split('/')[0];
+
+            clearActiveAuditSession();
+            auditData = null;
+            currentAuditUrl = '';
+            auditSnapshotTabOpened = false;
+            hasUnsavedAuditSession = false;
+
+            results.innerHTML = [
+                '<section class="audit-excellence-result">',
+                    '<div class="audit-excellence-score">',
+                        `<strong>${safeAuditText(scoreLabel)}</strong>`,
+                        '<span>score de excelencia</span>',
+                    '</div>',
+                    '<div class="audit-excellence-copy">',
+                        '<span class="audit-excellence-kicker">Analise concluida sem relatorio tecnico</span>',
+                        `<h2>${safeAuditText(praise.headline || 'Site em nivel de excelencia')}</h2>`,
+                        `<p>${safeAuditText(praise.message || technical.executive_summary || 'A S.S.W Intelligence identificou uma experiencia madura, consistente e acima do padrao esperado para a URL analisada.')}</p>`,
+                        `<small>${safeAuditText(praise.score_comment || `A URL ${host} esta na faixa premium da auditoria.`)}</small>`,
+                    '</div>',
+                    '<div class="audit-excellence-points">',
+                        points.map(point => [
+                            '<article>',
+                                '<i data-lucide="check-circle-2" class="w-4 h-4"></i>',
+                                `<span>${safeAuditText(point)}</span>`,
+                            '</article>'
+                        ].join('')).join(''),
+                    '</div>',
+                    '<div class="audit-excellence-note">',
+                        '<strong>Nenhum relatorio foi gerado.</strong>',
+                        '<p>Como o score ficou em 90 ou mais, a plataforma nao salvou esta analise no historico e nao liberou PDF. O resultado aqui e apenas o reconhecimento positivo da IA.</p>',
+                    '</div>',
+                    '<div class="audit-excellence-actions">',
+                        '<button type="button" onclick="showSimplifiedSearch()">Analisar outro site</button>',
+                        '<button type="button" onclick="nav(\'ranking\')">Ver ranking</button>',
+                    '</div>',
+                '</section>'
+            ].join('');
+            results.classList.remove('hidden');
+            document.getElementById('heroSection')?.classList.add('hidden');
+            document.getElementById('emptyStateCards')?.classList.add('hidden');
+            adjustFooterPosition(true);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
         async function runAudit() {
             showOnlyAuditHomeView();
             const url = document.getElementById('auditUrl').value;
@@ -3706,6 +3765,19 @@ function getCodigoHTML() {
                 }
                 stopAuditLoadingAnimation();
                 document.getElementById('auditLoading').classList.add('hidden');
+                if (data.success_only || data.high_score) {
+                    USER.credits = data.novo_saldo;
+                    if (typeof secureStorage !== 'undefined') {
+                        await secureStorage.setItem('USER', USER);
+                    } else {
+                        localStorage.setItem('USER', JSON.stringify(USER));
+                    }
+                    updateUserMenuCircle();
+                    showOnlyAuditHomeView();
+                    renderHighScorePraise(data, url);
+                    resetAuditCaptcha();
+                    return;
+                }
                 // Criar estrutura HTML inicial para todas as seções
                 showOnlyAuditHomeView();
                 createAuditResultsStructureModern();
