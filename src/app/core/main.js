@@ -5,8 +5,8 @@
         let auditSnapshotTabOpened = false;
         const AUDIT_LEAVE_MESSAGE = 'Voce esta saindo da auditoria atual. Se sair agora, pode perder o relatorio e o chat com as personas. O ideal e salvar o PDF ou fazer suas perguntas a persona antes de sair.';
         const FRONTEND_PLAN_LIMITS = {
-            starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 15, personaLimit: 3 },
-            pro: { chatInputTokens: 6000, chatOutputTokens: 450, historyLimit: 100, personaLimit: 8 }
+            starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 10, historyRetentionDays: 30, personaLimit: 3 },
+            pro: { chatInputTokens: 6000, chatOutputTokens: 450, historyLimit: 20, historyRetentionDays: 90, personaLimit: 8 }
         };
         function normalizeUserPlan(plan) {
             const value = String(plan || 'starter').trim().toLowerCase();
@@ -267,6 +267,13 @@
             if (typeof agentChatActive !== 'undefined') agentChatActive = false;
         }
 
+        function hideHistorySurfaces() {
+            const historyView = document.getElementById('view-history');
+            const historyDetail = document.getElementById('auditHistoryDetail');
+            if (historyView) historyView.classList.add('hidden');
+            if (historyDetail) historyDetail.classList.add('hidden');
+        }
+
         function clearActiveAuditSession() {
             hasUnsavedAuditSession = false;
             hideAuditChatSurfaces();
@@ -336,6 +343,7 @@
             } else if (view !== 'home') {
                 hideAuditChatSurfaces();
             }
+            if (view !== 'history') hideHistorySurfaces();
             window.currentView = view;
 
             // Atualiza a URL com caminho limpo (sem hash)
@@ -2304,7 +2312,7 @@ function getCodigoHTML() {
                 window.history.pushState({}, '', '/home');
             }
             // Esconde TODAS as views primeiro
-            const views = ['home', 'agents', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            const views = ['home', 'agents', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) {
@@ -3040,7 +3048,7 @@ function getCodigoHTML() {
                 });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(data.detail || 'Nao foi possivel carregar o historico.');
-                renderAuditHistoryList(data.items || []);
+                renderAuditHistoryList(data.items || [], data);
                 if (showToast) Toast.success('Historico atualizado.');
             } catch (error) {
                 console.error('Erro ao carregar historico:', error);
@@ -3050,9 +3058,16 @@ function getCodigoHTML() {
             }
         }
 
-        function renderAuditHistoryList(items) {
+        function renderAuditHistoryList(items, meta = {}) {
             const list = document.getElementById('auditHistoryList');
             if (!list) return;
+            const note = document.querySelector('.history-toolbar-note span');
+            if (note) {
+                const plan = getUserPlanLabel(meta.plan || getUserPlan());
+                const limit = meta.limit || getFrontendPlanLimits(meta.plan).historyLimit;
+                const retention = meta.retention_days || getFrontendPlanLimits(meta.plan).historyRetentionDays;
+                note.textContent = `${plan}: ate ${limit} analises salvas por ${retention} dias.`;
+            }
 
             if (!items.length) {
                 list.innerHTML = [
@@ -3092,10 +3107,37 @@ function getCodigoHTML() {
                         '<div class="history-card-actions">',
                             `<button onclick="openAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Ver detalhes</button>`,
                             item.url && item.audit_type !== 'compare' ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Analisar novamente</button>` : '',
+                            `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir</button>`,
                         '</div>',
                     '</article>'
                 ].join('');
             }).join('');
+        }
+
+        async function deleteAuditHistoryItem(historyId) {
+            const runDelete = async () => {
+                try {
+                    const res = await fetch(`${API_URL}/api/audits/history/${encodeURIComponent(historyId)}`, {
+                        method: 'DELETE',
+                        headers: authHeaders()
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) throw new Error(data.detail || 'Nao foi possivel excluir esta analise.');
+                    const detail = document.getElementById('auditHistoryDetail');
+                    if (detail) detail.classList.add('hidden');
+                    await loadAuditHistory(false);
+                    Toast.success(data.msg || 'Analise removida do historico.');
+                } catch (error) {
+                    console.error('Erro ao excluir historico:', error);
+                    Toast.error(error.message || 'Erro ao excluir analise.');
+                }
+            };
+
+            if (typeof showConfirmDialog === 'function') {
+                showConfirmDialog('Deseja excluir esta analise do historico? Esta acao nao pode ser desfeita.', runDelete);
+            } else if (confirm('Deseja excluir esta analise do historico?')) {
+                await runDelete();
+            }
         }
 
         function normalizeHistoryArray(value) {
@@ -3356,6 +3398,7 @@ function getCodigoHTML() {
                     renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
                         item.url ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Rodar novamente</button>` : '',
+                        `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir analise</button>`,
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
                     '</div>',
                 '</article>'
@@ -3399,6 +3442,7 @@ function getCodigoHTML() {
                     '</div>',
                     renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
+                        `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir analise</button>`,
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
                     '</div>',
                 '</article>'
@@ -3491,6 +3535,7 @@ function getCodigoHTML() {
         window.setAuditHistoryFilter = setAuditHistoryFilter;
         window.loadAuditHistory = loadAuditHistory;
         window.openAuditHistoryItem = openAuditHistoryItem;
+        window.deleteAuditHistoryItem = deleteAuditHistoryItem;
         window.rerunAuditFromHistory = rerunAuditFromHistory;
 
         function abrirModalNgrok() {

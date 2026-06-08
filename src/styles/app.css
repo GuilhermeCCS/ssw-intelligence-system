@@ -600,6 +600,17 @@
             border-color: rgba(34, 211, 238, 0.58);
             background: rgba(34, 211, 238, 0.16);
         }
+        .history-card-actions .history-delete-btn,
+        .history-detail-actions .history-delete-btn {
+            border-color: rgba(248, 113, 113, 0.24);
+            background: rgba(248, 113, 113, 0.08);
+            color: #fecaca;
+        }
+        .history-card-actions .history-delete-btn:hover,
+        .history-detail-actions .history-delete-btn:hover {
+            border-color: rgba(248, 113, 113, 0.46);
+            background: rgba(248, 113, 113, 0.14);
+        }
         .history-toolbar {
             display: flex;
             align-items: center;
