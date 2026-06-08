@@ -70,6 +70,80 @@
             color: #f0f4ff;
             overflow-x: hidden;
         }
+        .nav-cluster {
+            position: relative;
+        }
+        .nav-cluster-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            color: #f8fafc;
+            font-size: 15px;
+            font-weight: 650;
+            transition: all .18s ease;
+        }
+        .nav-cluster-trigger svg {
+            color: #94a3b8;
+            transition: color .18s ease;
+        }
+        .nav-cluster:hover .nav-cluster-trigger {
+            background: rgba(15, 23, 42, .72);
+            border-color: rgba(148, 163, 184, .22);
+        }
+        .nav-cluster:hover .nav-cluster-trigger svg {
+            color: #22d3ee;
+        }
+        .nav-cluster-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            z-index: 80;
+            display: none;
+            min-width: 235px;
+            padding: 8px;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, .18);
+            background: rgba(2, 6, 23, .96);
+            box-shadow: 0 22px 70px rgba(0, 0, 0, .36);
+            backdrop-filter: blur(18px);
+        }
+        .nav-cluster-menu::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -12px;
+            height: 12px;
+        }
+        .nav-cluster:hover .nav-cluster-menu,
+        .nav-cluster:focus-within .nav-cluster-menu {
+            display: grid;
+            gap: 4px;
+        }
+        .nav-cluster-menu button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 650;
+            text-align: left;
+            transition: all .18s ease;
+        }
+        .nav-cluster-menu button:hover {
+            background: rgba(34, 211, 238, .10);
+            color: #ffffff;
+        }
+        .nav-cluster-menu button svg {
+            color: #67e8f9;
+        }
         /* Sobrescreve fundo para página de tutorial - REGRAS MAIS FORTES */
         body:has(#view-tutorial:not(.hidden)) {
             background-color: #020408 !important;
@@ -349,6 +423,23 @@
         .audit-cancel-reason {
             margin-top: 8px !important;
             color: #94a3b8 !important;
+        }
+        .audit-cancel-guidance {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            background: rgba(34, 211, 238, 0.055);
+        }
+        .audit-cancel-guidance strong {
+            margin-bottom: 4px;
+            color: #cffafe;
+            font-size: 12px;
+        }
+        .audit-cancel-guidance code {
+            color: #67e8f9;
+            font-size: 11px;
+            word-break: break-word;
         }
         .audit-cancel-actions {
             display: flex;

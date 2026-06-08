@@ -163,33 +163,36 @@
             </div>
             <!-- Center: Menu Navegação -->
             <nav class="hidden md:flex items-center gap-3">
-                <button onclick="showSimplifiedSearch()" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="file-search" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Analisar</span>
-                </button>
-                <button onclick="nav('agents')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Agents</span>
-                </button>
-                <button onclick="nav('domains')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Domínios</span>
-                </button>
-                <button onclick="nav('history')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Histórico</span>
-                </button>
-                <button onclick="nav('ranking')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Ranking</span>
-                </button>
+                <div class="nav-cluster group">
+                    <button type="button" class="nav-cluster-trigger">
+                        <i data-lucide="scan-search" class="w-5 h-5"></i>
+                        <span>Central de Auditoria</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <div class="nav-cluster-menu">
+                        <button onclick="showSimplifiedSearch()"><i data-lucide="file-search" class="w-4 h-4"></i>Analisar site</button>
+                        <button onclick="nav('history')"><i data-lucide="history" class="w-4 h-4"></i>Histórico</button>
+                        <button onclick="nav('agents')"><i data-lucide="users" class="w-4 h-4"></i>Agents</button>
+                    </div>
+                </div>
+                <div class="nav-cluster group">
+                    <button type="button" class="nav-cluster-trigger">
+                        <i data-lucide="trophy" class="w-5 h-5"></i>
+                        <span>Autoridade Digital</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <div class="nav-cluster-menu">
+                        <button onclick="nav('ranking')"><i data-lucide="bar-chart-3" class="w-4 h-4"></i>Ranking premium</button>
+                        <button onclick="nav('domains')"><i data-lucide="shield-check" class="w-4 h-4"></i>Domínios autorizados</button>
+                    </div>
+                </div>
                 <button onclick="nav('tutorial')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
                     <i data-lucide="book-open" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Tutorial</span>
+                    <span class="hidden lg:inline">Guia SSW</span>
                 </button>
                 <button onclick="nav('precos')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
                     <i data-lucide="credit-card" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Preços</span>
+                    <span class="hidden lg:inline">Planos</span>
                 </button>
             </nav>
             <!-- Right: User Menu Circle -->
@@ -248,26 +251,29 @@
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden hidden" onclick="toggleSidebar()"></div>
     <div id="mobileMenuDropdown" class="fixed top-20 left-0 right-0 bg-slate-900 border-b border-slate-800 z-30 hidden md:hidden transform -translate-y-full transition-transform duration-300">
         <nav class="flex flex-col p-4 space-y-2">
+            <p class="px-2 pt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Central de Auditoria</p>
             <button onclick="showSimplifiedSearch(); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
                 <i data-lucide="file-search" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Analisar
-            </button>
-            <button onclick="nav('agents'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-accent"></i> Gerenciar Agents
-            </button>
-            <button onclick="nav('domains'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="shield-check" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Domínios Autorizados
             </button>
             <button onclick="nav('history'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
                 <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Histórico
             </button>
-            <button onclick="nav('ranking'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-yellow-400"></i> Ranking Global
+            <button onclick="nav('agents'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-accent"></i> Agents
             </button>
+            <p class="px-2 pt-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Autoridade Digital</p>
+            <button onclick="nav('ranking'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-yellow-400"></i> Ranking Premium
+            </button>
+            <button onclick="nav('domains'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                <i data-lucide="shield-check" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Domínios Autorizados
+            </button>
+            <p class="px-2 pt-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Conta e Suporte</p>
             <button onclick="nav('tutorial'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="book-open" class="w-5 h-5 text-slate-400 group-hover:text-cyber"></i> Como Usar
+                <i data-lucide="book-open" class="w-5 h-5 text-slate-400 group-hover:text-cyber"></i> Guia SSW
             </button>
             <button onclick="nav('precos'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="credit-card" class="w-5 h-5 text-slate-400 group-hover:text-green-400"></i> Planos e Preços
+                <i data-lucide="credit-card" class="w-5 h-5 text-slate-400 group-hover:text-green-400"></i> Planos
             </button>
         </nav>
     </div>
@@ -475,15 +481,25 @@
                     <div class="history-hero-copy">
                         <span>Acesso autorizado</span>
                         <h2>Domínios autorizados</h2>
-                        <p>Valide a propriedade do domínio e libere auditorias com User-Agent oficial e header secreto configurado no firewall do site.</p>
+                        <p>Use esta área apenas quando a auditoria normal for bloqueada por anti-bot, WAF ou Cloudflare. Primeiro tente analisar; se houver bloqueio, valide o domínio e libere a SSW no firewall do site.</p>
                     </div>
-                    <button onclick="loadAuthorizedDomains(true)" class="history-refresh-btn">
-                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                        Atualizar
-                    </button>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="abrirTutorialDominioAutorizado()" class="history-refresh-btn">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            Ver tutorial
+                        </button>
+                        <button onclick="loadAuthorizedDomains(true)" class="history-refresh-btn">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                            Atualizar
+                        </button>
+                    </div>
                 </header>
 
                 <section class="glass-panel p-6 md:p-8 rounded-2xl border border-white/10">
+                    <div class="mb-6 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.04] p-4">
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Fluxo correto</p>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-300">A SSW sempre tenta auditar normalmente primeiro. A autorização de domínio entra como plano de desbloqueio quando o site do cliente recusa automações legítimas. Assim, sites públicos continuam funcionando sem configuração extra.</p>
+                    </div>
                     <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6">
                         <div>
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Domínio do cliente</label>
@@ -493,7 +509,7 @@
                                     Adicionar
                                 </button>
                             </div>
-                            <p class="mt-3 text-xs leading-relaxed text-slate-400">Depois de verificado, qualquer análise desse domínio ou subdomínio usa automaticamente o token autorizado.</p>
+                            <p class="mt-3 text-xs leading-relaxed text-slate-400">Depois de verificado, a SSW usa o token autorizado somente quando a auditoria normal falhar por bloqueio de acesso.</p>
                         </div>
                         <div class="rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-4">
                             <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Header enviado na auditoria</p>
@@ -585,6 +601,12 @@
                                         <span class="flex items-center gap-2">
                                             <i data-lucide="globe-2" class="w-4 h-4"></i>
                                             Ngrok / Localhost
+                                        </span>
+                                    </button>
+                                    <button onclick="showTutorialSection('dominios-autorizados')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
+                                        <span class="flex items-center gap-2">
+                                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                            Domínios Autorizados
                                         </span>
                                     </button>
                                     <button onclick="showTutorialSection('batalha-comparativa')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
@@ -891,7 +913,152 @@
                                     </div>
                                 </div>
                             </section>
-                            <!-- SEÇÃO 3: Análise Comparativa -->
+                            <!-- SEÇÃO 3: Domínios Autorizados -->
+                            <section id="dominios-autorizados" class="hidden scroll-mt-24">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+                                    <div>
+                                        <p class="text-cyan-300 text-xs font-bold uppercase tracking-[0.2em] mb-3">Sites com anti-bot</p>
+                                        <h2 class="text-3xl font-semibold text-white">Como liberar uma auditoria com domínio autorizado</h2>
+                                        <p class="text-slate-400 text-base leading-relaxed mt-3 max-w-2xl">
+                                            Esta configuração não é obrigatória para sites públicos comuns. Ela existe para clientes que usam Cloudflare, WAF, captcha, proteção anti-bot ou firewall que bloqueia navegadores automatizados durante a análise.
+                                        </p>
+                                    </div>
+                                    <button onclick="nav('domains')" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded border border-cyan-500 transition-colors no-print">
+                                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                        Configurar domínio
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                    <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
+                                        <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
+                                            <i data-lucide="search-check" class="w-4 h-4 text-cyan-300"></i>
+                                        </div>
+                                        <h3 class="text-white font-semibold mb-2">Primeiro tente normal</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">A SSW sempre tenta acessar o site sem exigir configuração extra. Se a análise concluir, você não precisa autorizar domínio.</p>
+                                    </div>
+                                    <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
+                                        <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
+                                            <i data-lucide="shield-alert" class="w-4 h-4 text-cyan-300"></i>
+                                        </div>
+                                        <h3 class="text-white font-semibold mb-2">Use quando houver bloqueio</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">Se o site bloquear automação legítima, a tela de análise vai orientar o usuário a validar o domínio e liberar a SSW no firewall.</p>
+                                    </div>
+                                    <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
+                                        <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
+                                            <i data-lucide="key-round" class="w-4 h-4 text-cyan-300"></i>
+                                        </div>
+                                        <h3 class="text-white font-semibold mb-2">Header secreto</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">Após validar propriedade, a SSW envia um User-Agent oficial e um header secreto para o firewall reconhecer a auditoria.</p>
+                                    </div>
+                                </div>
+
+                                <div class="prose prose-invert max-w-none">
+                                    <h3 class="text-xl font-semibold text-white mb-4">Quando usar esta configuração</h3>
+                                    <div class="border border-amber-400/20 bg-amber-400/[0.04] rounded-xl p-5 mb-8">
+                                        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                            Use domínio autorizado quando a auditoria falhar por bloqueio externo: tela de desafio, captcha, Cloudflare, WAF, erro de bot, timeout provocado por proteção ou resposta recusada pelo servidor. Não use isso como primeiro passo para todos os sites.
+                                        </p>
+                                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-300">
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> O site pertence a você ou ao seu cliente.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> Você tem acesso ao DNS, ao código do site ou ao firewall/WAF.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> A auditoria normal falhou por bloqueio de acesso.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> O objetivo é liberar apenas a auditoria legítima da SSW.</li>
+                                        </ul>
+                                    </div>
+
+                                    <h3 class="text-xl font-semibold text-white mb-4">Passo a passo recomendado</h3>
+                                    <div class="space-y-5 mb-10">
+                                        <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
+                                            <div class="flex items-start gap-4">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">1</span>
+                                                <div class="min-w-0 flex-1">
+                                                    <h4 class="text-white font-semibold mb-2">Tente realizar a análise normalmente</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed">Cole a URL na tela de análise e inicie a auditoria. Se o site abrir e a análise terminar, não configure nada. Se houver bloqueio, a SSW cancela a auditoria, preserva o saldo e mostra a orientação correta.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
+                                            <div class="flex items-start gap-4">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">2</span>
+                                                <div class="min-w-0 flex-1">
+                                                    <h4 class="text-white font-semibold mb-2">Adicione o domínio em Autoridade Digital</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Acesse <strong class="text-white">Autoridade Digital > Domínios Autorizados</strong>, informe apenas o domínio principal e salve.</p>
+                                                    <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-cyan-200 overflow-x-auto">exemplo.com.br</code>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
+                                            <div class="flex items-start gap-4">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">3</span>
+                                                <div class="min-w-0 flex-1">
+                                                    <h4 class="text-white font-semibold mb-2">Comprove que você controla o domínio</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Escolha uma das três formas de verificação exibidas pela plataforma: DNS TXT, arquivo público ou meta tag no HTML.</p>
+                                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                                        <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">DNS TXT</span><code class="text-cyan-200">_ssw-verify</code></div>
+                                                        <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">Arquivo</span><code class="text-cyan-200">/.well-known/</code></div>
+                                                        <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">Meta tag</span><code class="text-cyan-200">ssw-verification</code></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
+                                            <div class="flex items-start gap-4">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">4</span>
+                                                <div class="min-w-0 flex-1">
+                                                    <h4 class="text-white font-semibold mb-2">Clique em verificar</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed">Depois de publicar o token, volte para a plataforma e clique em <strong class="text-white">Verificar</strong>. Quando o domínio ficar validado, a SSW passa a ter permissão técnica para usar o header secreto em tentativas de desbloqueio.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
+                                            <div class="flex items-start gap-4">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">5</span>
+                                                <div class="min-w-0 flex-1">
+                                                    <h4 class="text-white font-semibold mb-2">Libere o header e o User-Agent no firewall</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">No Cloudflare, WAF, firewall ou proteção anti-bot do site, crie uma regra para permitir a requisição quando ela vier com o header secreto e o User-Agent oficial da SSW.</p>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                                        <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-cyan-200 overflow-x-auto">X-SSW-Audit-Token: token_do_domínio</code>
+                                                        <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-cyan-200 overflow-x-auto">User-Agent contém: SSW-Intelligence-Auditor/1.0</code>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
+                                            <div class="flex items-start gap-4">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">6</span>
+                                                <div class="min-w-0 flex-1">
+                                                    <h4 class="text-white font-semibold mb-2">Rode a auditoria novamente</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed">A SSW tentará a auditoria normal. Se o bloqueio continuar, ela fará uma nova tentativa usando o header autorizado daquele domínio. O saldo continua protegido em falhas externas.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h3 class="text-xl font-semibold text-white mb-4">O que entregar ao dono do site</h3>
+                                    <div class="border border-cyan-400/20 bg-cyan-400/[0.04] rounded-xl p-5 mb-8">
+                                        <p class="text-slate-300 text-sm leading-relaxed mb-4">Se o site for de um cliente, envie um pedido simples para a equipe técnica:</p>
+                                        <div class="rounded-xl border border-white/10 bg-black/25 p-4">
+                                            <p class="text-slate-300 text-sm leading-relaxed">"Precisamos liberar a auditoria legítima da SSW Intelligence. Por favor, permita requisições que tenham o header <code class="text-cyan-200">X-SSW-Audit-Token</code> com o token informado na plataforma e User-Agent contendo <code class="text-cyan-200">SSW-Intelligence-Auditor/1.0</code>. Essa liberação deve valer apenas para o domínio validado."</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/70">
+                                        <h3 class="text-lg font-semibold text-white mb-3 flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-cyan-300"></i> Segurança da liberação</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed mb-3">Não crie uma regra ampla para liberar qualquer bot. A liberação deve depender do header secreto e do User-Agent oficial. Se suspeitar de exposição do token, use a opção de rotacionar token na tela de domínios autorizados.</p>
+                                        <button onclick="nav('domains')" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold transition-colors">
+                                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                            Abrir domínios autorizados
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- SEÇÃO 4: Análise Comparativa -->
                             <section id="batalha-comparativa" class="hidden scroll-mt-24">
                                 <div class="flex justify-between items-center mb-6">
                                     <h2 class="text-2xl font-semibold text-white">Análise Comparativa</h2>

@@ -62,7 +62,7 @@
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
                 // Esconder todas as seções
-                const sections = ['auditoria-simples', 'ngrok-localhost', 'batalha-comparativa', 'gestao-agents', 'relatorios-insights'];
+                const sections = ['auditoria-simples', 'ngrok-localhost', 'dominios-autorizados', 'batalha-comparativa', 'gestao-agents', 'relatorios-insights'];
                 sections.forEach(id => {
                     const section = document.getElementById(id);
                     if (section) {
@@ -2876,6 +2876,20 @@ function getCodigoHTML() {
             }, 60);
         }
 
+        function abrirTutorialDominioAutorizado() {
+            nav('tutorial');
+            setTimeout(() => {
+                if (typeof showTutorialSection === 'function') {
+                    showTutorialSection('dominios-autorizados');
+                }
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }, 60);
+        }
+
+        window.abrirTutorialDominioAutorizado = abrirTutorialDominioAutorizado;
+
         function positionLocalAuditHelp(mode = 'auto') {
             const help = document.getElementById('localAuditHelp');
             const normalSearchBar = document.getElementById('normalSearchBar');
@@ -3052,7 +3066,7 @@ function getCodigoHTML() {
                     '<div class="history-empty-state">',
                         '<i data-lucide="shield-check" class="w-6 h-6"></i>',
                         '<strong>Nenhum domínio autorizado ainda</strong>',
-                        '<p>Adicione o domínio do cliente para gerar o token de verificação e o header secreto da auditoria.</p>',
+                        '<p>Adicione um domínio somente quando a auditoria normal for bloqueada por anti-bot, WAF ou Cloudflare. A plataforma vai gerar o token de verificação e o header secreto para a liberação técnica.</p>',
                     '</div>'
                 ].join('');
                 if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -3063,7 +3077,7 @@ function getCodigoHTML() {
                 const statusClass = item.verified ? 'border-emerald-400/25 bg-emerald-400/[0.04]' : 'border-amber-400/25 bg-amber-400/[0.04]';
                 const statusLabel = item.verified ? 'Verificado' : 'Pendente';
                 const statusText = item.verified
-                    ? `Validado por ${safeAuditText(item.verification_method || 'token')}. As auditorias já usam o header autorizado.`
+                    ? `Validado por ${safeAuditText(item.verification_method || 'token')}. O header autorizado será usado apenas se a auditoria normal for bloqueada.`
                     : 'Publique o token por DNS, arquivo ou meta tag e clique em verificar.';
                 const idArg = encodeURIComponent(String(item.id || ''));
 
@@ -3150,7 +3164,7 @@ function getCodigoHTML() {
                 });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Token ainda não encontrado no domínio.'));
-                Toast.success('Domínio verificado. A auditoria autorizada está ativa.');
+                Toast.success('Domínio verificado. O fallback autorizado está ativo para bloqueios anti-bot.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
                 Toast.warning(error.message || 'Não encontramos o token neste domínio.', 10000);
@@ -3174,7 +3188,7 @@ function getCodigoHTML() {
         }
 
         async function deleteAuthorizedDomain(domainId) {
-            if (!confirm('Excluir este domínio autorizado? As auditorias deixarão de enviar o header secreto para ele.')) return;
+            if (!confirm('Excluir este domínio autorizado? A SSW deixará de usar o header secreto como fallback para ele.')) return;
             try {
                 const res = await fetch(`${API_URL}/api/authorized-domains/${encodeURIComponent(domainId)}`, {
                     method: 'DELETE',
@@ -3893,13 +3907,45 @@ function getCodigoHTML() {
             return String(detail);
         }
 
+        function isAntiBotAuditError(value) {
+            const lower = getAuditErrorDetailText(value).toLowerCase();
+            return [
+                'anti-bot',
+                'antibot',
+                'bot protection',
+                'bot detected',
+                'bot blocked',
+                'bloqueio',
+                'bloqueado',
+                'cloudflare',
+                'challenge',
+                'waf',
+                'firewall',
+                'checking your browser',
+                'private access token',
+                'ddos protection',
+                'access denied'
+            ].some(term => lower.includes(term));
+        }
+
         function formatAuditApiError(detail, status) {
             const raw = getAuditErrorDetailText(detail).trim();
             const clean = raw.replace(/^(Erro IA|Erro de captura):\s*/i, '').trim();
             const lower = clean.toLowerCase();
 
-            if (status === 403 || lower.includes('captcha')) {
+            const platformCaptchaError = status === 403 ||
+                lower.includes('turnstile') ||
+                lower.includes('captcha inválido') ||
+                lower.includes('captcha invalido') ||
+                lower.includes('verificação de segurança') ||
+                lower.includes('verificacao de seguranca');
+
+            if (platformCaptchaError) {
                 return 'A verificação de segurança expirou ou ficou inválida. Recarregue o captcha e tente novamente.';
+            }
+
+            if (lower.includes('captcha') || isAntiBotAuditError(clean)) {
+                return 'O site parece estar bloqueando automações legítimas por anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para auditar esse domínio, valide a propriedade e libere o header secreto da SSW no firewall do site.';
             }
 
             if (
@@ -3942,30 +3988,45 @@ function getCodigoHTML() {
 
         function showAuditCancelledNotice(reason = '', mode = 'auto') {
             const searchContainer = document.querySelector('.search-container');
+            const reasonText = String(reason || '').trim();
+            const antiBotDetected = isAntiBotAuditError(reasonText);
+            const message = antiBotDetected
+                ? 'O site bloqueou a auditoria por uma proteção anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para liberar esse domínio, valide a propriedade e configure o header secreto da SSW no firewall do site.'
+                : AUDIT_CANCEL_MESSAGE;
+
             if (!searchContainer) {
-                Toast.warning(AUDIT_CANCEL_MESSAGE, 10000);
+                Toast.warning(message, 10000);
                 return;
             }
 
             const oldNotice = document.getElementById('auditCancelNotice');
             if (oldNotice) oldNotice.remove();
 
-            const reasonText = String(reason || '').trim();
             const technicalReason = reasonText && !reasonText.toLowerCase().includes('captcha')
                 ? `<p class="audit-cancel-reason">Motivo técnico informado: ${safeAuditText(reasonText)}</p>`
+                : '';
+            const antiBotGuidance = antiBotDetected
+                ? `
+                    <div class="audit-cancel-guidance">
+                        <strong>Como resolver</strong>
+                        <p>Peça ao dono do site para validar o domínio na SSW e permitir requisições com o header <code>X-SSW-Audit-Token</code> e User-Agent contendo <code>SSW-Intelligence-Auditor/1.0</code>.</p>
+                    </div>
+                `
                 : '';
 
             const notice = document.createElement('div');
             notice.id = 'auditCancelNotice';
             notice.className = 'audit-cancel-notice';
             notice.innerHTML = `
-                <div class="audit-cancel-icon"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                <div class="audit-cancel-icon"><i data-lucide="${antiBotDetected ? 'shield-alert' : 'alert-triangle'}" class="w-5 h-5"></i></div>
                 <div class="audit-cancel-copy">
-                    <strong>Análise cancelada com saldo preservado</strong>
-                    <p>${AUDIT_CANCEL_MESSAGE}</p>
+                    <strong>${antiBotDetected ? 'Bloqueio anti-bot detectado' : 'Análise cancelada com saldo preservado'}</strong>
+                    <p>${message}</p>
+                    ${antiBotGuidance}
                     ${technicalReason}
                     <div class="audit-cancel-actions">
                         <button type="button" onclick="document.getElementById('auditCancelNotice')?.remove();">Entendi</button>
+                        ${antiBotDetected ? '<button type="button" onclick="abrirTutorialDominioAutorizado()">Ver tutorial</button><button type="button" onclick="nav(\'domains\')">Configurar domínio</button>' : ''}
                         <button type="button" onclick="openSupportForm()">Abrir formulário</button>
                         <a href="https://wa.me/5582991301991" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                     </div>
@@ -3973,7 +4034,7 @@ function getCodigoHTML() {
             `;
             searchContainer.appendChild(notice);
             if (typeof lucide !== 'undefined') lucide.createIcons();
-            Toast.warning('Análise cancelada por erro externo. Seu saldo foi mantido.', 10000);
+            Toast.warning(antiBotDetected ? 'Bloqueio anti-bot detectado. Seu saldo foi mantido.' : 'Análise cancelada por erro externo. Seu saldo foi mantido.', 10000);
         }
 
         function cancelAuditDueToApiError({ mode = 'auto', reason = '', resetCaptcha = true } = {}) {
