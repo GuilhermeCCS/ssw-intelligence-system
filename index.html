@@ -920,7 +920,7 @@
                                         <p class="text-cyan-300 text-xs font-bold uppercase tracking-[0.2em] mb-3">Sites com anti-bot</p>
                                         <h2 class="text-3xl font-semibold text-white">Como liberar uma auditoria com domínio autorizado</h2>
                                         <p class="text-slate-400 text-base leading-relaxed mt-3 max-w-2xl">
-                                            Esta configuração não é obrigatória para sites públicos comuns. Ela existe para clientes que usam Cloudflare, WAF, captcha, proteção anti-bot ou firewall que bloqueia navegadores automatizados durante a análise.
+                                            Use este guia quando a própria análise indicar bloqueio por Cloudflare, WAF, captcha, firewall ou proteção anti-bot. A liberação serve para identificar a SSW como auditoria autorizada sem abrir o site para qualquer automação.
                                         </p>
                                     </div>
                                     <button onclick="nav('domains')" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded border border-cyan-500 transition-colors no-print">
@@ -935,46 +935,50 @@
                                             <i data-lucide="search-check" class="w-4 h-4 text-cyan-300"></i>
                                         </div>
                                         <h3 class="text-white font-semibold mb-2">Primeiro tente normal</h3>
-                                        <p class="text-slate-400 text-sm leading-relaxed">A SSW sempre tenta acessar o site sem exigir configuração extra. Se a análise concluir, você não precisa autorizar domínio.</p>
+                                        <p class="text-slate-400 text-sm leading-relaxed">Se a análise terminar normalmente, nada precisa ser configurado. Esta etapa só entra quando o acesso for recusado.</p>
                                     </div>
                                     <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
                                         <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
                                             <i data-lucide="shield-alert" class="w-4 h-4 text-cyan-300"></i>
                                         </div>
-                                        <h3 class="text-white font-semibold mb-2">Use quando houver bloqueio</h3>
-                                        <p class="text-slate-400 text-sm leading-relaxed">Se o site bloquear automação legítima, a tela de análise vai orientar o usuário a validar o domínio e liberar a SSW no firewall.</p>
+                                        <h3 class="text-white font-semibold mb-2">Comprove propriedade</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">A plataforma gera um token para provar que você controla o domínio antes de permitir qualquer tentativa autorizada.</p>
                                     </div>
                                     <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
                                         <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
                                             <i data-lucide="key-round" class="w-4 h-4 text-cyan-300"></i>
                                         </div>
                                         <h3 class="text-white font-semibold mb-2">Header secreto</h3>
-                                        <p class="text-slate-400 text-sm leading-relaxed">Após validar propriedade, a SSW envia um User-Agent oficial e um header secreto para o firewall reconhecer a auditoria.</p>
+                                        <p class="text-slate-400 text-sm leading-relaxed">O firewall reconhece a auditoria por uma combinação de header privado e User-Agent oficial, sem depender de IP fixo.</p>
                                     </div>
                                 </div>
 
                                 <div class="prose prose-invert max-w-none">
-                                    <h3 class="text-xl font-semibold text-white mb-4">Quando usar esta configuração</h3>
+                                    <h3 class="text-xl font-semibold text-white mb-4">Antes de começar</h3>
                                     <div class="border border-amber-400/20 bg-amber-400/[0.04] rounded-xl p-5 mb-8">
                                         <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                            Use domínio autorizado quando a auditoria falhar por bloqueio externo: tela de desafio, captcha, Cloudflare, WAF, erro de bot, timeout provocado por proteção ou resposta recusada pelo servidor. Não use isso como primeiro passo para todos os sites.
+                                            Tenha acesso a pelo menos um dos pontos abaixo. Eles serão usados para publicar o token de verificação e liberar a auditoria no mecanismo de segurança do site.
                                         </p>
                                         <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-300">
-                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> O site pertence a você ou ao seu cliente.</li>
-                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> Você tem acesso ao DNS, ao código do site ou ao firewall/WAF.</li>
-                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> A auditoria normal falhou por bloqueio de acesso.</li>
-                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> O objetivo é liberar apenas a auditoria legítima da SSW.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> Acesso ao DNS do domínio para criar um registro TXT.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> Acesso ao servidor para publicar um arquivo em <code class="text-cyan-200">/.well-known/</code>.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> Acesso ao HTML para inserir uma meta tag temporária.</li>
+                                            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-300 shrink-0 mt-0.5"></i> Acesso ao Cloudflare, WAF ou firewall para criar a regra de permissão.</li>
                                         </ul>
                                     </div>
 
-                                    <h3 class="text-xl font-semibold text-white mb-4">Passo a passo recomendado</h3>
+                                    <h3 class="text-xl font-semibold text-white mb-4">Configuração em etapas</h3>
                                     <div class="space-y-5 mb-10">
                                         <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/60">
                                             <div class="flex items-start gap-4">
                                                 <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">1</span>
                                                 <div class="min-w-0 flex-1">
-                                                    <h4 class="text-white font-semibold mb-2">Tente realizar a análise normalmente</h4>
-                                                    <p class="text-slate-400 text-sm leading-relaxed">Cole a URL na tela de análise e inicie a auditoria. Se o site abrir e a análise terminar, não configure nada. Se houver bloqueio, a SSW cancela a auditoria, preserva o saldo e mostra a orientação correta.</p>
+                                                    <h4 class="text-white font-semibold mb-2">Cadastre o domínio principal</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Abra <strong class="text-white">Autoridade Digital > Domínios Autorizados</strong> e informe apenas o domínio raiz, sem protocolo, caminho ou parâmetros. A liberação vale para o domínio e seus subdomínios quando a API reconhecer a mesma base.</p>
+                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                                        <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-cyan-200 overflow-x-auto">correto: exemplo.com.br</code>
+                                                        <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-rose-200 overflow-x-auto">evite: https://exemplo.com.br/pagina?utm=...</code>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -983,9 +987,13 @@
                                             <div class="flex items-start gap-4">
                                                 <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">2</span>
                                                 <div class="min-w-0 flex-1">
-                                                    <h4 class="text-white font-semibold mb-2">Adicione o domínio em Autoridade Digital</h4>
-                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Acesse <strong class="text-white">Autoridade Digital > Domínios Autorizados</strong>, informe apenas o domínio principal e salve.</p>
-                                                    <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-cyan-200 overflow-x-auto">exemplo.com.br</code>
+                                                    <h4 class="text-white font-semibold mb-2">Escolha como publicar o token</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Depois de salvar, a plataforma mostra três alternativas. Use a que for mais simples para sua equipe técnica:</p>
+                                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                                        <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">DNS TXT</span><span class="text-slate-300">Ideal quando você gerencia o domínio no Registro.br, Cloudflare, Hostinger ou provedor similar.</span></div>
+                                                        <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">Arquivo público</span><span class="text-slate-300">Ideal quando você consegue subir arquivos no servidor ou deploy do site.</span></div>
+                                                        <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">Meta tag</span><span class="text-slate-300">Ideal quando você consegue editar o HTML da página inicial.</span></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -994,8 +1002,8 @@
                                             <div class="flex items-start gap-4">
                                                 <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">3</span>
                                                 <div class="min-w-0 flex-1">
-                                                    <h4 class="text-white font-semibold mb-2">Comprove que você controla o domínio</h4>
-                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Escolha uma das três formas de verificação exibidas pela plataforma: DNS TXT, arquivo público ou meta tag no HTML.</p>
+                                                    <h4 class="text-white font-semibold mb-2">Publique exatamente o valor exibido</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Copie o token sem alterar letras, espaços ou quebras. Para DNS, use o nome e o valor mostrados na plataforma. Para arquivo, o conteúdo do arquivo deve ser somente o token. Para meta tag, cole a tag dentro do <code class="text-cyan-200">&lt;head&gt;</code>.</p>
                                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                                                         <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">DNS TXT</span><code class="text-cyan-200">_ssw-verify</code></div>
                                                         <div class="border border-slate-800 rounded-lg p-3 bg-slate-900/70"><span class="text-slate-500 block mb-1">Arquivo</span><code class="text-cyan-200">/.well-known/</code></div>
@@ -1009,8 +1017,8 @@
                                             <div class="flex items-start gap-4">
                                                 <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">4</span>
                                                 <div class="min-w-0 flex-1">
-                                                    <h4 class="text-white font-semibold mb-2">Clique em verificar</h4>
-                                                    <p class="text-slate-400 text-sm leading-relaxed">Depois de publicar o token, volte para a plataforma e clique em <strong class="text-white">Verificar</strong>. Quando o domínio ficar validado, a SSW passa a ter permissão técnica para usar o header secreto em tentativas de desbloqueio.</p>
+                                                    <h4 class="text-white font-semibold mb-2">Valide dentro da SSW</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed">Volte para a tela de domínios e clique em <strong class="text-white">Verificar</strong>. DNS pode levar alguns minutos para propagar. Se falhar, aguarde, confirme se o token está público e tente novamente. Quando aprovado, o domínio muda para o status <strong class="text-white">Verificado</strong>.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1019,8 +1027,8 @@
                                             <div class="flex items-start gap-4">
                                                 <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">5</span>
                                                 <div class="min-w-0 flex-1">
-                                                    <h4 class="text-white font-semibold mb-2">Libere o header e o User-Agent no firewall</h4>
-                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">No Cloudflare, WAF, firewall ou proteção anti-bot do site, crie uma regra para permitir a requisição quando ela vier com o header secreto e o User-Agent oficial da SSW.</p>
+                                                    <h4 class="text-white font-semibold mb-2">Crie a regra de permissão no anti-bot</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">No Cloudflare, WAF ou firewall, permita a requisição somente quando os dois sinais existirem ao mesmo tempo: header secreto correto e User-Agent oficial. Evite liberar por IP, porque serviços de nuvem podem trocar o endereço de saída.</p>
                                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                                                         <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-cyan-200 overflow-x-auto">X-SSW-Audit-Token: token_do_domínio</code>
                                                         <code class="block bg-slate-900 border border-slate-800 rounded-lg p-3 text-cyan-200 overflow-x-auto">User-Agent contém: SSW-Intelligence-Auditor/1.0</code>
@@ -1033,16 +1041,27 @@
                                             <div class="flex items-start gap-4">
                                                 <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-black">6</span>
                                                 <div class="min-w-0 flex-1">
-                                                    <h4 class="text-white font-semibold mb-2">Rode a auditoria novamente</h4>
-                                                    <p class="text-slate-400 text-sm leading-relaxed">A SSW tentará a auditoria normal. Se o bloqueio continuar, ela fará uma nova tentativa usando o header autorizado daquele domínio. O saldo continua protegido em falhas externas.</p>
+                                                    <h4 class="text-white font-semibold mb-2">Faça um novo teste e ajuste se necessário</h4>
+                                                    <p class="text-slate-400 text-sm leading-relaxed">Rode a auditoria na mesma URL. Se continuar bloqueando, revise se o domínio cadastrado é o mesmo da URL final, se a regra do firewall está ativa antes do desafio anti-bot e se o token usado na regra é o token de auditoria, não o token de verificação.</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <h3 class="text-xl font-semibold text-white mb-4">O que entregar ao dono do site</h3>
+                                    <h3 class="text-xl font-semibold text-white mb-4">O que deve ser feito caso o site não seja seu</h3>
                                     <div class="border border-cyan-400/20 bg-cyan-400/[0.04] rounded-xl p-5 mb-8">
-                                        <p class="text-slate-300 text-sm leading-relaxed mb-4">Se o site for de um cliente, envie um pedido simples para a equipe técnica:</p>
+                                        <p class="text-slate-300 text-sm leading-relaxed mb-4">Peça autorização ao responsável técnico do site. Ele não precisa fornecer senhas, painel administrativo ou acesso interno; precisa apenas publicar o token de verificação e criar a regra de permissão no anti-bot.</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-300 mb-4">
+                                            <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                                                <h4 class="text-white font-semibold mb-2">Responsável pelo site</h4>
+                                                <p class="text-slate-400">Publica o token por DNS, arquivo ou meta tag e configura a regra no firewall/WAF.</p>
+                                            </div>
+                                            <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                                                <h4 class="text-white font-semibold mb-2">Você na SSW</h4>
+                                                <p class="text-slate-400">Cadastra o domínio, copia os tokens exibidos e clica em verificar depois que o responsável confirmar a publicação.</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-slate-300 text-sm leading-relaxed mb-3">Mensagem sugerida para enviar:</p>
                                         <div class="rounded-xl border border-white/10 bg-black/25 p-4">
                                             <p class="text-slate-300 text-sm leading-relaxed">"Precisamos liberar a auditoria legítima da SSW Intelligence. Por favor, permita requisições que tenham o header <code class="text-cyan-200">X-SSW-Audit-Token</code> com o token informado na plataforma e User-Agent contendo <code class="text-cyan-200">SSW-Intelligence-Auditor/1.0</code>. Essa liberação deve valer apenas para o domínio validado."</p>
                                         </div>
