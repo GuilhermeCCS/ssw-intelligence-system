@@ -20,7 +20,7 @@ function getStorageEncryptionKey() {
     }
     return localKey;
   } catch (error) {
-    console.warn('Nao foi possivel persistir a chave local do storage. Usando chave de sessao.');
+    console.warn('Não foi possível persistir a chave local do storage. Usando chave de sessão.');
     return generateStorageKey();
   }
 }
@@ -59,7 +59,7 @@ async function deriveKey(password) {
 
 // Criptografa dados
 async function encrypt(data) {
-  // Fallback de compatibilidade caso a chave local nao esteja disponivel.
+  // Fallback de compatibilidade caso a chave local não esteja disponível.
   if (!STORAGE_ENCRYPTION_KEY || STORAGE_ENCRYPTION_KEY.length < 32) {
     return btoa(JSON.stringify(data));
   }

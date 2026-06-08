@@ -224,7 +224,7 @@ class CheckoutMercadoPago {
 
     if (this.turnstileRendering) return;
     this.turnstileRendering = true;
-    container.innerHTML = '<div class="text-xs text-slate-500 animate-pulse">Carregando verificacao de seguranca...</div>';
+    container.innerHTML = '<div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>';
     const startedAt = Date.now();
 
     const tryRender = () => {
@@ -236,7 +236,7 @@ class CheckoutMercadoPago {
               Recarregar captcha
             </button>
           `;
-          if (typeof Toast !== 'undefined') Toast.error('Nao foi possivel carregar o captcha. Tente recarregar a verificacao.');
+          if (typeof Toast !== 'undefined') Toast.error('Não foi possível carregar o captcha. Tente recarregar a verificação.');
           return;
         }
         setTimeout(tryRender, 350);
@@ -253,7 +253,7 @@ class CheckoutMercadoPago {
           },
           'error-callback': () => {
             this.turnstileToken = null;
-            if (typeof Toast !== 'undefined') Toast.error('Erro na verificacao do captcha. Tente novamente.');
+            if (typeof Toast !== 'undefined') Toast.error('Erro na verificação do captcha. Tente novamente.');
           },
           'expired-callback': () => {
             this.turnstileToken = null;

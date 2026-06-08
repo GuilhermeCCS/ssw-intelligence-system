@@ -12,7 +12,7 @@ const rankingFilterLabels = {
     servicos: 'Servicos',
     digital: 'Digital',
     financas: 'B2B',
-    educacao: 'Educacao',
+    educacao: 'Educação',
     imoveis: 'Imoveis'
 };
 
@@ -181,7 +181,7 @@ function renderTopThree(topSites) {
                     <span class="text-2xl font-black text-white">${formatScore(site)}</span>
                 </div>
                 <h4 class="line-clamp-2 text-base font-black leading-tight text-white">${escapeHtml(site.site_name || 'Sem nome')}</h4>
-                <p class="mt-1 truncate text-sm text-slate-500">${escapeHtml(site.niche || 'Nicho nao informado')}</p>
+                <p class="mt-1 truncate text-sm text-slate-500">${escapeHtml(site.niche || 'Nicho não informado')}</p>
                 <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
                     <div class="h-full rounded-full bg-cyan-300" style="width: ${scoreWidth(site)}%"></div>
                 </div>
@@ -220,9 +220,9 @@ function renderRankingRows(dataToRender) {
                 </div>
                 <div class="min-w-0">
                     <h4 class="truncate text-sm font-black text-white">${escapeHtml(site.site_name || 'Sem nome')}</h4>
-                    <p class="mt-1 truncate text-xs text-slate-500 lg:hidden">${escapeHtml(site.niche || 'Nicho nao informado')}</p>
+                    <p class="mt-1 truncate text-xs text-slate-500 lg:hidden">${escapeHtml(site.niche || 'Nicho não informado')}</p>
                 </div>
-                <div class="hidden truncate text-sm text-slate-400 lg:block">${escapeHtml(site.niche || 'Nicho nao informado')}</div>
+                <div class="hidden truncate text-sm text-slate-400 lg:block">${escapeHtml(site.niche || 'Nicho não informado')}</div>
                 <div class="lg:text-right">
                     <div class="mb-1.5 flex items-center justify-between gap-3 lg:justify-end">
                         <span class="text-xs font-bold uppercase tracking-[0.14em] text-slate-500 lg:hidden">Score</span>
@@ -333,7 +333,7 @@ function searchRankingSite() {
         searchResultContainer.classList.remove('hidden');
         searchResultContainer.innerHTML = `
             <div class="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300">
-                <p class="font-black">Dados do ranking nao disponiveis</p>
+                <p class="font-black">Dados do ranking não disponíveis</p>
                 <p class="mt-1 text-sm text-red-200/80">Aguarde o carregamento do ranking e tente novamente.</p>
             </div>
         `;
@@ -355,7 +355,7 @@ function searchRankingSite() {
                         <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/[0.07] bg-[#020408] font-mono text-lg font-black text-cyan-100">#${position}</div>
                         <div class="min-w-0">
                             <h4 class="truncate text-lg font-black text-white">${escapeHtml(foundSite.site_name || 'Sem nome')}</h4>
-                            <p class="mt-1 truncate text-sm text-slate-400">${escapeHtml(foundSite.niche || 'Nicho nao informado')}</p>
+                            <p class="mt-1 truncate text-sm text-slate-400">${escapeHtml(foundSite.niche || 'Nicho não informado')}</p>
                         </div>
                     </div>
                     <div class="sm:w-36 sm:text-right">
@@ -371,9 +371,9 @@ function searchRankingSite() {
             <div class="rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-amber-200">
                 <p class="flex items-center gap-2 font-black">
                     <i data-lucide="alert-triangle" class="h-5 w-5"></i>
-                    Site nao encontrado
+                    Site não encontrado
                 </p>
-                <p class="mt-1 text-sm text-amber-100/75">A busca nao retornou resultados no ranking global.</p>
+                <p class="mt-1 text-sm text-amber-100/75">A busca não retornou resultados no ranking global.</p>
             </div>
         `;
         refreshRankingIcons();
@@ -414,7 +414,7 @@ function showSearchSuggestions() {
                 <button type="button" class="flex w-full items-center justify-between gap-3 p-3 text-left transition hover:bg-[#101828]" data-site="${escapeHtml(siteName)}" onclick="selectSuggestion(this.dataset.site)">
                     <span class="min-w-0">
                         <span class="block truncate text-sm font-bold text-white">${escapeHtml(siteName)}</span>
-                        <span class="mt-0.5 block truncate text-xs text-slate-500">${escapeHtml(site.niche || 'Nicho nao informado')}</span>
+                        <span class="mt-0.5 block truncate text-xs text-slate-500">${escapeHtml(site.niche || 'Nicho não informado')}</span>
                     </span>
                     <span class="flex shrink-0 items-center gap-2">
                         <span class="rounded-lg bg-[#020408] px-2 py-1 font-mono text-xs font-black text-slate-400">#${position}</span>

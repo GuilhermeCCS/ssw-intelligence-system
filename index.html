@@ -137,8 +137,8 @@
                         <div id="regPasswordStrengthBar" class="h-full w-0 rounded-full transition-all duration-300" style="background:#ef4444;"></div>
                     </div>
                     <div class="flex items-center justify-between gap-3 text-[11px]">
-                        <span id="regPasswordStrengthLabel" class="font-semibold text-slate-500">Forca da senha</span>
-                        <span id="regPasswordStrengthHint" class="text-right text-slate-500">Use 8+ caracteres, numero e simbolo</span>
+                        <span id="regPasswordStrengthLabel" class="font-semibold text-slate-500">Força da senha</span>
+                        <span id="regPasswordStrengthHint" class="text-right text-slate-500">Use 8+ caracteres, número e símbolo</span>
                     </div>
                 </div>
                 <div class="mt-4">
@@ -173,7 +173,7 @@
                 </button>
                 <button onclick="nav('history')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
                     <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Historico</span>
+                    <span class="hidden lg:inline">Histórico</span>
                 </button>
                 <button onclick="nav('ranking')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
                     <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
@@ -251,7 +251,7 @@
                 <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-accent"></i> Gerenciar Agents
             </button>
             <button onclick="nav('history'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Historico
+                <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Histórico
             </button>
             <button onclick="nav('ranking'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
                 <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-yellow-400"></i> Ranking Global
@@ -467,8 +467,8 @@
                 <header class="history-hero">
                     <div class="history-hero-copy">
                         <span>Workspace privado</span>
-                        <h2>Historico de analises</h2>
-                        <p>Revise auditorias concluidas, compare evolucao entre formatos e retome rapidamente os principais achados de cada diagnostico.</p>
+                        <h2>Histórico de análises</h2>
+                        <p>Revise auditorias concluídas, compare a evolução entre formatos e retome rapidamente os principais achados de cada diagnóstico.</p>
                     </div>
                     <button onclick="loadAuditHistory(true)" class="history-refresh-btn">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
@@ -476,23 +476,23 @@
                     </button>
                 </header>
 
-                <section class="history-toolbar" aria-label="Filtros do historico">
+                <section class="history-toolbar" aria-label="Filtros do histórico">
                     <div class="history-filter-group" id="auditHistoryFilters">
                         <button type="button" class="history-filter-btn active" data-history-filter="all" onclick="setAuditHistoryFilter('all')">Todas</button>
-                        <button type="button" class="history-filter-btn" data-history-filter="auto" onclick="setAuditHistoryFilter('auto')">Automaticas</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="auto" onclick="setAuditHistoryFilter('auto')">Automáticas</button>
                         <button type="button" class="history-filter-btn" data-history-filter="manual" onclick="setAuditHistoryFilter('manual')">Manuais</button>
                         <button type="button" class="history-filter-btn" data-history-filter="compare" onclick="setAuditHistoryFilter('compare')">Comparativas</button>
                     </div>
                     <div class="history-toolbar-note">
                         <i data-lucide="lock" class="w-4 h-4"></i>
-                        <span>Somente analises finalizadas com sucesso sao salvas.</span>
+                        <span>Somente análises finalizadas com sucesso são salvas.</span>
                     </div>
                 </section>
 
                 <section id="auditHistoryList" class="history-list" aria-live="polite">
                     <div class="history-empty-state">
                         <span class="history-loading-dot"></span>
-                        Carregando historico...
+                        Carregando histórico...
                     </div>
                 </section>
 

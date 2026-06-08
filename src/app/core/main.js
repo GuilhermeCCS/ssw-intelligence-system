@@ -3,7 +3,7 @@
         let isFloatingButtonVisible = true;
         let hasUnsavedAuditSession = false;
         let auditSnapshotTabOpened = false;
-        const AUDIT_LEAVE_MESSAGE = 'Voce esta saindo da auditoria atual. Se sair agora, pode perder o relatorio e o chat com as personas. O ideal e salvar o PDF ou fazer suas perguntas a persona antes de sair.';
+        const AUDIT_LEAVE_MESSAGE = 'Você está saindo da auditoria atual. Se sair agora, pode perder o relatório e o chat com as personas. O ideal é salvar o PDF ou fazer suas perguntas à persona antes de sair.';
         const FRONTEND_PLAN_LIMITS = {
             starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 10, historyRetentionDays: 30, personaLimit: 3 },
             pro: { chatInputTokens: 6000, chatOutputTokens: 450, historyLimit: 20, historyRetentionDays: 90, personaLimit: 8 }
@@ -408,7 +408,7 @@
             // Header Dinâmico
             const titles = {
                 'agents': 'Gestão de Perfis',
-                'history': 'Historico de Analises',
+                'history': 'Histórico de Análises',
                 'ranking': 'Ranking Global',
                 'precos': 'Planos e Preços',
                 'about': 'Sobre Nós',
@@ -532,7 +532,7 @@
             if (container.dataset.turnstileRendering === '1') return;
 
             container.dataset.turnstileRendering = '1';
-            container.innerHTML = '<div class="text-xs text-slate-500 animate-pulse">Carregando verificacao de seguranca...</div>';
+            container.innerHTML = '<div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>';
             const startedAt = Date.now();
 
             const tryRender = () => {
@@ -540,7 +540,7 @@
                     if (Date.now() - startedAt >= TURNSTILE_MAX_WAIT_MS) {
                         delete container.dataset.turnstileRendering;
                         container.innerHTML = retryButton;
-                        Toast.error('Nao foi possivel carregar o captcha. Verifique sua conexao e tente novamente.');
+                        Toast.error('Não foi possível carregar o captcha. Verifique sua conexão e tente novamente.');
                         return;
                     }
                     setTimeout(tryRender, TURNSTILE_RETRY_MS);
@@ -557,7 +557,7 @@
                         },
                         'error-callback': function() {
                             setToken(null);
-                            Toast.error('Erro na verificacao do captcha. Tente novamente.');
+                            Toast.error('Erro na verificação do captcha. Tente novamente.');
                         },
                         'expired-callback': function() {
                             setToken(null);
@@ -777,7 +777,7 @@
                     setTimeout(() => renderGoogleSignInButton(containerId, attempt + 1), 250);
                     return;
                 }
-                container.innerHTML = '<div class="google-auth-disabled">Google indisponivel no momento.</div>';
+                container.innerHTML = '<div class="google-auth-disabled">Google indisponível no momento.</div>';
                 if (hint) {
                     hint.textContent = 'Use e-mail e senha enquanto o provedor carrega.';
                     hint.classList.remove('hidden');
@@ -812,7 +812,7 @@
                 }
             } catch (error) {
                 console.error('Erro ao renderizar Google Sign-In:', error);
-                container.innerHTML = '<div class="google-auth-disabled">Nao foi possivel carregar o Google.</div>';
+                container.innerHTML = '<div class="google-auth-disabled">Não foi possível carregar o Google.</div>';
                 if (hint) {
                     hint.textContent = 'Continue com e-mail e senha.';
                     hint.classList.remove('hidden');
@@ -823,7 +823,7 @@
         async function handleGoogleCredentialResponse(response) {
             const token = response?.credential;
             if (!token) {
-                Toast.error('O Google nao retornou uma credencial valida.');
+                Toast.error('O Google não retornou uma credencial válida.');
                 return;
             }
 
@@ -836,7 +836,7 @@
                 });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok || !data.token) {
-                    throw new Error(data.detail || 'Nao foi possivel entrar com Google.');
+                    throw new Error(data.detail || 'Não foi possível entrar com Google.');
                 }
 
                 USER = {
@@ -856,7 +856,7 @@
                 loginSuccess();
             } catch (error) {
                 console.error('Erro no login com Google:', error);
-                Toast.error(error.message || 'Nao foi possivel entrar com Google.');
+                Toast.error(error.message || 'Não foi possível entrar com Google.');
             } finally {
                 setGoogleAuthBusy(false);
             }
@@ -926,13 +926,13 @@
             score = Math.min(score, 100);
 
             if (!password) {
-                return { score: 0, label: 'Forca da senha', color: '#ef4444', hint: 'Use 8+ caracteres, numero e simbolo', strong: false };
+                return { score: 0, label: 'Força da senha', color: '#ef4444', hint: 'Use 8+ caracteres, número e símbolo', strong: false };
             }
             if (score < 45) {
                 return { score, label: 'Senha fraca', color: '#ef4444', hint: 'Adicione mais caracteres e variedade', strong: false };
             }
             if (score < 75) {
-                return { score, label: 'Senha media', color: '#f59e0b', hint: 'Inclua maiuscula, numero e simbolo', strong: false };
+                return { score, label: 'Senha média', color: '#f59e0b', hint: 'Inclua maiúscula, número e símbolo', strong: false };
             }
             return { score, label: 'Senha forte', color: '#22c55e', hint: 'Boa senha para criar a conta', strong: true };
         }
@@ -1233,14 +1233,14 @@ async function enviarCodigoRecuperacao() {
             Toast.success("código enviado para seu e-mail!");
         } else {
             // Não mostra erro específico por segurança anti-enumeração
-            Toast.info("Se o e-mail existir, voce receberá um código.");
+            Toast.info("Se o e-mail existir, você receberá um código.");
         }
     } catch(e) {
         console.error('Erro ao enviar código:', e);
         loadingRecuperacao = false;
         emailTemporario = email;
         setAuthView('codigo');
-        Toast.info("Se o e-mail existir, voce receberá um código.");
+        Toast.info("Se o e-mail existir, você receberá um código.");
     }
 }
 // Função para atualizar senha
@@ -1759,7 +1759,7 @@ function getCodigoHTML() {
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>
                             <p class="text-xs uppercase tracking-[0.18em] ${reached ? 'text-amber-200' : 'text-cyan-200'} font-bold">Limite do plano ${getUserPlanLabel(usage.plan)}</p>
-                            <p class="text-sm text-slate-300 mt-1">${usage.count}/${usage.limit} personas criadas ${reached ? '- limite atingido' : '- disponivel para uso'}</p>
+                            <p class="text-sm text-slate-300 mt-1">${usage.count}/${usage.limit} personas criadas ${reached ? '- limite atingido' : '- disponível para uso'}</p>
                         </div>
                         <div class="w-full sm:w-48 h-2 rounded-full bg-slate-900 border border-white/10 overflow-hidden">
                             <div class="h-full ${reached ? 'bg-amber-300' : 'bg-cyan-300'}" style="width:${percent}%"></div>
@@ -2963,7 +2963,7 @@ function getCodigoHTML() {
                     })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || 'Nao foi possivel enviar sua duvida agora.');
+                if (!res.ok) throw new Error(data.detail || 'Não foi possível enviar sua dúvida agora.');
 
                 Toast.success('Dúvida enviada para o suporte.');
                 document.getElementById('supportSubject').value = '';
@@ -2971,7 +2971,7 @@ function getCodigoHTML() {
                 closeSupportForm();
             } catch (error) {
                 console.error('Erro ao enviar dúvida ao suporte:', error);
-                Toast.error(error.message || 'Nao foi possivel enviar sua duvida agora.');
+                Toast.error(error.message || 'Não foi possível enviar sua dúvida agora.');
             } finally {
                 setSupportSubmitLoading(false);
             }
@@ -2990,13 +2990,13 @@ function getCodigoHTML() {
                 manual: { label: 'Manual', icon: 'user-check', tone: 'manual' },
                 compare: { label: 'Comparativa', icon: 'git-compare', tone: 'compare' }
             };
-            return map[normalized] || { label: 'Analise', icon: 'file-search', tone: 'auto' };
+            return map[normalized] || { label: 'Análise', icon: 'file-search', tone: 'auto' };
         }
 
         function formatHistoryDate(value) {
-            if (!value) return 'Data indisponivel';
+            if (!value) return 'Data indisponível';
             const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return 'Data indisponivel';
+            if (Number.isNaN(date.getTime())) return 'Data indisponível';
             return date.toLocaleDateString('pt-BR', {
                 day: '2-digit',
                 month: '2-digit',
@@ -3032,13 +3032,13 @@ function getCodigoHTML() {
             if (!list) return;
 
             if (!USER || !USER.token) {
-                list.innerHTML = '<div class="history-empty-state"><strong>Login necessario</strong><p>Entre na sua conta para visualizar o historico privado das suas analises.</p><button onclick="showAuthScreen(\'login\')">Fazer login</button></div>';
+                list.innerHTML = '<div class="history-empty-state"><strong>Login necessário</strong><p>Entre na sua conta para visualizar o histórico privado das suas análises.</p><button onclick="showAuthScreen(\'login\')">Fazer login</button></div>';
                 if (detail) detail.classList.add('hidden');
                 if (typeof lucide !== 'undefined') lucide.createIcons();
                 return;
             }
 
-            list.innerHTML = '<div class="history-empty-state"><span class="history-loading-dot"></span>Carregando historico...</div>';
+            list.innerHTML = '<div class="history-empty-state"><span class="history-loading-dot"></span>Carregando histórico...</div>';
             if (detail) detail.classList.add('hidden');
 
             try {
@@ -3047,12 +3047,12 @@ function getCodigoHTML() {
                     headers: authHeaders()
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || 'Nao foi possivel carregar o historico.');
+                if (!res.ok) throw new Error(data.detail || 'Não foi possível carregar o histórico.');
                 renderAuditHistoryList(data.items || [], data);
-                if (showToast) Toast.success('Historico atualizado.');
+                if (showToast) Toast.success('Histórico atualizado.');
             } catch (error) {
                 console.error('Erro ao carregar historico:', error);
-                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Historico indisponivel</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p><button onclick="loadAuditHistory(true)">Tentar novamente</button></div>`;
+                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Histórico indisponível</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p><button onclick="loadAuditHistory(true)">Tentar novamente</button></div>`;
             } finally {
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
@@ -3066,16 +3066,16 @@ function getCodigoHTML() {
                 const plan = getUserPlanLabel(meta.plan || getUserPlan());
                 const limit = meta.limit || getFrontendPlanLimits(meta.plan).historyLimit;
                 const retention = meta.retention_days || getFrontendPlanLimits(meta.plan).historyRetentionDays;
-                note.textContent = `${plan}: ate ${limit} analises salvas por ${retention} dias.`;
+                note.textContent = `${plan}: até ${limit} análises salvas por ${retention} dias.`;
             }
 
             if (!items.length) {
                 list.innerHTML = [
                     '<div class="history-empty-state">',
                         '<i data-lucide="archive" class="w-6 h-6"></i>',
-                        '<strong>Nenhuma analise salva ainda</strong>',
-                        '<p>Assim que uma auditoria for concluida com sucesso, ela aparece aqui automaticamente.</p>',
-                        '<button onclick="nav(\'home\')">Iniciar uma analise</button>',
+                        '<strong>Nenhuma análise salva ainda</strong>',
+                        '<p>Assim que uma auditoria for concluída com sucesso, ela aparecerá aqui automaticamente.</p>',
+                        '<button onclick="nav(\'home\')">Iniciar uma análise</button>',
                     '</div>'
                 ].join('');
                 return;
@@ -3088,7 +3088,7 @@ function getCodigoHTML() {
                 const scoreTone = getHistoryScoreTone(score);
                 const urlLine = item.audit_type === 'compare'
                     ? `${item.url_a || 'Site A'} vs ${item.url_b || 'Site B'}`
-                    : (item.url || 'URL nao informada');
+                    : (item.url || 'URL não informada');
 
                 return [
                     `<article class="history-card history-card-${meta.tone}">`,
@@ -3098,9 +3098,9 @@ function getCodigoHTML() {
                         '</div>',
                         '<div class="history-card-body">',
                             '<div class="history-card-main">',
-                                `<h3>${safeAuditText(item.title || 'Analise SSW')}</h3>`,
+                                `<h3>${safeAuditText(item.title || 'Análise SSW')}</h3>`,
                                 `<p class="history-card-url">${safeAuditText(urlLine)}</p>`,
-                                `<p class="history-card-summary">${safeAuditText(item.summary || 'Resumo executivo nao informado.')}</p>`,
+                                `<p class="history-card-summary">${safeAuditText(item.summary || 'Resumo executivo não informado.')}</p>`,
                             '</div>',
                             `<div class="history-score history-score-${scoreTone}"><strong>${scoreLabel}</strong><span>score</span></div>`,
                         '</div>',
@@ -3122,20 +3122,20 @@ function getCodigoHTML() {
                         headers: authHeaders()
                     });
                     const data = await res.json().catch(() => ({}));
-                    if (!res.ok) throw new Error(data.detail || 'Nao foi possivel excluir esta analise.');
+                    if (!res.ok) throw new Error(data.detail || 'Não foi possível excluir esta análise.');
                     const detail = document.getElementById('auditHistoryDetail');
                     if (detail) detail.classList.add('hidden');
                     await loadAuditHistory(false);
-                    Toast.success(data.msg || 'Analise removida do historico.');
+                    Toast.success(data.msg || 'Análise removida do histórico.');
                 } catch (error) {
                     console.error('Erro ao excluir historico:', error);
-                    Toast.error(error.message || 'Erro ao excluir analise.');
+                    Toast.error(error.message || 'Erro ao excluir análise.');
                 }
             };
 
             if (typeof showConfirmDialog === 'function') {
-                showConfirmDialog('Deseja excluir esta analise do historico? Esta acao nao pode ser desfeita.', runDelete);
-            } else if (confirm('Deseja excluir esta analise do historico?')) {
+                showConfirmDialog('Deseja excluir esta análise do histórico? Esta ação não pode ser desfeita.', runDelete);
+            } else if (confirm('Deseja excluir esta análise do histórico?')) {
                 await runDelete();
             }
         }
@@ -3172,14 +3172,14 @@ function getCodigoHTML() {
         function renderHistoryVulnerabilitiesDetailed(vulnerabilities) {
             const items = normalizeHistoryArray(vulnerabilities);
             if (!items.length) {
-                return '<section class="history-detail-block history-vulnerability-detail"><h4>Vulnerabilidades identificadas</h4><ul><li class="history-detail-muted"><p>Nenhuma vulnerabilidade retornada para esta analise.</p></li></ul></section>';
+                return '<section class="history-detail-block history-vulnerability-detail"><h4>Vulnerabilidades identificadas</h4><ul><li class="history-detail-muted"><p>Nenhuma vulnerabilidade foi retornada para esta análise.</p></li></ul></section>';
             }
 
             const content = items.map((value, index) => {
                 const vuln = (value && typeof value === 'object') ? value : { description: value };
                 const title = vuln.title || vuln.name || `Vulnerabilidade ${index + 1}`;
-                const severity = vuln.severity || vuln.risk || vuln.level || 'NAO INFORMADO';
-                const pillar = vuln.pillar || vuln.category || vuln.period || 'Pilar nao informado';
+                const severity = vuln.severity || vuln.risk || vuln.level || 'NÃO INFORMADO';
+                const pillar = vuln.pillar || vuln.category || vuln.period || 'Pilar não informado';
                 const description = vuln.description || vuln.detail || vuln.explanation || vuln.step || '';
                 const extraRows = Object.entries(vuln)
                     .filter(([key, val]) => val !== null && val !== undefined && !['id', 'title', 'name', 'severity', 'risk', 'level', 'pillar', 'category', 'period', 'description', 'detail', 'explanation', 'step'].includes(key))
@@ -3193,7 +3193,7 @@ function getCodigoHTML() {
                             `<strong>${safeAuditText(title)}</strong>`,
                             `<span>${safeAuditText(severity)}</span>`,
                         '</div>',
-                        `<p>${safeAuditText(description || 'Descricao nao informada pelo backend.')}</p>`,
+                        `<p>${safeAuditText(description || 'Descrição não informada pelo backend.')}</p>`,
                         `<div class="history-vulnerability-meta"><span><strong>Pilar:</strong> ${safeAuditText(pillar)}</span>${vuln.id ? `<span><strong>ID:</strong> ${safeAuditText(vuln.id)}</span>` : ''}${extraRows}</div>`,
                     '</li>'
                 ].join('');
@@ -3209,10 +3209,10 @@ function getCodigoHTML() {
             const scoreLine = `${verification.score_before ?? '--'} -> ${verification.score_effective ?? verification.score_after_detected ?? '--'}`;
             const rows = verification.items.map(item => {
                 const status = String(item.status || 'nao_corrigida');
-                const label = status === 'corrigida' ? 'Corrigida' : status === 'parcial' ? 'Parcial' : status === 'inconclusiva' ? 'Inconclusiva' : 'Nao corrigida';
+                const label = status === 'corrigida' ? 'Corrigida' : status === 'parcial' ? 'Parcial' : status === 'inconclusiva' ? 'Inconclusiva' : 'Não corrigida';
                 return [
                     `<div class="history-verification-row history-verification-${safeAuditText(status)}">`,
-                        `<div><strong>${safeAuditText(item.action || 'Acao marcada')}</strong><p>${safeAuditText(item.evidence || '')}</p>${item.recommendation ? `<small>${safeAuditText(item.recommendation)}</small>` : ''}</div>`,
+                        `<div><strong>${safeAuditText(item.action || 'Ação marcada')}</strong><p>${safeAuditText(item.evidence || '')}</p>${item.recommendation ? `<small>${safeAuditText(item.recommendation)}</small>` : ''}</div>`,
                         `<span>${safeAuditText(label)}</span>`,
                     '</div>'
                 ].join('');
@@ -3222,8 +3222,8 @@ function getCodigoHTML() {
                 '<section class="history-verification-result">',
                     '<div class="history-verification-head">',
                         '<div>',
-                            '<h4>Validacao de correcoes</h4>',
-                            `<p>${safeAuditText(verification.message || verification.summary || 'Resultado da ultima rechecagem.')}</p>`,
+                            '<h4>Validação de correções</h4>',
+                            `<p>${safeAuditText(verification.message || verification.summary || 'Resultado da última rechecagem.')}</p>`,
                         '</div>',
                         `<strong>${safeAuditText(scoreLine)}</strong>`,
                     '</div>',
@@ -3237,7 +3237,7 @@ function getCodigoHTML() {
             const verificationMap = getHistoryVerificationMap(verification);
             const actionItems = normalizeHistoryArray(actions);
             if (!actionItems.length) {
-                return '<section class="history-detail-block history-action-checklist"><h4>Plano recomendado</h4><p class="history-detail-muted">Nenhuma acao retornada pelo backend.</p></section>';
+                return '<section class="history-detail-block history-action-checklist"><h4>Plano recomendado</h4><p class="history-detail-muted">Nenhuma ação foi retornada pelo backend.</p></section>';
             }
 
             const rows = actionItems.map((action, index) => {
@@ -3257,7 +3257,7 @@ function getCodigoHTML() {
                         `<input type="checkbox" data-history-action-checkbox data-action="${payload}" ${checked}>`,
                         '<span>',
                             `<strong>${safeAuditText(text)}</strong>`,
-                            status ? `<small class="history-action-status history-action-status-${safeAuditText(status)}">${safeAuditText(status === 'corrigida' ? 'corrigida' : status === 'parcial' ? 'parcial' : status === 'inconclusiva' ? 'inconclusiva' : 'nao corrigida')}</small>` : '',
+                            status ? `<small class="history-action-status history-action-status-${safeAuditText(status)}">${safeAuditText(status === 'corrigida' ? 'corrigida' : status === 'parcial' ? 'parcial' : status === 'inconclusiva' ? 'inconclusiva' : 'não corrigida')}</small>` : '',
                         '</span>',
                     '</label>'
                 ].join('');
@@ -3268,7 +3268,7 @@ function getCodigoHTML() {
                     '<div class="history-action-head">',
                         '<div>',
                             '<h4>Plano recomendado</h4>',
-                            '<p>Marque as acoes que voce ja corrigiu para a IA validar novamente a URL.</p>',
+                            '<p>Marque as ações que você já corrigiu para a IA validar novamente a URL.</p>',
                         '</div>',
                         '<div class="history-action-tools">',
                             '<button type="button" onclick="setHistoryActionChecks(true)">Marcar todas</button>',
@@ -3277,8 +3277,8 @@ function getCodigoHTML() {
                     '</div>',
                     `<div class="history-action-list">${rows}</div>`,
                     '<div class="history-action-footer">',
-                        '<span>Esta rechecagem consome 1 credito e reembolsa em caso de erro externo.</span>',
-                        `<button type="button" id="historyVerifyActionsBtn" onclick="verifyHistoryActions(decodeURIComponent('${toHistoryInlineArg(historyId)}'))">Validar correcoes com IA</button>`,
+                        '<span>Esta rechecagem consome 1 crédito e reembolsa em caso de erro externo.</span>',
+                        `<button type="button" id="historyVerifyActionsBtn" onclick="verifyHistoryActions(decodeURIComponent('${toHistoryInlineArg(historyId)}'))">Validar correções com IA</button>`,
                     '</div>',
                     renderHistoryActionVerification(verification),
                 '</section>'
@@ -3301,20 +3301,20 @@ function getCodigoHTML() {
                 .filter(item => item && item.text);
 
             if (!selected.length) {
-                Toast.warning('Marque pelo menos uma acao do plano recomendado.');
+                Toast.warning('Marque pelo menos uma ação do plano recomendado.');
                 return;
             }
 
             try {
                 if (btn) { btn.disabled = true; btn.innerText = 'Validando...'; }
-                Toast.info ? Toast.info('A IA esta reanalisando a URL e comparando as correcoes marcadas.', 10000) : Toast.warning('A IA esta reanalisando a URL.', 10000);
+                Toast.info ? Toast.info('A IA está reanalisando a URL e comparando as correções marcadas.', 10000) : Toast.warning('A IA está reanalisando a URL.', 10000);
                 const res = await fetch(`${API_URL}/api/audits/history/${encodeURIComponent(historyId)}/verify-actions`, {
                     method: 'POST',
                     headers: authHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ actions: selected })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || 'Nao foi possivel validar as correcoes.');
+                if (!res.ok) throw new Error(data.detail || 'Não foi possível validar as correções.');
                 if (USER && typeof data.novo_saldo !== 'undefined') {
                     USER.credits = data.novo_saldo;
                     if (typeof secureStorage !== 'undefined') await secureStorage.setItem('USER', USER);
@@ -3323,13 +3323,13 @@ function getCodigoHTML() {
                 }
                 renderAuditHistoryDetail(data.history || window.currentHistoryChatItem);
                 const confirmed = Number(data.verification?.confirmed_count || 0);
-                if (confirmed > 0) Toast.success(data.verification?.message || 'Correcoes confirmadas pela IA.', 10000);
-                else Toast.warning(data.verification?.message || 'A IA nao confirmou mudancas suficientes na URL.', 10000);
+                if (confirmed > 0) Toast.success(data.verification?.message || 'Correções confirmadas pela IA.', 10000);
+                else Toast.warning(data.verification?.message || 'A IA não confirmou mudanças suficientes na URL.', 10000);
             } catch (error) {
                 console.error('Erro ao validar correcoes:', error);
-                Toast.error(error.message || 'Erro ao validar correcoes.');
+                Toast.error(error.message || 'Erro ao validar correções.');
             } finally {
-                if (btn) { btn.disabled = false; btn.innerText = 'Validar correcoes com IA'; }
+                if (btn) { btn.disabled = false; btn.innerText = 'Validar correções com IA'; }
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         }
@@ -3346,11 +3346,11 @@ function getCodigoHTML() {
                     headers: authHeaders()
                 });
                 const item = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(item.detail || 'Nao foi possivel abrir esta analise.');
+                if (!res.ok) throw new Error(item.detail || 'Não foi possível abrir esta análise.');
                 renderAuditHistoryDetail(item);
             } catch (error) {
                 console.error('Erro ao abrir item do historico:', error);
-                detail.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Detalhe indisponivel</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p></div>`;
+                detail.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Detalhe indisponível</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p></div>`;
             } finally {
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
@@ -3384,21 +3384,21 @@ function getCodigoHTML() {
                     '<div class="history-detail-head">',
                         '<div>',
                             `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
-                            `<h3>${safeAuditText(item.title || 'Analise SSW')}</h3>`,
-                            `<p>${safeAuditText(item.url || 'URL nao informada')}</p>`,
+                            `<h3>${safeAuditText(item.title || 'Análise SSW')}</h3>`,
+                            `<p>${safeAuditText(item.url || 'URL não informada')}</p>`,
                         '</div>',
                         `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>score</span></div>`,
                     '</div>',
-                    `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo nao informado.')}</div>`,
+                    `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo não informado.')}</div>`,
                     '<div class="history-detail-grid">',
                         renderHistoryVulnerabilitiesDetailed(vulnerabilities),
-                        renderHistoryDetailBlock('Analise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name),
+                        renderHistoryDetailBlock('Análise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name),
                         renderHistoryActionChecklist(item, actions, verification),
                     '</div>',
                     renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
                         item.url ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Rodar novamente</button>` : '',
-                        `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir analise</button>`,
+                        `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir análise</button>`,
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
                     '</div>',
                 '</article>'
@@ -3432,17 +3432,17 @@ function getCodigoHTML() {
                             `<h3>${safeAuditText(item.title || 'Comparativo SSW')}</h3>`,
                             `<p>${safeAuditText((item.url_a || 'Site A') + ' vs ' + (item.url_b || 'Site B'))}</p>`,
                         '</div>',
-                        `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>media</span></div>`,
+                        `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>média</span></div>`,
                     '</div>',
-                    `<div class="history-detail-summary"><strong>${safeAuditText(verdict.winner_site || 'Resultado comparativo')}</strong><p>${safeAuditText(verdict.summary || item.summary || 'Resumo comparativo nao informado.')}</p></div>`,
+                    `<div class="history-detail-summary"><strong>${safeAuditText(verdict.winner_site || 'Resultado comparativo')}</strong><p>${safeAuditText(verdict.summary || item.summary || 'Resumo comparativo não informado.')}</p></div>`,
                     '<div class="history-detail-grid">',
-                        renderHistoryDetailBlock('Preferencia dos agents', agents, value => `${value.agent || 'Agent'}: ${value.preference || value.reason || ''}`),
-                        renderHistoryDetailBlock('Confronto tecnico', technical, value => `${value.criteria || 'Criterio'}: ${value.analysis || value.winner || ''}`),
+                        renderHistoryDetailBlock('Preferência dos agents', agents, value => `${value.agent || 'Agent'}: ${value.preference || value.reason || ''}`),
+                        renderHistoryDetailBlock('Confronto técnico', technical, value => `${value.criteria || 'Critério'}: ${value.analysis || value.winner || ''}`),
                         renderHistoryDetailBlock('Plano para superar', actions, value => value.step || value),
                     '</div>',
                     renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
-                        `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir analise</button>`,
+                        `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir análise</button>`,
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
                     '</div>',
                 '</article>'
@@ -3458,13 +3458,13 @@ function getCodigoHTML() {
 
         function renderHistoryChatAgents(agents) {
             if (!agents || !agents.length) {
-                return '<section class="history-chat-agents history-chat-agents-empty"><h4>Conversar com personas</h4><p>Esta analise nao retornou personas disponiveis para chat.</p></section>';
+                return '<section class="history-chat-agents history-chat-agents-empty"><h4>Conversar com personas</h4><p>Esta análise não retornou personas disponíveis para chat.</p></section>';
             }
             return [
                 '<section class="history-chat-agents">',
                     '<div>',
-                        '<h4>Conversar com personas desta analise</h4>',
-                        '<p>O chat abre com o contexto salvo deste historico, sem consumir uma nova auditoria.</p>',
+                        '<h4>Conversar com personas desta análise</h4>',
+                        '<p>O chat abre com o contexto salvo deste histórico, sem consumir uma nova auditoria.</p>',
                     '</div>',
                     '<div class="history-chat-agent-list">',
                         agents.slice(0, 8).map((agent, index) => [
@@ -3497,13 +3497,13 @@ function getCodigoHTML() {
             const agents = window.currentHistoryChatAgents || [];
             const rawAgent = agents[index];
             if (!item || !rawAgent) {
-                Toast.warning('Nao foi possivel abrir esta persona do historico.');
+                Toast.warning('Não foi possível abrir esta persona do histórico.');
                 return;
             }
             const agent = normalizeChatPersona(rawAgent);
             const payload = getHistoryChatPayload(item);
             currentChatMetaOverride = {
-                title: item.title || 'Historico SSW',
+                title: item.title || 'Histórico SSW',
                 url: item.url || item.url_a || '',
                 history_id: item.id,
                 audit_type: item.audit_type,
@@ -3528,7 +3528,7 @@ function getCodigoHTML() {
                     radio.checked = radio.value === mode;
                 });
                 if (typeof toggleManualSelect === 'function') toggleManualSelect();
-                Toast.info('URL carregada para uma nova analise.');
+                Toast.info('URL carregada para uma nova análise.');
             }, 80);
         }
 
@@ -3675,9 +3675,9 @@ function getCodigoHTML() {
             const points = Array.isArray(praise.positive_points) && praise.positive_points.length
                 ? praise.positive_points.slice(0, 5)
                 : [
-                    'Experiencia consistente e acima da media.',
-                    'Estrutura tecnica madura para navegacao e confianca.',
-                    'Base visual e funcional preparada para sustentar conversao.'
+                    'Experiência consistente e acima da média.',
+                    'Estrutura técnica madura para navegação e confiança.',
+                    'Base visual e funcional preparada para sustentar conversão.'
                 ];
             const host = String(url || '').replace(/^https?:\/\//, '').split('/')[0];
 
@@ -3691,13 +3691,13 @@ function getCodigoHTML() {
                 '<section class="audit-excellence-result">',
                     '<div class="audit-excellence-score">',
                         `<strong>${safeAuditText(scoreLabel)}</strong>`,
-                        '<span>score de excelencia</span>',
+                        '<span>score de excelência</span>',
                     '</div>',
                     '<div class="audit-excellence-copy">',
-                        '<span class="audit-excellence-kicker">Analise concluida sem relatorio tecnico</span>',
-                        `<h2>${safeAuditText(praise.headline || 'Site em nivel de excelencia')}</h2>`,
-                        `<p>${safeAuditText(praise.message || technical.executive_summary || 'A S.S.W Intelligence identificou uma experiencia madura, consistente e acima do padrao esperado para a URL analisada.')}</p>`,
-                        `<small>${safeAuditText(praise.score_comment || `A URL ${host} esta na faixa premium da auditoria.`)}</small>`,
+                        '<span class="audit-excellence-kicker">Análise concluída sem relatório técnico</span>',
+                        `<h2>${safeAuditText(praise.headline || 'Site em nível de excelência')}</h2>`,
+                        `<p>${safeAuditText(praise.message || technical.executive_summary || 'A S.S.W Intelligence identificou uma experiência madura, consistente e acima do padrão esperado para a URL analisada.')}</p>`,
+                        `<small>${safeAuditText(praise.score_comment || `A URL ${host} está na faixa premium da auditoria.`)}</small>`,
                     '</div>',
                     '<div class="audit-excellence-points">',
                         points.map(point => [
@@ -3708,8 +3708,8 @@ function getCodigoHTML() {
                         ].join('')).join(''),
                     '</div>',
                     '<div class="audit-excellence-note">',
-                        '<strong>Nenhum relatorio foi gerado.</strong>',
-                        '<p>Como o score ficou em 90 ou mais, a plataforma nao salvou esta analise no historico e nao liberou PDF. O resultado aqui e apenas o reconhecimento positivo da IA.</p>',
+                        '<strong>Nenhum relatório foi gerado.</strong>',
+                        '<p>Como o score ficou em 90 ou mais, a plataforma não salvou esta análise no histórico e não liberou PDF. O resultado aqui é apenas o reconhecimento positivo da IA.</p>',
                     '</div>',
                     '<div class="audit-excellence-actions">',
                         '<button type="button" onclick="showSimplifiedSearch()">Analisar outro site</button>',
@@ -4781,9 +4781,9 @@ function getCodigoHTML() {
                     real_metrics: fallbackMetrics,
                     pillars_evaluation: {
                         accessibility_performance: { score: fallbackMetrics.accessibility_score, brief: 'Performance e acessibilidade estimadas em modo de contingencia.' },
-                        security: { score: Math.max(55, score - 8), brief: 'Sinais de confianca avaliados por heuristicas basicas.' },
-                        functional_integrity: { score: Math.max(50, score - 5), brief: 'Fluxos e links exigem validacao detalhada na proxima auditoria completa.' },
-                        conversion_ux: { score, brief: 'Clareza da oferta e chamadas de acao avaliadas por regras gerais.' }
+                        security: { score: Math.max(55, score - 8), brief: 'Sinais de confiança avaliados por heurísticas básicas.' },
+                        functional_integrity: { score: Math.max(50, score - 5), brief: 'Fluxos e links exigem validação detalhada na próxima auditoria completa.' },
+                        conversion_ux: { score, brief: 'Clareza da oferta e chamadas de ação avaliadas por regras gerais.' }
                     }
                 });
             }
