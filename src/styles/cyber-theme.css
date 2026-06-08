@@ -540,7 +540,7 @@ nav button.active i {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background: #020408;
+    background: #020408 url('../assets/images/demo/ssw-demo-poster.png') center / contain no-repeat;
 }
 
 /* Empty State Cards */
