@@ -440,9 +440,8 @@
                 if(emptyStateCards) emptyStateCards.classList.remove('hidden');
                 if(auditResults) auditResults.classList.add('hidden');
                 if(auditLoading) auditLoading.classList.add('hidden');
-                // Inicializa Turnstile para auditoria e modo comparativo
+                // Inicializa apenas o captcha visivel. O comparativo carrega sob demanda.
                 setTimeout(() => initTurnstileAudit(), 500);
-                setTimeout(() => initTurnstileCompare(), 500);
             }
             adjustFooterPosition(false);
             // Scroll para o topo da página
@@ -2475,6 +2474,7 @@ function getCodigoHTML() {
                 // Esconde CAPTCHA do modo normal e mostra o do modo compare
                 if (turnstileAudit) turnstileAudit.classList.add('hidden');
                 if (turnstileCompare) turnstileCompare.classList.remove('hidden');
+                setTimeout(() => initTurnstileCompare(), 100);
                 // Mantém a área de comparação escondida pois agora está integrada na barra
                 if (compareArea) compareArea.classList.add('hidden');
             }
