@@ -140,6 +140,7 @@
             updateAuthButton();
             // Mostrar a primeira seção do tutorial por padrão
             showTutorialSection('auditoria-simples');
+            initUrlInputSanitizers();
             }; // Fecha window.onload (async)
         // === 2. UI HELPERS ===
         function toggleSidebar(forceOpen) {
@@ -2746,7 +2747,7 @@ function getCodigoHTML() {
             warning.textContent = '';
 
             const persona = manualPersonaCache.find(p => p.id === personaId);
-            const url = document.getElementById('auditUrl')?.value?.trim();
+            const url = sanitizeUrlInputValue(document.getElementById('auditUrl'));
             if (!persona || !url || persona.niche === 'geral') return;
 
             try {
@@ -3520,7 +3521,7 @@ function getCodigoHTML() {
             nav('home');
             setTimeout(() => {
                 const input = document.getElementById('auditUrl');
-                if (input) input.value = url;
+                if (input) input.value = sanitizeMarketingUrl(url);
                 const mode = type === 'manual' ? 'manual' : 'auto';
                 const modeInput = document.getElementById('auditMode');
                 if (modeInput) modeInput.value = mode;
@@ -3537,6 +3538,111 @@ function getCodigoHTML() {
         window.openAuditHistoryItem = openAuditHistoryItem;
         window.deleteAuditHistoryItem = deleteAuditHistoryItem;
         window.rerunAuditFromHistory = rerunAuditFromHistory;
+
+        const MARKETING_QUERY_PARAM_EXACT = new Set([
+            'ppc',
+            'gclid',
+            'gclsrc',
+            'gbraid',
+            'wbraid',
+            'dclid',
+            'fbclid',
+            'msclkid',
+            'ttclid',
+            'twclid',
+            'li_fat_id',
+            'igshid',
+            'mc_cid',
+            'mc_eid',
+            'srsltid',
+            '_gl',
+            '_hsenc',
+            '_hsmi',
+            'cjevent',
+            'irclickid',
+            'clickid',
+            'click_id',
+            'rb_clickid'
+        ]);
+        const MARKETING_QUERY_PARAM_PREFIXES = [
+            'utm_',
+            'gad_',
+            'hsa_',
+            'fb_action_'
+        ];
+
+        function isMarketingQueryParam(name) {
+            const key = String(name || '').trim().toLowerCase();
+            return MARKETING_QUERY_PARAM_EXACT.has(key) ||
+                MARKETING_QUERY_PARAM_PREFIXES.some(prefix => key.startsWith(prefix));
+        }
+
+        function getUrlParseCandidate(value) {
+            const trimmed = String(value || '').trim().replace(/^<(.+)>$/, '$1').replace(/^['"]|['"]$/g, '');
+            if (!trimmed || /\s/.test(trimmed)) return null;
+
+            const hasProtocol = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed);
+            const protocolRelative = /^\/\//.test(trimmed);
+            const looksLikeDomain = /^[^\s/?#]+\.[^\s]+/.test(trimmed);
+            if (!hasProtocol && !protocolRelative && !looksLikeDomain) return null;
+
+            return {
+                original: trimmed,
+                candidate: hasProtocol ? trimmed : protocolRelative ? `https:${trimmed}` : `https://${trimmed}`,
+                removeProtocol: !hasProtocol && !protocolRelative,
+                protocolRelative
+            };
+        }
+
+        function sanitizeMarketingUrl(value) {
+            const parsed = getUrlParseCandidate(value);
+            if (!parsed) return String(value || '').trim();
+
+            try {
+                const url = new URL(parsed.candidate);
+                const removableKeys = Array.from(new Set(Array.from(url.searchParams.keys()).filter(isMarketingQueryParam)));
+                if (!removableKeys.length) return parsed.original;
+
+                removableKeys.forEach(key => url.searchParams.delete(key));
+                let cleaned = url.toString();
+
+                if (parsed.removeProtocol) cleaned = cleaned.replace(/^https:\/\//i, '');
+                if (parsed.protocolRelative) cleaned = cleaned.replace(/^https:/i, '');
+
+                return cleaned;
+            } catch (_) {
+                return String(value || '').trim();
+            }
+        }
+
+        function sanitizeUrlInputValue(input) {
+            if (!input) return '';
+            const before = input.value;
+            const cleaned = sanitizeMarketingUrl(before);
+            if (cleaned && cleaned !== before.trim()) {
+                input.value = cleaned;
+            }
+            return input.value.trim();
+        }
+
+        function bindUrlSanitizer(input) {
+            if (!input || input.dataset.urlSanitizerBound === '1') return;
+            input.dataset.urlSanitizerBound = '1';
+            let sanitizeTimer = null;
+            const scheduleSanitize = () => {
+                clearTimeout(sanitizeTimer);
+                sanitizeTimer = setTimeout(() => sanitizeUrlInputValue(input), 160);
+            };
+            input.addEventListener('input', scheduleSanitize);
+            input.addEventListener('paste', () => setTimeout(() => sanitizeUrlInputValue(input), 0));
+            input.addEventListener('change', () => sanitizeUrlInputValue(input));
+            input.addEventListener('blur', () => sanitizeUrlInputValue(input));
+        }
+
+        function initUrlInputSanitizers() {
+            document.querySelectorAll('#auditUrl, [id="compareUrlA"], [id="compareUrlB"], #compareUrlA_main, #compareUrlB_main')
+                .forEach(bindUrlSanitizer);
+        }
 
         function abrirModalNgrok() {
             abrirTutorialNgrok();
@@ -3726,7 +3832,8 @@ function getCodigoHTML() {
 
         async function runAudit() {
             showOnlyAuditHomeView();
-            const url = document.getElementById('auditUrl').value;
+            const urlInput = document.getElementById('auditUrl');
+            const url = sanitizeUrlInputValue(urlInput);
             if (bloquearUrlLocalSeNecessario(url)) return;
             if(USER.credits <= 0) return comprarCreditos();
             const mode = document.getElementById('auditMode')?.value || 'auto';
@@ -4065,8 +4172,8 @@ function getCodigoHTML() {
                 document.getElementById('manualSelectArea').classList.add('hidden');
                 return alert("Erro interno: Inputs não encontrados.");
             }
-            const urlA = elA.value.trim();
-            const urlB = elB.value.trim();
+            const urlA = sanitizeUrlInputValue(elA);
+            const urlB = sanitizeUrlInputValue(elB);
             if (!urlA || !urlB) {
                 document.getElementById('emptyStateCards').classList.remove('hidden');
                 document.getElementById('heroSection').classList.remove('hidden');
