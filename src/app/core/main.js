@@ -2684,34 +2684,43 @@ function getCodigoHTML() {
             var modeColor = isCompare ? '#818cf8' : mode === 'manual' ? '#67e8f9' : '#22d3ee';
 
             var steps = isCompare ? [
-                'Acessando e verificando Site A...',
-                'Acessando e verificando Site B...',
-                'Comparando performance e velocidade...',
-                'Auditando SEO dos dois sites...',
-                'Analisando experiência do usuário...',
-                'Gerando análise comparativa com IA...',
-                'Calculando pontuações e vencedor...',
-                'Compilando relatório de batalha...'
+                'Abrindo Site A em ambiente controlado...',
+                'Abrindo Site B sob as mesmas condições...',
+                'Coletando sinais visuais e estruturais...',
+                'Aguardando métricas oficiais quando o Google demora mais...',
+                'Comparando estabilidade, velocidade e acessibilidade...',
+                'Lendo diferenças de SEO e semântica...',
+                'Simulando reações de agents em cada experiência...',
+                'Cruzando percepção de usuário com dados técnicos...',
+                'Organizando vantagens e lacunas competitivas...',
+                'Preparando o veredito executivo...',
+                'Conferindo consistência antes de liberar o resultado...'
             ] : [
-                'Acessando estrutura da página...',
-                'Analisando performance e Core Web Vitals...',
-                'Auditando SEO e metadados...',
-                'Verificando acessibilidade (WCAG)...',
-                'Analisando segurança e certificados...',
-                'Construindo perfis de agents com IA...',
-                'Gerando recomendações estratégicas...',
-                'Compilando relatório final...'
+                'Abrindo a URL como um usuário real...',
+                'Mapeando estrutura, links e elementos principais...',
+                'Capturando evidências visuais em desktop e mobile...',
+                'Aguardando o Google PageSpeed concluir as métricas oficiais...',
+                'Lendo Core Web Vitals, SEO e acessibilidade...',
+                'Verificando sinais de confiança, segurança e estabilidade...',
+                'Observando fricções que podem afetar conversão...',
+                'Simulando jornadas com diferentes agents...',
+                'Separando problemas críticos de ajustes cosméticos...',
+                'Priorizando ações pelo impacto na experiência...',
+                'Conferindo coerência entre captura, métricas e IA...',
+                'Montando o relatório em uma leitura guiada...'
             ];
 
             var tips = [
-                'Sites com carregamento rápido convertem até 3× mais',
-                '68% das buscas globais são feitas em dispositivos móveis',
-                'Sites com HTTPS têm melhor posicionamento no Google',
-                '1 segundo de atraso reduz conversões em até 7%',
-                '53% dos usuários abandonam páginas que demoram mais de 3s',
-                'Análise de agents aumenta eficácia de marketing em 73%',
-                'Acessibilidade pode ampliar seu público em até 15%',
-                'Páginas com Schema Markup têm 20% mais cliques nos resultados'
+                'Algumas URLs fazem o PageSpeed levar mais tempo; a análise continua aguardando a resposta oficial.',
+                'A captura visual ajuda a explicar problemas que uma nota isolada não mostra.',
+                'A SSW combina sinais técnicos com percepção de usuário para priorizar melhor.',
+                'Um site lento nem sempre parece quebrado, mas pode perder decisões importantes.',
+                'Acessibilidade, clareza e confiança costumam impactar conversão tanto quanto performance.',
+                'Quando há bloqueios ou atrasos externos, o sistema evita gerar conclusões apressadas.',
+                'As agents ajudam a transformar métricas em contexto de jornada.',
+                'O relatório final separa evidência, diagnóstico e plano de ação.',
+                'Métricas oficiais podem variar por CDN, localização e estado atual do servidor.',
+                'A leitura priorizada reduz ruído para equipes de produto, marketing e tecnologia.'
             ];
 
             var displayUrl = url.length > 45 ? url.substring(0, 42) + '...' : url;
