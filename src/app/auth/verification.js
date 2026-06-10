@@ -1,76 +1,95 @@
-// Variável global para o timer
 let intervaloReenvio;
+
+function setReenviarButtonState(button, { disabled, label, muted = disabled }) {
+    if (!button) return;
+    button.disabled = disabled;
+    button.innerHTML = label;
+    button.classList.toggle('opacity-50', muted);
+    button.classList.toggle('text-slate-400', muted);
+    button.classList.toggle('text-primary', !muted);
+    button.classList.toggle('hover:underline', !muted);
+}
+
 function iniciarContagemReenvio() {
     let tempo = 30;
-    const link = document.getElementById('linkReenviar');
-    const span = document.getElementById('timerReenvio');
-    // Reseta estado visual (desabilitado)
-    link.classList.add('pointer-events-none', 'opacity-50');
-    link.classList.remove('text-primary', 'hover:underline');
-    link.classList.add('text-slate-400');
-    // Limpa intervalo anterior se existir
+    const button = document.getElementById('linkReenviar');
+    if (!button) return;
+
     if (intervaloReenvio) clearInterval(intervaloReenvio);
-    // Inicia contagem
+    setReenviarButtonState(button, {
+        disabled: true,
+        label: 'Reenviar código em <span id="timerReenvio">30</span>s'
+    });
+
     intervaloReenvio = setInterval(() => {
         tempo--;
-        span.innerText = tempo;
+        const timer = document.getElementById('timerReenvio');
+        if (timer) timer.innerText = tempo;
+
         if (tempo <= 0) {
             clearInterval(intervaloReenvio);
-            // Habilita o link
-            link.innerHTML = "Reenviar código agora";
-            link.classList.remove('pointer-events-none', 'opacity-50', 'text-slate-400');
-            link.classList.add('text-primary', 'hover:underline');
+            setReenviarButtonState(button, {
+                disabled: false,
+                label: 'Reenviar código agora',
+                muted: false
+            });
         }
     }, 1000);
 }
-async function reenviarCodigo() {
-    const link = document.getElementById('linkReenviar');
 
-    // Determina qual email usar (fluxo de login ou cadastro)
+async function reenviarCodigo() {
+    const button = document.getElementById('linkReenviar');
+    if (!button || button.disabled) return;
+
     let emailParaReenviar;
 
     if (USER && USER.email) {
-        // Fluxo normal de login (usuário já logado)
         emailParaReenviar = USER.email;
     } else if (emailTemporario) {
-        // Fluxo de cadastro (usuário acabou de se cadastrar)
         emailParaReenviar = emailTemporario;
     } else {
-        Toast.error("Usuário não encontrado. Faça login novamente.");
+        Toast.error('Usuário não encontrado. Faça login novamente.');
         logout();
         return;
     }
 
-    // Efeito visual de "Enviando..."
-    link.innerHTML = "Enviando...";
-    link.classList.add('pointer-events-none', 'opacity-50');
+    setReenviarButtonState(button, {
+        disabled: true,
+        label: 'Enviando...'
+    });
+
     try {
         const res = await fetch(`${API_URL}/api/reenviar_codigo`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: emailParaReenviar })
         });
         const data = await res.json().catch(() => ({}));
+
         if (res.ok) {
-            Toast.success("Novo código enviado! Verifique seu e-mail.");
-            // Reinicia a contagem de 30s
-            link.innerHTML = 'Reenviar código em <span id="timerReenvio">30</span>s';
+            Toast.success('Novo código enviado! Verifique seu e-mail.');
             iniciarContagemReenvio();
-        } else {
-            Toast.error(data.detail || "Erro ao reenviar. Tente novamente.");
-            link.innerHTML = "Tentar novamente";
-            link.classList.remove('pointer-events-none', 'opacity-50');
+            return;
         }
+
+        Toast.error(data.detail || 'Erro ao reenviar. Tente novamente.');
+        setReenviarButtonState(button, {
+            disabled: false,
+            label: 'Tentar novamente',
+            muted: false
+        });
     } catch (error) {
-        console.error("Erro ao reenviar código:", error);
-        Toast.error("Erro de conexão. Tente novamente.");
-        link.innerHTML = "Tentar novamente";
-        link.classList.remove('pointer-events-none', 'opacity-50');
+        console.error('Erro ao reenviar código:', error);
+        Toast.error('Erro de conexão. Tente novamente.');
+        setReenviarButtonState(button, {
+            disabled: false,
+            label: 'Tentar novamente',
+            muted: false
+        });
     }
 }
-// Inicializa o sistema de autenticação
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializa o formulário de login com a view padrão
     if (document.getElementById('loginContent')) {
         renderAuthView();
     }

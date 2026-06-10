@@ -169,6 +169,57 @@
             }
             document.body.classList.toggle('mobile-menu-open', shouldOpen);
         }
+        function setHomeSandbox(persona = 'ux') {
+            const sandboxData = {
+                ux: {
+                    label: 'Agent UX',
+                    score: '74',
+                    title: 'CTA principal perde contraste em telas pequenas',
+                    text: 'Usuários com pressa podem não perceber a ação principal acima da dobra, reduzindo conversão em landing pages mobile.',
+                    tags: ['Conversão', 'Mobile', 'Prioridade alta']
+                },
+                security: {
+                    label: 'Agent Segurança',
+                    score: '68',
+                    title: 'Formulários sensíveis precisam de sinais de confiança',
+                    text: 'A página solicita dados antes de reforçar criptografia, política de privacidade e contexto de uso, aumentando abandono em jornadas B2B.',
+                    tags: ['Confiança', 'Formulário', 'Risco médio']
+                },
+                mobile: {
+                    label: 'Agent Mobile',
+                    score: '71',
+                    title: 'Hierarquia visual fica comprimida em 360px',
+                    text: 'Elementos importantes competem por espaço no topo, exigindo mais rolagem e tornando a primeira decisão do usuário menos clara.',
+                    tags: ['Responsivo', 'UX', 'Correção rápida']
+                }
+            };
+            const data = sandboxData[persona] || sandboxData.ux;
+
+            const label = document.getElementById('sandboxPersonaLabel');
+            const score = document.getElementById('sandboxScore');
+            const title = document.getElementById('sandboxFindingTitle');
+            const text = document.getElementById('sandboxFindingText');
+            const tags = document.getElementById('sandboxTags');
+
+            if (label) label.textContent = data.label;
+            if (score) score.textContent = data.score;
+            if (title) title.textContent = data.title;
+            if (text) text.textContent = data.text;
+            if (tags) {
+                tags.textContent = '';
+                data.tags.forEach(tag => {
+                    const item = document.createElement('span');
+                    item.textContent = tag;
+                    tags.appendChild(item);
+                });
+            }
+
+            document.querySelectorAll('.home-sandbox-tab').forEach(tab => {
+                const isActive = tab.dataset.sandboxPersona === persona;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-pressed', String(isActive));
+            });
+        }
         // Scroll suave para um elemento
         function smoothScrollTo(elementId) {
             const element = document.getElementById(elementId);

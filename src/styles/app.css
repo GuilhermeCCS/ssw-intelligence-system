@@ -4219,6 +4219,278 @@ body.auth-page-active #appTopbar {
     animation: typingCursorBlink 1.15s ease-in-out infinite;
 }
 
+.home-trust-section,
+.home-how-section,
+.home-sandbox-section,
+.home-pricing-preview,
+.home-education-section {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 30px 0 4px;
+}
+
+.home-section-heading {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.home-section-heading span {
+    color: #93e7ff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.home-section-heading h2 {
+    max-width: 760px;
+    color: #ffffff;
+    font-size: clamp(1.28rem, 2.3vw, 2rem);
+    font-weight: 850;
+    line-height: 1.18;
+    letter-spacing: 0;
+}
+
+.home-proof-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.home-proof-logo,
+.home-education-item {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+    color: #dbeafe;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.home-proof-logo svg,
+.home-education-item svg {
+    color: #93e7ff;
+    flex-shrink: 0;
+}
+
+.home-testimonial-grid,
+.home-step-grid,
+.home-plan-grid,
+.home-education-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.home-testimonial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-testimonial-card,
+.home-step-card,
+.home-plan-card {
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(5, 10, 18, 0.76);
+    padding: 18px;
+}
+
+.home-testimonial-card p,
+.home-step-card p,
+.home-plan-card p,
+.home-sandbox-copy p,
+.home-sandbox-preview p {
+    color: #a8b5c7;
+    font-size: 14px;
+    line-height: 1.62;
+}
+
+.home-testimonial-card span {
+    display: block;
+    margin-top: 12px;
+    color: #93e7ff;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.home-step-card {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+}
+
+.home-step-number {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #bdf4ff;
+    color: #031018;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.home-step-card h3,
+.home-plan-card strong,
+.home-sandbox-preview h3 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 850;
+    line-height: 1.3;
+}
+
+.home-sandbox-section {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+    gap: 18px;
+    align-items: stretch;
+}
+
+.home-sandbox-copy,
+.home-sandbox-preview {
+    min-width: 0;
+}
+
+.home-sandbox-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.home-sandbox-tab,
+.home-plan-link,
+.home-inline-action {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(147, 231, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+    color: #dbeafe;
+    font-size: 13px;
+    font-weight: 850;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.home-sandbox-tab {
+    padding: 0 14px;
+}
+
+.home-sandbox-tab.active,
+.home-plan-link:hover,
+.home-inline-action:hover,
+.home-education-item:hover {
+    border-color: rgba(147, 231, 255, 0.55);
+    background: rgba(147, 231, 255, 0.13);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.home-sandbox-preview {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    border: 1px solid rgba(147, 231, 255, 0.22);
+    border-radius: 8px;
+    background: linear-gradient(145deg, rgba(8, 13, 22, 0.96), rgba(3, 10, 18, 0.92));
+    padding: 20px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.home-sandbox-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.home-sandbox-topline span {
+    color: #93e7ff;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.home-sandbox-topline strong {
+    width: 54px;
+    height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgba(147, 231, 255, 0.38);
+    color: #bdf4ff;
+    font-size: 20px;
+    font-weight: 950;
+}
+
+.home-sandbox-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.home-sandbox-tags span {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.home-inline-action,
+.home-plan-link {
+    width: fit-content;
+    padding: 0 14px;
+}
+
+.home-plan-card {
+    display: grid;
+    gap: 12px;
+}
+
+.home-plan-featured {
+    border-color: rgba(147, 231, 255, 0.32);
+    background: rgba(147, 231, 255, 0.075);
+}
+
+.home-education-item {
+    min-height: 64px;
+    text-align: left;
+}
+
+#homeFooterSpacer {
+    min-height: 24vh !important;
+}
+
+#linkReenviar {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 4px 6px;
+}
+
+#linkReenviar:disabled {
+    cursor: not-allowed;
+}
+
 @media (max-width: 767px) {
     .app-topbar {
         height: 66px;
@@ -4277,6 +4549,60 @@ body.auth-page-active #appTopbar {
     .hero-title-premium {
         font-size: clamp(2.25rem, 12.5vw, 3.2rem) !important;
         line-height: 1.08 !important;
+    }
+
+    .home-trust-section,
+    .home-how-section,
+    .home-sandbox-section,
+    .home-pricing-preview,
+    .home-education-section {
+        padding-top: 24px;
+    }
+
+    .home-section-heading {
+        margin-bottom: 14px;
+    }
+
+    .home-section-heading h2 {
+        font-size: 1.28rem;
+    }
+
+    .home-proof-strip,
+    .home-testimonial-grid,
+    .home-step-grid,
+    .home-plan-grid,
+    .home-education-grid,
+    .home-sandbox-section {
+        grid-template-columns: 1fr;
+    }
+
+    .home-proof-logo,
+    .home-education-item {
+        min-height: 48px;
+        justify-content: flex-start;
+        padding: 0 14px;
+    }
+
+    .home-testimonial-card,
+    .home-step-card,
+    .home-plan-card,
+    .home-sandbox-preview {
+        padding: 16px;
+    }
+
+    .home-sandbox-controls,
+    .home-sandbox-tags {
+        gap: 7px;
+    }
+
+    .home-sandbox-tab {
+        flex: 1 1 92px;
+        padding: 0 10px;
+    }
+
+    .home-inline-action,
+    .home-plan-link {
+        width: 100%;
     }
 
     #mobileMenuDropdown.sidebar-surface,

@@ -248,6 +248,44 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     color: var(--ssw-t2);
 }
 .ssw-g-icon { width: 14px; height: 14px; color: var(--ssw-cyan); }
+.ssw-free-trial-banner {
+    max-width: 720px;
+    margin: 24px auto 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid rgba(34,211,238,0.24);
+    border-radius: 8px;
+    background: rgba(34,211,238,0.07);
+    padding: 16px;
+    text-align: left;
+}
+.ssw-free-trial-banner strong {
+    display: block;
+    color: var(--ssw-t1);
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.ssw-free-trial-banner span {
+    display: block;
+    color: var(--ssw-t2);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.ssw-free-trial-banner button {
+    min-height: 40px;
+    border: 1px solid rgba(34,211,238,0.42);
+    border-radius: 8px;
+    background: #bdf4ff;
+    color: #031018;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 0 16px;
+    white-space: nowrap;
+}
 
 /* ── PLANS GRID ── */
 .ssw-plans-section {
@@ -723,6 +761,8 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     .ssw-plan-featured:hover { transform: translateY(-3px) !important; }
     .ssw-cta-card { padding: 48px 24px; }
     .ssw-guarantees { gap: 14px; flex-direction: column; align-items: center; }
+    .ssw-free-trial-banner { grid-template-columns: 1fr; text-align: center; }
+    .ssw-free-trial-banner button { width: 100%; }
     .ssw-hero-title { font-size: 44px; }
     .ssw-section-title, .ssw-cta-title { font-size: 30px; }
 }

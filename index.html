@@ -156,7 +156,7 @@
         </div>
     </div>
     <header id="appTopbar" class="app-topbar">
-        <a href="#" onclick="nav('home')" class="app-brand-link" aria-label="Ir para o início">
+        <a href="/home" onclick="event.preventDefault(); nav('home');" class="app-brand-link" aria-label="Ir para o início">
             <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
             <span>SSW <strong>| Intelligence</strong></span>
         </a>
@@ -223,7 +223,7 @@
     <aside id="appSidebar" class="app-sidebar-shell">
         <div id="mobileMenuDropdown" class="sidebar-surface hidden md:flex" aria-label="Menu principal">
             <div class="sidebar-brand">
-                <a href="#" onclick="nav('home'); toggleSidebar(false);" class="sidebar-brand-link" aria-label="Ir para o início">
+                <a href="/home" onclick="event.preventDefault(); nav('home'); toggleSidebar(false);" class="sidebar-brand-link" aria-label="Ir para o início">
                     <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
                     <span>SSW <strong>| Intelligence</strong></span>
                 </a>
@@ -350,6 +350,141 @@
                         </select>
                     </div>
                 </div>
+                <section class="home-trust-section" aria-labelledby="homeTrustTitle">
+                    <div class="home-section-heading">
+                        <span>Credibilidade imediata</span>
+                        <h2 id="homeTrustTitle">Diagnóstico apoiado em sinais técnicos, comportamento real e relatórios acionáveis.</h2>
+                    </div>
+                    <div class="home-proof-strip" aria-label="Sinais de confiança">
+                        <div class="home-proof-logo">
+                            <i data-lucide="gauge" class="w-4 h-4"></i>
+                            <span>PageSpeed</span>
+                        </div>
+                        <div class="home-proof-logo">
+                            <i data-lucide="globe-2" class="w-4 h-4"></i>
+                            <span>Chromium</span>
+                        </div>
+                        <div class="home-proof-logo">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Segurança</span>
+                        </div>
+                        <div class="home-proof-logo">
+                            <i data-lucide="users" class="w-4 h-4"></i>
+                            <span>Agents IA</span>
+                        </div>
+                    </div>
+                    <div class="home-testimonial-grid">
+                        <article class="home-testimonial-card">
+                            <p>"O relatório separa impacto, causa provável e prioridade. Dá para transformar uma auditoria em backlog no mesmo dia."</p>
+                            <span>Operação de agência digital</span>
+                        </article>
+                        <article class="home-testimonial-card">
+                            <p>"As agents mostram atritos que um score técnico sozinho não revela, principalmente em jornadas mobile e páginas de conversão."</p>
+                            <span>Time de produto SaaS</span>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="home-how-section" aria-labelledby="homeHowTitle">
+                    <div class="home-section-heading">
+                        <span>Como funciona</span>
+                        <h2 id="homeHowTitle">Três passos para transformar uma URL em plano de ação.</h2>
+                    </div>
+                    <div class="home-step-grid">
+                        <article class="home-step-card">
+                            <span class="home-step-number">1</span>
+                            <h3>Capture o site</h3>
+                            <p>A SSW acessa a página como um navegador real, lê estrutura, performance, SEO, segurança e sinais de usabilidade.</p>
+                        </article>
+                        <article class="home-step-card">
+                            <span class="home-step-number">2</span>
+                            <h3>Simule as agents</h3>
+                            <p>Perfis comportamentais interpretam o impacto das falhas em usuários diferentes, como comprador B2B, mobile-first ou visitante leigo.</p>
+                        </article>
+                        <article class="home-step-card">
+                            <span class="home-step-number">3</span>
+                            <h3>Priorize correções</h3>
+                            <p>O relatório organiza riscos por criticidade, impacto e clareza de execução para acelerar decisão técnica e comercial.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="home-sandbox-section" aria-labelledby="homeSandboxTitle">
+                    <div class="home-sandbox-copy">
+                        <div class="home-section-heading">
+                            <span>Sandbox interativo</span>
+                            <h2 id="homeSandboxTitle">Experimente o formato do relatório antes de analisar seu site.</h2>
+                        </div>
+                        <p>Troque a persona e veja como o mesmo problema muda de prioridade conforme a jornada do usuário.</p>
+                        <div class="home-sandbox-controls" role="group" aria-label="Selecionar persona do sandbox">
+                            <button type="button" class="home-sandbox-tab active" data-sandbox-persona="ux" onclick="setHomeSandbox('ux')">UX</button>
+                            <button type="button" class="home-sandbox-tab" data-sandbox-persona="security" onclick="setHomeSandbox('security')">Segurança</button>
+                            <button type="button" class="home-sandbox-tab" data-sandbox-persona="mobile" onclick="setHomeSandbox('mobile')">Mobile</button>
+                        </div>
+                    </div>
+                    <div class="home-sandbox-preview" aria-live="polite">
+                        <div class="home-sandbox-topline">
+                            <span id="sandboxPersonaLabel">Agent UX</span>
+                            <strong id="sandboxScore">74</strong>
+                        </div>
+                        <h3 id="sandboxFindingTitle">CTA principal perde contraste em telas pequenas</h3>
+                        <p id="sandboxFindingText">Usuários com pressa podem não perceber a ação principal acima da dobra, reduzindo conversão em landing pages mobile.</p>
+                        <div id="sandboxTags" class="home-sandbox-tags">
+                            <span>Conversão</span>
+                            <span>Mobile</span>
+                            <span>Prioridade alta</span>
+                        </div>
+                        <button type="button" onclick="nav('tutorial')" class="home-inline-action">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            Ver tour completo
+                        </button>
+                    </div>
+                </section>
+
+                <section class="home-pricing-preview" aria-labelledby="homePricingTitle">
+                    <div class="home-section-heading">
+                        <span>Planos transparentes</span>
+                        <h2 id="homePricingTitle">Comece com sandbox gratuito e escale por volume de auditorias.</h2>
+                    </div>
+                    <div class="home-plan-grid">
+                        <article class="home-plan-card">
+                            <strong>Teste gratuito</strong>
+                            <p>Explore o sandbox, entenda a metodologia e crie sua conta sem cobrança inicial.</p>
+                            <button type="button" onclick="showAuthScreen('register')" class="home-plan-link">Criar conta</button>
+                        </article>
+                        <article class="home-plan-card home-plan-featured">
+                            <strong>Pro</strong>
+                            <p>Mais créditos, benchmarking competitivo, histórico estendido e PDF premium.</p>
+                            <button type="button" onclick="nav('precos')" class="home-plan-link">Ver planos</button>
+                        </article>
+                        <article class="home-plan-card">
+                            <strong>Enterprise</strong>
+                            <p>Volume alto, white-label, API e suporte comercial para operações maiores.</p>
+                            <button type="button" onclick="nav('precos')" class="home-plan-link">Comparar</button>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="home-education-section" aria-labelledby="homeEducationTitle">
+                    <div class="home-section-heading">
+                        <span>Conteúdo educativo</span>
+                        <h2 id="homeEducationTitle">Guias práticos para UX, performance, segurança e auditorias locais.</h2>
+                    </div>
+                    <div class="home-education-grid">
+                        <button type="button" onclick="showTutorialSection('auditoria-simples'); nav('tutorial');" class="home-education-item">
+                            <i data-lucide="search-check" class="w-5 h-5"></i>
+                            <span>Auditoria individual</span>
+                        </button>
+                        <button type="button" onclick="showTutorialSection('ngrok-localhost'); nav('tutorial');" class="home-education-item">
+                            <i data-lucide="monitor" class="w-5 h-5"></i>
+                            <span>Auditar localhost</span>
+                        </button>
+                        <button type="button" onclick="showTutorialSection('dominios-autorizados'); nav('tutorial');" class="home-education-item">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                            <span>Domínios autorizados</span>
+                        </button>
+                    </div>
+                </section>
                 <!-- Manual Selection Area -->
                 <div id="manualSelectArea" class="hidden p-5 rounded-2xl" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,0.16);box-shadow:0 8px 32px rgba(0,0,0,0.25);">
                     <div class="flex justify-between items-start mb-5">
@@ -1571,9 +1706,9 @@
                 </button>
                 <div class="mt-4 text-center">
                     <p class="text-xs text-slate-500">Não recebeu?</p>
-                    <a href="#" id="linkReenviar" onclick="reenviarCodigo()" class="text-sm font-bold text-slate-400 pointer-events-none opacity-50 transition-colors">
+                    <button type="button" id="linkReenviar" onclick="reenviarCodigo()" disabled class="text-sm font-bold text-slate-400 opacity-50 transition-colors disabled:cursor-not-allowed">
                         Reenviar código em <span id="timerReenvio">30</span>s
-                    </a>
+                    </button>
                 </div>
             </div>
             <div class="mt-6 pt-6 border-t border-slate-800/50">
