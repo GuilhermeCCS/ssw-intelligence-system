@@ -3620,7 +3620,9 @@ function getCodigoHTML() {
                 const key = getHistoryActionKey(action, index);
                 const text = getHistoryActionText(action);
                 const verified = verificationMap.get(key);
-                const checked = verified ? 'checked' : '';
+                const isChecked = Boolean(verified);
+                const checked = isChecked ? 'checked' : '';
+                const checkedClass = isChecked ? ' is-checked' : '';
                 const status = verified?.status || '';
                 const payload = safeAuditText(JSON.stringify({
                     key,
@@ -3629,8 +3631,8 @@ function getCodigoHTML() {
                     text
                 }));
                 return [
-                    '<label class="history-action-check">',
-                        `<input type="checkbox" data-history-action-checkbox data-action="${payload}" ${checked}>`,
+                    `<label class="history-action-check${checkedClass}" aria-checked="${isChecked ? 'true' : 'false'}" onclick="toggleHistoryActionCheck(event, this)">`,
+                        `<input type="checkbox" data-history-action-checkbox data-action="${payload}" ${checked} onchange="syncHistoryActionCheckVisual(this)">`,
                         '<span>',
                             `<strong>${safeAuditText(text)}</strong>`,
                             status ? `<small class="history-action-status history-action-status-${safeAuditText(status)}">${safeAuditText(status === 'corrigida' ? 'corrigida' : status === 'parcial' ? 'parcial' : status === 'inconclusiva' ? 'inconclusiva' : 'não corrigida')}</small>` : '',
@@ -3661,20 +3663,54 @@ function getCodigoHTML() {
             ].join('');
         }
 
+        function syncHistoryActionCheckVisual(input) {
+            if (!input) return;
+            const row = input.closest('.history-action-check');
+            if (!row) return;
+            const checked = Boolean(input.checked);
+            row.classList.toggle('is-checked', checked);
+            row.setAttribute('aria-checked', checked ? 'true' : 'false');
+        }
+
+        function toggleHistoryActionCheck(event, row) {
+            const input = row?.querySelector?.('[data-history-action-checkbox]');
+            if (!input) return;
+            if (event?.target === input) {
+                setTimeout(() => syncHistoryActionCheckVisual(input), 0);
+                return;
+            }
+            if (event) event.preventDefault();
+            input.checked = !input.checked;
+            syncHistoryActionCheckVisual(input);
+        }
+
         function setHistoryActionChecks(checked) {
             document.querySelectorAll('[data-history-action-checkbox]').forEach(input => {
                 input.checked = Boolean(checked);
+                syncHistoryActionCheckVisual(input);
             });
+        }
+
+        function parseSelectedHistoryAction(input) {
+            if (!input) return null;
+            try {
+                const action = JSON.parse(input.dataset.action || '{}');
+                return action && (action.text || action.key) ? action : null;
+            } catch {
+                return null;
+            }
         }
 
         async function verifyHistoryActions(historyId) {
             const btn = document.getElementById('historyVerifyActionsBtn');
-            const selected = Array.from(document.querySelectorAll('[data-history-action-checkbox]:checked'))
+            const selected = Array.from(document.querySelectorAll('[data-history-action-checkbox]'))
+                .filter(input => input.checked || input.closest('.history-action-check')?.classList.contains('is-checked'))
                 .map(input => {
-                    try { return JSON.parse(input.dataset.action || '{}'); }
-                    catch { return null; }
+                    input.checked = true;
+                    syncHistoryActionCheckVisual(input);
+                    return parseSelectedHistoryAction(input);
                 })
-                .filter(item => item && item.text);
+                .filter(Boolean);
 
             if (!selected.length) {
                 Toast.warning('Marque pelo menos uma ação do plano recomendado.');
@@ -3913,6 +3949,10 @@ function getCodigoHTML() {
         window.openAuditHistoryItem = openAuditHistoryItem;
         window.deleteAuditHistoryItem = deleteAuditHistoryItem;
         window.rerunAuditFromHistory = rerunAuditFromHistory;
+        window.setHistoryActionChecks = setHistoryActionChecks;
+        window.syncHistoryActionCheckVisual = syncHistoryActionCheckVisual;
+        window.toggleHistoryActionCheck = toggleHistoryActionCheck;
+        window.verifyHistoryActions = verifyHistoryActions;
 
         const MARKETING_QUERY_PARAM_EXACT = new Set([
             'ppc',
