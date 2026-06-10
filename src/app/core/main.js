@@ -148,6 +148,8 @@
             const mobileMenu = document.getElementById('mobileMenuDropdown');
             const overlay = document.getElementById('sidebarOverlay');
             const button = document.getElementById('mobileMenuButton');
+            const userDropdown = document.getElementById('userMenuCircleDropdown');
+            const avatarBtn = document.getElementById('avatarCircleBtn');
             if(!mobileMenu) return;
 
             const isOpen = !mobileMenu.classList.contains('hidden');
@@ -157,9 +159,13 @@
             if(overlay) overlay.classList.toggle('hidden', !shouldOpen);
             if(button) {
                 button.setAttribute('aria-expanded', String(shouldOpen));
-                const icon = button.querySelector('i');
-                if (icon) icon.setAttribute('data-lucide', shouldOpen ? 'x' : 'menu');
+                button.classList.toggle('is-active', shouldOpen);
                 if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+            if (shouldOpen && userDropdown) {
+                userDropdown.classList.add('hidden');
+                if (avatarBtn) avatarBtn.setAttribute('aria-expanded', 'false');
+                document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
             }
             document.body.classList.toggle('mobile-menu-open', shouldOpen);
         }
@@ -225,7 +231,7 @@
                 if (charIndex < text.length) {
                     line.textContent += text.charAt(charIndex);
                     charIndex += 1;
-                    const pause = /[ ,]/.test(text.charAt(charIndex - 1)) ? 48 : 32;
+                    const pause = /[ ,]/.test(text.charAt(charIndex - 1)) ? 130 : 82;
                     window.setTimeout(typeNext, pause);
                     return;
                 }
@@ -235,13 +241,13 @@
                 lineIndex += 1;
                 charIndex = 0;
                 if (lineIndex < lines.length) {
-                    window.setTimeout(typeNext, 220);
+                    window.setTimeout(typeNext, 520);
                 } else {
                     title.classList.add('typing-complete');
                 }
             };
 
-            window.setTimeout(typeNext, 180);
+            window.setTimeout(typeNext, 360);
         }
         // Função auxiliar para gerenciar UI de comparação
         function updateCompareUI(showResults = false) {
@@ -1564,6 +1570,7 @@ function getCodigoHTML() {
             const btn = document.getElementById('avatarCircleBtn');
             if (!dropdown) return;
             const shouldOpen = dropdown.classList.contains('hidden');
+            if (shouldOpen) toggleSidebar(false);
             dropdown.classList.toggle('hidden', !shouldOpen);
             if (btn) btn.setAttribute('aria-expanded', String(shouldOpen));
             // Fechar ao clicar fora
