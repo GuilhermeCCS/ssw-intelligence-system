@@ -231,7 +231,7 @@
                 if (charIndex < text.length) {
                     line.textContent += text.charAt(charIndex);
                     charIndex += 1;
-                    const pause = /[ ,]/.test(text.charAt(charIndex - 1)) ? 130 : 82;
+                    const pause = /[ ,]/.test(text.charAt(charIndex - 1)) ? 98 : 62;
                     window.setTimeout(typeNext, pause);
                     return;
                 }
@@ -241,13 +241,13 @@
                 lineIndex += 1;
                 charIndex = 0;
                 if (lineIndex < lines.length) {
-                    window.setTimeout(typeNext, 520);
+                    window.setTimeout(typeNext, 380);
                 } else {
                     title.classList.add('typing-complete');
                 }
             };
 
-            window.setTimeout(typeNext, 360);
+            window.setTimeout(typeNext, 260);
         }
         // Função auxiliar para gerenciar UI de comparação
         function updateCompareUI(showResults = false) {

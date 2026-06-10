@@ -3594,7 +3594,7 @@ body {
     transform: translateY(0.08em);
     border-radius: 999px;
     background: currentColor;
-    animation: typingCursorBlink 0.85s steps(2, start) infinite;
+    animation: typingCursorBlink 1.15s ease-in-out infinite;
 }
 
 .title-highlight.is-typing::after,
@@ -3604,8 +3604,12 @@ body {
 }
 
 @keyframes typingCursorBlink {
+    0%,
+    100% {
+        opacity: 1;
+    }
     50% {
-        opacity: 0;
+        opacity: 0.32;
     }
 }
 
@@ -4199,6 +4203,7 @@ body.auth-page-active #appTopbar {
     height: 0.76em;
     background: #93e7ff;
     box-shadow: 0 0 18px rgba(147, 231, 255, 0.4);
+    animation: typingCursorBlink 1.15s ease-in-out infinite;
 }
 
 @media (max-width: 767px) {
