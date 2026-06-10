@@ -155,130 +155,120 @@
             </div>
         </div>
     </div>
-    <aside id="appSidebar" class="sticky top-0 z-40 w-full">
-        <!-- Navbar Horizontal -->
-        <div class="w-full px-6 py-3 flex items-center justify-between">
-            <!-- Left: Logo e Nome -->
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-14 h-14 object-contain rounded-full">
-                <a href="#" onclick="nav('home')" class="text-lg font-medium uppercase tracking-wide text-white hidden sm:block hover:text-primary transition-colors cursor-pointer">SSW <span class="text-primary">| INTELLIGENCE</span></a>
-            </div>
-            <!-- Center: Menu Navegação -->
-            <nav class="hidden md:flex items-center gap-3">
-                <div class="nav-cluster group">
-                    <button type="button" class="nav-cluster-trigger">
-                        <i data-lucide="scan-search" class="w-5 h-5"></i>
-                        <span>Central de Auditoria</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                    </button>
-                    <div class="nav-cluster-menu">
-                        <button onclick="showSimplifiedSearch()"><i data-lucide="file-search" class="w-4 h-4"></i>Analisar site</button>
-                        <button onclick="nav('history')"><i data-lucide="history" class="w-4 h-4"></i>Histórico</button>
-                        <button onclick="nav('agents')"><i data-lucide="users" class="w-4 h-4"></i>Agents</button>
-                    </div>
-                </div>
-                <div class="nav-cluster group">
-                    <button type="button" class="nav-cluster-trigger">
-                        <i data-lucide="trophy" class="w-5 h-5"></i>
-                        <span>Autoridade Digital</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                    </button>
-                    <div class="nav-cluster-menu">
-                        <button onclick="nav('ranking')"><i data-lucide="bar-chart-3" class="w-4 h-4"></i>Ranking premium</button>
-                        <button onclick="nav('domains')"><i data-lucide="shield-check" class="w-4 h-4"></i>Domínios autorizados</button>
-                    </div>
-                </div>
-                <button onclick="nav('tutorial')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="book-open" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Guia SSW</span>
+    <header id="mobileTopbar" class="mobile-topbar md:hidden">
+        <a href="#" onclick="nav('home')" class="mobile-brand-link" aria-label="Ir para o início">
+            <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
+            <span>SSW <strong>| Intelligence</strong></span>
+        </a>
+        <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu" aria-expanded="false" class="mobile-menu-button">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+    </header>
+    <div id="sidebarOverlay" class="sidebar-overlay hidden md:hidden" onclick="toggleSidebar(false)"></div>
+    <aside id="appSidebar" class="app-sidebar-shell">
+        <div id="mobileMenuDropdown" class="sidebar-surface hidden md:flex" aria-label="Menu principal">
+            <div class="sidebar-brand">
+                <a href="#" onclick="nav('home'); toggleSidebar(false);" class="sidebar-brand-link" aria-label="Ir para o início">
+                    <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
+                    <span>SSW <strong>| Intelligence</strong></span>
+                </a>
+                <button type="button" onclick="toggleSidebar(false)" class="sidebar-close-button" aria-label="Fechar menu">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
-                <button onclick="nav('precos')" class="group flex items-center gap-2 px-4 py-2.5 text-base font-medium text-white hover:text-white hover:bg-slate-800/50 rounded-lg transition-all border border-transparent hover:border-slate-700/50">
-                    <i data-lucide="credit-card" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                    <span class="hidden lg:inline">Planos</span>
+            </div>
+
+            <nav id="primarySidebarNav" class="sidebar-nav" aria-label="Navegação principal">
+                <p class="sidebar-section-label">Central de Auditoria</p>
+                <button onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="home">
+                    <i data-lucide="file-search" class="w-5 h-5"></i>
+                    <span>Analisar site</span>
+                </button>
+                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
+                    <i data-lucide="history" class="w-5 h-5"></i>
+                    <span>Histórico</span>
+                </button>
+                <button onclick="nav('agents'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="agents">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Agents</span>
+                </button>
+
+                <p class="sidebar-section-label">Autoridade Digital</p>
+                <button onclick="nav('ranking'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="ranking">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span>Ranking premium</span>
+                </button>
+                <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    <span>Domínios autorizados</span>
+                </button>
+
+                <p class="sidebar-section-label">Conta e Suporte</p>
+                <button onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                    <span>Guia SSW</span>
+                </button>
+                <button onclick="nav('precos'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="precos">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    <span>Planos</span>
                 </button>
             </nav>
-            <!-- Right: User Menu Circle -->
-           <div class="flex items-center gap-3">
 
-    <div id="authButtonsContainer" class="hidden flex items-center gap-3">
-        <button onclick="showAuthScreen('login')" class="text-base font-medium uppercase text-slate-300 hover:text-white px-3 sm:px-4 py-2.5 transition-colors">Login</button>
-        <button onclick="showAuthScreen('register')" class="text-base font-medium uppercase text-white bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90 px-4 sm:px-5 py-2.5 rounded-lg shadow-lg shadow-primary/30 transition-transform hover:scale-105">Cadastro</button>
-    </div>
+            <div class="sidebar-account">
+                <div id="authButtonsContainer" class="sidebar-auth hidden">
+                    <button onclick="showAuthScreen('login'); toggleSidebar(false);" class="sidebar-auth-link">Login</button>
+                    <button onclick="showAuthScreen('register'); toggleSidebar(false);" class="sidebar-auth-primary">Cadastro</button>
+                </div>
 
-    <div id="userAvatarContainer" class="relative hidden">
-        <button onclick="toggleUserMenuCircle()" class="user-avatar-button" id="avatarCircleBtn" aria-label="Abrir menu do usuário">
-            <span id="userAvatarCircle" class="user-avatar-initial">U</span>
-        </button>
-        <div id="userMenuCircleDropdown" class="absolute right-0 mt-3 w-64 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-2 border-blue-500/30 rounded-2xl shadow-2xl z-50 hidden overflow-hidden backdrop-blur-xl">
-            <div id="userInfoCircleSection" class="border border-blue-500/30 rounded-lg p-4 bg-blue-600/10 hidden">
-                <div class="flex items-center gap-3">
-                    <div class="user-avatar-large">
-                        <span id="userAvatarLarge" class="user-avatar-large-initial">U</span>
+                <div id="userAvatarContainer" class="sidebar-profile hidden">
+                    <button onclick="toggleUserMenuCircle()" class="sidebar-profile-button" id="avatarCircleBtn" aria-label="Abrir menu do usuário" aria-expanded="false">
+                        <span class="user-avatar-button sidebar-profile-avatar">
+                            <span id="userAvatarCircle" class="user-avatar-initial">U</span>
+                        </span>
+                        <span class="sidebar-profile-copy">
+                            <span id="sidebarProfileName">Meu perfil</span>
+                            <small id="sidebarProfilePlan">Starter</small>
+                        </span>
+                        <i data-lucide="chevron-up" class="w-4 h-4"></i>
+                    </button>
+                    <div id="userMenuCircleDropdown" class="user-menu-panel hidden">
+                        <div id="userInfoCircleSection" class="user-menu-summary hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="user-avatar-large">
+                                    <span id="userAvatarLarge" class="user-avatar-large-initial">U</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="user-menu-name" id="userNameCircle">...</p>
+                                    <p class="user-menu-email" id="userEmailCircle">user@email.com</p>
+                                </div>
+                            </div>
+                            <div class="user-menu-metric">
+                                <span>Créditos</span>
+                                <strong id="userCreditsCircle">0</strong>
+                            </div>
+                            <div class="user-menu-metric">
+                                <span>Plano</span>
+                                <strong id="userPlanCircle">Starter</strong>
+                            </div>
+                        </div>
+                        <div class="user-menu-actions">
+                            <button onclick="mudarSenha()" class="user-menu-action">
+                                <i data-lucide="key" class="w-4 h-4"></i>
+                                <span>Mudar senha</span>
+                            </button>
+                            <button onclick="comprarCreditos(); toggleUserMenuCircle();" class="user-menu-action user-menu-action-primary">
+                                <i data-lucide="coins" class="w-4 h-4"></i>
+                                <span>Comprar créditos</span>
+                            </button>
+                            <button onclick="handleLoginLogout(); toggleUserMenuCircle();" class="user-menu-action user-menu-action-danger" id="userMenuCircleLogoutBtn">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                <span id="userMenuCircleText">Sair</span>
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-sm font-medium text-slate-200" id="userNameCircle">...</p>
-                        <p class="text-xs text-slate-500" id="userEmailCircle">user@email.com</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mt-4 pt-4 border-t border-blue-500/20">
-                    <span class="text-xs text-slate-400 uppercase tracking-wider">Créditos</span>
-                    <span class="text-lg font-semibold text-white" id="userCreditsCircle">0</span>
-                </div>
-                <div class="flex justify-between items-center mt-3">
-                    <span class="text-xs text-slate-400 uppercase tracking-wider">Plano</span>
-                    <span class="text-xs font-semibold text-cyan-200 uppercase tracking-[0.18em]" id="userPlanCircle">Starter</span>
                 </div>
             </div>
-            <div class="px-4 py-3 space-y-2">
-                <button onclick="mudarSenha()" class="w-full bg-blue-600/20 border border-blue-500/30 text-white text-sm font-medium py-2 rounded-md hover:bg-blue-600/30 transition-colors">
-                    <i data-lucide="key" class="w-4 h-4 inline mr-2"></i> Mudar Senha
-                </button>
-                <button onclick="comprarCreditos()" class="w-full bg-white text-black text-sm font-medium py-2 rounded-md hover:bg-slate-200 transition-colors">
-                    Comprar Créditos
-                </button>
-                <button onclick="handleLoginLogout(); toggleUserMenuCircle();" class="w-full bg-red-500 text-white text-xs font-medium py-2 rounded-md hover:bg-red-600 transition-colors mt-2" id="userMenuCircleLogoutBtn">
-                    <span id="userMenuCircleText">Sair</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu" aria-expanded="false" class="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors">
-        <i data-lucide="menu" class="w-5 h-5"></i>
-    </button>
-</div>
         </div>
     </aside>
-    <!-- Menu Mobile Dropdown (aparece quando clica no botão menu) -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden hidden" onclick="toggleSidebar()"></div>
-    <div id="mobileMenuDropdown" class="fixed top-20 left-0 right-0 bg-slate-900 border-b border-slate-800 z-30 hidden md:hidden transform -translate-y-full transition-transform duration-300">
-        <nav class="flex flex-col p-4 space-y-2">
-            <p class="px-2 pt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Central de Auditoria</p>
-            <button onclick="showSimplifiedSearch(); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="file-search" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Analisar
-            </button>
-            <button onclick="nav('history'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="history" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Histórico
-            </button>
-            <button onclick="nav('agents'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="users" class="w-5 h-5 text-slate-400 group-hover:text-accent"></i> Agents
-            </button>
-            <p class="px-2 pt-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Autoridade Digital</p>
-            <button onclick="nav('ranking'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="trophy" class="w-5 h-5 text-slate-400 group-hover:text-yellow-400"></i> Ranking Premium
-            </button>
-            <button onclick="nav('domains'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="shield-check" class="w-5 h-5 text-slate-400 group-hover:text-primary"></i> Domínios Autorizados
-            </button>
-            <p class="px-2 pt-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Conta e Suporte</p>
-            <button onclick="nav('tutorial'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="book-open" class="w-5 h-5 text-slate-400 group-hover:text-cyber"></i> Guia SSW
-            </button>
-            <button onclick="nav('precos'); toggleSidebar();" class="group w-full flex items-center gap-3 px-4 py-3 text-base font-medium uppercase text-white hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
-                <i data-lucide="credit-card" class="w-5 h-5 text-slate-400 group-hover:text-green-400"></i> Planos
-            </button>
-        </nav>
-    </div>
     <main class="flex-1 md:h-screen overflow-y-auto overflow-x-hidden relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;"></main>
         <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper" style="background: transparent !important;">
             <div id="view-home" class="command-center max-w-6xl mx-auto space-y-8 animate-fade-in-up">
@@ -286,9 +276,9 @@
                 <div id="heroSection" class="hero-section-premium">
                     <!-- Título Principal com Efeito -->
                     <div class="hero-title-container">
-                        <h1 class="hero-title-premium">
-                            <span class="title-line">Simule a experiência de um</span>
-                            <span class="title-highlight">usuário real no seu site</span>
+                        <h1 class="hero-title-premium" data-typewriter="true" aria-label="Simule a experiência de um usuário real no seu site">
+                            <span class="title-line typing-target" data-typewriter-text="Simule a experiência de um">Simule a experiência de um</span>
+                            <span class="title-highlight typing-target" data-typewriter-text="usuário real no seu site">usuário real no seu site</span>
                         </h1>
                     </div>
                     <!-- Subtítulo com Design Premium -->

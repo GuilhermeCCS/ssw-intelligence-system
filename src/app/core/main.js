@@ -58,6 +58,7 @@
 
             // Verifica pathname inicial ao carregar a página
             handlePopState();
+            initHeroTypewriter();
 
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
@@ -154,7 +155,12 @@
 
             mobileMenu.classList.toggle('hidden', !shouldOpen);
             if(overlay) overlay.classList.toggle('hidden', !shouldOpen);
-            if(button) button.setAttribute('aria-expanded', String(shouldOpen));
+            if(button) {
+                button.setAttribute('aria-expanded', String(shouldOpen));
+                const icon = button.querySelector('i');
+                if (icon) icon.setAttribute('data-lucide', shouldOpen ? 'x' : 'menu');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
             document.body.classList.toggle('mobile-menu-open', shouldOpen);
         }
         // Scroll suave para um elemento
@@ -163,6 +169,79 @@
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+        }
+        function setActiveNavButton(view) {
+            const buttons = document.querySelectorAll('#primarySidebarNav button');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-primary/10', 'border-primary/30');
+                btn.classList.add('border-transparent');
+                btn.removeAttribute('aria-current');
+                const indicator = btn.querySelector('.nav-indicator');
+                if (indicator) indicator.remove();
+            });
+
+            const activeButtons = document.querySelectorAll(`#primarySidebarNav button[data-nav-target="${view}"]`);
+            activeButtons.forEach(btn => {
+                btn.classList.add('active', 'bg-primary/10', 'border-primary/30');
+                btn.classList.remove('border-transparent');
+                btn.setAttribute('aria-current', 'page');
+                if (!btn.querySelector('.nav-indicator')) {
+                    btn.insertAdjacentHTML('afterbegin', '<div class="nav-indicator"></div>');
+                }
+            });
+        }
+        function initHeroTypewriter() {
+            const title = document.querySelector('.hero-title-premium[data-typewriter="true"]');
+            if (!title || title.dataset.typewriterReady === 'true') return;
+
+            const lines = Array.from(title.querySelectorAll('[data-typewriter-text]'));
+            if (!lines.length) return;
+
+            const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reducedMotion) {
+                title.classList.add('typing-complete');
+                return;
+            }
+
+            title.dataset.typewriterReady = 'true';
+            title.classList.remove('typing-complete');
+            const texts = lines.map(line => line.dataset.typewriterText || line.textContent || '');
+            lines.forEach(line => {
+                line.textContent = '';
+                line.classList.remove('is-typing', 'is-typed');
+            });
+
+            let lineIndex = 0;
+            let charIndex = 0;
+            const typeNext = () => {
+                const line = lines[lineIndex];
+                const text = texts[lineIndex] || '';
+                if (!line) {
+                    title.classList.add('typing-complete');
+                    return;
+                }
+
+                line.classList.add('is-typing');
+                if (charIndex < text.length) {
+                    line.textContent += text.charAt(charIndex);
+                    charIndex += 1;
+                    const pause = /[ ,]/.test(text.charAt(charIndex - 1)) ? 48 : 32;
+                    window.setTimeout(typeNext, pause);
+                    return;
+                }
+
+                line.classList.remove('is-typing');
+                line.classList.add('is-typed');
+                lineIndex += 1;
+                charIndex = 0;
+                if (lineIndex < lines.length) {
+                    window.setTimeout(typeNext, 220);
+                } else {
+                    title.classList.add('typing-complete');
+                }
+            };
+
+            window.setTimeout(typeNext, 180);
         }
         // Função auxiliar para gerenciar UI de comparação
         function updateCompareUI(showResults = false) {
@@ -352,22 +431,7 @@
                 window.history.pushState({}, '', `/${view}`);
             }
 
-            // Atualiza indicadores ativos na sidebar
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('active', 'bg-primary/10', 'border-primary/30');
-                btn.classList.add('border-transparent');
-                const indicator = btn.querySelector('.nav-indicator');
-                if (indicator) indicator.remove();
-            });
-            // Adiciona classe ativa ao botão atual
-            const activeBtn = document.querySelector(`button[onclick="nav('${view}')"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active', 'bg-primary/10', 'border-primary/30');
-                activeBtn.classList.remove('border-transparent');
-                if (!activeBtn.querySelector('.nav-indicator')) {
-                    activeBtn.insertAdjacentHTML('afterbegin', '<div class="nav-indicator"></div>');
-                }
-            }
+            setActiveNavButton(view);
             // Esconde todas as views
             const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
@@ -1497,18 +1561,26 @@ function getCodigoHTML() {
         }
         function toggleUserMenuCircle() {
             const dropdown = document.getElementById('userMenuCircleDropdown');
-            dropdown.classList.toggle('hidden');
+            const btn = document.getElementById('avatarCircleBtn');
+            if (!dropdown) return;
+            const shouldOpen = dropdown.classList.contains('hidden');
+            dropdown.classList.toggle('hidden', !shouldOpen);
+            if (btn) btn.setAttribute('aria-expanded', String(shouldOpen));
             // Fechar ao clicar fora
-            if (!dropdown.classList.contains('hidden')) {
+            if (shouldOpen) {
                 document.addEventListener('click', closeUserMenuCircleOnClickOutside);
+            } else {
+                document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
             }
         }
         // Função para fechar o menu ao clicar fora
         function closeUserMenuCircleOnClickOutside(e) {
             const dropdown = document.getElementById('userMenuCircleDropdown');
             const btn = document.getElementById('avatarCircleBtn');
+            if (!dropdown || !btn) return;
             if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
                 dropdown.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
                 document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
             }
         }
@@ -1526,6 +1598,8 @@ function getCodigoHTML() {
     const userPlanCircle = document.getElementById('userPlanCircle');
     const userAvatarLarge = document.getElementById('userAvatarLarge');
     const userAvatarCircle = document.getElementById('userAvatarCircle');
+    const sidebarProfileName = document.getElementById('sidebarProfileName');
+    const sidebarProfilePlan = document.getElementById('sidebarProfilePlan');
 
     // Nossos novos containers
     const authButtonsContainer = document.getElementById('authButtonsContainer');
@@ -1535,6 +1609,8 @@ function getCodigoHTML() {
         // --- ESTADO: NÃO LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.remove('hidden'); // Mostra botões Login/Cadastro
         if (userAvatarContainer) userAvatarContainer.classList.add('hidden');      // Esconde Avatar
+        if (sidebarProfileName) sidebarProfileName.textContent = 'Meu perfil';
+        if (sidebarProfilePlan) sidebarProfilePlan.textContent = 'Starter';
     } else {
         // --- ESTADO: LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.add('hidden');    // Esconde botões Login/Cadastro
@@ -1549,6 +1625,8 @@ function getCodigoHTML() {
         if (userEmailCircle) userEmailCircle.textContent = USER.email;
         if (userCreditsCircle) userCreditsCircle.textContent = USER.credits || 0;
         if (userPlanCircle) userPlanCircle.textContent = getUserPlanLabel(USER.plan);
+        if (sidebarProfileName) sidebarProfileName.textContent = USER.name || USER.email.split('@')[0];
+        if (sidebarProfilePlan) sidebarProfilePlan.textContent = getUserPlanLabel(USER.plan);
     }
 
     // Recriar ícones Lucide
@@ -1620,7 +1698,7 @@ function getCodigoHTML() {
             }
             if (!USER || !USER.email) {
                 // Usuário não logado - mostrar Login
-                btn.className = 'w-full bg-white text-black text-xs font-medium py-2 rounded-md hover:bg-slate-200 transition-colors mt-2';
+                btn.className = 'user-menu-action user-menu-action-primary';
                 btn.onclick = () => {
                     showAuthScreen('login');
                     toggleUserMenuCircle();
@@ -1628,7 +1706,7 @@ function getCodigoHTML() {
                 text.textContent = 'Login';
             } else {
                 // Usuário logado - mostrar Logout
-                btn.className = 'w-full bg-red-500 text-white text-xs font-medium py-2 rounded-md hover:bg-red-600 transition-colors mt-2';
+                btn.className = 'user-menu-action user-menu-action-danger';
                 btn.onclick = () => {
                     logout();
                 };
@@ -2364,22 +2442,7 @@ function getCodigoHTML() {
             document.getElementById('auditMode').value = 'auto';
             document.querySelector('input[name="auditMode"][value="auto"]').checked = true;
             positionLocalAuditHelp('auto');
-            // Marca navegação como ativa
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('active', 'bg-primary/10', 'border-primary/30');
-                btn.classList.add('border-transparent');
-                const indicator = btn.querySelector('.nav-indicator');
-                if (indicator) indicator.remove();
-            });
-            // Marca o botão "Nova Análise" como ativo
-            const novaAnaliseBtn = document.querySelector('button[onclick="showSimplifiedSearch()"]');
-            if (novaAnaliseBtn) {
-                novaAnaliseBtn.classList.add('active', 'bg-primary/10', 'border-primary/30');
-                novaAnaliseBtn.classList.remove('border-transparent');
-                if (!novaAnaliseBtn.querySelector('.nav-indicator')) {
-                    novaAnaliseBtn.insertAdjacentHTML('afterbegin', '<div class="nav-indicator"></div>');
-                }
-            }
+            setActiveNavButton('home');
             // Foca no input de URL
             if (auditUrl) {
                 setTimeout(() => {
