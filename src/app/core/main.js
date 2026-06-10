@@ -249,6 +249,52 @@
 
             window.setTimeout(typeNext, 260);
         }
+
+        function setHomePresentationVisible(visible) {
+            document.querySelectorAll('.home-editorial-section').forEach(section => {
+                section.classList.toggle('hidden', !visible);
+            });
+            const spacer = document.getElementById('homeFooterSpacer');
+            if (spacer) spacer.classList.toggle('hidden', !visible);
+        }
+
+        function showHomeLandingState({ focusInput = false } = {}) {
+            stopAuditLoadingAnimation();
+            setHomePresentationVisible(true);
+            document.getElementById('auditCancelNotice')?.remove();
+            document.getElementById('heroSection')?.classList.remove('hidden');
+            document.querySelector('.hero-title-container')?.classList.remove('hidden');
+            document.querySelector('.hero-subtitle-container')?.classList.remove('hidden');
+            document.querySelector('.search-container')?.classList.remove('hidden');
+            document.getElementById('normalSearchBar')?.classList.remove('hidden');
+            document.getElementById('compareSearchBar')?.classList.add('hidden');
+            document.getElementById('turnstile-audit')?.classList.remove('hidden');
+            document.getElementById('turnstile-compare')?.classList.add('hidden');
+            document.getElementById('manualSelectArea')?.classList.add('hidden');
+            document.getElementById('compareArea')?.classList.add('hidden');
+            document.getElementById('auditResults')?.classList.add('hidden');
+            document.getElementById('auditLoading')?.classList.add('hidden');
+            document.getElementById('emptyStateCards')?.classList.add('hidden');
+
+            const modeSelect = document.getElementById('auditMode');
+            if (modeSelect) modeSelect.value = 'auto';
+            document.querySelectorAll('input[name="auditMode"]').forEach(radio => {
+                radio.checked = radio.value === 'auto';
+            });
+            positionLocalAuditHelp('auto');
+            adjustFooterPosition(false);
+            if (focusInput) {
+                setTimeout(() => document.getElementById('auditUrl')?.focus(), 80);
+            }
+        }
+
+        function showHomeAnalysisState() {
+            setHomePresentationVisible(false);
+            document.getElementById('auditCancelNotice')?.remove();
+            document.getElementById('emptyStateCards')?.classList.add('hidden');
+            document.getElementById('manualSelectArea')?.classList.add('hidden');
+            document.getElementById('compareArea')?.classList.add('hidden');
+        }
         // Função auxiliar para gerenciar UI de comparação
         function updateCompareUI(showResults = false) {
             const emptyState = document.getElementById('emptyStateCards');
@@ -257,6 +303,7 @@
             const auditLoading = document.getElementById('auditLoading');
             if (showResults) {
                 // Mostra resultados
+                showHomeAnalysisState();
                 if (auditResults) auditResults.classList.remove('hidden');
                 if (auditLoading) auditLoading.classList.add('hidden');
                 if (emptyState) emptyState.classList.add('hidden');
@@ -264,6 +311,7 @@
                 adjustFooterPosition(true);
             } else {
                 // Mostra inputs
+                setHomePresentationVisible(true);
                 if (auditResults) auditResults.classList.add('hidden');
                 if (auditLoading) auditLoading.classList.add('hidden');
                 if (emptyState) emptyState.classList.remove('hidden');
@@ -504,12 +552,7 @@
             if(view === 'about') initAboutAnimations();
             // Restaura cards e esconde resultados ao voltar para home
             if(view === 'home') {
-                const emptyStateCards = document.getElementById('emptyStateCards');
-                const auditResults = document.getElementById('auditResults');
-                const auditLoading = document.getElementById('auditLoading');
-                if(emptyStateCards) emptyStateCards.classList.remove('hidden');
-                if(auditResults) auditResults.classList.add('hidden');
-                if(auditLoading) auditLoading.classList.add('hidden');
+                showHomeLandingState();
                 // Inicializa apenas o captcha visivel. O comparativo carrega sob demanda.
                 setTimeout(() => initTurnstileAudit(), 500);
             }
@@ -2491,6 +2534,7 @@ function getCodigoHTML() {
             if (viewHome) {
                 viewHome.classList.remove('hidden');
             }
+            setHomePresentationVisible(false);
             // Mostra o hero section (que contém a search bar)
             const heroSection = document.getElementById('heroSection');
             if (heroSection) heroSection.classList.remove('hidden');
@@ -4184,6 +4228,7 @@ function getCodigoHTML() {
 
         function restoreAuditInputState(mode = 'auto') {
             stopAuditLoadingAnimation();
+            setHomePresentationVisible(true);
             document.getElementById('auditLoading')?.classList.add('hidden');
             document.getElementById('auditResults')?.classList.add('hidden');
             document.getElementById('heroSection')?.classList.remove('hidden');
@@ -4283,6 +4328,7 @@ function getCodigoHTML() {
             const host = String(url || '').replace(/^https?:\/\//, '').split('/')[0];
 
             clearActiveAuditSession();
+            showHomeAnalysisState();
             auditData = null;
             currentAuditUrl = '';
             auditSnapshotTabOpened = false;
@@ -4344,6 +4390,7 @@ function getCodigoHTML() {
                 validateManualPersonaNiche(selected[0]);
             }
             // Esconde toda a interface anterior e mostra apenas o loading centralizado
+            showHomeAnalysisState();
             document.getElementById('heroSection').classList.add('hidden');
             document.getElementById('emptyStateCards').classList.add('hidden');
             document.getElementById('manualSelectArea').classList.add('hidden');
@@ -4360,6 +4407,7 @@ function getCodigoHTML() {
                     if (!cfToken) {
                         initTurnstileAudit();
                         Toast.warning("Resolva o captcha primeiro");
+                        setHomePresentationVisible(true);
                         document.getElementById('heroSection').classList.remove('hidden');
                         document.getElementById('emptyStateCards').classList.remove('hidden');
                         document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
@@ -4377,6 +4425,7 @@ function getCodigoHTML() {
                         data = await res.json();
                     } else if(res.status === 402) {
                         resetAuditCaptcha();
+                        setHomePresentationVisible(true);
                         document.getElementById('heroSection').classList.remove('hidden');
                         document.getElementById('emptyStateCards').classList.remove('hidden');
                         document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
@@ -4431,6 +4480,7 @@ function getCodigoHTML() {
                 }
                 // Criar estrutura HTML inicial para todas as seções
                 showOnlyAuditHomeView();
+                showHomeAnalysisState();
                 createAuditResultsStructureModern();
                 setAuditPillarsVisibility(mode === 'auto');
                 // Armazenar dados globalmente para exportação PDF
@@ -4639,6 +4689,7 @@ function getCodigoHTML() {
         // === FUNÇÃO DE COMPARAÇÃO ===
         async function runCompare() {
             showOnlyAuditHomeView();
+            showHomeAnalysisState();
             console.log("Iniciando processo de comparação...");
             // Oculta os cards IMEDIATAMENTE ao iniciar comparação
             const emptyStateCards = document.getElementById('emptyStateCards');
@@ -5288,6 +5339,7 @@ function getCodigoHTML() {
             stopAuditLoadingAnimation();
             document.getElementById('auditLoading').classList.add('hidden');
             // Criar estrutura HTML inicial para todas as seções
+            showHomeAnalysisState();
             createAuditResultsStructureModern();
             setAuditPillarsVisibility(mode === 'auto');
             // Armazenar dados globalmente para exportação PDF (fallback)
@@ -7128,6 +7180,19 @@ function getCodigoHTML() {
                 Toast.error('Erro ao gerar PDF. Tente novamente.');
             }
         }
+
+        Object.assign(window, {
+            nav,
+            runAudit,
+            runCompare,
+            toggleManualSelect,
+            showSimplifiedSearch,
+            comprarCreditos,
+            gerarPDFOficial,
+            smoothScrollTo,
+            setHomePresentationVisible,
+            showHomeLandingState
+        });
 
 // ========== RANKING FUNCTIONS MOVED TO src/components/ranking/ranking-component.js ==========
 // ========== END RANKING FUNCTIONS ==========
