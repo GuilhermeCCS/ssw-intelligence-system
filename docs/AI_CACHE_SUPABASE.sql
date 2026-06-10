@@ -18,3 +18,6 @@ create index if not exists ai_response_cache_purpose_idx
 alter table public.ai_response_cache enable row level security;
 
 -- O service role do Supabase ignora RLS. Nao crie policy publica para esta tabela.
+-- No Render, configure SUPABASE_SERVICE_ROLE_KEY com a chave service_role do Supabase.
+-- Se usar SUPABASE_KEY com anon key, o insert falhara com:
+-- new row violates row-level security policy for table "ai_response_cache"
