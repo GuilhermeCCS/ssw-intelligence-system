@@ -822,6 +822,22 @@
             return env.GOOGLE_CLIENT_ID || env.VITE_GOOGLE_CLIENT_ID || '';
         }
 
+        function decodeGoogleCredentialPayload(token) {
+            try {
+                const payload = String(token || '').split('.')[1];
+                if (!payload) return {};
+
+                const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+                const padded = normalized.padEnd(normalized.length + ((4 - normalized.length % 4) % 4), '=');
+                const binary = atob(padded);
+                const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+                return JSON.parse(new TextDecoder().decode(bytes));
+            } catch (error) {
+                console.warn('Nao foi possivel ler os dados do perfil Google:', error);
+                return {};
+            }
+        }
+
         function setGoogleAuthBusy(isBusy) {
             document.querySelectorAll('.google-auth-slot').forEach(slot => {
                 slot.style.pointerEvents = isBusy ? 'none' : '';
@@ -911,8 +927,20 @@
                     throw new Error(data.detail || 'Não foi possível entrar com Google.');
                 }
 
+                const googleProfile = decodeGoogleCredentialPayload(token);
+                const googlePicture = data.picture || data.avatar_url || data.avatarUrl || data.photo_url || data.photoURL || googleProfile.picture || '';
+                const googleEmail = data.email || googleProfile.email || '';
+                const googleName = data.name || data.nome || googleProfile.name || googleProfile.given_name || '';
+
                 USER = {
                     ...data,
+                    provider: data.provider || data.auth_provider || 'google',
+                    auth_provider: data.auth_provider || data.provider || 'google',
+                    google_id: data.google_id || data.googleId || data.sub || googleProfile.sub || '',
+                    name: googleName || data.name || data.nome || googleEmail.split('@')[0] || '',
+                    email: googleEmail || data.email,
+                    picture: googlePicture,
+                    avatar_url: data.avatar_url || data.avatarUrl || data.photo_url || data.photoURL || googlePicture,
                     verificado: data.verificado ?? data.verified ?? true,
                     verified: data.verified ?? data.verificado ?? true
                 };
@@ -1592,8 +1620,53 @@ function getCodigoHTML() {
             }
         }
         function getUserInitial() {
-            const source = USER?.name || USER?.email || 'U';
+            const source = USER?.name || USER?.nome || USER?.email || 'U';
             return String(source).trim().charAt(0).toUpperCase() || 'U';
+        }
+
+        // Avatar helpers
+        function getUserDisplayName() {
+            return USER?.name || USER?.nome || USER?.email?.split('@')[0] || 'Meu perfil';
+        }
+
+        function isGoogleUserProfile() {
+            const provider = String(USER?.provider || USER?.auth_provider || USER?.login_provider || '').toLowerCase();
+            return provider.includes('google') || provider.includes('gmail') || Boolean(USER?.google_id || USER?.googleId);
+        }
+
+        function getUserAvatarUrl() {
+            const avatarUrl = USER?.picture || USER?.avatar_url || USER?.avatarUrl || USER?.photo_url || USER?.photoURL || USER?.profile_picture || '';
+            if (!avatarUrl) return '';
+
+            try {
+                const url = new URL(String(avatarUrl), window.location.origin);
+                const isGoogleImage = /(^|\.)googleusercontent\.com$/i.test(url.hostname);
+                if (url.protocol !== 'https:' || (!isGoogleUserProfile() && !isGoogleImage)) return '';
+                return url.href;
+            } catch (error) {
+                return '';
+            }
+        }
+
+        function renderUserAvatar(avatarElement, initial, avatarUrl) {
+            if (!avatarElement) return;
+
+            avatarElement.textContent = '';
+            avatarElement.classList.toggle('has-photo', Boolean(avatarUrl));
+
+            if (!avatarUrl) {
+                avatarElement.textContent = initial;
+                return;
+            }
+
+            const image = document.createElement('img');
+            image.src = avatarUrl;
+            image.alt = getUserDisplayName();
+            image.className = 'user-avatar-photo';
+            image.referrerPolicy = 'no-referrer';
+            image.loading = 'lazy';
+            image.decoding = 'async';
+            avatarElement.appendChild(image);
         }
 
         // Função para atualizar a barra superior e o menu circular
@@ -1616,6 +1689,8 @@ function getCodigoHTML() {
         // --- ESTADO: NÃO LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.remove('hidden'); // Mostra botões Login/Cadastro
         if (userAvatarContainer) userAvatarContainer.classList.add('hidden');      // Esconde Avatar
+        renderUserAvatar(userAvatarCircle, 'U', '');
+        renderUserAvatar(userAvatarLarge, 'U', '');
         if (sidebarProfileName) sidebarProfileName.textContent = 'Meu perfil';
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = 'Starter';
     } else {
@@ -1626,13 +1701,15 @@ function getCodigoHTML() {
         // Preenche dados do avatar
         if (userInfoSection) userInfoSection.classList.remove('hidden');
         const initial = getUserInitial();
-        if (userAvatarCircle) userAvatarCircle.textContent = initial;
-        if (userAvatarLarge) userAvatarLarge.textContent = initial;
-        if (userNameCircle) userNameCircle.textContent = USER.name || USER.email.split('@')[0];
+        const avatarUrl = getUserAvatarUrl();
+        const displayName = getUserDisplayName();
+        renderUserAvatar(userAvatarCircle, initial, avatarUrl);
+        renderUserAvatar(userAvatarLarge, initial, avatarUrl);
+        if (userNameCircle) userNameCircle.textContent = displayName;
         if (userEmailCircle) userEmailCircle.textContent = USER.email;
         if (userCreditsCircle) userCreditsCircle.textContent = USER.credits || 0;
         if (userPlanCircle) userPlanCircle.textContent = getUserPlanLabel(USER.plan);
-        if (sidebarProfileName) sidebarProfileName.textContent = USER.name || USER.email.split('@')[0];
+        if (sidebarProfileName) sidebarProfileName.textContent = displayName;
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = getUserPlanLabel(USER.plan);
     }
 

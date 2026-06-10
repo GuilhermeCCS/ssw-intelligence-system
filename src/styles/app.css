@@ -2307,6 +2307,19 @@
         .user-avatar-large-initial {
             font-size: 15px;
         }
+        .user-avatar-initial.has-photo,
+        .user-avatar-large-initial.has-photo {
+            overflow: hidden;
+            background: transparent !important;
+            color: transparent !important;
+        }
+        .user-avatar-photo {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: inherit;
+            object-fit: cover;
+        }
 
 /* ---- extracted inline block ---- */
 
