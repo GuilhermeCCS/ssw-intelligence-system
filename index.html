@@ -161,13 +161,21 @@
             <span>SSW <strong>| Intelligence</strong></span>
         </a>
         <div class="app-topbar-actions">
+            <button onclick="showSimplifiedSearch()" class="app-text-button" aria-label="Analisar site">
+                <span>Analisar</span>
+            </button>
+            <button onclick="nav('tutorial')" class="app-text-button" aria-label="Docs">
+                <span>Docs</span>
+            </button>
+            <button onclick="nav('precos')" class="app-text-button" aria-label="Planos">
+                <span>Planos</span>
+            </button>
             <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu lateral" aria-expanded="false" class="app-icon-button app-settings-button">
-                <i data-lucide="settings" class="w-5 h-5"></i>
+                <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
 
             <div id="authButtonsContainer" class="topbar-auth hidden">
                 <button onclick="showAuthScreen('login'); toggleSidebar(false);" class="topbar-auth-link">Login</button>
-                <button onclick="showAuthScreen('register'); toggleSidebar(false);" class="topbar-auth-primary">Cadastro</button>
             </div>
 
             <div id="userAvatarContainer" class="topbar-profile hidden">
@@ -234,10 +242,6 @@
 
             <nav id="primarySidebarNav" class="sidebar-nav" aria-label="Navegação principal">
                 <p class="sidebar-section-label">Central de Auditoria</p>
-                <button onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="home">
-                    <i data-lucide="file-search" class="w-5 h-5"></i>
-                    <span>Analisar site</span>
-                </button>
                 <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
                     <i data-lucide="history" class="w-5 h-5"></i>
                     <span>Histórico</span>
@@ -256,16 +260,6 @@
                     <i data-lucide="shield-check" class="w-5 h-5"></i>
                     <span>Domínios autorizados</span>
                 </button>
-
-                <p class="sidebar-section-label">Conta e Suporte</p>
-                <button onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
-                    <i data-lucide="book-open" class="w-5 h-5"></i>
-                    <span>Guia SSW</span>
-                </button>
-                <button onclick="nav('precos'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="precos">
-                    <i data-lucide="credit-card" class="w-5 h-5"></i>
-                    <span>Planos</span>
-                </button>
             </nav>
 
         </div>
@@ -275,135 +269,146 @@
             <div id="view-home" class="command-center max-w-6xl mx-auto space-y-8 animate-fade-in-up">
                 <!-- HERO SECTION PREMIUM -->
                 <div id="heroSection" class="hero-section-premium">
-                    <!-- Título Principal com Efeito -->
-                    <div class="hero-title-container">
-                        <h1 class="hero-title-premium" data-typewriter="true" aria-label="Simule a experiência de um usuário real no seu site">
-                            <span class="title-line typing-target" data-typewriter-text="Simule a experiência de um">Simule a experiência de um</span>
-                            <span class="title-highlight typing-target" data-typewriter-text="usuário real no seu site">usuário real no seu site</span>
-                        </h1>
-                    </div>
-                    <!-- Subtítulo com Design Premium -->
-                    <div class="hero-subtitle-container">
-                        <p class="hero-subtitle-premium">
-                            Identifique falhas de UX, gargalos de performance, vulnerabilidades de segurança e muito mais com as nossas agents
-                        </p>
-                    </div>
-                    <!-- Search Bar Hero -->
-                    <div class="search-container">
-                        <!-- Modo Normal (Auto/Manual) -->
-                        <div id="normalSearchBar" class="search-bar-hero">
-                            <div class="search-input-wrapper">
-                                <i data-lucide="search" class="w-5 h-5 search-icon"></i>
-                                <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
+                    <div class="ssw-hero-shell">
+                        <div class="ssw-hero-copy">
+                            <div class="hero-title-container">
+                                <h1 class="hero-title-premium" data-typewriter="true" aria-label="S.S.W Intelligence">
+                                    <span class="title-line typing-target" data-typewriter-text="S.S.W">S.S.W</span>
+                                    <span class="title-highlight typing-target" data-typewriter-text="Intelligence">Intelligence</span>
+                                </h1>
                             </div>
-                            <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
-                                Analisar
-                            </button>
-                        </div>
-                        <p id="localAuditHelp" class="text-xs text-slate-400 mt-2 text-left flex items-center justify-center sm:justify-start gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-                            <span>Testando um site local? Veja o nosso <span onclick="abrirTutorialNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
-                        </p>
-                        <!-- Cloudflare Turnstile Widget -->
-                        <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
-                            <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                        </div>
-                        <!-- Modo Comparativo -->
-                        <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
-                            <div class="flex-1 flex items-center gap-2 px-4">
-                                <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                <input type="text" id="compareUrlA" placeholder="Site A - https://site-a.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('compareUrlB').focus();}">
+
+                            <div class="hero-subtitle-container">
+                                <p class="hero-subtitle-premium">
+                                    Monitore, compare e otimize experiências digitais com auditorias em tempo real, leitura comportamental e evidências prontas para decisão.
+                                </p>
                             </div>
-                            <div class="w-px h-8 bg-slate-600"></div>
-                            <div class="flex-1 flex items-center gap-2 px-4">
-                                <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                <input type="text" id="compareUrlB" placeholder="Site B - https://site-b.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runCompare();}">
+
+                            <div class="search-container">
+                                <div id="normalSearchBar" class="search-bar-hero">
+                                    <div class="search-input-wrapper">
+                                        <i data-lucide="search" class="w-5 h-5 search-icon"></i>
+                                        <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
+                                    </div>
+                                    <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
+                                        <i data-lucide="activity" class="w-4 h-4"></i>
+                                        <span>Analisar</span>
+                                    </button>
+                                </div>
+
+                                <p id="localAuditHelp" class="text-xs text-slate-400 mt-2 text-left flex items-center justify-center sm:justify-start gap-1">
+                                    <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
+                                    <span>Testando um site local? Veja o nosso <span onclick="abrirTutorialNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
+                                </p>
+
+                                <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
+                                    <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                                </div>
+
+                                <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
+                                    <div class="compare-input-block">
+                                        <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                                        <input type="text" id="compareUrlA" placeholder="Site A - https://site-a.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('compareUrlB').focus();}">
+                                    </div>
+                                    <div class="compare-divider"></div>
+                                    <div class="compare-input-block">
+                                        <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                                        <input type="text" id="compareUrlB" placeholder="Site B - https://site-b.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runCompare();}">
+                                    </div>
+                                    <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runCompare()" class="search-button">
+                                        <i data-lucide="git-compare" class="w-4 h-4"></i>
+                                        <span>Comparar</span>
+                                    </button>
+                                </div>
+
+                                <div id="turnstile-compare" class="hidden flex justify-center mt-4 min-h-[65px] items-center">
+                                    <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                                </div>
+
+                                <div class="ssw-mode-selector" aria-label="Modo de auditoria">
+                                    <label>
+                                        <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
+                                        <span>Automático</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
+                                        <span>Manual</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
+                                        <span>Comparativo</span>
+                                    </label>
+                                </div>
+
+                                <select id="auditMode" class="hidden">
+                                    <option value="auto">Seleção Automática</option>
+                                    <option value="manual">Seleção Manual</option>
+                                    <option value="compare">Modo Comparativo</option>
+                                </select>
                             </div>
-                            <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runCompare()" class="search-button">
-                                <i data-lucide="git-compare" class="w-4 h-4"></i>
-                                Comparar
-                            </button>
                         </div>
-                        <!-- Cloudflare Turnstile Widget for Compare Mode -->
-                        <div id="turnstile-compare" class="hidden flex justify-center mt-4 min-h-[65px] items-center">
-                            <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+
+                        <div class="stats-container-premium ssw-hero-visual" aria-label="Prévia do painel SSW Intelligence">
+                            <div class="ssw-dashboard-frame">
+                                <div class="ssw-dashboard-rail">
+                                    <span></span>
+                                    <span class="is-active"></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                <div class="ssw-dashboard-main">
+                                    <div class="ssw-dashboard-head">
+                                        <div>
+                                            <span>Web Auditing</span>
+                                            <strong>Score operacional ao vivo</strong>
+                                        </div>
+                                        <img src="src/assets/images/logo/logos.ico" alt="" aria-hidden="true">
+                                    </div>
+
+                                    <div class="ssw-dashboard-grid">
+                                        <div class="ssw-chart-widget ssw-chart-wide">
+                                            <div class="ssw-widget-lines"><span></span><span></span></div>
+                                            <svg viewBox="0 0 320 150" role="img" aria-label="Curvas de auditoria">
+                                                <path d="M10 116 C48 74 76 96 112 58 C148 18 172 126 214 74 C252 30 272 98 310 54" class="ssw-chart-line ssw-chart-line-cyan"></path>
+                                                <path d="M10 132 C46 108 74 130 114 86 C154 48 178 136 218 96 C250 68 274 118 310 86" class="ssw-chart-line ssw-chart-line-violet"></path>
+                                            </svg>
+                                        </div>
+
+                                        <div class="ssw-score-widget">
+                                            <svg viewBox="0 0 120 120" aria-hidden="true">
+                                                <circle cx="60" cy="60" r="42" class="ssw-ring-bg"></circle>
+                                                <circle cx="60" cy="60" r="42" class="ssw-ring-progress"></circle>
+                                            </svg>
+                                            <strong>86</strong>
+                                        </div>
+
+                                        <div class="ssw-score-widget ssw-score-widget-alt">
+                                            <svg viewBox="0 0 120 120" aria-hidden="true">
+                                                <circle cx="60" cy="60" r="42" class="ssw-ring-bg"></circle>
+                                                <circle cx="60" cy="60" r="42" class="ssw-ring-progress"></circle>
+                                            </svg>
+                                            <strong>74</strong>
+                                        </div>
+
+                                        <div class="ssw-network-widget">
+                                            <div class="ssw-widget-lines"><span></span><span></span></div>
+                                            <svg viewBox="0 0 500 190" role="img" aria-label="Mapa de sinais da auditoria">
+                                                <path d="M28 72 C110 46 122 154 196 128 C264 104 250 30 318 62 C382 92 390 162 474 130" class="ssw-network-line"></path>
+                                                <path d="M28 134 C96 92 154 72 208 94 C270 118 282 158 346 140 C414 120 424 68 474 72" class="ssw-network-line ssw-network-line-alt"></path>
+                                            </svg>
+                                            <span class="ssw-node ssw-node-a"></span>
+                                            <span class="ssw-node ssw-node-b"></span>
+                                            <span class="ssw-node ssw-node-c"></span>
+                                            <span class="ssw-node ssw-node-d"></span>
+                                            <span class="ssw-node ssw-node-e"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Audit Mode Selector -->
-                        <div class="flex items-center justify-center gap-4 mt-4">
-                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
-                                <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
-                                <span>Automático</span>
-                            </label>
-                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
-                                <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
-                                <span>Manual</span>
-                            </label>
-                            <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer hover:text-white transition-colors">
-                                <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
-                                <span>Comparativo</span>
-                            </label>
-                        </div>
-                        <select id="auditMode" class="hidden">
-                            <option value="auto">Seleção Automática</option>
-                            <option value="manual">Seleção Manual</option>
-                            <option value="compare">Modo Comparativo</option>
-                        </select>
                     </div>
                 </div>
-                <section class="home-editorial-section home-editorial-trust" aria-labelledby="homeTrustTitle">
-                    <div class="home-editorial-inner">
-                        <span class="home-editorial-kicker">Credibilidade imediata</span>
-                        <h2 id="homeTrustTitle">A SSW Intelligence transforma uma URL em uma leitura clara sobre risco, experiência e potencial de conversão.</h2>
-                        <p>Em vez de mostrar apenas notas soltas, a plataforma cruza sinais técnicos, comportamento de navegação e impacto comercial para indicar o que realmente merece atenção. O resultado é um diagnóstico mais próximo da realidade de quem visita o site, compra, compara alternativas e decide se confia ou não na marca.</p>
-                        <p>Esse formato ajuda equipes de produto, marketing e tecnologia a enxergarem a mesma página com a mesma linguagem: o problema, o motivo, a consequência para o usuário e a prioridade de correção.</p>
-                    </div>
-                </section>
-
-                <section class="home-editorial-section home-editorial-method" aria-labelledby="homeHowTitle">
-                    <div class="home-editorial-inner">
-                        <span class="home-editorial-kicker">Como funciona</span>
-                        <h2 id="homeHowTitle">A auditoria combina captura técnica, leitura comportamental e priorização executiva.</h2>
-                        <p>Primeiro, o sistema acessa a página como um navegador real e observa estrutura, carregamento, SEO, segurança, acessibilidade e estabilidade visual. Depois, as agents interpretam esses sinais a partir de perfis de uso diferentes, como visitantes mobile, compradores B2B, usuários leigos ou pessoas que precisam de confiança antes de preencher um formulário.</p>
-                        <p>Por fim, a SSW organiza as descobertas em uma ordem prática de decisão. O relatório não se limita a dizer que algo está errado; ele explica por que aquilo afeta a jornada, onde a correção tende a gerar mais retorno e como priorizar o trabalho sem transformar a análise em uma lista interminável.</p>
-                    </div>
-                </section>
-
-                <section class="home-editorial-section home-editorial-demo" aria-labelledby="homeSandboxTitle">
-                    <div class="home-editorial-inner">
-                        <span class="home-editorial-kicker">Demonstração guiada</span>
-                        <h2 id="homeSandboxTitle">Antes de analisar seu próprio site, entenda como as agents raciocinam sobre uma experiência digital.</h2>
-                        <p>Uma mesma falha pode ter pesos diferentes dependendo do tipo de usuário. Um botão pouco evidente pode ser apenas um detalhe visual para um visitante técnico, mas pode bloquear uma decisão de compra em uma landing page mobile. Uma mensagem de segurança ausente pode parecer pequena para quem já conhece sua empresa, mas ser decisiva para um novo lead.</p>
-                        <p>A proposta das agents é tornar esse contexto visível. Elas simulam olhares diferentes sobre a mesma página para que a equipe não dependa apenas de métricas frias ou opiniões isoladas.</p>
-                        <div class="home-editorial-actions">
-                            <button type="button" onclick="nav('tutorial')" class="home-text-action">Ver tour completo</button>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="home-editorial-section home-editorial-pricing" aria-labelledby="homePricingTitle">
-                    <div class="home-editorial-inner">
-                        <span class="home-editorial-kicker">Planos transparentes</span>
-                        <h2 id="homePricingTitle">Comece entendendo a metodologia e escale conforme seu volume de auditorias.</h2>
-                        <p>O fluxo foi pensado para ser simples: você pode criar uma conta, explorar o ambiente, entender o formato do relatório e avançar para pacotes pagos quando precisar de mais créditos, histórico, benchmarking competitivo ou recursos para operação de agência.</p>
-                        <p>Para times maiores, o modelo enterprise amplia volume, white-label e integrações. Para operações menores, os pacotes por crédito mantêm previsibilidade sem exigir assinatura complexa antes do primeiro resultado.</p>
-                        <div class="home-editorial-actions">
-                            <button type="button" onclick="showAuthScreen('register')" class="home-text-action">Criar conta</button>
-                            <button type="button" onclick="nav('precos')" class="home-text-action secondary">Ver planos</button>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="home-editorial-section home-editorial-learning" aria-labelledby="homeEducationTitle">
-                    <div class="home-editorial-inner">
-                        <span class="home-editorial-kicker">Aprendizado contínuo</span>
-                        <h2 id="homeEducationTitle">A plataforma também orienta boas práticas para UX, performance, segurança e auditorias em ambientes locais.</h2>
-                        <p>Além da análise automática, a SSW reúne guias práticos para ajudar o usuário a preparar URLs públicas, auditar projetos em localhost, autorizar domínios protegidos e interpretar melhor os relatórios. A intenção é tornar a auditoria útil mesmo antes da primeira correção ser aplicada.</p>
-                        <p>Esse conteúdo reduz dúvidas, melhora a qualidade das análises e posiciona o sistema como uma ferramenta de decisão, não apenas como um gerador de score.</p>
-                        <div class="home-editorial-actions">
-                            <button type="button" onclick="showTutorialSection('auditoria-simples'); nav('tutorial');" class="home-text-action">Abrir guia</button>
-                        </div>
-                    </div>
-                </section>
                 <!-- Manual Selection Area -->
                 <div id="manualSelectArea" class="hidden p-5 rounded-2xl" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,0.16);box-shadow:0 8px 32px rgba(0,0,0,0.25);">
                     <div class="flex justify-between items-start mb-5">

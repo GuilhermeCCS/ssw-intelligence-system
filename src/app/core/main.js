@@ -265,6 +265,7 @@
             document.getElementById('heroSection')?.classList.remove('hidden');
             document.querySelector('.hero-title-container')?.classList.remove('hidden');
             document.querySelector('.hero-subtitle-container')?.classList.remove('hidden');
+            document.querySelector('.stats-container-premium')?.classList.remove('hidden');
             document.querySelector('.search-container')?.classList.remove('hidden');
             document.getElementById('normalSearchBar')?.classList.remove('hidden');
             document.getElementById('compareSearchBar')?.classList.add('hidden');
