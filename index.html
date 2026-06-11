@@ -170,60 +170,12 @@
             <button onclick="nav('precos')" class="app-text-button" aria-label="Planos">
                 <span>Planos</span>
             </button>
-            <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu lateral" aria-expanded="false" class="app-icon-button app-settings-button">
+            <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu lateral" aria-expanded="false" class="app-icon-button app-settings-button hidden">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
 
             <div id="authButtonsContainer" class="topbar-auth hidden">
                 <button onclick="showAuthScreen('login'); toggleSidebar(false);" class="topbar-auth-link">Login</button>
-            </div>
-
-            <div id="userAvatarContainer" class="topbar-profile hidden">
-                <button onclick="toggleUserMenuCircle()" class="topbar-profile-button" id="avatarCircleBtn" aria-label="Abrir menu do usuário" aria-expanded="false">
-                    <span class="user-avatar-button topbar-profile-avatar">
-                        <span id="userAvatarCircle" class="user-avatar-initial">U</span>
-                    </span>
-                    <span class="topbar-profile-copy">
-                        <span id="sidebarProfileName">Meu perfil</span>
-                        <small id="sidebarProfilePlan">Starter</small>
-                    </span>
-                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                </button>
-                <div id="userMenuCircleDropdown" class="user-menu-panel hidden">
-                    <div id="userInfoCircleSection" class="user-menu-summary hidden">
-                        <div class="flex items-center gap-3">
-                            <div class="user-avatar-large">
-                                <span id="userAvatarLarge" class="user-avatar-large-initial">U</span>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="user-menu-name" id="userNameCircle">...</p>
-                                <p class="user-menu-email" id="userEmailCircle">user@email.com</p>
-                            </div>
-                        </div>
-                        <div class="user-menu-metric">
-                            <span>Créditos</span>
-                            <strong id="userCreditsCircle">0</strong>
-                        </div>
-                        <div class="user-menu-metric">
-                            <span>Plano</span>
-                            <strong id="userPlanCircle">Starter</strong>
-                        </div>
-                    </div>
-                    <div class="user-menu-actions">
-                        <button onclick="mudarSenha()" class="user-menu-action">
-                            <i data-lucide="key" class="w-4 h-4"></i>
-                            <span>Mudar senha</span>
-                        </button>
-                        <button onclick="comprarCreditos(); toggleUserMenuCircle();" class="user-menu-action user-menu-action-primary">
-                            <i data-lucide="coins" class="w-4 h-4"></i>
-                            <span>Comprar créditos</span>
-                        </button>
-                        <button onclick="handleLoginLogout(); toggleUserMenuCircle();" class="user-menu-action user-menu-action-danger" id="userMenuCircleLogoutBtn">
-                            <i data-lucide="log-out" class="w-4 h-4"></i>
-                            <span id="userMenuCircleText">Sair</span>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -259,6 +211,41 @@
                 <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
                     <i data-lucide="shield-check" class="w-5 h-5"></i>
                     <span>Domínios autorizados</span>
+                </button>
+
+                <p class="sidebar-section-label">Minha Conta</p>
+                <div id="sidebarUserInfo" class="sidebar-user-info hidden">
+                    <div class="sidebar-user-header">
+                        <div class="sidebar-user-avatar">
+                            <span id="sidebarUserInitial">U</span>
+                        </div>
+                        <div class="sidebar-user-details">
+                            <p id="sidebarUserName" class="sidebar-user-name">...</p>
+                            <p id="sidebarUserEmail" class="sidebar-user-email">user@email.com</p>
+                        </div>
+                    </div>
+                    <div class="sidebar-user-metrics">
+                        <div class="sidebar-user-metric">
+                            <span>Créditos</span>
+                            <strong id="sidebarUserCredits">0</strong>
+                        </div>
+                        <div class="sidebar-user-metric">
+                            <span>Plano</span>
+                            <strong id="sidebarUserPlan">Starter</strong>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="mudarSenha(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="key" class="w-5 h-5"></i>
+                    <span>Mudar senha</span>
+                </button>
+                <button onclick="comprarCreditos(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="coins" class="w-5 h-5"></i>
+                    <span>Comprar créditos</span>
+                </button>
+                <button onclick="handleLoginLogout(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent sidebar-nav-item-danger">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span>Sair</span>
                 </button>
             </nav>
 
