@@ -24,8 +24,6 @@
     <script src="src/utils/crypto.js"></script>
     <!-- Pricing Section -->
     <script src="src/components/pricing/pricing-component.js" defer></script>
-    <!-- Footer Section -->
-    <script src="src/components/footer/footer-component.js" defer></script>
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- Google Identity Services -->
@@ -163,35 +161,10 @@
             </div>
         </div>
     </div>
-    <header id="appTopbar" class="app-topbar">
-        <a href="/home" onclick="event.preventDefault(); nav('home');" class="app-brand-link" aria-label="Ir para o início">
-            <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
-            <span>SSW <strong>| Intelligence</strong></span>
-        </a>
-        <div class="app-topbar-actions">
-            <button onclick="showSimplifiedSearch()" class="app-text-button" aria-label="Analisar site">
-                <span>Analisar</span>
-            </button>
-            <button onclick="nav('tutorial')" class="app-text-button" aria-label="Documentação">
-                <span>Documentação</span>
-            </button>
-            <button onclick="nav('precos')" class="app-text-button" aria-label="Planos">
-                <span>Planos</span>
-            </button>
-            <button onclick="nav('history')" class="app-text-button" aria-label="Histórico">
-                <span>Histórico</span>
-            </button>
-            <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu lateral" aria-expanded="false" class="app-icon-button app-settings-button hidden">
-                <i data-lucide="menu" class="w-5 h-5"></i>
-            </button>
-
-            <div id="authButtonsContainer" class="topbar-auth hidden">
-                <button onclick="showAuthScreen('login'); toggleSidebar(false);" class="topbar-auth-link">Login</button>
-                <button onclick="showAuthScreen('register'); toggleSidebar(false);" class="topbar-auth-primary">Começar grátis</button>
-            </div>
-        </div>
-    </header>
     <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar(false)"></div>
+    <button id="sidebarRevealButton" type="button" onclick="if(window.innerWidth < 768){toggleSidebar(true)}else{toggleSidebarCollapsed(false)}" class="sidebar-reveal-button hidden" aria-label="Mostrar menu lateral">
+        <i data-lucide="panel-left-open" class="w-4 h-4"></i>
+    </button>
     <aside id="appSidebar" class="app-sidebar-shell">
         <div id="mobileMenuDropdown" class="sidebar-surface hidden md:flex" aria-label="Menu principal">
             <div class="sidebar-brand">
@@ -199,8 +172,8 @@
                     <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
                     <span>SSW Intelligence</span>
                 </a>
-                <button type="button" onclick="toggleSidebar(false)" class="sidebar-close-button" aria-label="Fechar menu">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button id="sidebarCollapseButton" type="button" onclick="if(window.innerWidth < 768){toggleSidebar(false)}else{toggleSidebarCollapsed(true)}" class="sidebar-close-button" aria-label="Ocultar menu lateral" aria-expanded="true">
+                    <i data-lucide="panel-left-close" class="w-5 h-5"></i>
                 </button>
             </div>
 
@@ -255,6 +228,44 @@
                         <span>Suporte</span>
                     </button>
                 </nav>
+
+                <div class="sidebar-meta" aria-label="Empresa e canais">
+                    <p class="sidebar-section-label">Empresa</p>
+                    <button type="button" onclick="showAboutCard(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
+                        <i data-lucide="info" class="w-4 h-4"></i>
+                        <span>Sobre a SSW</span>
+                    </button>
+                    <button type="button" onclick="showTermsCard(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
+                        <i data-lucide="file-check" class="w-4 h-4"></i>
+                        <span>Termos de uso</span>
+                    </button>
+                    <button type="button" onclick="showFAQ(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        <span>FAQ</span>
+                    </button>
+
+                    <div class="sidebar-social-links" aria-label="Canais de contato e redes sociais">
+                        <a href="tel:82991301991" aria-label="Telefone" title="Telefone">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                        </a>
+                        <a href="mailto:contato@sswintelligence.com.br" aria-label="E-mail" title="E-mail">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+
+                    <p class="sidebar-legal">© 2026 SSW Intelligence<br><span>CNPJ 65.283.065/0001-37</span></p>
+                </div>
+
+                <div id="authButtonsContainer" class="sidebar-auth hidden">
+                    <button onclick="showAuthScreen('login'); toggleSidebar(false);" class="sidebar-auth-link">Entrar</button>
+                    <button onclick="showAuthScreen('register'); toggleSidebar(false);" class="sidebar-auth-primary">Testar agora</button>
+                </div>
 
                 <div id="userAvatarContainer" class="sidebar-profile hidden">
                     <button id="avatarCircleBtn" type="button" onclick="event.stopPropagation(); toggleUserMenuCircle();" class="sidebar-profile-button" aria-haspopup="menu" aria-expanded="false">
@@ -1612,11 +1623,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Placeholder para o footer - será carregado dinamicamente -->
-            <div id="footer-anchor" aria-hidden="true"></div>
-            <div id="footer-container"></div>
-
-            <script src="src/app/layout/footer-loader.js"></script>
             <script src="src/app/core/main.js"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">

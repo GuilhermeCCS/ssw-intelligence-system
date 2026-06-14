@@ -139,6 +139,7 @@
             // Atualiza os botões
             updateUserMenuCircle();
             updateAuthButton();
+            applySidebarCollapsedState();
             // Mostrar a primeira seção do tutorial por padrão
             showTutorialSection('auditoria-simples');
             initUrlInputSanitizers();
@@ -155,11 +156,6 @@
             const isOpen = !mobileMenu.classList.contains('hidden');
             const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
 
-            if (shouldOpen && (!USER || !USER.email)) {
-                showAuthScreen('login');
-                return;
-            }
-
             mobileMenu.classList.toggle('hidden', !shouldOpen);
             if(overlay) overlay.classList.toggle('hidden', !shouldOpen);
             if(button) {
@@ -173,6 +169,39 @@
                 document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
             }
             document.body.classList.toggle('mobile-menu-open', shouldOpen);
+        }
+
+        function setSidebarCollapsed(collapsed, persist = true) {
+            const shouldCollapse = Boolean(collapsed);
+            const collapseButton = document.getElementById('sidebarCollapseButton');
+            const revealButton = document.getElementById('sidebarRevealButton');
+
+            document.body.classList.toggle('sidebar-collapsed', shouldCollapse);
+            if (collapseButton) collapseButton.setAttribute('aria-expanded', String(!shouldCollapse));
+            if (revealButton) revealButton.classList.toggle('hidden', !shouldCollapse);
+
+            if (persist) {
+                try {
+                    localStorage.setItem('SSW_SIDEBAR_COLLAPSED', shouldCollapse ? '1' : '0');
+                } catch (error) {}
+            }
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function toggleSidebarCollapsed(forceCollapsed) {
+            const nextState = typeof forceCollapsed === 'boolean'
+                ? forceCollapsed
+                : !document.body.classList.contains('sidebar-collapsed');
+            setSidebarCollapsed(nextState);
+        }
+
+        function applySidebarCollapsedState() {
+            let collapsed = false;
+            try {
+                collapsed = localStorage.getItem('SSW_SIDEBAR_COLLAPSED') === '1';
+            } catch (error) {}
+            setSidebarCollapsed(collapsed, false);
         }
         // Scroll suave para um elemento
         function smoothScrollTo(elementId) {
@@ -1780,8 +1809,11 @@ function getCodigoHTML() {
             mobileMenuButton.setAttribute('aria-hidden', 'true');
             mobileMenuButton.setAttribute('tabindex', '-1');
         }
-        if (appSidebar) appSidebar.classList.add('hidden');
-        if (mobileMenu) mobileMenu.classList.add('hidden');
+        if (appSidebar) {
+            appSidebar.classList.remove('hidden');
+            appSidebar.classList.add('flex');
+        }
+        if (mobileMenu && window.innerWidth < 768) mobileMenu.classList.add('hidden');
         if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
         if (sidebarUserInfo) sidebarUserInfo.classList.add('hidden');
         document.body.classList.remove('mobile-menu-open');
