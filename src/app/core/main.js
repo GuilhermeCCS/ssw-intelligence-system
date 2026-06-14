@@ -167,7 +167,7 @@
                 button.classList.toggle('is-active', shouldOpen);
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
-            if (shouldOpen && userDropdown) {
+            if (userDropdown) {
                 userDropdown.classList.add('hidden');
                 if (avatarBtn) avatarBtn.setAttribute('aria-expanded', 'false');
                 document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
@@ -625,8 +625,26 @@
         const TURNSTILE_MAX_WAIT_MS = 15000;
         let googleAuthInitializedClientId = '';
 
-        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark' }) {
-            const container = document.getElementById(containerId);
+        function getVisibleElementById(id) {
+            const matches = Array.from(document.querySelectorAll(`[id="${id}"]`));
+            return matches.find(el => {
+                const rect = el.getBoundingClientRect();
+                const style = window.getComputedStyle(el);
+                return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+            }) || matches[0] || null;
+        }
+
+        function getActiveRegisterForm() {
+            return getVisibleElementById('registerForm');
+        }
+
+        function getRegisterFormField(id) {
+            const form = getActiveRegisterForm();
+            return form?.querySelector(`[id="${id}"]`) || getVisibleElementById(id);
+        }
+
+        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark', size = 'normal' }) {
+            const container = getVisibleElementById(containerId);
             if (!container) return;
 
             const retryButton = `
@@ -677,9 +695,10 @@
 
                 try {
                     container.innerHTML = '';
-                    const widgetId = window.turnstile.render(`#${containerId}`, {
+                    const widgetId = window.turnstile.render(container, {
                         sitekey: TURNSTILE_SITE_KEY,
                         theme,
+                        size,
                         callback: function(token) {
                             setToken(token);
                         },
@@ -712,7 +731,8 @@
                 containerId: 'turnstile-login',
                 getWidget: () => turnstileLoginWidget,
                 setWidget: widget => { turnstileLoginWidget = widget; },
-                setToken: token => { turnstileLoginToken = token; }
+                setToken: token => { turnstileLoginToken = token; },
+                size: 'flexible'
             });
             return;
             if (turnstileLoginWidget !== null) {
@@ -776,7 +796,8 @@
                 containerId: 'turnstile-register',
                 getWidget: () => turnstileRegisterWidget,
                 setWidget: widget => { turnstileRegisterWidget = widget; },
-                setToken: token => { turnstileRegisterToken = token; }
+                setToken: token => { turnstileRegisterToken = token; },
+                size: 'flexible'
             });
             return;
             if (turnstileRegisterWidget !== null) {
@@ -834,7 +855,8 @@
         }
 
         function getRegisterCaptchaToken() {
-            return turnstileRegisterToken || document.querySelector('#turnstile-register [name="cf-turnstile-response"]')?.value || '';
+            const form = getActiveRegisterForm();
+            return turnstileRegisterToken || form?.querySelector('#turnstile-register [name="cf-turnstile-response"]')?.value || '';
         }
 
         function getLoginCaptchaToken() {
@@ -857,13 +879,14 @@
             const btn = document.getElementById('loginSubmitBtn');
             if (!btn) return;
             btn.disabled = isLoading;
-            btn.textContent = isLoading ? 'ACESSANDO...' : 'ACESSAR SISTEMA';
+            btn.textContent = isLoading ? 'Entrando...' : 'Entrar';
             btn.classList.toggle('opacity-70', isLoading);
             btn.classList.toggle('cursor-not-allowed', isLoading);
         }
 
         function togglePasswordVisibility(inputId, button) {
-            const input = document.getElementById(inputId);
+            const scope = button?.closest('#registerForm, #loginContent, #authScreen');
+            const input = scope?.querySelector(`[id="${inputId}"]`) || getVisibleElementById(inputId);
             if (!input) return;
             const shouldShow = input.type === 'password';
             input.type = shouldShow ? 'text' : 'password';
@@ -939,15 +962,16 @@
                     googleAuthInitializedClientId = clientId;
                 }
 
-                const width = Math.min(360, Math.max(280, container.clientWidth || 320));
+                const width = Math.min(360, Math.max(240, container.clientWidth || 320));
                 container.innerHTML = '';
                 window.google.accounts.id.renderButton(container, {
                     type: 'standard',
-                    theme: 'outline',
+                    theme: 'filled_black',
                     size: 'large',
                     shape: 'rectangular',
                     text: containerId.toLowerCase().includes('register') ? 'signup_with' : 'signin_with',
                     logo_alignment: 'left',
+                    locale: 'pt_BR',
                     width
                 });
                 if (hint) {
@@ -1065,52 +1089,34 @@
             const btn = document.getElementById('registerSubmitBtn');
             if (!btn) return;
             btn.disabled = isLoading;
-            btn.textContent = isLoading ? 'CRIANDO CONTA...' : 'CONFIRMAR CADASTRO';
+            btn.textContent = isLoading ? 'Criando conta...' : 'Criar conta';
             btn.classList.toggle('opacity-70', isLoading);
             btn.classList.toggle('cursor-not-allowed', isLoading);
         }
 
         function getPasswordStrength(pass) {
             const password = pass || '';
-            let score = 0;
-            if (password.length >= 8) score += 25;
-            if (password.length >= 12) score += 10;
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 20;
-            if (/\d/.test(password)) score += 20;
-            if (/[^A-Za-z0-9]/.test(password)) score += 20;
-            if (!/(.)\1{2,}/.test(password) && password.length >= 8) score += 5;
-            score = Math.min(score, 100);
-
-            if (!password) {
-                return { score: 0, label: 'Força da senha', color: '#ef4444', hint: 'Use 8+ caracteres, número e símbolo', strong: false };
-            }
-            if (score < 45) {
-                return { score, label: 'Senha fraca', color: '#ef4444', hint: 'Adicione mais caracteres e variedade', strong: false };
-            }
-            if (score < 75) {
-                return { score, label: 'Senha média', color: '#f59e0b', hint: 'Inclua maiúscula, número e símbolo', strong: false };
-            }
-            return { score, label: 'Senha forte', color: '#22c55e', hint: 'Boa senha para criar a conta', strong: true };
+            const strong = password.length >= 8 && /\d/.test(password) && /[^A-Za-z0-9]/.test(password);
+            return {
+                score: strong ? 100 : 0,
+                label: '',
+                color: strong ? '#22c55e' : '#ef4444',
+                hint: 'Use pelo menos 8 caracteres, número e símbolo.',
+                strong
+            };
         }
 
         function updateRegisterPasswordStrength() {
-            const input = document.getElementById('regPass');
-            const bar = document.getElementById('regPasswordStrengthBar');
-            const label = document.getElementById('regPasswordStrengthLabel');
-            const hint = document.getElementById('regPasswordStrengthHint');
-            if (!input || !bar || !label || !hint) return;
-
-            const strength = getPasswordStrength(input.value);
-            bar.style.width = `${strength.score}%`;
-            bar.style.background = strength.color;
-            label.textContent = strength.label;
-            label.style.color = strength.color;
-            hint.textContent = strength.hint;
+            const hint = getRegisterFormField('regPasswordStrengthHint');
+            if (!hint) return;
+            hint.textContent = 'Use pelo menos 8 caracteres, número e símbolo.';
         }
 
         function resetRegisterPasswordStrength() {
-            const input = document.getElementById('regPass');
+            const input = getRegisterFormField('regPass');
+            const confirmInput = getRegisterFormField('regPassConfirm');
             if (input) input.value = '';
+            if (confirmInput) confirmInput.value = '';
             updateRegisterPasswordStrength();
         }
 
@@ -1289,11 +1295,22 @@
             }
         }
         async function fazerCadastro() {
-            const nome = document.getElementById('regNome').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPass').value;
+            const registerForm = getActiveRegisterForm();
+            const nomeInput = registerForm?.querySelector('#regNome') || getRegisterFormField('regNome');
+            const emailInput = registerForm?.querySelector('#regEmail') || getRegisterFormField('regEmail');
+            const passInput = registerForm?.querySelector('#regPass') || getRegisterFormField('regPass');
+            const confirmInput = registerForm?.querySelector('#regPassConfirm') || getRegisterFormField('regPassConfirm');
+            const nome = nomeInput?.value || '';
+            const email = emailInput?.value || '';
+            const pass = passInput?.value || '';
+            const confirmPass = confirmInput?.value || '';
 
-            if(!nome || !email || !pass) return Toast.warning("Preencha todos os campos");
+            if(!nome || !email || !pass || !confirmPass) return Toast.warning("Preencha todos os campos");
+
+            if (pass !== confirmPass) {
+                Toast.warning("As senhas não conferem.");
+                return;
+            }
 
             updateRegisterPasswordStrength();
             const passwordStrength = getPasswordStrength(pass);
@@ -1320,12 +1337,12 @@
                 if(res.ok) {
                     Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
                     // Limpa formulário
-                    document.getElementById('regNome').value = "";
-                    document.getElementById('regEmail').value = "";
+                    if (nomeInput) nomeInput.value = "";
+                    if (emailInput) emailInput.value = "";
                     resetRegisterPasswordStrength();
                     resetRegisterCaptcha();
                     // Esconde formulário de cadastro
-                    document.getElementById('registerForm').classList.add('hidden');
+                    (registerForm || document.getElementById('registerForm'))?.classList.add('hidden');
                     // Mostra tela de verificação diretamente
                     document.getElementById('verifyModal').classList.remove('hidden');
                     lucide.createIcons();
@@ -1477,50 +1494,44 @@ function renderAuthView() {
 // Templates HTML para cada visualização
 function getLoginHTML() {
     return `
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-white mb-2">Acessar Sistema</h2>
-            <p class="text-slate-400 text-sm">Entre com suas credenciais para continuar</p>
-        </div>
-        <div class="space-y-4">
-            <div id="googleSignInLogin" class="google-auth-slot"></div>
-            <p id="googleSignInLoginHint" class="google-auth-hint hidden"></p>
-            <div class="google-auth-divider" aria-hidden="true">
-                <span></span>
-                <small>ou entre com e-mail</small>
-                <span></span>
+        <div class="auth-login-card">
+            <div class="auth-login-heading">
+                <h2>Entrar na sua conta</h2>
+                <p>Informe seu e-mail abaixo para acessar sua conta</p>
             </div>
-            <div class="group">
-                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">E-mail Corporativo</label>
-                <div class="relative">
-                    <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="email" id="loginEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
+            <div class="auth-login-form">
+                <div class="auth-login-field">
+                    <label for="loginEmail" class="auth-login-label">E-mail</label>
+                    <input type="email" id="loginEmail" autocomplete="email" placeholder="voce@exemplo.com" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
                 </div>
-            </div>
-            <div class="group">
-                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Senha de Acesso</label>
-                <div class="relative">
-                    <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="password" id="loginPass" class="input-pro w-full rounded-xl py-3 pl-10 pr-11 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
-                    <button type="button" onclick="togglePasswordVisibility('loginPass', this)" aria-label="Mostrar senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-                        <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
-                    </button>
+                <div class="auth-login-field">
+                    <div class="auth-login-label-row">
+                        <label for="loginPass" class="auth-login-label">Senha</label>
+                        <button type="button" onclick="setAuthView('email')" class="auth-login-forgot">
+                            Esqueceu sua senha?
+                        </button>
+                    </div>
+                    <div class="auth-password-wrap">
+                        <input type="password" id="loginPass" autocomplete="current-password" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerLogin();}">
+                        <button type="button" onclick="togglePasswordVisibility('loginPass', this)" aria-label="Mostrar senha" class="auth-password-toggle">
+                            <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="mt-4">
-                <div id="turnstile-login" class="flex justify-center min-h-[65px] items-center">
+                <div id="turnstile-login" class="auth-login-captcha">
                     <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
                 </div>
-            </div>
-            <button id="loginSubmitBtn" onclick="fazerLogin()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase">
-                Acessar Sistema
-            </button>
-            <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-800/50">
-                <button onclick="showAuthScreen('register')" class="text-xs text-slate-400 hover:text-white transition-colors font-medium flex items-center gap-1">
-                    <i data-lucide="user-plus" class="w-3 h-3"></i> Criar Conta
+                <button id="loginSubmitBtn" onclick="fazerLogin()" class="btn-primary auth-login-submit">
+                    Entrar
                 </button>
-                <button onclick="setAuthView('email')" class="text-xs text-slate-400 hover:text-[#00D4FF] transition-colors font-medium">
-                    Esqueci minha senha
-                </button>
+                <div class="auth-login-google">
+                    <div id="googleSignInLogin" class="google-auth-slot"></div>
+                    <p id="googleSignInLoginHint" class="google-auth-hint hidden"></p>
+                </div>
+                <p class="auth-login-register">
+                    Ainda não tem uma conta?
+                    <button type="button" onclick="showAuthScreen('register')">Cadastre-se</button>
+                </p>
             </div>
         </div>
     `;
@@ -1658,7 +1669,8 @@ function getCodigoHTML() {
             const btn = document.getElementById('avatarCircleBtn');
             if (!dropdown) return;
             const shouldOpen = dropdown.classList.contains('hidden');
-            if (shouldOpen) toggleSidebar(false);
+            const buttonIsInsideSidebar = Boolean(btn?.closest('#mobileMenuDropdown'));
+            if (shouldOpen && !buttonIsInsideSidebar) toggleSidebar(false);
             dropdown.classList.toggle('hidden', !shouldOpen);
             if (btn) btn.setAttribute('aria-expanded', String(shouldOpen));
             // Fechar ao clicar fora
@@ -1740,6 +1752,7 @@ function getCodigoHTML() {
     const userAvatarCircle = document.getElementById('userAvatarCircle');
     const sidebarProfileName = document.getElementById('sidebarProfileName');
     const sidebarProfilePlan = document.getElementById('sidebarProfilePlan');
+    const sidebarProfileEmail = document.getElementById('sidebarProfileEmail');
 
     // Nossos novos containers
     const authButtonsContainer = document.getElementById('authButtonsContainer');
@@ -1756,6 +1769,7 @@ function getCodigoHTML() {
     const sidebarUserPlan = document.getElementById('sidebarUserPlan');
 
     if (!USER || !USER.email) {
+        document.body.classList.remove('user-authenticated');
         // --- ESTADO: NÃO LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.remove('hidden'); // Mostra botões Login/Cadastro
         if (userAvatarContainer) userAvatarContainer.classList.add('hidden');      // Esconde Avatar
@@ -1775,7 +1789,9 @@ function getCodigoHTML() {
         renderUserAvatar(userAvatarLarge, 'U', '');
         if (sidebarProfileName) sidebarProfileName.textContent = 'Meu perfil';
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = 'Starter';
+        if (sidebarProfileEmail) sidebarProfileEmail.textContent = 'm@example.com';
     } else {
+        document.body.classList.add('user-authenticated');
         // --- ESTADO: LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.add('hidden');    // Esconde botões Login/Cadastro
         if (userAvatarContainer) userAvatarContainer.classList.remove('hidden');   // Mostra Avatar
@@ -1809,6 +1825,7 @@ function getCodigoHTML() {
         if (userPlanCircle) userPlanCircle.textContent = planLabel;
         if (sidebarProfileName) sidebarProfileName.textContent = displayName;
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = planLabel;
+        if (sidebarProfileEmail) sidebarProfileEmail.textContent = USER.email;
     }
 
     // Recriar ícones Lucide

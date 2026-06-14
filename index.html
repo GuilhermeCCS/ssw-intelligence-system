@@ -105,53 +105,61 @@
         <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-0"></div>
         <div class="glass-panel p-10 rounded-3xl w-full max-w-md border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in-up">
-            <div class="text-center mb-10">
-                <div class="mb-6 flex justify-center">
-                    <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE" class="w-16 h-16 object-contain drop-shadow-lg rounded-full" style="width: 64px !important; height: 64px !important;">
-                </div>
-                <div class="text-4xl font-black tracking-tighter text-white mb-2 drop-shadow-lg block">SSW <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">INTELLIGENCE</span></div>
-                <p class="text-xs text-slate-400 uppercase tracking-[0.2em] font-medium">Enterprise Analytics Platform</p>
-            </div>
-                        <div class="space-y-6" id="loginForm">
+            <div class="space-y-6" id="loginForm">
                 <div id="loginContent">
                     <!-- Conteúdo será renderizado dinamicamente -->
                 </div>
             </div>
-            <div class="space-y-4 hidden" id="registerForm">
-                <h3 class="text-center text-white font-bold text-lg mb-4">Novo Cadastro</h3>
-                <div id="googleSignInRegister" class="google-auth-slot"></div>
-                <p id="googleSignInRegisterHint" class="google-auth-hint hidden"></p>
-                <div class="google-auth-divider" aria-hidden="true">
-                    <span></span>
-                    <small>ou crie com e-mail</small>
-                    <span></span>
+            <div class="auth-login-card auth-register-card hidden" id="registerForm">
+                <div class="auth-login-heading">
+                    <h2>Criar uma conta</h2>
+                    <p>Informe seus dados abaixo para criar sua conta</p>
                 </div>
-                <input type="text" id="regNome" placeholder="Nome Completo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
-                <input type="email" id="regEmail" placeholder="Email" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
-                <div class="relative">
-                    <input type="password" id="regPass" placeholder="Senha Forte" class="input-pro w-full rounded-xl py-3 pl-3 pr-11 text-white text-sm" oninput="updateRegisterPasswordStrength()" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
-                    <button type="button" onclick="togglePasswordVisibility('regPass', this)" aria-label="Mostrar senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-                        <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
-                    </button>
-                </div>
-                <div id="regPasswordStrength" class="space-y-2">
-                    <div class="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                        <div id="regPasswordStrengthBar" class="h-full w-0 rounded-full transition-all duration-300" style="background:#ef4444;"></div>
+                <div class="auth-login-form auth-register-form">
+                    <div class="auth-login-field">
+                        <label for="regNome" class="auth-login-label">Nome completo</label>
+                        <input type="text" id="regNome" autocomplete="name" placeholder="João Silva" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
                     </div>
-                    <div class="flex items-center justify-between gap-3 text-[11px]">
-                        <span id="regPasswordStrengthLabel" class="font-semibold text-slate-500">Força da senha</span>
-                        <span id="regPasswordStrengthHint" class="text-right text-slate-500">Use 8+ caracteres, número e símbolo</span>
+                    <div class="auth-login-field">
+                        <label for="regEmail" class="auth-login-label">E-mail</label>
+                        <input type="email" id="regEmail" autocomplete="email" placeholder="voce@exemplo.com" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
+                        <p class="auth-register-note">Usaremos este e-mail para contato. Não compartilharemos com ninguém.</p>
                     </div>
-                </div>
-                <div class="mt-4">
-                    <div id="turnstile-register" class="flex justify-center min-h-[65px] items-center">
+                    <div class="auth-login-field">
+                        <label for="regPass" class="auth-login-label">Senha</label>
+                        <div class="auth-password-wrap">
+                            <input type="password" id="regPass" autocomplete="new-password" class="input-pro auth-login-input" oninput="updateRegisterPasswordStrength()" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPassConfirm').focus();}">
+                            <button type="button" onclick="togglePasswordVisibility('regPass', this)" aria-label="Mostrar senha" class="auth-password-toggle">
+                                <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                            </button>
+                        </div>
+                        <p id="regPasswordStrengthHint" class="auth-register-note">Use pelo menos 8 caracteres, número e símbolo.</p>
+                    </div>
+                    <div class="auth-login-field">
+                        <label for="regPassConfirm" class="auth-login-label">Confirmar senha</label>
+                        <div class="auth-password-wrap">
+                            <input type="password" id="regPassConfirm" autocomplete="new-password" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
+                            <button type="button" onclick="togglePasswordVisibility('regPassConfirm', this)" aria-label="Mostrar senha" class="auth-password-toggle">
+                                <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                            </button>
+                        </div>
+                        <p class="auth-register-note">Confirme sua senha.</p>
+                    </div>
+                    <div id="turnstile-register" class="auth-login-captcha">
                         <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
                     </div>
+                    <button id="registerSubmitBtn" onclick="event.preventDefault(); fazerCadastro()" class="btn-primary auth-login-submit">
+                        Criar conta
+                    </button>
+                    <div class="auth-login-google">
+                        <div id="googleSignInRegister" class="google-auth-slot"></div>
+                        <p id="googleSignInRegisterHint" class="google-auth-hint hidden"></p>
+                    </div>
+                    <p class="auth-login-register">
+                        Já tem uma conta?
+                        <button type="button" onclick="showAuthScreen('login')">Entrar</button>
+                    </p>
                 </div>
-                <button id="registerSubmitBtn" onclick="event.preventDefault(); fazerCadastro()" class="w-full bg-cyber hover:bg-violet-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/30 mt-2">CONFIRMAR CADASTRO</button>
-                <button onclick="showAuthScreen('login')" class="w-full text-xs text-slate-500 hover:text-white mt-4 flex items-center justify-center gap-1">
-                    <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar para Login
-                </button>
             </div>
         </div>
     </div>
@@ -189,70 +197,131 @@
             <div class="sidebar-brand">
                 <a href="/home" onclick="event.preventDefault(); nav('home'); toggleSidebar(false);" class="sidebar-brand-link" aria-label="Ir para o início">
                     <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
-                    <span>SSW <strong>| Intelligence</strong></span>
+                    <span>SSW Intelligence</span>
                 </a>
                 <button type="button" onclick="toggleSidebar(false)" class="sidebar-close-button" aria-label="Fechar menu">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <nav id="primarySidebarNav" class="sidebar-nav" aria-label="Navegação principal">
-                <p class="sidebar-section-label">Central de Auditoria</p>
-                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
-                    <i data-lucide="history" class="w-5 h-5"></i>
-                    <span>Histórico</span>
+            <div class="sidebar-quick-actions" aria-label="Ações rápidas">
+                <button type="button" onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-quick-create">
+                    <i data-lucide="circle-plus" class="w-4 h-4"></i>
+                    <span>Criar análise</span>
                 </button>
-                <button onclick="nav('agents'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="agents">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                    <span>Agents</span>
+                <button type="button" onclick="nav('history'); toggleSidebar(false);" class="sidebar-quick-icon" aria-label="Abrir histórico">
+                    <i data-lucide="inbox" class="w-4 h-4"></i>
                 </button>
+            </div>
 
-                <p class="sidebar-section-label">Autoridade Digital</p>
+            <nav id="primarySidebarNav" class="sidebar-nav" aria-label="Navegação principal">
+                <button onclick="nav('home'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="home">
+                    <i data-lucide="gauge-circle" class="w-4 h-4"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="audit">
+                    <i data-lucide="list-tree" class="w-4 h-4"></i>
+                    <span>Ciclo de auditoria</span>
+                </button>
                 <button onclick="nav('ranking'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="ranking">
-                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-                    <span>Ranking premium</span>
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    <span>Analytics</span>
                 </button>
                 <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
-                    <i data-lucide="shield-check" class="w-5 h-5"></i>
-                    <span>Domínios autorizados</span>
+                    <i data-lucide="folder" class="w-4 h-4"></i>
+                    <span>Projetos</span>
+                </button>
+                <button onclick="nav('agents'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="agents">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Equipe</span>
                 </button>
 
-                <p class="sidebar-section-label">Minha Conta</p>
-                <div id="sidebarUserInfo" class="sidebar-user-info hidden">
-                    <div class="sidebar-user-header">
-                        <div class="sidebar-user-avatar">
-                            <span id="sidebarUserInitial">U</span>
-                        </div>
-                        <div class="sidebar-user-details">
-                            <p id="sidebarUserName" class="sidebar-user-name">...</p>
-                            <p id="sidebarUserEmail" class="sidebar-user-email">user@email.com</p>
-                        </div>
-                    </div>
-                    <div class="sidebar-user-metrics">
-                        <div class="sidebar-user-metric">
-                            <span>Créditos</span>
-                            <strong id="sidebarUserCredits">0</strong>
-                        </div>
-                        <div class="sidebar-user-metric">
-                            <span>Plano</span>
-                            <strong id="sidebarUserPlan">Starter</strong>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="mudarSenha(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
-                    <i data-lucide="key" class="w-5 h-5"></i>
-                    <span>Mudar senha</span>
+                <p class="sidebar-section-label">Documentos</p>
+                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
+                    <i data-lucide="database" class="w-4 h-4"></i>
+                    <span>Biblioteca de dados</span>
                 </button>
-                <button onclick="comprarCreditos(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
-                    <i data-lucide="coins" class="w-5 h-5"></i>
-                    <span>Comprar créditos</span>
+                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>Relatórios</span>
                 </button>
-                <button onclick="handleLoginLogout(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent sidebar-nav-item-danger">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                    <span>Sair</span>
+                <button onclick="const chatBtn=document.getElementById('floatingChatBtn'); if(chatBtn){chatBtn.click();} else {Toast.info('O assistente fica disponível nos relatórios com personas.');} toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                    <span>Assistente SSW</span>
+                </button>
+                <button onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
+                    <i data-lucide="ellipsis" class="w-4 h-4"></i>
+                    <span>Mais</span>
                 </button>
             </nav>
 
+            <div class="sidebar-footer">
+                <nav class="sidebar-utility-nav" aria-label="Atalhos">
+                    <button type="button" onclick="showUserSettings(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                        <span>Configurações</span>
+                    </button>
+                    <button type="button" onclick="openSupportForm(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
+                        <i data-lucide="circle-help" class="w-4 h-4"></i>
+                        <span>Ajuda</span>
+                    </button>
+                    <button type="button" onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        <span>Buscar</span>
+                    </button>
+                </nav>
+
+                <div id="userAvatarContainer" class="sidebar-profile hidden">
+                    <button id="avatarCircleBtn" type="button" onclick="event.stopPropagation(); toggleUserMenuCircle();" class="sidebar-profile-button" aria-haspopup="menu" aria-expanded="false">
+                        <span id="userAvatarCircle" class="user-avatar-button sidebar-profile-avatar">U</span>
+                        <span class="sidebar-profile-copy">
+                            <span id="sidebarProfileName">Meu perfil</span>
+                            <small id="sidebarProfileEmail">m@example.com</small>
+                        </span>
+                        <i data-lucide="more-vertical" class="w-4 h-4 sidebar-profile-more"></i>
+                    </button>
+
+                    <div id="userMenuCircleDropdown" class="user-menu-panel hidden" role="menu" aria-label="Menu do perfil">
+                        <div class="user-menu-summary">
+                            <span id="userAvatarLarge" class="user-avatar-button user-avatar-large">U</span>
+                            <div class="user-menu-summary-copy">
+                                <p id="userNameCircle" class="user-menu-name">Meu perfil</p>
+                                <p id="userEmailCircle" class="user-menu-email">m@example.com</p>
+                            </div>
+                        </div>
+                        <div id="userInfoCircleSection" class="user-menu-metrics hidden" aria-hidden="true">
+                            <span id="userCreditsCircle">0</span>
+                            <span id="userPlanCircle">Starter</span>
+                        </div>
+                        <div class="user-menu-actions">
+                            <button type="button" onclick="showUserSettings(); toggleUserMenuCircle();" class="user-menu-action" role="menuitem">
+                                <i data-lucide="user-circle" class="w-4 h-4"></i>
+                                <span>Conta</span>
+                            </button>
+                            <button type="button" onclick="comprarCreditos(); toggleUserMenuCircle();" class="user-menu-action" role="menuitem">
+                                <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                <span>Faturamento</span>
+                            </button>
+                            <button type="button" onclick="Toast.info('Central de notificações em breve.')" class="user-menu-action" role="menuitem">
+                                <i data-lucide="bell" class="w-4 h-4"></i>
+                                <span>Notificações</span>
+                            </button>
+                            <button id="userMenuCircleLogoutBtn" type="button" onclick="logout()" class="user-menu-action user-menu-action-danger" role="menuitem">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                <span id="userMenuCircleText">Sair</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sidebarUserInfo" class="sidebar-user-info hidden" aria-hidden="true">
+                    <span id="sidebarUserInitial">U</span>
+                    <span id="sidebarUserName">Meu perfil</span>
+                    <span id="sidebarUserEmail">m@example.com</span>
+                    <span id="sidebarUserCredits">0</span>
+                    <span id="sidebarUserPlan">Starter</span>
+                </div>
+            </div>
         </div>
     </aside>
     <main class="flex-1 md:h-screen overflow-y-auto overflow-x-hidden relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;"></main>
@@ -273,6 +342,13 @@
                                 <p class="hero-subtitle-premium">
                                     Monitore, compare e otimize experiências digitais com auditorias em tempo real, leitura comportamental e evidências prontas para decisão.
                                 </p>
+                            </div>
+
+                            <div class="hero-auth-cta-container">
+                                <button type="button" onclick="showAuthScreen('register')" class="hero-auth-cta">
+                                    <span>Testar agora</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
                             </div>
 
                             <div class="search-container">
