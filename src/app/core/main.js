@@ -31,47 +31,11 @@
         window.addEventListener('ssw:plan-updated', function(event) {
             applyUserPlanState(event.detail?.plan, event.detail?.limits);
         });
-        function getAppThemePreference() {
-            try {
-                return localStorage.getItem('SSW_THEME') === 'light' ? 'light' : 'dark';
-            } catch {
-                return 'dark';
-            }
-        }
-        function updateThemeToggleButton(theme = getAppThemePreference()) {
-            const button = document.getElementById('appThemeToggle');
-            if (!button) return;
-            const isLight = theme === 'light';
-            const label = isLight ? 'Ativar modo escuro' : 'Ativar modo claro';
-            button.setAttribute('aria-label', label);
-            button.setAttribute('title', label);
-            button.classList.toggle('is-light-mode', isLight);
-            button.innerHTML = `<i data-lucide="${isLight ? 'moon' : 'sun'}" class="w-5 h-5"></i>`;
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-        function applyAppTheme(theme, persist = true) {
-            const nextTheme = theme === 'light' ? 'light' : 'dark';
-            document.documentElement.dataset.theme = nextTheme;
-            document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-            if (persist) {
-                try {
-                    localStorage.setItem('SSW_THEME', nextTheme);
-                } catch {}
-            }
-            updateThemeToggleButton(nextTheme);
-        }
-        function toggleAppTheme() {
-            const current = document.documentElement.dataset.theme || getAppThemePreference();
-            applyAppTheme(current === 'light' ? 'dark' : 'light');
-        }
-        window.toggleAppTheme = toggleAppTheme;
         // Variável temporária para senha no fluxo de cadastro
         let senhaTemporaria = null;
         // === 1. INICIALIZAÇÃO ===
             window.onload = async () => {
-            applyAppTheme(getAppThemePreference(), false);
             lucide.createIcons();
-            updateThemeToggleButton();
 
             // Navegação baseada em pathname (History API)
             function handlePopState() {
@@ -299,8 +263,14 @@
             if (spacer) spacer.classList.toggle('hidden', !visible);
         }
 
+        function setAnalysisFocusState(active) {
+            const heroSection = document.getElementById('heroSection');
+            if (heroSection) heroSection.classList.toggle('is-analysis-focus', !!active);
+        }
+
         function showHomeLandingState({ focusInput = false } = {}) {
             stopAuditLoadingAnimation();
+            setAnalysisFocusState(false);
             setHomePresentationVisible(true);
             document.getElementById('auditCancelNotice')?.remove();
             document.getElementById('heroSection')?.classList.remove('hidden');
@@ -331,6 +301,7 @@
         }
 
         function showHomeAnalysisState() {
+            setAnalysisFocusState(false);
             setHomePresentationVisible(false);
             document.getElementById('auditCancelNotice')?.remove();
             document.getElementById('emptyStateCards')?.classList.add('hidden');
@@ -2622,6 +2593,7 @@ function getCodigoHTML() {
             // Mostra o hero section (que contém a search bar)
             const heroSection = document.getElementById('heroSection');
             if (heroSection) heroSection.classList.remove('hidden');
+            setAnalysisFocusState(true);
             // Esconde elementos do hero section
             const titleContainer = document.querySelector('.hero-title-container');
             if (titleContainer) titleContainer.classList.add('hidden');
@@ -2654,6 +2626,7 @@ function getCodigoHTML() {
             document.getElementById('auditMode').value = 'auto';
             document.querySelector('input[name="auditMode"][value="auto"]').checked = true;
             positionLocalAuditHelp('auto');
+            setModeOnlyCardsVisibility('auto');
             setActiveNavButton('home');
             // Foca no input de URL
             if (auditUrl) {
@@ -3191,8 +3164,10 @@ function getCodigoHTML() {
             const showCards = mode === 'auto';
             const statsContainer = document.querySelector('.stats-container-premium');
             const emptyStateCards = document.getElementById('emptyStateCards');
+            const analysisFeatureCards = document.getElementById('analysisFeatureCards');
             if (statsContainer) statsContainer.classList.toggle('hidden', !showCards);
             if (emptyStateCards) emptyStateCards.classList.toggle('hidden', !showCards);
+            if (analysisFeatureCards) analysisFeatureCards.classList.toggle('hidden', !showCards);
         }
 
         function setAuditPillarsVisibility(show) {

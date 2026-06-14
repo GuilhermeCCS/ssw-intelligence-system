@@ -51,16 +51,6 @@
     <meta name="author" content="SSW INTELLIGENCE">
     <title>SSW INTELLIGENCE</title>
     <link rel="icon" type="image/x-icon" href="src/assets/images/logo/logos.ico">
-    <script>
-        (() => {
-            let theme = 'dark';
-            try {
-                theme = localStorage.getItem('SSW_THEME') === 'light' ? 'light' : 'dark';
-            } catch {}
-            document.documentElement.dataset.theme = theme;
-            document.documentElement.classList.toggle('dark', theme === 'dark');
-        })();
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="src/config/tailwind.cdn.js"></script>
@@ -72,7 +62,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=theme-toggle-1">
+    <link rel="stylesheet" href="src/styles/app.css">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -174,14 +164,14 @@
             <button onclick="showSimplifiedSearch()" class="app-text-button" aria-label="Analisar site">
                 <span>Analisar</span>
             </button>
-            <button onclick="nav('tutorial')" class="app-text-button" aria-label="Docs">
-                <span>Docs</span>
+            <button onclick="nav('tutorial')" class="app-text-button" aria-label="Documentação">
+                <span>Documentação</span>
             </button>
             <button onclick="nav('precos')" class="app-text-button" aria-label="Planos">
                 <span>Planos</span>
             </button>
-            <button id="appThemeToggle" type="button" onclick="toggleAppTheme()" aria-label="Ativar modo claro" title="Ativar modo claro" class="app-icon-button app-theme-toggle">
-                <i data-lucide="sun" class="w-5 h-5"></i>
+            <button onclick="nav('history')" class="app-text-button" aria-label="Histórico">
+                <span>Histórico</span>
             </button>
             <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu lateral" aria-expanded="false" class="app-icon-button app-settings-button hidden">
                 <i data-lucide="menu" class="w-5 h-5"></i>
@@ -189,6 +179,7 @@
 
             <div id="authButtonsContainer" class="topbar-auth hidden">
                 <button onclick="showAuthScreen('login'); toggleSidebar(false);" class="topbar-auth-link">Login</button>
+                <button onclick="showAuthScreen('register'); toggleSidebar(false);" class="topbar-auth-primary">Começar grátis</button>
             </div>
         </div>
     </header>
@@ -287,7 +278,7 @@
                             <div class="search-container">
                                 <div id="normalSearchBar" class="search-bar-hero">
                                     <div class="search-input-wrapper">
-                                        <i data-lucide="search" class="w-5 h-5 search-icon"></i>
+                                        <i data-lucide="globe-2" class="w-5 h-5 search-icon"></i>
                                         <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
                                     </div>
                                     <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
@@ -300,6 +291,30 @@
                                     <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
                                     <span>Testando um site local? Veja o nosso <span onclick="abrirTutorialNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
                                 </p>
+
+                                <div id="analysisFeatureCards" class="analysis-feature-grid hidden" aria-label="Escopos da análise automática">
+                                    <article class="analysis-feature-card">
+                                        <i data-lucide="bar-chart-3" aria-hidden="true"></i>
+                                        <div>
+                                            <strong>Performance</strong>
+                                            <span>Core Web Vitals e tempo de carga</span>
+                                        </div>
+                                    </article>
+                                    <article class="analysis-feature-card">
+                                        <i data-lucide="eye" aria-hidden="true"></i>
+                                        <div>
+                                            <strong>UX & SEO</strong>
+                                            <span>Usabilidade e acessibilidade WCAG</span>
+                                        </div>
+                                    </article>
+                                    <article class="analysis-feature-card">
+                                        <i data-lucide="user-round" aria-hidden="true"></i>
+                                        <div>
+                                            <strong>Comportamental</strong>
+                                            <span>Simulação por perfil de usuário</span>
+                                        </div>
+                                    </article>
+                                </div>
 
                                 <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
                                     <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
@@ -1565,7 +1580,7 @@
             <div id="footer-container"></div>
 
             <script src="src/app/layout/footer-loader.js"></script>
-            <script src="src/app/core/main.js?v=theme-toggle-1"></script>
+            <script src="src/app/core/main.js"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">
