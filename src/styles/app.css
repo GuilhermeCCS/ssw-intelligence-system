@@ -6457,3 +6457,80 @@ body:not(.auth-page-active) .sidebar-close-button {
         padding-top: 58px !important;
     }
 }
+
+/* Smooth sidebar open/close motion */
+:root {
+    --ssw-sidebar-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ssw-sidebar-duration: 520ms;
+}
+
+body:not(.auth-page-active) #appSidebar.app-sidebar-shell {
+    opacity: 1;
+    filter: blur(0);
+    will-change: transform, opacity, filter;
+    transition:
+        transform var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
+        opacity 420ms ease,
+        filter 420ms ease !important;
+}
+
+body.sidebar-collapsed:not(.auth-page-active) #appSidebar.app-sidebar-shell {
+    opacity: 0;
+    filter: blur(1.5px);
+    transform: translate3d(calc(-1 * var(--ssw-sidebar-width)), 0, 0) !important;
+    pointer-events: none !important;
+}
+
+body:not(.auth-page-active) #mobileMenuDropdown.sidebar-surface,
+body:not(.auth-page-active) #mobileMenuDropdown.sidebar-surface.hidden {
+    will-change: transform, opacity;
+    transition:
+        transform var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
+        opacity 420ms ease,
+        visibility 420ms linear !important;
+}
+
+body:not(.auth-page-active) #mobileMenuDropdown.sidebar-surface:not(.hidden) {
+    opacity: 1 !important;
+}
+
+body:not(.auth-page-active) #mobileMenuDropdown.sidebar-surface.hidden {
+    opacity: 0 !important;
+}
+
+body:not(.auth-page-active) #mainContentWrapper {
+    transition:
+        margin-left var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
+        width var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
+        max-width var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
+        padding var(--ssw-sidebar-duration) var(--ssw-sidebar-ease) !important;
+}
+
+body.sidebar-collapsed:not(.auth-page-active) #mainContentWrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+}
+
+.sidebar-reveal-button {
+    animation: sidebarRevealIn 280ms var(--ssw-sidebar-ease) both;
+    transition:
+        background 180ms ease,
+        border-color 180ms ease,
+        transform 220ms ease !important;
+}
+
+.sidebar-reveal-button:hover {
+    transform: translateY(-1px);
+}
+
+@keyframes sidebarRevealIn {
+    from {
+        opacity: 0;
+        transform: translateX(-8px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
