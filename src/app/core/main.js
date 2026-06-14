@@ -3164,10 +3164,8 @@ function getCodigoHTML() {
             const showCards = mode === 'auto';
             const statsContainer = document.querySelector('.stats-container-premium');
             const emptyStateCards = document.getElementById('emptyStateCards');
-            const analysisFeatureCards = document.getElementById('analysisFeatureCards');
             if (statsContainer) statsContainer.classList.toggle('hidden', !showCards);
             if (emptyStateCards) emptyStateCards.classList.toggle('hidden', !showCards);
-            if (analysisFeatureCards) analysisFeatureCards.classList.toggle('hidden', !showCards);
         }
 
         function setAuditPillarsVisibility(show) {
