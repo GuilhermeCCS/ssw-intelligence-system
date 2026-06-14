@@ -3646,6 +3646,10 @@ function getCodigoHTML() {
             return map;
         }
 
+        function encodeHistoryActionPayload(action) {
+            return encodeURIComponent(JSON.stringify(action || {}));
+        }
+
         function renderHistoryVulnerabilitiesDetailed(vulnerabilities) {
             const items = normalizeHistoryArray(vulnerabilities);
             if (!items.length) {
@@ -3725,12 +3729,12 @@ function getCodigoHTML() {
                 const checked = isChecked ? 'checked' : '';
                 const checkedClass = isChecked ? ' is-checked' : '';
                 const status = verified?.status || '';
-                const payload = safeAuditText(JSON.stringify({
+                const payload = encodeHistoryActionPayload({
                     key,
                     period: action?.period || 'item',
                     index: Number.isFinite(Number(action?.index)) ? Number(action.index) : index,
                     text
-                }));
+                });
                 return [
                     `<label class="history-action-check${checkedClass}" aria-checked="${isChecked ? 'true' : 'false'}" onclick="toggleHistoryActionCheck(event, this)">`,
                         `<input type="checkbox" data-history-action-checkbox data-action="${payload}" ${checked} onchange="syncHistoryActionCheckVisual(this)">`,
@@ -3795,10 +3799,22 @@ function getCodigoHTML() {
         function parseSelectedHistoryAction(input) {
             if (!input) return null;
             try {
-                const action = JSON.parse(input.dataset.action || '{}');
+                const raw = input.dataset.action || '{}';
+                const decoded = raw.includes('%') ? decodeURIComponent(raw) : raw;
+                const action = JSON.parse(decoded);
                 return action && (action.text || action.key) ? action : null;
             } catch {
-                return null;
+                const row = input.closest('.history-action-check');
+                const text = row?.querySelector('strong')?.textContent?.trim() || '';
+                if (!text) return null;
+                const rows = Array.from(row?.parentElement?.querySelectorAll('.history-action-check') || []);
+                const index = Math.max(0, rows.indexOf(row));
+                return {
+                    key: `item:${index}`,
+                    period: 'item',
+                    index,
+                    text
+                };
             }
         }
 
