@@ -207,7 +207,7 @@
             <div class="sidebar-quick-actions" aria-label="Ações rápidas">
                 <button type="button" onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-quick-create">
                     <i data-lucide="circle-plus" class="w-4 h-4"></i>
-                    <span>Criar análise</span>
+                    <span>Nova análise</span>
                 </button>
                 <button type="button" onclick="nav('history'); toggleSidebar(false);" class="sidebar-quick-icon" aria-label="Abrir histórico">
                     <i data-lucide="inbox" class="w-4 h-4"></i>
@@ -215,59 +215,44 @@
             </div>
 
             <nav id="primarySidebarNav" class="sidebar-nav" aria-label="Navegação principal">
+                <p class="sidebar-section-label">Principal</p>
                 <button onclick="nav('home'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="home">
                     <i data-lucide="gauge-circle" class="w-4 h-4"></i>
                     <span>Dashboard</span>
                 </button>
-                <button onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="audit">
-                    <i data-lucide="list-tree" class="w-4 h-4"></i>
-                    <span>Ciclo de auditoria</span>
-                </button>
-                <button onclick="nav('ranking'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="ranking">
-                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-                    <span>Analytics</span>
-                </button>
-                <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
-                    <i data-lucide="folder" class="w-4 h-4"></i>
-                    <span>Projetos</span>
+                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
+                    <i data-lucide="history" class="w-4 h-4"></i>
+                    <span>Histórico de análises</span>
                 </button>
                 <button onclick="nav('agents'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="agents">
                     <i data-lucide="users" class="w-4 h-4"></i>
-                    <span>Equipe</span>
+                    <span>Personas</span>
+                </button>
+                <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Domínios autorizados</span>
                 </button>
 
-                <p class="sidebar-section-label">Documentos</p>
-                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
-                    <i data-lucide="database" class="w-4 h-4"></i>
-                    <span>Biblioteca de dados</span>
+                <p class="sidebar-section-label">Crescimento</p>
+                <button onclick="nav('ranking'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="ranking">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    <span>Ranking público</span>
                 </button>
-                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
-                    <i data-lucide="file-text" class="w-4 h-4"></i>
-                    <span>Relatórios</span>
-                </button>
-                <button onclick="const chatBtn=document.getElementById('floatingChatBtn'); if(chatBtn){chatBtn.click();} else {Toast.info('O assistente fica disponível nos relatórios com personas.');} toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
-                    <i data-lucide="bot" class="w-4 h-4"></i>
-                    <span>Assistente SSW</span>
-                </button>
-                <button onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
-                    <i data-lucide="ellipsis" class="w-4 h-4"></i>
-                    <span>Mais</span>
+                <button onclick="nav('precos'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="precos">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    <span>Planos e créditos</span>
                 </button>
             </nav>
 
             <div class="sidebar-footer">
-                <nav class="sidebar-utility-nav" aria-label="Atalhos">
-                    <button type="button" onclick="showUserSettings(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
-                        <i data-lucide="settings" class="w-4 h-4"></i>
-                        <span>Configurações</span>
+                <nav class="sidebar-utility-nav" aria-label="Ajuda e suporte">
+                    <button type="button" onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent" data-nav-target="tutorial">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        <span>Documentação</span>
                     </button>
                     <button type="button" onclick="openSupportForm(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
                         <i data-lucide="circle-help" class="w-4 h-4"></i>
-                        <span>Ajuda</span>
-                    </button>
-                    <button type="button" onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
-                        <i data-lucide="search" class="w-4 h-4"></i>
-                        <span>Buscar</span>
+                        <span>Suporte</span>
                     </button>
                 </nav>
 
@@ -300,11 +285,11 @@
                             </button>
                             <button type="button" onclick="comprarCreditos(); toggleUserMenuCircle();" class="user-menu-action" role="menuitem">
                                 <i data-lucide="credit-card" class="w-4 h-4"></i>
-                                <span>Faturamento</span>
+                                <span>Planos e créditos</span>
                             </button>
-                            <button type="button" onclick="Toast.info('Central de notificações em breve.')" class="user-menu-action" role="menuitem">
-                                <i data-lucide="bell" class="w-4 h-4"></i>
-                                <span>Notificações</span>
+                            <button type="button" onclick="mudarSenha();" class="user-menu-action" role="menuitem">
+                                <i data-lucide="key-round" class="w-4 h-4"></i>
+                                <span>Senha e segurança</span>
                             </button>
                             <button id="userMenuCircleLogoutBtn" type="button" onclick="logout()" class="user-menu-action user-menu-action-danger" role="menuitem">
                                 <i data-lucide="log-out" class="w-4 h-4"></i>
