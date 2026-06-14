@@ -3046,7 +3046,7 @@
             }
 
             #authButtonsContainer button:first-child {
-                display: none;
+                display: inline-flex;
             }
         }
 
@@ -4095,6 +4095,14 @@ body.auth-page-active #mobileTopbar {
     transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
 }
 
+#mobileMenuButton.hidden {
+    display: none !important;
+}
+
+#appSidebar.hidden {
+    display: none !important;
+}
+
 .app-icon-button:hover,
 .app-icon-button.is-active {
     color: #93e7ff;
@@ -4521,12 +4529,17 @@ body.auth-page-active #appTopbar {
         font-size: 13px;
     }
 
+    .app-topbar-actions .app-text-button:nth-of-type(2),
+    .app-topbar-actions .app-text-button:nth-of-type(3) {
+        display: none;
+    }
+
     .topbar-auth {
         gap: 6px;
     }
 
     .topbar-auth-link {
-        display: none !important;
+        display: inline-flex !important;
     }
 
     .topbar-auth-primary {

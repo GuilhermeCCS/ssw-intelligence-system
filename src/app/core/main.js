@@ -155,6 +155,11 @@
             const isOpen = !mobileMenu.classList.contains('hidden');
             const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
 
+            if (shouldOpen && (!USER || !USER.email)) {
+                showAuthScreen('login');
+                return;
+            }
+
             mobileMenu.classList.toggle('hidden', !shouldOpen);
             if(overlay) overlay.classList.toggle('hidden', !shouldOpen);
             if(button) {
@@ -1615,9 +1620,13 @@ function getCodigoHTML() {
             // 3. Se estiver verificado, segue o fluxo normal
             setAuthPageState(false);
             document.getElementById('verifyModal').classList.add('hidden'); // Garante que sumiu
-            document.getElementById('appSidebar').classList.remove('hidden');
-            document.getElementById('appSidebar').classList.add('flex');
-            document.getElementById('userAvatarCircle').innerText = getUserInitial();
+            const appSidebar = document.getElementById('appSidebar');
+            const userAvatarCircle = document.getElementById('userAvatarCircle');
+            if (appSidebar) {
+                appSidebar.classList.remove('hidden');
+                appSidebar.classList.add('flex');
+            }
+            if (userAvatarCircle) userAvatarCircle.innerText = getUserInitial();
             loadManageAgents();
             // Atualiza os botões
             updateUserMenuCircle();
@@ -1728,11 +1737,33 @@ function getCodigoHTML() {
     // Nossos novos containers
     const authButtonsContainer = document.getElementById('authButtonsContainer');
     const userAvatarContainer = document.getElementById('userAvatarContainer');
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const appSidebar = document.getElementById('appSidebar');
+    const mobileMenu = document.getElementById('mobileMenuDropdown');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarUserInfo = document.getElementById('sidebarUserInfo');
+    const sidebarUserInitial = document.getElementById('sidebarUserInitial');
+    const sidebarUserName = document.getElementById('sidebarUserName');
+    const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+    const sidebarUserCredits = document.getElementById('sidebarUserCredits');
+    const sidebarUserPlan = document.getElementById('sidebarUserPlan');
 
     if (!USER || !USER.email) {
         // --- ESTADO: NÃO LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.remove('hidden'); // Mostra botões Login/Cadastro
         if (userAvatarContainer) userAvatarContainer.classList.add('hidden');      // Esconde Avatar
+        if (mobileMenuButton) {
+            mobileMenuButton.classList.add('hidden');
+            mobileMenuButton.classList.remove('is-active');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            mobileMenuButton.setAttribute('aria-hidden', 'true');
+            mobileMenuButton.setAttribute('tabindex', '-1');
+        }
+        if (appSidebar) appSidebar.classList.add('hidden');
+        if (mobileMenu) mobileMenu.classList.add('hidden');
+        if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
+        if (sidebarUserInfo) sidebarUserInfo.classList.add('hidden');
+        document.body.classList.remove('mobile-menu-open');
         renderUserAvatar(userAvatarCircle, 'U', '');
         renderUserAvatar(userAvatarLarge, 'U', '');
         if (sidebarProfileName) sidebarProfileName.textContent = 'Meu perfil';
@@ -1741,24 +1772,40 @@ function getCodigoHTML() {
         // --- ESTADO: LOGADO ---
         if (authButtonsContainer) authButtonsContainer.classList.add('hidden');    // Esconde botões Login/Cadastro
         if (userAvatarContainer) userAvatarContainer.classList.remove('hidden');   // Mostra Avatar
+        if (mobileMenuButton) {
+            mobileMenuButton.classList.remove('hidden');
+            mobileMenuButton.setAttribute('aria-hidden', 'false');
+            mobileMenuButton.setAttribute('tabindex', '0');
+        }
+        if (appSidebar) {
+            appSidebar.classList.remove('hidden');
+            appSidebar.classList.add('flex');
+        }
 
         // Preenche dados do avatar
         if (userInfoSection) userInfoSection.classList.remove('hidden');
         const initial = getUserInitial();
         const avatarUrl = getUserAvatarUrl();
         const displayName = getUserDisplayName();
+        const planLabel = getUserPlanLabel(USER.plan);
+        if (sidebarUserInfo) sidebarUserInfo.classList.remove('hidden');
+        if (sidebarUserInitial) sidebarUserInitial.textContent = initial;
+        if (sidebarUserName) sidebarUserName.textContent = displayName;
+        if (sidebarUserEmail) sidebarUserEmail.textContent = USER.email;
+        if (sidebarUserCredits) sidebarUserCredits.textContent = USER.credits || 0;
+        if (sidebarUserPlan) sidebarUserPlan.textContent = planLabel;
         renderUserAvatar(userAvatarCircle, initial, avatarUrl);
         renderUserAvatar(userAvatarLarge, initial, avatarUrl);
         if (userNameCircle) userNameCircle.textContent = displayName;
         if (userEmailCircle) userEmailCircle.textContent = USER.email;
         if (userCreditsCircle) userCreditsCircle.textContent = USER.credits || 0;
-        if (userPlanCircle) userPlanCircle.textContent = getUserPlanLabel(USER.plan);
+        if (userPlanCircle) userPlanCircle.textContent = planLabel;
         if (sidebarProfileName) sidebarProfileName.textContent = displayName;
-        if (sidebarProfilePlan) sidebarProfilePlan.textContent = getUserPlanLabel(USER.plan);
+        if (sidebarProfilePlan) sidebarProfilePlan.textContent = planLabel;
     }
 
     // Recriar ícones Lucide
-    lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
         // Função para alternar Login/Sair
         function handleLoginLogout() {
