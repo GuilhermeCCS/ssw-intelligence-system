@@ -51,6 +51,16 @@
     <meta name="author" content="SSW INTELLIGENCE">
     <title>SSW INTELLIGENCE</title>
     <link rel="icon" type="image/x-icon" href="src/assets/images/logo/logos.ico">
+    <script>
+        (() => {
+            let theme = 'dark';
+            try {
+                theme = localStorage.getItem('SSW_THEME') === 'light' ? 'light' : 'dark';
+            } catch {}
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="src/config/tailwind.cdn.js"></script>
@@ -62,7 +72,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css">
+    <link rel="stylesheet" href="src/styles/app.css?v=theme-toggle-1">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -169,6 +179,9 @@
             </button>
             <button onclick="nav('precos')" class="app-text-button" aria-label="Planos">
                 <span>Planos</span>
+            </button>
+            <button id="appThemeToggle" type="button" onclick="toggleAppTheme()" aria-label="Ativar modo claro" title="Ativar modo claro" class="app-icon-button app-theme-toggle">
+                <i data-lucide="sun" class="w-5 h-5"></i>
             </button>
             <button id="mobileMenuButton" onclick="toggleSidebar()" aria-label="Abrir menu lateral" aria-expanded="false" class="app-icon-button app-settings-button hidden">
                 <i data-lucide="menu" class="w-5 h-5"></i>
@@ -1552,7 +1565,7 @@
             <div id="footer-container"></div>
 
             <script src="src/app/layout/footer-loader.js"></script>
-            <script src="src/app/core/main.js"></script>
+            <script src="src/app/core/main.js?v=theme-toggle-1"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">

@@ -5355,3 +5355,246 @@ body.auth-page-active #appTopbar {
         font-size: 10px;
     }
 }
+
+/* =========================================
+   Light theme
+   ========================================= */
+html[data-theme="light"] {
+    color-scheme: light;
+}
+
+html[data-theme="light"] body {
+    background:
+        radial-gradient(circle at 12% 8%, rgba(34, 211, 238, 0.18), transparent 32%),
+        radial-gradient(circle at 88% 18%, rgba(16, 185, 129, 0.12), transparent 30%),
+        #f5f8fc !important;
+    color: #172033 !important;
+}
+
+html[data-theme="light"] .app-topbar {
+    border-bottom-color: rgba(15, 23, 42, 0.1);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1);
+}
+
+html[data-theme="light"] .app-brand-link span,
+html[data-theme="light"] .sidebar-brand-link span,
+html[data-theme="light"] .mobile-brand-link span,
+html[data-theme="light"] .topbar-profile-copy span,
+html[data-theme="light"] .sidebar-user-name,
+html[data-theme="light"] .history-card h3,
+html[data-theme="light"] .history-vulnerability-top strong,
+html[data-theme="light"] .history-action-check strong,
+html[data-theme="light"] .hero-title-premium,
+html[data-theme="light"] .title-line,
+html[data-theme="light"] .ssw-hero-title,
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4 {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] #mainContentWrapper .text-white,
+html[data-theme="light"] #authScreen .text-white,
+html[data-theme="light"] .glass-panel .text-white,
+html[data-theme="light"] .history-detail-block .text-white,
+html[data-theme="light"] .support-form-panel .text-white {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .btn-primary.text-white,
+html[data-theme="light"] button.text-white,
+html[data-theme="light"] .search-button,
+html[data-theme="light"] .topbar-auth-primary {
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .app-brand-link strong,
+html[data-theme="light"] .sidebar-brand-link strong,
+html[data-theme="light"] .mobile-brand-link strong,
+html[data-theme="light"] .title-highlight,
+html[data-theme="light"] .topbar-profile-copy small,
+html[data-theme="light"] .sidebar-user-metric strong {
+    color: #057c95 !important;
+    -webkit-text-fill-color: #057c95 !important;
+}
+
+html[data-theme="light"] .app-text-button,
+html[data-theme="light"] .app-icon-button,
+html[data-theme="light"] .topbar-auth-link,
+html[data-theme="light"] .sidebar-nav-item,
+html[data-theme="light"] .sidebar-close-button,
+html[data-theme="light"] .history-card-actions button,
+html[data-theme="light"] .history-action-tools button,
+html[data-theme="light"] .history-action-footer button {
+    border-color: rgba(15, 23, 42, 0.1);
+    background: rgba(255, 255, 255, 0.72);
+    color: #1e293b;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+html[data-theme="light"] .app-text-button:hover,
+html[data-theme="light"] .app-text-button.is-active,
+html[data-theme="light"] .app-icon-button:hover,
+html[data-theme="light"] .app-icon-button.is-active,
+html[data-theme="light"] .app-theme-toggle.is-light-mode,
+html[data-theme="light"] .topbar-auth-link:hover,
+html[data-theme="light"] .sidebar-nav-item:hover,
+html[data-theme="light"] .sidebar-nav-item.active {
+    border-color: rgba(8, 145, 178, 0.28) !important;
+    background: rgba(14, 165, 233, 0.12) !important;
+    color: #075985 !important;
+}
+
+html[data-theme="light"] .sidebar-surface,
+html[data-theme="light"] .glass-panel,
+html[data-theme="light"] .empty-state-card,
+html[data-theme="light"] .stat-card,
+html[data-theme="light"] .stat-card-premium,
+html[data-theme="light"] .history-card,
+html[data-theme="light"] .history-detail-block,
+html[data-theme="light"] .history-vulnerability-item,
+html[data-theme="light"] .history-action-check,
+html[data-theme="light"] .history-verification-result,
+html[data-theme="light"] .support-form-panel,
+html[data-theme="light"] .user-menu-panel,
+html[data-theme="light"] .topbar-profile-button,
+html[data-theme="light"] .sidebar-user-info,
+html[data-theme="light"] .report-section,
+html[data-theme="light"] .report-page {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.84)),
+        rgba(255, 255, 255, 0.86) !important;
+    box-shadow: 0 18px 46px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="light"] .sidebar-surface {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.98)),
+        linear-gradient(135deg, rgba(34, 211, 238, 0.09), rgba(16, 185, 129, 0.06)) !important;
+}
+
+html[data-theme="light"] .hero-section-premium,
+html[data-theme="light"] .ssw-hero-shell,
+html[data-theme="light"] .home-editorial-section {
+    background: transparent !important;
+}
+
+html[data-theme="light"] #mainContentWrapper,
+html[data-theme="light"] #mainContent {
+    background: transparent !important;
+}
+
+html[data-theme="light"] .hero-subtitle-premium,
+html[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .history-card-summary,
+html[data-theme="light"] .history-card-url,
+html[data-theme="light"] .history-detail-muted,
+html[data-theme="light"] .history-action-head p,
+html[data-theme="light"] .history-action-footer span,
+html[data-theme="light"] .history-verification-head p,
+html[data-theme="light"] .sidebar-user-email,
+html[data-theme="light"] .support-form-note,
+html[data-theme="light"] p,
+html[data-theme="light"] small {
+    color: #475569 !important;
+}
+
+html[data-theme="light"] .input-pro,
+html[data-theme="light"] .search-input,
+html[data-theme="light"] .compare-input-block,
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] select {
+    border-color: rgba(15, 23, 42, 0.14) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .input-pro::placeholder,
+html[data-theme="light"] .search-input::placeholder,
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .search-bar-hero,
+html[data-theme="light"] .search-bar-integrated,
+html[data-theme="light"] .ssw-mode-selector,
+html[data-theme="light"] .audit-metric-card,
+html[data-theme="light"] .audit-pillar-card,
+html[data-theme="light"] .history-filter-btn {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+    background: rgba(255, 255, 255, 0.78) !important;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+}
+
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] .search-button,
+html[data-theme="light"] .topbar-auth-primary {
+    border-color: rgba(8, 145, 178, 0.4) !important;
+    background: linear-gradient(135deg, #0891b2, #10b981) !important;
+    color: #ffffff !important;
+    box-shadow: 0 16px 34px rgba(8, 145, 178, 0.2);
+}
+
+html[data-theme="light"] .sidebar-overlay,
+html[data-theme="light"] .support-modal-backdrop {
+    background: rgba(15, 23, 42, 0.28);
+}
+
+html[data-theme="light"] .sidebar-section-label,
+html[data-theme="light"] .history-card-top time {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .history-action-check.is-checked {
+    border-color: rgba(8, 145, 178, 0.38) !important;
+    background: rgba(14, 165, 233, 0.11) !important;
+}
+
+html[data-theme="light"] .support-help-button {
+    border-color: rgba(8, 145, 178, 0.22);
+    background: #ffffff;
+    color: #075985;
+    box-shadow: 0 16px 38px rgba(15, 23, 42, 0.14);
+}
+
+html[data-theme="light"] #authScreen > .absolute:nth-child(-n+3) {
+    opacity: 0.28 !important;
+}
+
+html[data-theme="light"] #authScreen > .absolute.inset-0 {
+    background: rgba(248, 250, 252, 0.84) !important;
+}
+
+#toastContainer {
+    top: 88px !important;
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: auto;
+}
+
+@media (max-width: 520px) {
+    .app-topbar-actions .app-text-button:first-child {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    #toastContainer {
+        top: 78px !important;
+        right: 12px !important;
+        left: 12px !important;
+    }
+
+    .toast {
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 100%;
+    }
+}
