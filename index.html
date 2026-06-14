@@ -212,35 +212,30 @@
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                     <span>Planos e créditos</span>
                 </button>
+
+                <p class="sidebar-section-label">Ajuda</p>
+                <button type="button" onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>Documentação</span>
+                </button>
+                <button type="button" onclick="openSupportForm(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="circle-help" class="w-4 h-4"></i>
+                    <span>Suporte</span>
+                </button>
+
+                <p class="sidebar-section-label">Empresa</p>
+                <button type="button" onclick="showAboutCard(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    <span>Sobre a SSW</span>
+                </button>
+                <button type="button" onclick="showTermsCard(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                    <i data-lucide="file-check" class="w-4 h-4"></i>
+                    <span>Termos de uso</span>
+                </button>
             </nav>
 
             <div class="sidebar-footer">
-                <nav class="sidebar-utility-nav" aria-label="Ajuda e suporte">
-                    <button type="button" onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent" data-nav-target="tutorial">
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        <span>Documentação</span>
-                    </button>
-                    <button type="button" onclick="openSupportForm(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
-                        <i data-lucide="circle-help" class="w-4 h-4"></i>
-                        <span>Suporte</span>
-                    </button>
-                </nav>
-
-                <div class="sidebar-meta" aria-label="Empresa e canais">
-                    <p class="sidebar-section-label">Empresa</p>
-                    <button type="button" onclick="showAboutCard(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
-                        <i data-lucide="info" class="w-4 h-4"></i>
-                        <span>Sobre a SSW</span>
-                    </button>
-                    <button type="button" onclick="showTermsCard(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
-                        <i data-lucide="file-check" class="w-4 h-4"></i>
-                        <span>Termos de uso</span>
-                    </button>
-                    <button type="button" onclick="showFAQ(); toggleSidebar(false);" class="sidebar-nav-item sidebar-utility-item border border-transparent">
-                        <i data-lucide="help-circle" class="w-4 h-4"></i>
-                        <span>FAQ</span>
-                    </button>
-
+                <div class="sidebar-meta" aria-label="Canais de contato e redes sociais">
                     <div class="sidebar-social-links" aria-label="Canais de contato e redes sociais">
                         <a href="tel:82991301991" aria-label="Telefone" title="Telefone">
                             <i data-lucide="phone" class="w-4 h-4"></i>
