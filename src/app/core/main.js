@@ -602,6 +602,10 @@
                 hideAuditChatSurfaces();
             }
             if (view !== 'history') hideHistorySurfaces();
+            // Esconde o authScreen se estiver visível
+            if (typeof hideAuthScreen === 'function') {
+                hideAuthScreen();
+            }
             window.currentView = view;
 
             // Atualiza a URL com caminho limpo (sem hash)
