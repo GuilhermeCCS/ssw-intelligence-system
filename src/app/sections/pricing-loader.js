@@ -1,11 +1,14 @@
 // Carrega a seção de preços dinamicamente
 async function loadPricingSection() {
     try {
-        const response = await fetch('src/components/pricing/pricing-component.html');
+        const response = await fetch('src/components/pricing/pricing-component.fragment', { redirect: 'error' });
         if (!response.ok) {
             throw new Error(`Falha ao carregar preços: ${response.status}`);
         }
         const html = await response.text();
+        if (!html.includes('id="view-precos"') || /<html[\s>]/i.test(html)) {
+            throw new Error('Resposta inválida ao carregar preços.');
+        }
         document.getElementById('view-precos-container').innerHTML = html;
         // Recria ícones Lucide após carregar
         if (typeof lucide !== 'undefined') {

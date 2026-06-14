@@ -60,7 +60,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260614-sidebar-fix-9">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -159,7 +159,7 @@
         </div>
     </div>
     <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar(false)"></div>
-    <button id="sidebarRevealButton" type="button" onclick="if(window.innerWidth < 768){toggleSidebar(true)}else{toggleSidebarCollapsed(false)}" class="sidebar-reveal-button hidden" aria-label="Mostrar menu lateral">
+    <button id="sidebarRevealButton" type="button" class="sidebar-reveal-button hidden" aria-label="Mostrar menu lateral">
         <i data-lucide="panel-left-open" class="w-4 h-4"></i>
     </button>
     <aside id="appSidebar" class="app-sidebar-shell">
@@ -169,7 +169,7 @@
                     <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
                     <span>SSW Intelligence</span>
                 </a>
-                <button id="sidebarCollapseButton" type="button" onclick="if(window.innerWidth < 768){toggleSidebar(false)}else{toggleSidebarCollapsed(true)}" class="sidebar-close-button" aria-label="Ocultar menu lateral" aria-expanded="true">
+                <button id="sidebarCollapseButton" type="button" class="sidebar-close-button" aria-label="Ocultar menu lateral" aria-expanded="true">
                     <i data-lucide="panel-left-close" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -648,8 +648,8 @@
 <!-- Placeholder para a seção de preços - será carregada dinamicamente -->
 <div id="view-precos-container"></div>
 
-<script src="src/app/sections/pricing-loader.js"></script>
-<script src="src/app/sections/ranking-loader.js"></script>
+<script src="src/app/sections/pricing-loader.js?v=20260614-sidebar-fix-9"></script>
+<script src="src/app/sections/ranking-loader.js?v=20260614-sidebar-fix-9"></script>
             <div id="view-tutorial" class="hidden min-h-screen bg-[#020408] animate-fade-in-up">
                 <!-- HEADER -->
                 <header class="max-w-7xl mx-auto px-6 py-12">
@@ -1615,7 +1615,7 @@
                     </div>
                 </div>
             </div>
-            <script src="src/app/core/main.js"></script>
+            <script src="src/app/core/main.js?v=20260614-sidebar-fix-9"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">

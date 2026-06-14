@@ -2,11 +2,14 @@
 async function loadRankingSection() {
     console.log('🚀 loadRankingSection iniciado');
     try {
-        const response = await fetch('/src/components/ranking/ranking-component.html');
+        const response = await fetch('/src/components/ranking/ranking-component.fragment', { redirect: 'error' });
         if (!response.ok) {
             throw new Error(`Falha ao carregar ranking: ${response.status}`);
         }
         const html = await response.text();
+        if (!html.includes('id="view-ranking"') || /<html[\s>]/i.test(html)) {
+            throw new Error('Resposta inválida ao carregar ranking.');
+        }
         console.log('📄 HTML do ranking carregado');
         document.getElementById('view-ranking-container').innerHTML = html;
         // Recria ícones Lucide após carregar

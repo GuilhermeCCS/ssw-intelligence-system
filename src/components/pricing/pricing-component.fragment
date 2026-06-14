@@ -1,0 +1,363 @@
+<div id="view-precos" class="hidden w-full animate-fade-in-up">
+
+    <!-- ══ HERO ══ -->
+    <section class="ssw-pricing-hero">
+        <div class="ssw-hero-glow"></div>
+        <div class="ssw-hero-inner">
+            <h1 class="ssw-hero-title">
+                Preços que escalam com o<br>
+                <em>tamanho da sua agência.</em>
+            </h1>
+            <p class="ssw-hero-sub">
+                Compre créditos, audite sites com IA e feche contratos maiores entregando relatórios irrefutáveis.
+            </p>
+            <div class="ssw-guarantees">
+                <span class="ssw-guarantee-item">
+                    <i data-lucide="shield-check" class="ssw-g-icon"></i>
+                    Pagamento seguro via Mercado Pago
+                </span>
+                <span class="ssw-guarantee-item">
+                    <i data-lucide="zap" class="ssw-g-icon"></i>
+                    Créditos liberados instantaneamente via PIX
+                </span>
+                <span class="ssw-guarantee-item">
+                    <i data-lucide="infinity" class="ssw-g-icon"></i>
+                    Créditos não expiram nunca
+                </span>
+            </div>
+            <div class="ssw-free-trial-banner">
+                <div>
+                    <strong>Teste gratuito disponível</strong>
+                    <span>Explore o sandbox, veja um relatório exemplo e crie sua conta sem cobrança inicial.</span>
+                </div>
+                <button type="button" onclick="showAuthScreen('register')">Começar grátis</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ CARDS DE PLANOS ══ -->
+    <section class="ssw-plans-section">
+        <div class="ssw-plans-grid">
+
+            <!-- STARTER -->
+            <div class="ssw-plan-card">
+                <div class="ssw-card-top-shine"></div>
+                <div class="ssw-plan-name">Starter</div>
+                <div class="ssw-plan-desc">Para freelancers validando o mercado de otimização web.</div>
+                <div class="ssw-price-block">
+                    <div class="ssw-price-row">
+                        <span class="ssw-currency">R$</span>
+                        <span class="ssw-amount">99</span>
+                        <span class="ssw-cents">,99</span>
+                    </div>
+                    <div class="ssw-price-note">Pagamento único · R$ 9,99/crédito</div>
+                </div>
+                <button onclick="comprarPlano('basico')" class="ssw-btn ssw-btn-default">
+                    Começar com Starter
+                </button>
+                <hr class="ssw-divider">
+                <p class="ssw-features-label">Incluído no plano</p>
+                <ul class="ssw-feature-list">
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span><strong>10 Créditos</strong> de auditoria</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>Análise de Performance e SEO</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>3 Agents simultâneas por análise</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>Histórico por 30 dias</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- PRO (DESTAQUE) -->
+            <div class="ssw-plan-card ssw-plan-featured">
+                <div class="ssw-featured-top-line"></div>
+                <span class="ssw-plan-badge">
+                    <i data-lucide="star" class="ssw-star-icon"></i>
+                    Mais escolhido
+                </span>
+                <div class="ssw-plan-name ssw-name-accent">Pro</div>
+                <div class="ssw-plan-desc">Arsenal completo para agências de marketing e devs seniores.</div>
+                <div class="ssw-price-block">
+                    <div class="ssw-price-row">
+                        <span class="ssw-currency ssw-currency-accent">R$</span>
+                        <span class="ssw-amount">149</span>
+                        <span class="ssw-cents ssw-cents-accent">,99</span>
+                    </div>
+                    <div class="ssw-price-note">Pagamento único</div>
+                    <span class="ssw-price-tag">R$ 3,75 por crédito — melhor custo</span>
+                </div>
+                <button onclick="comprarPlano('recomendado')" class="ssw-btn ssw-btn-primary">
+                    Assinar Pacote Pro
+                </button>
+                <hr class="ssw-divider">
+                <p class="ssw-features-label ssw-features-label-bright">Tudo do Starter, mais:</p>
+                <ul class="ssw-feature-list">
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-accent"></i>
+                        <span><strong>40 Créditos</strong> de auditoria</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-accent"></i>
+                        <span>Exportação em <strong>PDF Premium</strong></span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-accent"></i>
+                        <span>Benchmarking competitivo</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-accent"></i>
+                        <span>Histórico estendido — <strong>1 ano</strong></span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-accent"></i>
+                        <span>Veredito Executivo IA</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ENTERPRISE -->
+            <div class="ssw-plan-card">
+                <div class="ssw-card-top-shine"></div>
+                <div class="ssw-plan-name">Enterprise</div>
+                <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios white-label com sua marca.</div>
+                <div class="ssw-price-block">
+                    <div class="ssw-price-consult-wrap">
+                        <span class="ssw-price-consult">Sob consulta</span>
+                    </div>
+                    <div class="ssw-price-note">Volume agentlizado</div>
+                </div>
+                <button onclick="falarComVendas()" class="ssw-btn ssw-btn-outline">
+                    Falar com Vendas
+                </button>
+                <hr class="ssw-divider">
+                <p class="ssw-features-label">Soluções exclusivas</p>
+                <ul class="ssw-feature-list">
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span><strong>150+ Créditos</strong> por demanda</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>Relatórios White-label (sua logo)</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>Acesso à API REST</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>Histórico ilimitado</span>
+                    </li>
+                    <li class="ssw-feature-item">
+                        <i data-lucide="check" class="ssw-check-dim"></i>
+                        <span>Agents ilimitadas por análise</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══ TABELA COMPARATIVA (desktop only) ══ -->
+    <section class="ssw-table-section">
+        <div class="ssw-table-header">
+            <p class="ssw-section-label">Detalhes</p>
+            <h2 class="ssw-section-title">Comparação completa de recursos</h2>
+            <p class="ssw-section-sub">Veja exatamente o que cada plano oferece para a sua operação.</p>
+        </div>
+        <div class="ssw-table-wrap">
+            <table class="ssw-table">
+                <thead>
+                    <tr>
+                        <th class="ssw-th-feature">Funcionalidade</th>
+                        <th>Starter</th>
+                        <th class="ssw-th-featured">Pro</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="ssw-group-row"><td colspan="4">Capacidade de Auditoria</td></tr>
+                    <tr>
+                        <td class="ssw-td-feature">Créditos de Análise</td>
+                        <td>10</td>
+                        <td class="ssw-td-featured">40</td>
+                        <td>Agentlizado</td>
+                    </tr>
+                    <tr>
+                        <td class="ssw-td-feature">Armazenamento de Histórico</td>
+                        <td>30 dias</td>
+                        <td class="ssw-td-featured">1 Ano</td>
+                        <td>Ilimitado</td>
+                    </tr>
+                    <tr class="ssw-group-row"><td colspan="4">Inteligência Artificial & Agents</td></tr>
+                    <tr>
+                        <td class="ssw-td-feature">Agents Simultâneas</td>
+                        <td>3</td>
+                        <td class="ssw-td-featured">3</td>
+                        <td>Ilimitado</td>
+                    </tr>
+                    <tr>
+                        <td class="ssw-td-feature">Veredito Executivo IA</td>
+                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                        <td class="ssw-td-featured"><span class="ssw-tcheck"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="ssw-td-feature">Análise Comparativa (Benchmarking)</td>
+                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
+                        <td class="ssw-td-featured"><span class="ssw-tcheck"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                    </tr>
+                    <tr class="ssw-group-row"><td colspan="4">Relatórios e Integrações</td></tr>
+                    <tr>
+                        <td class="ssw-td-feature">Exportação em PDF</td>
+                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
+                        <td class="ssw-td-featured"><span class="ssw-tcheck"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="ssw-td-feature">White-label (Sua Marca no PDF)</td>
+                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
+                        <td class="ssw-td-featured"><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
+                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="ssw-td-feature">Acesso à API REST</td>
+                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
+                        <td class="ssw-td-featured"><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
+                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ══ MARQUEE DE TECNOLOGIAS ══ -->
+    <section class="ssw-marquee-section">
+        <p class="ssw-marquee-label">Motor de auditoria impulsionado pelas melhores tecnologias</p>
+        <div class="ssw-marquee-outer">
+            <div class="ssw-marquee-fade-left"></div>
+            <div class="ssw-marquee-fade-right"></div>
+            <div class="ssw-marquee-track">
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/gm.ico" alt="Gemini" class="ssw-mi-icon ssw-mi-purple" style="width: 24px; height: 24px; object-fit: contain;"><span>Gemini AI</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/grok.ico" alt="Grok" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Grok AI</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/cm.ico" alt="Chromium" class="ssw-mi-icon ssw-mi-amber" style="width: 24px; height: 24px; object-fit: contain;"><span>Chromium Engine</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/sp.ico" alt="Supabase" class="ssw-mi-icon ssw-mi-green" style="width: 24px; height: 24px; object-fit: contain;"><span>Supabase Data</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/python.ico" alt="Python" class="ssw-mi-icon ssw-mi-blue" style="width: 24px; height: 24px; object-fit: contain;"><span>Python Engine</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/mc.ico" alt="Mercado Pago" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Mercado Pago</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/clf.ico" alt="Cloudflare" class="ssw-mi-icon ssw-mi-orange" style="width: 24px; height: 24px; object-fit: contain;"><span>Cloudflare</span></div>
+                <!-- duplicata 1 para loop contínuo -->
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/gm.ico" alt="Gemini" class="ssw-mi-icon ssw-mi-purple" style="width: 24px; height: 24px; object-fit: contain;"><span>Gemini AI</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/grok.ico" alt="Grok" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Grok AI</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/cm.ico" alt="Chromium" class="ssw-mi-icon ssw-mi-amber" style="width: 24px; height: 24px; object-fit: contain;"><span>Chromium Engine</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/sp.ico" alt="Supabase" class="ssw-mi-icon ssw-mi-green" style="width: 24px; height: 24px; object-fit: contain;"><span>Supabase Data</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/python.ico" alt="Python" class="ssw-mi-icon ssw-mi-blue" style="width: 24px; height: 24px; object-fit: contain;"><span>Python Engine</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/mc.ico" alt="Mercado Pago" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Mercado Pago</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/clf.ico" alt="Cloudflare" class="ssw-mi-icon ssw-mi-orange" style="width: 24px; height: 24px; object-fit: contain;"><span>Cloudflare</span></div>
+                <!-- duplicata 2 para loop contínuo -->
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/gm.ico" alt="Gemini" class="ssw-mi-icon ssw-mi-purple" style="width: 24px; height: 24px; object-fit: contain;"><span>Gemini AI</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/grok.ico" alt="Grok" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Grok AI</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/cm.ico" alt="Chromium" class="ssw-mi-icon ssw-mi-amber" style="width: 24px; height: 24px; object-fit: contain;"><span>Chromium Engine</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/sp.ico" alt="Supabase" class="ssw-mi-icon ssw-mi-green" style="width: 24px; height: 24px; object-fit: contain;"><span>Supabase Data</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/python.ico" alt="Python" class="ssw-mi-icon ssw-mi-blue" style="width: 24px; height: 24px; object-fit: contain;"><span>Python Engine</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/mc.ico" alt="Mercado Pago" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Mercado Pago</span></div>
+                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/clf.ico" alt="Cloudflare" class="ssw-mi-icon ssw-mi-orange" style="width: 24px; height: 24px; object-fit: contain;"><span>Cloudflare</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ FAQ ══ -->
+    <section class="ssw-faq-section">
+        <div class="ssw-faq-inner">
+            <p class="ssw-section-label">Dúvidas frequentes</p>
+            <h2 class="ssw-section-title" style="margin-bottom:40px">Tudo sobre créditos e planos</h2>
+
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
+                    <span class="ssw-faq-question">Os créditos têm prazo de validade?</span>
+                    <i data-lucide="plus" class="ssw-faq-icon"></i>
+                </button>
+                <div class="ssw-faq-body">
+                    <p class="ssw-faq-answer">Não. Utilizamos o modelo transparente <strong>Pay-as-you-go</strong>. Seus créditos ficam atrelados à conta permanentemente e não expiram no final do mês. Você só consome um crédito ao auditar ativamente uma URL.</p>
+                </div>
+            </div>
+
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
+                    <span class="ssw-faq-question">A plataforma serve para agências enviarem relatórios a clientes?</span>
+                    <i data-lucide="plus" class="ssw-faq-icon"></i>
+                </button>
+                <div class="ssw-faq-body">
+                    <p class="ssw-faq-answer">Absolutamente. O <strong>Pacote Pro</strong> foi desenhado para prospecção e fechamento B2B. Com a Exportação em PDF, você gera uma análise estratégica elegante que pode ser enviada ao prospecto, provando matematicamente as falhas do site antes da reunião de vendas.</p>
+                </div>
+            </div>
+
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
+                    <span class="ssw-faq-question">Como funciona o Benchmarking (Modo Comparativo)?</span>
+                    <i data-lucide="plus" class="ssw-faq-icon"></i>
+                </button>
+                <div class="ssw-faq-body">
+                    <p class="ssw-faq-answer">Disponível no Pro e Enterprise. Coloca o site do cliente lado a lado com o maior concorrente dele. A IA simula a jornada nos dois sites simultaneamente, extrai os gaps e gera um plano de ataque para superar o adversário em conversão e SEO.</p>
+                </div>
+            </div>
+
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
+                    <span class="ssw-faq-question">O que são as "Agents" na auditoria?</span>
+                    <i data-lucide="plus" class="ssw-faq-icon"></i>
+                </button>
+                <div class="ssw-faq-body">
+                    <p class="ssw-faq-answer">As personas são perfis criados e salvos no backend da sua conta. Você define nicho, tipo e comportamento, e a IA usa somente essas personas para simular como diferentes públicos perceberiam o site.</p>
+                </div>
+            </div>
+
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
+                    <span class="ssw-faq-question">Quais métodos de pagamento são aceitos e o acesso é imediato?</span>
+                    <i data-lucide="plus" class="ssw-faq-icon"></i>
+                </button>
+                <div class="ssw-faq-body">
+                    <p class="ssw-faq-answer">Sim. Liberação via <strong>PIX</strong> e <strong>Cartão de Crédito</strong> é instantânea, integrada com a segurança do Mercado Pago. Boleto bancário pode levar até 48h úteis para compensação e liberação dos créditos.</p>
+                </div>
+            </div>
+
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
+                    <span class="ssw-faq-question">Oferecem API ou relatórios White-label sem a marca SSW?</span>
+                    <i data-lucide="plus" class="ssw-faq-icon"></i>
+                </button>
+                <div class="ssw-faq-body">
+                    <p class="ssw-faq-answer">São funcionalidades exclusivas do <strong>Enterprise</strong>, feitas para SaaS e grandes agências que querem embutir nossa tecnologia dentro do próprio software usando sua logotipo. Entre em contato com nossa equipe de vendas para cotação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ CTA FINAL ══ -->
+    <section class="ssw-cta-section">
+        <div class="ssw-cta-card">
+            <div class="ssw-cta-grid"></div>
+            <div class="ssw-cta-glow"></div>
+            <div class="ssw-cta-content">
+                <h2 class="ssw-cta-title">Pare de adivinhar onde o site perde dinheiro.</h2>
+                <p class="ssw-cta-sub">Adquira o Pacote Pro hoje, reduza seu CAC e venda projetos web com alto valor agregado — baseado em auditorias reais com IA.</p>
+                <button onclick="comprarPlano('recomendado')" class="ssw-btn-cta">
+                    <i data-lucide="arrow-right" class="ssw-cta-icon"></i>
+                    Assinar Pro Agora — R$ 149,99
+                </button>
+                <p class="ssw-cta-note">Acesso imediato · Créditos não expiram · Cancele quando quiser</p>
+            </div>
+        </div>
+    </section>
+
+</div>
