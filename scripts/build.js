@@ -24,7 +24,7 @@ console.log('🔧 Injetando variáveis de ambiente...');
 // Caminho do HTML (volta um nível para encontrar na raiz)
 const htmlPaths = [
   path.join(__dirname, '..', 'index.html'),
-  path.join(__dirname, '..', 'precos.html')
+  path.join(__dirname, '..', 'precos', 'index.html')
 ];
 
 htmlPaths.forEach(htmlPath => {
