@@ -4898,6 +4898,10 @@ body.auth-page-active #appTopbar {
     text-align: left !important;
 }
 
+.hero-section-premium.hidden {
+    display: none !important;
+}
+
 .ssw-hero-shell {
     position: relative;
     z-index: 1;

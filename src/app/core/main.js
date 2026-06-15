@@ -417,6 +417,7 @@
             setAnalysisFocusState(false);
             setHomePresentationVisible(false);
             document.getElementById('auditCancelNotice')?.remove();
+            document.getElementById('heroSection')?.classList.add('hidden');
             document.getElementById('emptyStateCards')?.classList.add('hidden');
             document.getElementById('manualSelectArea')?.classList.add('hidden');
             document.getElementById('compareArea')?.classList.add('hidden');
