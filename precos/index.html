@@ -2,27 +2,26 @@
 <html lang="pt-br" class="dark">
 <head>
     <meta charset="UTF-8">
-    <base href="/">
     <meta name="env-mp-public-key" content="APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac">
     <meta name="env-api-url" content="https://ssw-intelligence-api.onrender.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Preços da SSWINTELLIGENCE para auditoria web com IA, créditos e relatórios profissionais.">
     <title>Preços | SSWINTELLIGENCE</title>
-    <link rel="icon" type="image/x-icon" href="src/assets/images/logo/logos.ico">
+    <link rel="icon" type="image/x-icon" href="/src/assets/images/logo/logos.ico">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="src/config/tailwind.cdn.js"></script>
+    <script src="/src/config/tailwind.cdn.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script src="src/utils/env-injector.js"></script>
-    <script src="src/utils/crypto.js"></script>
-    <script src="src/app/payments/mercado-pago-checkout.js"></script>
-    <link rel="stylesheet" href="src/styles/cyber-theme.css">
-    <script src="src/app/ui/toast.js"></script>
-    <script src="src/components/pricing/pricing-component.js?v=20260615-pricing-page-1" defer></script>
-    <script src="src/app/sections/pricing-page.js?v=20260615-pricing-page-1" defer></script>
-    <script src="src/app/sections/public-footer.js?v=20260615-public-pages-1" defer></script>
+    <script src="/src/utils/env-injector.js"></script>
+    <script src="/src/utils/crypto.js"></script>
+    <script src="/src/app/payments/mercado-pago-checkout.js"></script>
+    <link rel="stylesheet" href="/src/styles/cyber-theme.css">
+    <script src="/src/app/ui/toast.js"></script>
+    <script src="/src/components/pricing/pricing-component.js?v=20260615-pricing-page-1" defer></script>
+    <script src="/src/app/sections/pricing-page.js?v=20260615-pricing-page-1" defer></script>
+    <script src="/src/app/sections/public-footer.js?v=20260615-public-pages-1" defer></script>
     <style>
         html,
         body {
@@ -35,6 +34,68 @@
 
         body {
             overflow-x: hidden;
+        }
+
+        .terms-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(2, 4, 8, 0.86);
+            backdrop-filter: blur(18px);
+        }
+
+        .terms-topbar-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 0 auto;
+        }
+
+        .terms-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+        }
+
+        .terms-brand img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .terms-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terms-top-actions a {
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 13px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 8px;
+            color: #dbeafe;
+            font-size: 13px;
+            font-weight: 750;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .terms-top-actions a:first-child {
+            background: #f4f7fb;
+            color: #020408;
         }
 
         .pricing-page-shell {
@@ -86,10 +147,37 @@
         @keyframes pricingPageSpin {
             to { transform: rotate(360deg); }
         }
+
+        @media (max-width: 620px) {
+            .terms-topbar-inner {
+                width: min(100% - 24px, 1180px);
+                min-height: auto;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px 0;
+            }
+
+            .terms-top-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
     </style>
 </head>
 <body class="pricing-view-active">
     <div id="toastContainer"></div>
+    <header class="terms-topbar">
+        <div class="terms-topbar-inner">
+            <a class="terms-brand" href="/home" aria-label="Voltar para a SSW Intelligence">
+                <img src="/src/assets/images/logo/logos.ico" alt="">
+                <span>SSWINTELLIGENCE</span>
+            </a>
+            <nav class="terms-top-actions" aria-label="Ações principais">
+                <a href="/home"><i data-lucide="arrow-left"></i> Plataforma</a>
+                <a href="/termos/"><i data-lucide="file-text"></i> Termos</a>
+            </nav>
+        </div>
+    </header>
     <main id="pricingPageRoot" class="pricing-page-shell">
         <div class="pricing-page-loading">
             <span aria-hidden="true"></span>
