@@ -379,6 +379,14 @@
         function setAnalysisFocusState(active) {
             const heroSection = document.getElementById('heroSection');
             if (heroSection) heroSection.classList.toggle('is-analysis-focus', !!active);
+            if (!active) setAnalysisModeState('auto');
+        }
+
+        function setAnalysisModeState(mode = 'auto') {
+            const heroSection = document.getElementById('heroSection');
+            if (!heroSection) return;
+            heroSection.classList.toggle('is-manual-mode', mode === 'manual');
+            heroSection.classList.toggle('is-compare-mode', mode === 'compare');
         }
 
         function showHomeLandingState({ focusInput = false } = {}) {
@@ -400,6 +408,7 @@
             document.getElementById('auditResults')?.classList.add('hidden');
             document.getElementById('auditLoading')?.classList.add('hidden');
             document.getElementById('emptyStateCards')?.classList.add('hidden');
+            setAnalysisModeState('auto');
 
             const modeSelect = document.getElementById('auditMode');
             if (modeSelect) modeSelect.value = 'auto';
@@ -2838,6 +2847,7 @@ function getCodigoHTML() {
             // Reseta para modo automático
             document.getElementById('auditMode').value = 'auto';
             document.querySelector('input[name="auditMode"][value="auto"]').checked = true;
+            setAnalysisModeState('auto');
             positionLocalAuditHelp('auto');
             setModeOnlyCardsVisibility('auto');
             setActiveNavButton('analisar');
@@ -2870,6 +2880,7 @@ function getCodigoHTML() {
             const statsContainer = document.querySelector('.stats-container-premium');
             const emptyStateCards = document.getElementById('emptyStateCards');
             console.log("Elementos encontrados:", { manualArea, compareArea, normalSearchBar, compareSearchBar });
+            setAnalysisModeState(mode);
             // Reset all areas
             if (manualArea) manualArea.classList.add('hidden');
             if (compareArea) compareArea.classList.add('hidden');
@@ -2898,18 +2909,20 @@ function getCodigoHTML() {
             if(mode === 'manual') {
                 console.log("Entrando no modo manual");
                 if (manualArea) manualArea.classList.remove('hidden');
+                requestAnimationFrame(focusManualPersonaPanel);
                 const cont = document.getElementById('checklistContainer');
                 console.log("Container encontrado:", cont);
                 if (cont) {
-                    cont.innerHTML = "<span class='text-xs text-slate-500'>Carregando perfis...</span>";
+                    cont.innerHTML = "<div class='manual-persona-loading'><span></span><p>Carregando personas...</p></div>";
                     try {
                         let custom = [];
                         custom = await fetchBackendPersonas();
                         manualPersonaCache = custom.map(normalizeManualPersona);
+                        manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
                         populateManualPersonaFilters(manualPersonaCache);
                         cont.innerHTML = "";
                         if (manualPersonaCache.length === 0) {
-                            cont.innerHTML = '<div class="md:col-span-2 lg:col-span-3 text-center border border-dashed border-slate-700 rounded-xl p-7">'
+                            cont.innerHTML = '<div class="manual-persona-empty">'
                                 + '<p class="text-sm font-semibold text-white">Nenhuma persona retornada pela API.</p>'
                                 + '<p class="text-xs text-slate-500 mt-2">Verifique se o backend está expondo o catálogo oficial de personas.</p>'
                                 + '<button onclick="toggleManualSelect()" class="mt-4 px-4 py-2 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 text-xs font-bold hover:bg-cyan-500/25 transition">Tentar novamente</button>'
@@ -2918,9 +2931,10 @@ function getCodigoHTML() {
                             return;
                         }
                         renderManualPersonaList();
+                        requestAnimationFrame(focusManualPersonaPanel);
                     } catch (e) {
                         console.error(e);
-                        cont.innerHTML = '<div class="text-center border border-red-500/20 bg-red-500/10 rounded-xl p-7">'
+                        cont.innerHTML = '<div class="manual-persona-empty manual-persona-empty-error">'
                             + '<p class="text-sm font-semibold text-red-200">Não consegui carregar suas personas.</p>'
                             + '<p class="text-xs text-red-100/80 mt-2">' + safeAuditText(e.message || 'Verifique seu login e a API.') + '</p>'
                             + '<button onclick="toggleManualSelect()" class="mt-4 px-4 py-2 rounded-lg bg-red-500/15 border border-red-400/30 text-red-100 text-xs font-bold hover:bg-red-500/25 transition">Tentar novamente</button>'
@@ -3095,6 +3109,8 @@ function getCodigoHTML() {
 
         var manualPersonaCache = [];
         var manualNicheCache = {};
+        const MANUAL_PERSONA_PAGE_SIZE = 4;
+        var manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
 
         function normalizeTaxonomyValue(value, fallback) {
             return String(value || fallback || '').trim().toLowerCase().replace(/\s+/g, '_');
@@ -3151,18 +3167,40 @@ function getCodigoHTML() {
 
         function setManualPersonaSelected(input) {
             document.querySelectorAll('.manual-persona-row').forEach(row => {
-                row.style.borderColor = 'rgba(255,255,255,0.1)';
-                row.style.background = 'rgba(8,13,22,0.72)';
-                row.style.boxShadow = 'none';
+                row.classList.remove('is-selected');
             });
             const row = input?.closest('.manual-persona-row');
             if (row) {
-                row.style.borderColor = 'rgba(34,211,238,0.55)';
-                row.style.background = 'rgba(34,211,238,0.08)';
-                row.style.boxShadow = '0 0 0 1px rgba(34,211,238,0.18), 0 18px 50px rgba(0,0,0,0.22)';
+                row.classList.add('is-selected');
             }
             updateManualPersonaCount();
             validateManualPersonaNiche(input?.value);
+        }
+
+        function handleManualPersonaFilterChange() {
+            manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
+            renderManualPersonaList();
+        }
+
+        function showMoreManualPersonas() {
+            manualPersonaVisibleCount += MANUAL_PERSONA_PAGE_SIZE;
+            renderManualPersonaList();
+        }
+
+        function collapseManualPersonaList() {
+            manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
+            renderManualPersonaList();
+            requestAnimationFrame(focusManualPersonaPanel);
+        }
+
+        function focusManualPersonaPanel() {
+            const manualArea = document.getElementById('manualSelectArea');
+            if (!manualArea || manualArea.classList.contains('hidden')) return;
+            const rect = manualArea.getBoundingClientRect();
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 720;
+            if (rect.top > viewportHeight * 0.7 || rect.bottom < viewportHeight * 0.18) {
+                manualArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
 
         function renderManualPersonaList() {
@@ -3181,7 +3219,7 @@ function getCodigoHTML() {
             });
 
             if (filtered.length === 0) {
-                cont.innerHTML = '<div class="text-center border border-dashed border-slate-700 rounded-xl p-7">'
+                cont.innerHTML = '<div class="manual-persona-empty">'
                     + '<p class="text-sm font-semibold text-white">Nenhuma persona encontrada.</p>'
                     + '<p class="text-xs text-slate-500 mt-2">Ajuste a busca ou os filtros para encontrar uma persona do backend.</p>'
                     + '</div>';
@@ -3189,29 +3227,55 @@ function getCodigoHTML() {
                 return;
             }
 
-            cont.innerHTML = filtered.map(p => {
+            const selectedPersona = selectedValue ? filtered.find(p => p.id === selectedValue) : null;
+            const ordered = selectedPersona
+                ? [selectedPersona, ...filtered.filter(p => p.id !== selectedValue)]
+                : filtered;
+            const visibleCount = Math.max(MANUAL_PERSONA_PAGE_SIZE, manualPersonaVisibleCount);
+            const visible = ordered.slice(0, visibleCount);
+            const remaining = Math.max(0, ordered.length - visible.length);
+
+            const cards = visible.map(p => {
                 const checked = selectedValue === p.id ? 'checked' : '';
+                const initial = safeAuditText(String(p.name || 'P').trim().charAt(0).toUpperCase() || 'P');
+                const selectedClass = checked ? ' is-selected' : '';
                 return `
-                    <label class="manual-persona-row block rounded-xl border border-white/10 bg-slate-950/70 p-4 cursor-pointer transition-all hover:border-cyan-400/35 hover:bg-cyan-400/[0.06]">
-                        <div class="flex items-start gap-4">
-                            <input type="radio" name="manualPersona" class="agent-radio mt-1 accent-cyan-400" value="${safeAuditText(p.id)}" ${checked} onchange="setManualPersonaSelected(this)">
-                            <div class="min-w-0 flex-1">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <h4 class="text-sm font-bold text-white">${safeAuditText(p.name)}</h4>
-                                    <span class="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-200">${safeAuditText(humanizeTaxonomy(p.niche))}</span>
-                                    <span class="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-300">${safeAuditText(humanizeTaxonomy(p.type))}</span>
-                                </div>
-                                <p class="mt-2 text-xs leading-relaxed text-slate-400">${safeAuditText(p.description || 'Sem descrição comportamental.')}</p>
-                            </div>
-                        </div>
+                    <label class="manual-persona-row${selectedClass}">
+                        <input type="radio" name="manualPersona" class="agent-radio" value="${safeAuditText(p.id)}" ${checked} onchange="setManualPersonaSelected(this)">
+                        <span class="manual-persona-avatar" aria-hidden="true">${initial}</span>
+                        <span class="manual-persona-body">
+                            <span class="manual-persona-title-row">
+                                <strong>${safeAuditText(p.name)}</strong>
+                                <span class="manual-persona-status"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selecionada</span>
+                            </span>
+                            <span class="manual-persona-tags">
+                                <span>${safeAuditText(humanizeTaxonomy(p.niche))}</span>
+                                <span>${safeAuditText(humanizeTaxonomy(p.type))}</span>
+                            </span>
+                            <span class="manual-persona-description">${safeAuditText(p.description || 'Sem descriÃ§Ã£o comportamental.')}</span>
+                        </span>
                     </label>
                 `;
             }).join('');
+
+            const footer = filtered.length > MANUAL_PERSONA_PAGE_SIZE ? `
+                <div class="manual-persona-list-footer">
+                    <span>${safeAuditText(String(Math.min(visible.length, ordered.length)))} de ${safeAuditText(String(ordered.length))} personas</span>
+                    <div>
+                        ${remaining > 0 ? `<button type="button" onclick="showMoreManualPersonas()">Mostrar mais ${safeAuditText(String(Math.min(MANUAL_PERSONA_PAGE_SIZE, remaining)))}</button>` : ''}
+                        ${visible.length > MANUAL_PERSONA_PAGE_SIZE ? '<button type="button" onclick="collapseManualPersonaList()">Ver menos</button>' : ''}
+                    </div>
+                </div>
+            ` : '';
+
+            cont.innerHTML = cards + footer;
             const selected = Array.from(document.querySelectorAll('.agent-radio')).find(el => el.value === selectedValue);
             if (selected) setManualPersonaSelected(selected);
             updateManualPersonaCount();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
         }
-
         async function validateManualPersonaNiche(personaId) {
             const warning = document.getElementById('manualPersonaWarning');
             if (!warning) return;
@@ -4527,6 +4591,8 @@ function getCodigoHTML() {
             document.getElementById('auditLoading')?.classList.add('hidden');
             document.getElementById('auditResults')?.classList.add('hidden');
             document.getElementById('heroSection')?.classList.remove('hidden');
+            setAnalysisFocusState(true);
+            setAnalysisModeState(mode);
             document.getElementById('manualSelectArea')?.classList.toggle('hidden', mode !== 'manual');
             document.getElementById('compareArea')?.classList.add('hidden');
 
@@ -7483,6 +7549,11 @@ function getCodigoHTML() {
             runAudit,
             runCompare,
             toggleManualSelect,
+            renderManualPersonaList,
+            handleManualPersonaFilterChange,
+            showMoreManualPersonas,
+            collapseManualPersonaList,
+            setManualPersonaSelected,
             showSimplifiedSearch,
             openPricingPage,
             openTermsPage,

@@ -499,27 +499,29 @@
                     </div>
                 </div>
                 <!-- Manual Selection Area -->
-                <div id="manualSelectArea" class="hidden p-5 rounded-2xl" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,0.16);box-shadow:0 8px 32px rgba(0,0,0,0.25);">
-                    <div class="flex justify-between items-start mb-5">
+                <div id="manualSelectArea" class="hidden manual-persona-panel">
+                    <div class="manual-persona-head">
                         <div>
-                            <h3 class="text-sm font-bold text-white tracking-wide">Personas Criadas</h3>
-                            <p class="text-[11px] text-slate-500 mt-1">Selecione <strong class="text-slate-400">1 persona</strong> salva no backend para uma análise manual exclusiva</p>
+                            <span class="manual-persona-kicker">Modo manual</span>
+                            <h3>Escolha a persona</h3>
+                            <p>Use uma persona salva para orientar a análise desta URL.</p>
                         </div>
-                        <span id="agentSelCount" class="text-[10px] font-semibold bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/50 whitespace-nowrap ml-4 mt-0.5">0 / 1</span>
+                        <span id="agentSelCount" class="manual-persona-count">0 / 1</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                        <div class="md:col-span-1">
-                            <input id="manualPersonaSearch" type="text" placeholder="Buscar persona..." oninput="renderManualPersonaList()" class="input-pro w-full rounded-xl p-3 text-white text-sm">
-                        </div>
-                        <select id="manualPersonaNiche" onchange="renderManualPersonaList()" class="input-pro rounded-xl p-3 text-white text-sm">
+                    <div class="manual-persona-controls">
+                        <label class="manual-persona-search" for="manualPersonaSearch">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            <input id="manualPersonaSearch" type="text" placeholder="Buscar persona..." oninput="handleManualPersonaFilterChange()" class="input-pro">
+                        </label>
+                        <select id="manualPersonaNiche" onchange="handleManualPersonaFilterChange()" class="input-pro">
                             <option value="all">Todos os nichos</option>
                         </select>
-                        <select id="manualPersonaType" onchange="renderManualPersonaList()" class="input-pro rounded-xl p-3 text-white text-sm">
+                        <select id="manualPersonaType" onchange="handleManualPersonaFilterChange()" class="input-pro">
                             <option value="all">Todos os tipos</option>
                         </select>
                     </div>
                     <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
-                    <div id="checklistContainer" class="space-y-2"></div>
+                    <div id="checklistContainer" class="manual-persona-list"></div>
                 </div>
                 <!-- Compare Area -->
                 <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
