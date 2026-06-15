@@ -1962,19 +1962,74 @@ function getCodigoHTML() {
             }
         }
         // Função para atualizar o estado do botão Login/Sair
-        function logout() {
+        function showLogoutConfirmModal() {
+            const dropdown = document.getElementById('userMenuCircleDropdown');
+            const avatarBtn = document.getElementById('avatarCircleBtn');
+            const modal = document.getElementById('logoutConfirmModal');
+            if (dropdown) dropdown.classList.add('hidden');
+            if (avatarBtn) avatarBtn.setAttribute('aria-expanded', 'false');
+            document.removeEventListener('click', closeUserMenuCircleOnClickOutside);
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            document.body.classList.add('logout-confirm-active');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            const primaryButton = modal.querySelector('.logout-confirm-primary');
+            if (primaryButton) setTimeout(() => primaryButton.focus(), 80);
+        }
+
+        function hideLogoutConfirmModal() {
+            const modal = document.getElementById('logoutConfirmModal');
+            if (modal) modal.classList.add('hidden');
+            document.body.classList.remove('logout-confirm-active');
+        }
+
+        function setLogoutLeavingState(isActive) {
+            const leavingScreen = document.getElementById('logoutLeavingScreen');
+            document.body.classList.toggle('logout-leaving-active', isActive);
+            if (leavingScreen) leavingScreen.classList.toggle('hidden', !isActive);
+        }
+
+        async function performLogout() {
+            hideLogoutConfirmModal();
+            setLogoutLeavingState(true);
             clearActiveAuditSession();
             auditSnapshotTabOpened = false;
-            if (typeof secureStorage !== 'undefined') {
-                secureStorage.removeItem('USER');
+            try {
+                if (typeof secureStorage !== 'undefined') {
+                    await Promise.resolve(secureStorage.removeItem('USER'));
+                }
+            } catch (error) {
+                console.warn('Erro ao limpar secureStorage durante logout:', error);
             }
             localStorage.removeItem('USER');
             USER = null;
+            if (typeof hideAuthScreen === 'function') hideAuthScreen();
+            const verifyModal = document.getElementById('verifyModal');
+            if (verifyModal) verifyModal.classList.add('hidden');
             updateUserMenuCircle();
             updateAuthButton();
-            Toast.success('Logout realizado com sucesso!');
-            setTimeout(() => location.reload(), 1000);
+            if (typeof nav === 'function') {
+                nav('home');
+            } else if (window.location.pathname !== '/home') {
+                window.history.pushState({}, '', '/home');
+            }
+            setSidebarCollapsed(window.innerWidth >= 768);
+            setTimeout(() => {
+                setLogoutLeavingState(false);
+            }, 1250);
         }
+
+        function logout(options = {}) {
+            if (options && options.skipConfirm) {
+                performLogout();
+                return;
+            }
+            showLogoutConfirmModal();
+        }
+        window.showLogoutConfirmModal = showLogoutConfirmModal;
+        window.hideLogoutConfirmModal = hideLogoutConfirmModal;
+        window.performLogout = performLogout;
+        window.logout = logout;
         function comprarCreditos() { nav('precos'); }
         // Função falarComVendas movida para pricing-section.js
         function mudarSenha() {
@@ -2080,7 +2135,7 @@ function getCodigoHTML() {
                 isCadastroFlow = true;
             } else {
                 Toast.error("Usuário não encontrado. Faça login novamente.");
-                logout();
+                logout({ skipConfirm: true });
                 return;
             }
 

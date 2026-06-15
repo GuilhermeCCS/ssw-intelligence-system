@@ -6903,6 +6903,220 @@ body.auth-page-active #authScreen .glass-panel {
     transform: none !important;
 }
 
+.auth-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #303030;
+    border-radius: 10px;
+    background: #1e1e1e;
+    color: #ffffff;
+    transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.auth-modal-close:hover,
+.auth-modal-close:focus-visible {
+    border-color: #525252;
+    background: #2a2a2a;
+    transform: translateY(-1px);
+}
+
+.auth-modal-close:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.logout-confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 180;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logout-confirm-modal.hidden {
+    display: none !important;
+}
+
+.logout-confirm-card {
+    position: relative;
+    width: min(100%, 420px);
+    padding: 30px;
+    border: 1px solid #2b2b2b;
+    border-radius: 14px;
+    background: #151515;
+    color: #ffffff;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.72);
+}
+
+.logout-confirm-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #303030;
+    border-radius: 10px;
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+.logout-confirm-close:hover,
+.logout-confirm-close:focus-visible {
+    border-color: #525252;
+    background: #2a2a2a;
+}
+
+.logout-confirm-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    border: 1px solid #373737;
+    border-radius: 12px;
+    background: #202020;
+    color: #ffffff;
+}
+
+.logout-confirm-card h2 {
+    margin: 0 44px 10px 0;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 850;
+    line-height: 1.15;
+    letter-spacing: 0;
+}
+
+.logout-confirm-card p {
+    margin: 0;
+    color: #cfcfcf;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.logout-confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.logout-confirm-actions button {
+    min-height: 42px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.logout-confirm-actions button:hover,
+.logout-confirm-actions button:focus-visible {
+    transform: translateY(-1px);
+}
+
+.logout-confirm-secondary {
+    border: 1px solid #333333;
+    background: #202020;
+    color: #ffffff;
+}
+
+.logout-confirm-secondary:hover,
+.logout-confirm-secondary:focus-visible {
+    border-color: #555555;
+    background: #292929;
+}
+
+.logout-confirm-primary {
+    border: 1px solid #ffffff;
+    background: #ffffff;
+    color: #000000;
+}
+
+.logout-confirm-primary:hover,
+.logout-confirm-primary:focus-visible {
+    background: #ececec;
+}
+
+.logout-confirm-close:focus-visible,
+.logout-confirm-actions button:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.logout-leaving-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    background: #020408;
+    color: #ffffff;
+}
+
+.logout-leaving-screen.hidden {
+    display: none !important;
+}
+
+.logout-leaving-effect {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    border-top-color: #ffffff;
+    border-radius: 999px;
+    animation: logoutSpin 880ms linear infinite;
+}
+
+.logout-leaving-effect span {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+}
+
+.logout-leaving-screen p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 850;
+    letter-spacing: 0;
+}
+
+body.logout-confirm-active,
+body.logout-leaving-active {
+    overflow: hidden;
+}
+
+@keyframes logoutSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 body.auth-page-active #appSidebar.app-sidebar-shell,
 body.auth-page-active #mainContent,
 body.auth-page-active #mainContentWrapper,
@@ -6920,6 +7134,164 @@ body.auth-page-active #appSidebar.app-sidebar-shell {
 
 body.auth-page-active #mainContent {
     display: flex !important;
+}
+
+/* Sidebar accessibility sizing */
+:root {
+    --ssw-sidebar-width: 248px;
+    --ssw-sidebar-compact-width: 76px;
+}
+
+.sidebar-surface {
+    gap: 20px !important;
+}
+
+.sidebar-close-button {
+    width: 40px !important;
+    height: 40px !important;
+    flex-basis: 40px !important;
+    border-radius: 10px !important;
+}
+
+.sidebar-quick-actions {
+    grid-template-columns: minmax(0, 1fr) 42px !important;
+    gap: 8px !important;
+    margin: 10px 0 12px !important;
+}
+
+.sidebar-quick-create,
+.sidebar-quick-icon {
+    min-height: 42px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+}
+
+.sidebar-quick-create {
+    gap: 10px !important;
+    padding: 0 12px !important;
+}
+
+.sidebar-quick-icon {
+    width: 42px !important;
+}
+
+.sidebar-quick-create svg,
+.sidebar-quick-icon svg {
+    width: 19px !important;
+    height: 19px !important;
+}
+
+.sidebar-nav {
+    gap: 6px !important;
+}
+
+.sidebar-section-label {
+    margin: 20px 8px 10px !important;
+    color: #d6d6d6 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+.sidebar-nav-item {
+    min-height: 44px !important;
+    gap: 12px !important;
+    padding: 0 12px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    font-weight: 750 !important;
+    line-height: 1.18 !important;
+}
+
+.sidebar-nav-item svg,
+.sidebar-nav-item i {
+    width: 19px !important;
+    height: 19px !important;
+    flex: 0 0 19px !important;
+    stroke-width: 2.1 !important;
+}
+
+.sidebar-nav-item span {
+    min-width: 0;
+    line-height: 1.18 !important;
+}
+
+.sidebar-nav-item:focus-visible,
+.sidebar-quick-create:focus-visible,
+.sidebar-quick-icon:focus-visible,
+.sidebar-close-button:focus-visible,
+.sidebar-profile-button:focus-visible {
+    outline: 2px solid #ffffff !important;
+    outline-offset: 2px !important;
+}
+
+.sidebar-profile-button {
+    min-height: 50px !important;
+    padding: 7px 8px !important;
+    border-radius: 12px !important;
+}
+
+.user-avatar-button.sidebar-profile-avatar,
+.sidebar-profile-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+}
+
+@media (min-width: 768px) {
+    body.sidebar-collapsed .sidebar-brand {
+        padding-bottom: 20px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-close-button {
+        width: 52px !important;
+        height: 52px !important;
+        flex-basis: 52px !important;
+        border-radius: 14px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-close-button svg,
+    body.sidebar-collapsed .sidebar-close-button i {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav {
+        gap: 14px !important;
+        padding-top: 6px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible {
+        width: 52px !important;
+        height: 52px !important;
+        min-height: 52px !important;
+        border-radius: 14px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible svg,
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible i {
+        width: 24px !important;
+        height: 24px !important;
+        flex: 0 0 24px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-profile-button {
+        width: 52px !important;
+        min-height: 52px !important;
+        height: 52px !important;
+    }
+
+    body.sidebar-collapsed .user-avatar-button.sidebar-profile-avatar {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    body.sidebar-collapsed [data-sidebar-label]::after {
+        left: calc(100% + 12px) !important;
+        padding: 9px 11px !important;
+        font-size: 13px !important;
+        border-radius: 8px !important;
+    }
 }
 
 @media (min-width: 768px) {

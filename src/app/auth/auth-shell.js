@@ -136,9 +136,26 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
             document.getElementById('authScreen').classList.add('hidden');
             setAuthPageState(false);
         }
+
+        function closeAuthScreenToHome() {
+            if (typeof nav === 'function') {
+                nav('home');
+                return;
+            }
+            hideAuthScreen();
+            if (window.location.pathname !== '/home') {
+                window.history.pushState({}, '', '/home');
+            }
+            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
+            views.forEach((view) => {
+                const element = document.getElementById(`view-${view}`);
+                if (element) element.classList.toggle('hidden', view !== 'home');
+            });
+        }
         window.setAuthPageState = setAuthPageState;
         window.showAuthScreen = showAuthScreen;
         window.hideAuthScreen = hideAuthScreen;
+        window.closeAuthScreenToHome = closeAuthScreenToHome;
         // Verificar se clique foi em botão que não é do footer
         function handleButtonClick(event) {
             const button = event.target.closest('button');

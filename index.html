@@ -60,7 +60,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260615-auth-modal-2">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260615-logout-flow-1">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -93,13 +93,16 @@
         </form>
     </div>
     <script src="src/app/ui/toast.js"></script>
-    <script src="src/app/auth/auth-shell.js?v=20260615-auth-modal-2"></script>
+    <script src="src/app/auth/auth-shell.js?v=20260615-logout-flow-1"></script>
     <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
         <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
         <div class="absolute top-0 -right-4 w-72 h-72 bg-emerald-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-0"></div>
         <div class="glass-panel p-10 rounded-3xl w-full max-w-md border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in-up">
+            <button type="button" class="auth-modal-close" onclick="closeAuthScreenToHome()" aria-label="Fechar autenticação">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
             <div class="space-y-6" id="loginForm">
                 <div id="loginContent">
                     <!-- Conteúdo será renderizado dinamicamente -->
@@ -157,6 +160,28 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="logoutConfirmModal" class="logout-confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle">
+        <div class="logout-confirm-card">
+            <button type="button" class="logout-confirm-close" onclick="hideLogoutConfirmModal()" aria-label="Cancelar saída">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="logout-confirm-icon" aria-hidden="true">
+                <i data-lucide="log-out" class="w-6 h-6"></i>
+            </div>
+            <h2 id="logoutConfirmTitle">Deseja realmente sair?</h2>
+            <p>Você precisará entrar novamente para acessar seu histórico, personas e análises privadas.</p>
+            <div class="logout-confirm-actions">
+                <button type="button" class="logout-confirm-secondary" onclick="hideLogoutConfirmModal()">Cancelar</button>
+                <button type="button" class="logout-confirm-primary" onclick="performLogout()">Sim, sair</button>
+            </div>
+        </div>
+    </div>
+    <div id="logoutLeavingScreen" class="logout-leaving-screen hidden" role="status" aria-live="polite">
+        <div class="logout-leaving-effect" aria-hidden="true">
+            <span></span>
+        </div>
+        <p>Saindo da conta</p>
     </div>
     <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar(false)"></div>
     <button id="sidebarRevealButton" type="button" class="sidebar-reveal-button hidden" aria-label="Mostrar menu lateral">
@@ -659,8 +684,8 @@
 <!-- Placeholder para a seção de preços - será carregada dinamicamente -->
 <div id="view-precos-container"></div>
 
-<script src="src/app/sections/pricing-loader.js?v=20260615-auth-modal-2"></script>
-<script src="src/app/sections/ranking-loader.js?v=20260615-auth-modal-2"></script>
+<script src="src/app/sections/pricing-loader.js?v=20260615-logout-flow-1"></script>
+<script src="src/app/sections/ranking-loader.js?v=20260615-logout-flow-1"></script>
             <div id="view-tutorial" class="hidden min-h-screen bg-[#020408] animate-fade-in-up">
                 <!-- HEADER -->
                 <header class="max-w-7xl mx-auto px-6 py-12">
@@ -1626,7 +1651,7 @@
                     </div>
                 </div>
             </div>
-            <script src="src/app/core/main.js?v=20260615-auth-modal-2"></script>
+            <script src="src/app/core/main.js?v=20260615-logout-flow-1"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">
