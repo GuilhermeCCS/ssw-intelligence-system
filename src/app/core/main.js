@@ -2036,7 +2036,10 @@ function getCodigoHTML() {
         window.performLogout = performLogout;
         window.logout = logout;
         function openPricingPage() {
-            window.location.href = '/precos/';
+            const pricingTab = window.open('/precos/', '_blank', 'noopener,noreferrer');
+            if (!pricingTab) {
+                window.location.href = '/precos/';
+            }
         }
         function comprarCreditos() { openPricingPage(); }
         // Função falarComVendas movida para pricing-section.js
