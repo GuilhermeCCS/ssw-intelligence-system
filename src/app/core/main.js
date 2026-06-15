@@ -175,6 +175,7 @@
         function setSidebarCollapsed(collapsed) {
             const shouldCollapse = Boolean(collapsed);
             const isDesktop = window.innerWidth >= 768;
+            const sidebarWidth = shouldCollapse ? 'var(--ssw-sidebar-compact-width)' : 'var(--ssw-sidebar-width)';
             const sidebar = document.getElementById('appSidebar');
             const mainWrapper = document.getElementById('mainContentWrapper');
             const authScreen = document.getElementById('authScreen');
@@ -182,13 +183,19 @@
             const revealButton = document.getElementById('sidebarRevealButton');
 
             document.body.classList.toggle('sidebar-collapsed', shouldCollapse);
-            if (collapseButton) collapseButton.setAttribute('aria-expanded', String(!shouldCollapse));
+            if (collapseButton) {
+                collapseButton.setAttribute('aria-expanded', String(!shouldCollapse));
+                collapseButton.setAttribute('aria-label', shouldCollapse ? 'Expandir menu lateral' : 'Recolher menu lateral');
+                collapseButton.dataset.sidebarLabel = shouldCollapse ? 'Expandir menu' : 'Recolher menu';
+                collapseButton.innerHTML = `<i data-lucide="${shouldCollapse ? 'panel-left-open' : 'panel-left-close'}" class="w-5 h-5"></i>`;
+            }
             if (revealButton) {
-                revealButton.classList.toggle('hidden', !shouldCollapse);
-                if (isDesktop && shouldCollapse) {
-                    revealButton.style.setProperty('opacity', '1', 'important');
-                    revealButton.style.setProperty('transform', 'translateX(0) scale(1)', 'important');
+                if (isDesktop) {
+                    revealButton.classList.add('hidden');
+                    revealButton.style.setProperty('display', 'none', 'important');
                 } else {
+                    revealButton.classList.toggle('hidden', !shouldCollapse);
+                    revealButton.style.removeProperty('display');
                     revealButton.style.removeProperty('opacity');
                     revealButton.style.removeProperty('transform');
                 }
@@ -196,13 +203,13 @@
 
             if (sidebar) {
                 if (isDesktop) {
-                    sidebar.style.setProperty('transition', 'none', 'important');
-                    sidebar.style.setProperty('left', shouldCollapse ? '-224px' : '0px', 'important');
+                    sidebar.style.setProperty('width', sidebarWidth, 'important');
+                    sidebar.style.setProperty('left', '0px', 'important');
                     sidebar.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
-                    sidebar.style.setProperty('opacity', shouldCollapse ? '0' : '1', 'important');
-                    sidebar.style.setProperty('pointer-events', shouldCollapse ? 'none' : 'auto', 'important');
+                    sidebar.style.setProperty('opacity', '1', 'important');
+                    sidebar.style.setProperty('pointer-events', 'auto', 'important');
                 } else {
-                    sidebar.style.removeProperty('transition');
+                    sidebar.style.removeProperty('width');
                     sidebar.style.removeProperty('left');
                     sidebar.style.removeProperty('transform');
                     sidebar.style.removeProperty('opacity');
@@ -211,10 +218,9 @@
             }
 
             if (mainWrapper && isDesktop) {
-                mainWrapper.style.setProperty('transition', 'none', 'important');
-                mainWrapper.style.setProperty('width', shouldCollapse ? '100%' : 'calc(100% - var(--ssw-sidebar-width))', 'important');
-                mainWrapper.style.setProperty('max-width', shouldCollapse ? '100%' : 'calc(100% - var(--ssw-sidebar-width))', 'important');
-                mainWrapper.style.setProperty('margin-left', shouldCollapse ? '0' : 'var(--ssw-sidebar-width)', 'important');
+                mainWrapper.style.setProperty('width', `calc(100% - ${sidebarWidth})`, 'important');
+                mainWrapper.style.setProperty('max-width', `calc(100% - ${sidebarWidth})`, 'important');
+                mainWrapper.style.setProperty('margin-left', sidebarWidth, 'important');
             } else if (mainWrapper) {
                 mainWrapper.style.removeProperty('transition');
                 mainWrapper.style.removeProperty('width');
@@ -222,13 +228,9 @@
                 mainWrapper.style.removeProperty('margin-left');
             }
 
-            if (authScreen && isDesktop && document.body.classList.contains('auth-page-active')) {
-                authScreen.style.removeProperty('inset');
-                authScreen.style.setProperty('top', '0', 'important');
-                authScreen.style.setProperty('right', '0', 'important');
-                authScreen.style.setProperty('bottom', '0', 'important');
-                authScreen.style.setProperty('left', shouldCollapse ? '0' : 'var(--ssw-sidebar-width)', 'important');
-                authScreen.style.setProperty('width', 'auto', 'important');
+            if (authScreen && document.body.classList.contains('auth-page-active')) {
+                authScreen.style.setProperty('inset', '0', 'important');
+                authScreen.style.setProperty('width', '100%', 'important');
             } else if (authScreen) {
                 authScreen.style.removeProperty('inset');
                 authScreen.style.removeProperty('top');
@@ -260,7 +262,7 @@
                     if (window.innerWidth < 768) {
                         toggleSidebar(false);
                     } else {
-                        setSidebarCollapsed(true);
+                        toggleSidebarCollapsed();
                     }
                 }, true);
             }
@@ -283,7 +285,7 @@
             try {
                 localStorage.removeItem('SSW_SIDEBAR_COLLAPSED');
             } catch (error) {}
-            setSidebarCollapsed(false);
+            setSidebarCollapsed(window.innerWidth >= 768);
         }
         // Scroll suave para um elemento
         function smoothScrollTo(elementId) {

@@ -67,11 +67,26 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
 
         // Função para mostrar tela de autenticação
     function setAuthBackdropState(isActive) {
-        const opacity = isActive ? '0.3' : '';
-        const mainContent = document.getElementById('mainContent');
-        const appSidebar = document.getElementById('appSidebar');
-        if (mainContent) mainContent.style.opacity = opacity;
-        if (appSidebar) appSidebar.style.opacity = opacity;
+        const elements = [
+            document.getElementById('mainContent'),
+            document.getElementById('mainContentWrapper'),
+            document.getElementById('appSidebar'),
+            document.getElementById('guestAuthTopbar'),
+            document.getElementById('sidebarRevealButton')
+        ].filter(Boolean);
+        elements.forEach((element) => {
+            if (isActive) {
+                element.style.setProperty('filter', 'blur(8px) saturate(0.78)', 'important');
+                element.style.setProperty('opacity', '0.36', 'important');
+                element.style.setProperty('pointer-events', 'none', 'important');
+                element.style.setProperty('user-select', 'none', 'important');
+            } else {
+                element.style.removeProperty('filter');
+                element.style.removeProperty('opacity');
+                element.style.removeProperty('pointer-events');
+                element.style.removeProperty('user-select');
+            }
+        });
     }
 
     function setAuthPageState(isActive) {
@@ -81,7 +96,7 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
         if (mobileMenu) mobileMenu.classList.add('hidden');
         if (overlay) overlay.classList.add('hidden');
         document.body.classList.remove('mobile-menu-open');
-        setAuthBackdropState(false);
+        setAuthBackdropState(isActive);
     }
 
     function showAuthScreen(type = 'login', pushRoute = true) {
@@ -121,6 +136,9 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
             document.getElementById('authScreen').classList.add('hidden');
             setAuthPageState(false);
         }
+        window.setAuthPageState = setAuthPageState;
+        window.showAuthScreen = showAuthScreen;
+        window.hideAuthScreen = hideAuthScreen;
         // Verificar se clique foi em botão que não é do footer
         function handleButtonClick(event) {
             const button = event.target.closest('button');

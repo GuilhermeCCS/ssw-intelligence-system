@@ -5834,6 +5834,7 @@ body.auth-page-active #appTopbar {
    ========================================= */
 :root {
     --ssw-sidebar-width: 224px;
+    --ssw-sidebar-compact-width: 64px;
     --ssw-sidebar-hidden-x: -224px;
     --ssw-sidebar-bg: #151515;
     --ssw-sidebar-panel: #1d1d1d;
@@ -6471,6 +6472,7 @@ body:not(.auth-page-active) #appSidebar.app-sidebar-shell {
     filter: blur(0);
     will-change: transform, opacity, filter;
     transition:
+        width var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
         left var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
         transform var(--ssw-sidebar-duration) var(--ssw-sidebar-ease),
         opacity 420ms ease,
@@ -6608,5 +6610,361 @@ body.sidebar-collapsed:not(.auth-page-active) #mainContentWrapper {
 
     body.auth-page-active.sidebar-collapsed #sidebarRevealButton {
         display: inline-flex !important;
+    }
+}
+
+@media (min-width: 768px) {
+    body.sidebar-collapsed #appSidebar.app-sidebar-shell,
+    body.auth-page-active.sidebar-collapsed #appSidebar.app-sidebar-shell {
+        left: 0 !important;
+        width: var(--ssw-sidebar-compact-width) !important;
+        opacity: 1 !important;
+        filter: none !important;
+        overflow: visible !important;
+        pointer-events: auto !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+
+    body.sidebar-collapsed #mobileMenuDropdown.sidebar-surface,
+    body.sidebar-collapsed #mobileMenuDropdown.sidebar-surface.hidden,
+    body.auth-page-active.sidebar-collapsed #mobileMenuDropdown.sidebar-surface,
+    body.auth-page-active.sidebar-collapsed #mobileMenuDropdown.sidebar-surface.hidden {
+        width: 100% !important;
+        padding: 14px 8px !important;
+        overflow: visible !important;
+    }
+
+    body.sidebar-collapsed #mainContentWrapper {
+        width: calc(100% - var(--ssw-sidebar-compact-width)) !important;
+        max-width: calc(100% - var(--ssw-sidebar-compact-width)) !important;
+        margin-left: var(--ssw-sidebar-compact-width) !important;
+    }
+
+    body.auth-page-active.sidebar-collapsed #authScreen {
+        left: var(--ssw-sidebar-compact-width) !important;
+    }
+
+    body.sidebar-collapsed #sidebarRevealButton,
+    body.auth-page-active.sidebar-collapsed #sidebarRevealButton {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .sidebar-brand {
+        justify-content: center !important;
+        padding: 0 0 18px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-brand-link {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .sidebar-close-button {
+        position: relative;
+        width: 40px !important;
+        height: 40px !important;
+        flex-basis: 40px !important;
+        margin: 0 auto !important;
+        border-color: transparent !important;
+        border-radius: 10px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-close-button:hover {
+        background: #242424 !important;
+    }
+
+    body.sidebar-collapsed .sidebar-quick-actions,
+    body.sidebar-collapsed .sidebar-section-label,
+    body.sidebar-collapsed .sidebar-meta,
+    body.sidebar-collapsed .sidebar-auth,
+    body.sidebar-collapsed .sidebar-social-links,
+    body.sidebar-collapsed .sidebar-legal {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav {
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 12px !important;
+        overflow: visible !important;
+        padding-top: 4px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav-item {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible {
+        position: relative;
+        width: 40px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        border-radius: 10px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible span {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible svg,
+    body.sidebar-collapsed .sidebar-nav-item.sidebar-compact-visible i {
+        width: 20px !important;
+        height: 20px !important;
+        flex: 0 0 20px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-footer {
+        align-items: center;
+        gap: 0;
+        margin-top: auto;
+        padding: 0 0 10px !important;
+        overflow: visible;
+    }
+
+    body.sidebar-collapsed .sidebar-profile {
+        width: 100%;
+        overflow: visible;
+    }
+
+    body.sidebar-collapsed .sidebar-profile-button {
+        position: relative;
+        width: 40px !important;
+        min-height: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        border-radius: 999px !important;
+    }
+
+    body.sidebar-collapsed .sidebar-profile-copy,
+    body.sidebar-collapsed .sidebar-profile-more {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .user-avatar-button.sidebar-profile-avatar {
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 999px !important;
+    }
+
+    body.sidebar-collapsed .user-menu-panel {
+        left: calc(100% + 10px) !important;
+        bottom: 0 !important;
+    }
+
+    body.sidebar-collapsed [data-sidebar-label]::after {
+        content: attr(data-sidebar-label);
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 50%;
+        z-index: 150;
+        min-width: max-content;
+        padding: 7px 9px;
+        border: 1px solid #2d2d2d;
+        border-radius: 7px;
+        background: #181818;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-4px, -50%);
+        transition: opacity 160ms ease, transform 160ms ease;
+        white-space: nowrap;
+    }
+
+    body.sidebar-collapsed [data-sidebar-label]:hover::after,
+    body.sidebar-collapsed [data-sidebar-label]:focus-visible::after {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}
+
+/* Guest access actions and centered auth modal */
+.guest-auth-topbar {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    z-index: 92;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 220ms ease, filter 220ms ease, transform 220ms ease;
+}
+
+#toastContainer {
+    pointer-events: none;
+}
+
+#toastContainer .toast {
+    pointer-events: auto;
+}
+
+body:not(.user-authenticated) #toastContainer {
+    top: 72px !important;
+}
+
+.guest-auth-topbar button {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0;
+    transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.guest-auth-topbar button:hover {
+    transform: translateY(-1px);
+}
+
+.guest-auth-link {
+    border: 1px solid #303030;
+    background: rgba(24, 24, 24, 0.86);
+    color: #ffffff;
+}
+
+.guest-auth-link:hover {
+    border-color: #4a4a4a;
+    background: #242424;
+}
+
+.guest-auth-primary {
+    border: 1px solid #ffffff;
+    background: #ffffff;
+    color: #000000;
+    box-shadow: 0 14px 34px rgba(255, 255, 255, 0.12);
+}
+
+.guest-auth-primary:hover {
+    background: #ededed;
+}
+
+body.user-authenticated .guest-auth-topbar {
+    display: none !important;
+}
+
+body.auth-page-active {
+    overflow: hidden;
+}
+
+body.auth-page-active #authScreen {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    min-height: 100dvh !important;
+    z-index: 150 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 24px !important;
+    background: rgba(0, 0, 0, 0.54) !important;
+    backdrop-filter: blur(10px) saturate(1.08) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(1.08) !important;
+}
+
+body.auth-page-active #authScreen.hidden {
+    display: none !important;
+}
+
+body.auth-page-active #authScreen > .absolute:nth-child(-n+3) {
+    display: none !important;
+}
+
+body.auth-page-active #authScreen > .absolute.inset-0 {
+    background: rgba(0, 0, 0, 0.22) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+
+body.auth-page-active #authScreen .glass-panel {
+    width: min(100%, 440px) !important;
+    max-height: min(760px, calc(100dvh - 48px)) !important;
+    margin: 0 auto !important;
+    overflow-y: auto !important;
+    background: #151515 !important;
+    border: 1px solid #2b2b2b !important;
+    border-radius: 14px !important;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.7) !important;
+    padding: 30px !important;
+    transform: none !important;
+}
+
+body.auth-page-active #appSidebar.app-sidebar-shell,
+body.auth-page-active #mainContent,
+body.auth-page-active #mainContentWrapper,
+body.auth-page-active #guestAuthTopbar,
+body.auth-page-active #sidebarRevealButton {
+    filter: blur(8px) saturate(0.78) !important;
+    opacity: 0.36 !important;
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+body.auth-page-active #appSidebar.app-sidebar-shell {
+    display: block !important;
+}
+
+body.auth-page-active #mainContent {
+    display: flex !important;
+}
+
+@media (min-width: 768px) {
+    body.auth-page-active #appSidebar.app-sidebar-shell {
+        z-index: 86 !important;
+    }
+
+    body.auth-page-active #mainContentWrapper {
+        display: flex !important;
+    }
+
+    body.auth-page-active.sidebar-collapsed #authScreen,
+    body.auth-page-active:not(.sidebar-collapsed) #authScreen {
+        inset: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .guest-auth-topbar {
+        top: 12px;
+        right: 12px;
+        gap: 7px;
+    }
+
+    .guest-auth-topbar button {
+        min-height: 36px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+
+    .guest-auth-link span {
+        display: none;
+    }
+
+    body.auth-page-active #authScreen {
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+        padding: 12px !important;
+    }
+
+    body.auth-page-active #authScreen .glass-panel {
+        max-height: none !important;
+        margin: 12px 0 !important;
+        padding: 24px !important;
     }
 }

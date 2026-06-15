@@ -60,7 +60,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260614-sidebar-fix-9">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260615-auth-modal-2">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -93,7 +93,7 @@
         </form>
     </div>
     <script src="src/app/ui/toast.js"></script>
-    <script src="src/app/auth/auth-shell.js"></script>
+    <script src="src/app/auth/auth-shell.js?v=20260615-auth-modal-2"></script>
     <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
         <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
         <div class="absolute top-0 -right-4 w-72 h-72 bg-emerald-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
@@ -162,6 +162,16 @@
     <button id="sidebarRevealButton" type="button" class="sidebar-reveal-button hidden" aria-label="Mostrar menu lateral">
         <i data-lucide="panel-left-open" class="w-4 h-4"></i>
     </button>
+    <div id="guestAuthTopbar" class="guest-auth-topbar" aria-label="Acesso à conta">
+        <button type="button" class="guest-auth-link" onclick="showAuthScreen('login')">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span>Fazer login</span>
+        </button>
+        <button type="button" class="guest-auth-primary" onclick="showAuthScreen('register')">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>Começar grátis</span>
+        </button>
+    </div>
     <aside id="appSidebar" class="app-sidebar-shell">
         <div id="mobileMenuDropdown" class="sidebar-surface hidden md:flex" aria-label="Menu principal">
             <div class="sidebar-brand">
@@ -169,7 +179,7 @@
                     <img src="src/assets/images/logo/logos.ico" alt="SSW INTELLIGENCE">
                     <span>SSW Intelligence</span>
                 </a>
-                <button id="sidebarCollapseButton" type="button" class="sidebar-close-button" aria-label="Ocultar menu lateral" aria-expanded="true">
+                <button id="sidebarCollapseButton" type="button" class="sidebar-close-button" aria-label="Ocultar menu lateral" aria-expanded="true" data-sidebar-label="Expandir menu">
                     <i data-lucide="panel-left-close" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -186,15 +196,19 @@
 
             <nav id="primarySidebarNav" class="sidebar-nav" aria-label="Navegação principal">
                 <p class="sidebar-section-label">Principal</p>
-                <button onclick="nav('home'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="home">
+                <button onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-sidebar-label="Analisar" title="Analisar">
+                    <i data-lucide="square-pen" class="w-4 h-4"></i>
+                    <span>Analisar</span>
+                </button>
+                <button onclick="nav('home'); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-nav-target="home" data-sidebar-label="Dashboard" title="Dashboard">
                     <i data-lucide="gauge-circle" class="w-4 h-4"></i>
                     <span>Dashboard</span>
                 </button>
-                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="history">
+                <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-nav-target="history" data-sidebar-label="Histórico" title="Histórico">
                     <i data-lucide="history" class="w-4 h-4"></i>
                     <span>Histórico de análises</span>
                 </button>
-                <button onclick="nav('agents'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="agents">
+                <button onclick="nav('agents'); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-nav-target="agents" data-sidebar-label="Personas" title="Personas">
                     <i data-lucide="users" class="w-4 h-4"></i>
                     <span>Personas</span>
                 </button>
@@ -257,7 +271,7 @@
                 </div>
 
                 <div id="userAvatarContainer" class="sidebar-profile hidden">
-                    <button id="avatarCircleBtn" type="button" onclick="event.stopPropagation(); toggleUserMenuCircle();" class="sidebar-profile-button" aria-haspopup="menu" aria-expanded="false">
+                    <button id="avatarCircleBtn" type="button" onclick="event.stopPropagation(); toggleUserMenuCircle();" class="sidebar-profile-button" aria-haspopup="menu" aria-expanded="false" data-sidebar-label="Meu perfil" title="Meu perfil">
                         <span id="userAvatarCircle" class="user-avatar-button sidebar-profile-avatar">U</span>
                         <span class="sidebar-profile-copy">
                             <span id="sidebarProfileName">Meu perfil</span>
@@ -645,8 +659,8 @@
 <!-- Placeholder para a seção de preços - será carregada dinamicamente -->
 <div id="view-precos-container"></div>
 
-<script src="src/app/sections/pricing-loader.js?v=20260614-sidebar-fix-9"></script>
-<script src="src/app/sections/ranking-loader.js?v=20260614-sidebar-fix-9"></script>
+<script src="src/app/sections/pricing-loader.js?v=20260615-auth-modal-2"></script>
+<script src="src/app/sections/ranking-loader.js?v=20260615-auth-modal-2"></script>
             <div id="view-tutorial" class="hidden min-h-screen bg-[#020408] animate-fade-in-up">
                 <!-- HEADER -->
                 <header class="max-w-7xl mx-auto px-6 py-12">
@@ -1612,7 +1626,7 @@
                     </div>
                 </div>
             </div>
-            <script src="src/app/core/main.js?v=20260614-sidebar-fix-9"></script>
+            <script src="src/app/core/main.js?v=20260615-auth-modal-2"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">
