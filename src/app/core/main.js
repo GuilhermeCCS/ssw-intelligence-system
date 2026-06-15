@@ -1619,7 +1619,7 @@ function getLoginHTML() {
             <div class="auth-login-form">
                 <div class="auth-login-field">
                     <label for="loginEmail" class="auth-login-label">E-mail</label>
-                    <input type="email" id="loginEmail" autocomplete="email" placeholder="voce@exemplo.com" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
+                    <input type="email" id="loginEmail" autocomplete="email" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginPass').focus();}">
                 </div>
                 <div class="auth-login-field">
                     <div class="auth-login-label-row">
