@@ -1,3 +1,5 @@
 # Configuração para SPA (Single Page Application) com URLs limpas
 # Todas as rotas são redirecionadas para index.html
+/precos /precos.html 200
+/precos/ /precos.html 200
 /* /index.html 200

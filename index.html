@@ -22,8 +22,6 @@
     <script src="src/app/payments/mercado-pago-checkout.js"></script>
     <!-- Crypto Security (carrega antes para definir secureStorage) -->
     <script src="src/utils/crypto.js"></script>
-    <!-- Pricing Section -->
-    <script src="src/components/pricing/pricing-component.js" defer></script>
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- Google Identity Services -->
@@ -247,10 +245,10 @@
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
                     <span>Ranking público</span>
                 </button>
-                <button onclick="nav('precos'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="precos">
+                <a href="/precos.html" onclick="toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="precos">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                     <span>Planos e créditos</span>
-                </button>
+                </a>
 
                 <p class="sidebar-section-label">Ajuda</p>
                 <button type="button" onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
@@ -681,10 +679,6 @@
     </div>
 </div>
 
-<!-- Placeholder para a seção de preços - será carregada dinamicamente -->
-<div id="view-precos-container"></div>
-
-<script src="src/app/sections/pricing-loader.js?v=20260615-logout-flow-1"></script>
 <script src="src/app/sections/ranking-loader.js?v=20260615-logout-flow-1"></script>
             <div id="view-tutorial" class="hidden min-h-screen bg-[#020408] animate-fade-in-up">
                 <!-- HEADER -->
@@ -1528,7 +1522,7 @@
                         <p class="text-reveal delay-300" style="color:#a0aec0;font-size:18px;line-height:1.8;max-width:650px;margin:0 0 44px;font-weight:500;">Somos uma plataforma de auditoria web orientada por IA que ajuda empresas a entender e melhorar sua presença digital com dados reais, rápidos e acionáveis.</p>
                         <div class="text-reveal delay-400" style="display:flex;gap:16px;flex-wrap:wrap;">
                             <button onclick="nav('home')" style="padding:16px 36px;border-radius:10px;background:#22d3ee;color:#ffffff;font-size:15px;font-weight:800;border:none;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(34,211,238,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(34,211,238,0.4)';" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px rgba(34,211,238,0.3)';">Iniciar Auditoria</button>
-                            <button onclick="nav('precos')" style="padding:16px 36px;border-radius:10px;background:transparent;border:2px solid rgba(34,211,238,0.3);color:#ffffff;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='rgba(34,211,238,0.1)';this.style.borderColor='#22d3ee';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(34,211,238,0.3)';this.style.transform='none';">Ver Planos</button>
+                            <button onclick="openPricingPage()" style="padding:16px 36px;border-radius:10px;background:transparent;border:2px solid rgba(34,211,238,0.3);color:#ffffff;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='rgba(34,211,238,0.1)';this.style.borderColor='#22d3ee';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(34,211,238,0.3)';this.style.transform='none';">Ver Planos</button>
                         </div>
                     </div>
                 </div>
@@ -1613,7 +1607,7 @@
                         </div>
                         <div class="text-reveal delay-300" style="display:flex;flex-direction:column;gap:10px;min-width:210px;">
                             <button onclick="nav('home')" style="padding:14px 28px;border-radius:9px;background:#22d3ee;color:#ffffff;font-size:14px;font-weight:800;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 4px 20px rgba(34,211,238,0.3);">Iniciar Auditoria</button>
-                            <button onclick="nav('precos')" style="padding:14px 28px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#ffffff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">Ver Planos e Preços</button>
+                            <button onclick="openPricingPage()" style="padding:14px 28px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#ffffff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">Ver Planos e Preços</button>
                         </div>
                     </div>
                 </div>
@@ -1651,7 +1645,7 @@
                     </div>
                 </div>
             </div>
-            <script src="src/app/core/main.js?v=20260615-audit-loading-fix-1"></script>
+            <script src="src/app/core/main.js?v=20260615-pricing-page-1"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">

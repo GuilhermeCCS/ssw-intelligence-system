@@ -598,6 +598,10 @@
         }
 
         function nav(view) {
+            if (view === 'precos') {
+                openPricingPage();
+                return;
+            }
             if (warnBeforeLeavingAudit()) {
                 if (!confirmLeavingAudit()) return;
                 clearActiveAuditSession();
@@ -2031,7 +2035,10 @@ function getCodigoHTML() {
         window.hideLogoutConfirmModal = hideLogoutConfirmModal;
         window.performLogout = performLogout;
         window.logout = logout;
-        function comprarCreditos() { nav('precos'); }
+        function openPricingPage() {
+            window.location.href = '/precos.html';
+        }
+        function comprarCreditos() { openPricingPage(); }
         // Função falarComVendas movida para pricing-section.js
         function mudarSenha() {
             // Fecha o menu do usuário
@@ -7462,6 +7469,7 @@ function getCodigoHTML() {
             runCompare,
             toggleManualSelect,
             showSimplifiedSearch,
+            openPricingPage,
             comprarCreditos,
             gerarPDFOficial,
             smoothScrollTo,

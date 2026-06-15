@@ -4,10 +4,54 @@
 //  lógica de FAQ/Marquee inicializada via evento loadPricingSection
 // =============================================================
 
+function sswPricingNotify(type, message) {
+    if (typeof Toast !== 'undefined' && Toast && typeof Toast[type] === 'function') {
+        Toast[type](message);
+        return;
+    }
+    if (type === 'error') console.error(message);
+    else console.log(message);
+}
+
+async function getSswPricingUser() {
+    if (typeof USER !== 'undefined' && USER && USER.email) return USER;
+    if (window.USER && window.USER.email) return window.USER;
+
+    try {
+        if (typeof secureStorage !== 'undefined' && secureStorage && typeof secureStorage.getItem === 'function') {
+            const storedUser = await secureStorage.getItem('USER');
+            if (storedUser && storedUser.email) return storedUser;
+        }
+    } catch (error) {
+        console.warn('Não foi possível ler o usuário criptografado para checkout:', error);
+    }
+
+    try {
+        const rawUser = localStorage.getItem('USER');
+        if (rawUser) {
+            const parsedUser = JSON.parse(rawUser);
+            if (parsedUser && parsedUser.email) return parsedUser;
+        }
+    } catch (error) {
+        console.warn('Não foi possível ler o usuário local para checkout:', error);
+    }
+
+    return null;
+}
+
+function redirectSswPricingAuth() {
+    if (typeof showAuthScreen === 'function') {
+        showAuthScreen('register');
+        return;
+    }
+    window.location.href = '/cadastro';
+}
+
 // --- FUNÇÃO DE COMPRA (CHECKOUT MERCADO PAGO) ---
 async function comprarPlano(pacoteId) {
-    if (!USER || !USER.email) {
-        showAuthScreen();
+    const activeUser = await getSswPricingUser();
+    if (!activeUser || !activeUser.email) {
+        redirectSswPricingAuth();
         return;
     }
     const pacotes = {
@@ -21,12 +65,12 @@ async function comprarPlano(pacoteId) {
         'recarga_90':     { id: 'recarga_90',         nome: 'Recarga 90 Créditos',preco: 347.00 },
     };
     const pacoteSelecionado = pacotes[pacoteId];
-    if (!pacoteSelecionado) { Toast.error("Pacote não encontrado."); return; }
+    if (!pacoteSelecionado) { sswPricingNotify('error', "Pacote não encontrado."); return; }
     try {
-        await openCheckout(pacoteSelecionado, USER);
+        await openCheckout(pacoteSelecionado, activeUser);
     } catch (error) {
         console.error('Erro ao abrir checkout:', error);
-        Toast.error("Erro ao abrir checkout. Tente novamente.");
+        sswPricingNotify('error', "Erro ao abrir checkout. Tente novamente.");
     }
 }
 
@@ -211,14 +255,28 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     flex-shrink: 0;
 }
 .ssw-hero-title {
-    font-size: 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 72px;
     font-weight: 800;
-    line-height: 1.08;
+    line-height: 0.96;
     letter-spacing: 0;
-    margin: 0 auto 12px;
+    margin: 0 auto 14px;
+}
+.ssw-hero-system {
+    display: block;
+    color: var(--ssw-t2);
+    font-size: 30%;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.08em;
 }
 .ssw-hero-title em {
+    display: block;
     font-style: normal;
+    font-size: 1em;
     background: linear-gradient(135deg, var(--ssw-cyan) 0%, #818cf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
