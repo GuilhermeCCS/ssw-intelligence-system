@@ -1,7 +1,7 @@
 // =============================================================
 //  pricing-component.js — SSW Pricing Section
 //  Estrutura idêntica ao original: estilos injetados no <head>,
-//  lógica de FAQ/Marquee inicializada via evento loadPricingSection
+//  lógica de FAQ inicializada via evento loadPricingSection
 // =============================================================
 
 function sswPricingNotify(type, message) {
@@ -55,8 +55,8 @@ async function comprarPlano(pacoteId) {
         return;
     }
     const pacotes = {
-        'basico':         { id: 'pacote_basico',     nome: 'Pacote Básico',      preco: 99.99  },
-        'recomendado':    { id: 'pacote_recomendado', nome: 'Pacote Recomendado', preco: 149.99 },
+        'basico':         { id: 'pacote_basico',     nome: 'Pacote Inicial',     preco: 99.99  },
+        'recomendado':    { id: 'pacote_recomendado', nome: 'Pacote Plus',        preco: 149.99 },
         'plano_mensal':   { id: 'plano_mensal',       nome: 'Plano Mensal',       preco: 120.00 },
         'plano_anual':    { id: 'plano_anual',        nome: 'Plano Anual',        preco: 997.00 },
         'plano_semestral':{ id: 'plano_semestral',    nome: 'Plano Semestral',    preco: 597.00 },
@@ -76,7 +76,7 @@ async function comprarPlano(pacoteId) {
 
 // --- FUNÇÃO PARA FALAR COM VENDAS ---
 function falarComVendas() {
-    window.open('https://wa.me/5582991301991?text=Olá! gostaria de saber um pouco mais sobre o pacote enterprise', '_blank');
+    window.open('https://wa.me/5582991301991?text=Olá! gostaria de saber um pouco mais sobre o pacote empresarial', '_blank');
 }
 
 // --- FAQ ACCORDION (escopo ssw para não conflitar) ---
@@ -131,8 +131,8 @@ function initPricingSection() {
             observer.observe(el);
         });
 
-        // Marquee e FAQ com delay
-        document.querySelectorAll('.ssw-marquee-section, .ssw-faq-section').forEach(el => {
+        // FAQ com delay
+        document.querySelectorAll('.ssw-faq-section').forEach(el => {
             el.style.transitionDelay = '0.3s';
             observer.observe(el);
         });
@@ -152,11 +152,11 @@ const sswPricingStyles = `<style>
 /* ── VARIÁVEIS ── */
 #view-precos {
     --ssw-bg:        #020408;
-    --ssw-surface:   #080d16;
-    --ssw-card:      #0c1220;
-    --ssw-card-h:    #101828;
-    --ssw-border:    rgba(255,255,255,0.07);
-    --ssw-border-a:  rgba(34,211,238,0.35);
+    --ssw-surface:   #070707;
+    --ssw-card:      #050505;
+    --ssw-card-h:    #0b0b0d;
+    --ssw-border:    rgba(255,255,255,0.10);
+    --ssw-border-a:  rgba(255,255,255,0.22);
     --ssw-t1:        #f0f4ff;
     --ssw-t2:        #8292a8;
     --ssw-t3:        #3d4f63;
@@ -197,15 +197,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes ssw-glow-pulse {
-    0%,100% { box-shadow: 0 0 22px var(--ssw-cyan-glow), 0 0 60px rgba(34,211,238,0.05); }
-    50%      { box-shadow: 0 0 38px var(--ssw-cyan-glow), 0 0 90px rgba(34,211,238,0.10); }
-}
-@keyframes ssw-marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-33.33%); }
-}
-.ssw-plan-card, .ssw-hero-inner, .ssw-cta-card, .ssw-marquee-section, .ssw-faq-section {
+.ssw-plan-card, .ssw-hero-inner, .ssw-cta-card, .ssw-faq-section {
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
@@ -213,7 +205,6 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 .ssw-plan-card.ssw-visible,
 .ssw-hero-inner.ssw-visible,
 .ssw-cta-card.ssw-visible,
-.ssw-marquee-section.ssw-visible,
 .ssw-faq-section.ssw-visible { opacity: 1; transform: translateY(0); }
 
 /* ── HERO ── */
@@ -231,7 +222,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     pointer-events: none;
     filter: blur(60px);
 }
-.ssw-hero-inner { max-width: 820px; margin: 0 auto 10px; }
+.ssw-hero-inner { max-width: 980px; margin: 0 auto 10px; }
 
 .ssw-badge {
     display: inline-flex;
@@ -255,32 +246,19 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     flex-shrink: 0;
 }
 .ssw-hero-title {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
+    display: block;
     font-size: 72px;
     font-weight: 800;
     line-height: 0.96;
     letter-spacing: 0;
+    color: var(--ssw-t1);
     margin: 0 auto 14px;
-}
-.ssw-hero-system {
-    display: block;
-    color: var(--ssw-t2);
-    font-size: 30%;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: 0.08em;
+    text-wrap: balance;
 }
 .ssw-hero-title em {
-    display: block;
+    display: inline;
     font-style: normal;
-    font-size: 1em;
-    background: linear-gradient(135deg, var(--ssw-cyan) 0%, #818cf8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: inherit;
 }
 .ssw-hero-sub {
     font-size: 16.5px;
@@ -347,15 +325,15 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 
 /* ── PLANS GRID ── */
 .ssw-plans-section {
-    padding: 20px 24px 40px;
+    padding: 24px 24px 44px;
     width: 100%;
-    max-width: 1140px;
+    max-width: 1180px;
     margin: 0 auto;
 }
 .ssw-plans-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    gap: 28px;
     align-items: stretch;
     width: 100%;
     min-width: 0;
@@ -365,23 +343,21 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 .ssw-plan-card {
     display: flex;
     flex-direction: column;
+    height: 100%;
     min-width: 0;
     background: var(--ssw-card);
     border: 1px solid var(--ssw-border);
-    border-radius: 20px;
-    padding: 24px;
+    border-radius: 18px;
+    padding: 26px;
     position: relative;
     overflow: hidden;
     transition: border-color 0.3s, transform 0.3s, background 0.3s, opacity 0.6s, box-shadow 0.3s;
 }
 .ssw-card-top-shine {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.025), transparent 60%);
-    pointer-events: none;
+    display: none;
 }
-.ssw-plan-card:hover:not(.ssw-plan-featured) {
-    border-color: rgba(255,255,255,0.13);
+.ssw-plan-card:hover {
+    border-color: rgba(255,255,255,0.18);
     background: var(--ssw-card-h);
     transform: translateY(-3px) !important;
     box-shadow: 0 12px 40px rgba(0,0,0,0.35);
@@ -389,22 +365,13 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 
 /* CARD DESTAQUE */
 .ssw-plan-featured {
-    border-color: var(--ssw-border-a) !important;
-    background: linear-gradient(160deg, #0d1825 0%, #0c1220 100%) !important;
-    animation: ssw-glow-pulse 4s ease-in-out infinite;
-    transform: scale(1.025) !important;
+    border-color: rgba(255,255,255,0.18) !important;
+    background: var(--ssw-card) !important;
+    transform: none !important;
 }
 .ssw-plan-featured:hover {
-    transform: scale(1.025) translateY(-3px) !important;
+    transform: translateY(-3px) !important;
 }
-.ssw-featured-top-line {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--ssw-cyan), transparent);
-    border-radius: 20px 20px 0 0;
-}
-
 /* BADGE DO PLANO */
 .ssw-plan-badge {
     display: inline-flex;
@@ -416,9 +383,9 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    background: var(--ssw-cyan-dim);
-    border: 1px solid var(--ssw-border-a);
-    color: var(--ssw-cyan);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    color: var(--ssw-t1);
     width: fit-content;
     margin-bottom: 18px;
 }
@@ -431,7 +398,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     color: var(--ssw-t1);
     margin-bottom: 6px;
 }
-.ssw-name-accent { color: var(--ssw-cyan); }
+.ssw-name-accent { color: var(--ssw-t1); }
 
 .ssw-plan-desc {
     font-size: 13.5px;
@@ -452,7 +419,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     min-width: 0;
 }
 .ssw-currency { font-size: 18px; font-weight: 700; color: var(--ssw-t3); }
-.ssw-currency-accent { color: var(--ssw-cyan) !important; }
+.ssw-currency-accent { color: var(--ssw-t2) !important; }
 .ssw-amount {
     font-size: 50px;
     font-weight: 800;
@@ -461,18 +428,18 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     line-height: 1;
 }
 .ssw-cents { font-size: 19px; font-weight: 700; color: var(--ssw-t3); align-self: flex-start; margin-top: 8px; }
-.ssw-cents-accent { color: var(--ssw-cyan) !important; }
+.ssw-cents-accent { color: var(--ssw-t2) !important; }
 .ssw-price-note { font-size: 12px; color: var(--ssw-t3); font-weight: 500; }
 .ssw-price-tag {
     display: inline-flex;
     align-items: center;
     padding: 3px 10px;
     border-radius: 6px;
-    background: var(--ssw-cyan-dim);
-    border: 1px solid rgba(34,211,238,0.2);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
     font-size: 11.5px;
     font-weight: 600;
-    color: var(--ssw-cyan);
+    color: var(--ssw-t1);
     margin-top: 7px;
 }
 .ssw-price-consult-wrap { display: flex; align-items: center; height: 68px; }
@@ -503,14 +470,14 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     border-color: rgba(255,255,255,0.18);
 }
 .ssw-btn-primary {
-    background: var(--ssw-cyan);
+    background: #ffffff;
     color: #020408;
     font-weight: 700;
-    box-shadow: 0 0 20px rgba(34,211,238,0.28), 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.36);
 }
 .ssw-btn-primary:hover {
-    background: #67e8f9;
-    box-shadow: 0 0 32px rgba(34,211,238,0.38), 0 6px 18px rgba(0,0,0,0.35);
+    background: #e8edf4;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.42);
     transform: translateY(-1px);
 }
 .ssw-btn-outline {
@@ -545,7 +512,7 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 }
 .ssw-feature-item strong { color: var(--ssw-t1); font-weight: 600; }
 .ssw-check-dim  { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; color: rgba(255,255,255,0.28); }
-.ssw-check-accent { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; color: var(--ssw-cyan); }
+.ssw-check-accent { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; color: var(--ssw-t1); }
 
 /* ── TABELA ── */
 .ssw-table-section {
@@ -590,18 +557,14 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 }
 .ssw-th-feature { text-align: left !important; color: var(--ssw-t3) !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.08em; }
 .ssw-th-featured {
-    background: rgba(34,211,238,0.04);
-    color: var(--ssw-cyan) !important;
+    background: rgba(255,255,255,0.035);
+    color: var(--ssw-t1) !important;
     border-left: 1px solid var(--ssw-border-a);
     border-right: 1px solid var(--ssw-border-a);
     position: relative;
 }
 .ssw-th-featured::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--ssw-cyan), transparent);
+    display: none;
 }
 .ssw-group-row td {
     padding: 9px 22px;
@@ -625,68 +588,17 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
 .ssw-table tbody tr:not(.ssw-group-row):hover td { background: rgba(255,255,255,0.02); }
 .ssw-td-feature { text-align: left !important; color: var(--ssw-t1) !important; padding-left: 30px !important; }
 .ssw-td-featured {
-    background: rgba(34,211,238,0.03);
+    background: rgba(255,255,255,0.025);
     border-left: 1px solid var(--ssw-border-a);
     border-right: 1px solid var(--ssw-border-a);
     color: var(--ssw-t1) !important;
     font-weight: 600;
 }
 .ssw-table tbody tr:last-child td { border-bottom: none; }
-.ssw-tcheck     { color: var(--ssw-cyan); display: flex; justify-content: center; }
+.ssw-tcheck     { color: var(--ssw-t1); display: flex; justify-content: center; }
 .ssw-tcheck-dim { color: rgba(255,255,255,0.25); display: flex; justify-content: center; }
 .ssw-tminus     { color: var(--ssw-t3); display: flex; justify-content: center; }
 .ssw-ti { width: 15px; height: 15px; }
-
-/* ── MARQUEE ── */
-.ssw-marquee-section {
-    padding: 56px 0;
-    border-top: 1px solid var(--ssw-border);
-    border-bottom: 1px solid var(--ssw-border);
-    overflow: hidden;
-}
-.ssw-marquee-label {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ssw-t3);
-    margin-bottom: 30px;
-}
-.ssw-marquee-outer { position: relative; overflow: hidden; }
-.ssw-marquee-fade-left, .ssw-marquee-fade-right {
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 160px;
-    pointer-events: none;
-    z-index: 10;
-}
-.ssw-marquee-fade-left  { left: 0;  background: linear-gradient(to right, var(--ssw-bg), transparent); }
-.ssw-marquee-fade-right { right: 0; background: linear-gradient(to left, var(--ssw-bg), transparent); }
-.ssw-marquee-track {
-    display: flex;
-    animation: ssw-marquee 28s linear infinite;
-    width: max-content;
-}
-.ssw-marquee-track:hover { animation-play-state: paused; }
-.ssw-marquee-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 44px;
-    opacity: 0.4;
-    transition: opacity 0.3s;
-    white-space: nowrap;
-    cursor: default;
-}
-.ssw-marquee-item:hover { opacity: 0.9; }
-.ssw-marquee-item span { font-size: 15px; font-weight: 700; color: var(--ssw-t1); letter-spacing: 0; }
-.ssw-mi-icon { width: 18px; height: 18px; }
-.ssw-mi-cyan   { color: var(--ssw-cyan); }
-.ssw-mi-purple { color: #a78bfa; }
-.ssw-mi-amber  { color: #fbbf24; }
-.ssw-mi-green  { color: #34d399; }
-.ssw-mi-blue   { color: #60a5fa; }
 
 /* ── FAQ ── */
 .ssw-faq-section {
@@ -832,9 +744,6 @@ body.pricing-view-active #checkout-modal .bg-\[\#0F1117\] {
     .ssw-plan-desc { min-height: 0; }
     .ssw-amount { font-size: 42px; }
     .ssw-price-consult { font-size: 24px; }
-    .ssw-marquee-section { padding: 42px 0; }
-    .ssw-marquee-fade-left, .ssw-marquee-fade-right { width: 56px; }
-    .ssw-marquee-item { padding: 0 24px; }
     .ssw-cta-card { padding: 40px 20px; border-radius: 18px; }
     .ssw-btn-cta { width: 100%; padding-left: 18px; padding-right: 18px; }
 }

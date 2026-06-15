@@ -5,8 +5,7 @@
         <div class="ssw-hero-glow"></div>
         <div class="ssw-hero-inner">
             <h1 class="ssw-hero-title">
-                <span class="ssw-hero-system">SSWINTELLIGENCE</span>
-                <em>Preços</em>
+                Adquira um plano para o seu uso pessoal ou empresarial
             </h1>
             <p class="ssw-hero-sub">
                 Compre créditos, audite sites com IA e feche contratos maiores entregando relatórios irrefutáveis.
@@ -18,10 +17,10 @@
     <section class="ssw-plans-section">
         <div class="ssw-plans-grid">
 
-            <!-- STARTER -->
+            <!-- INICIAL -->
             <div class="ssw-plan-card">
                 <div class="ssw-card-top-shine"></div>
-                <div class="ssw-plan-name">Starter</div>
+                <div class="ssw-plan-name">Inicial</div>
                 <div class="ssw-plan-desc">Para freelancers validando o mercado de otimização web.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-row">
@@ -32,7 +31,7 @@
                     <div class="ssw-price-note">Pagamento único · R$ 9,99/crédito</div>
                 </div>
                 <button onclick="comprarPlano('basico')" class="ssw-btn ssw-btn-default">
-                    Começar com Starter
+                    Começar com Inicial
                 </button>
                 <hr class="ssw-divider">
                 <p class="ssw-features-label">Incluído no plano</p>
@@ -56,14 +55,13 @@
                 </ul>
             </div>
 
-            <!-- PRO (DESTAQUE) -->
+            <!-- PLUS -->
             <div class="ssw-plan-card ssw-plan-featured">
-                <div class="ssw-featured-top-line"></div>
                 <span class="ssw-plan-badge">
                     <i data-lucide="star" class="ssw-star-icon"></i>
                     Mais escolhido
                 </span>
-                <div class="ssw-plan-name ssw-name-accent">Pro</div>
+                <div class="ssw-plan-name ssw-name-accent">Plus</div>
                 <div class="ssw-plan-desc">Arsenal completo para agências de marketing e devs seniores.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-row">
@@ -75,10 +73,10 @@
                     <span class="ssw-price-tag">R$ 3,75 por crédito — melhor custo</span>
                 </div>
                 <button onclick="comprarPlano('recomendado')" class="ssw-btn ssw-btn-primary">
-                    Assinar Pacote Pro
+                    Assinar Pacote Plus
                 </button>
                 <hr class="ssw-divider">
-                <p class="ssw-features-label ssw-features-label-bright">Tudo do Starter, mais:</p>
+                <p class="ssw-features-label ssw-features-label-bright">Tudo do Inicial, mais:</p>
                 <ul class="ssw-feature-list">
                     <li class="ssw-feature-item">
                         <i data-lucide="check" class="ssw-check-accent"></i>
@@ -103,10 +101,10 @@
                 </ul>
             </div>
 
-            <!-- ENTERPRISE -->
+            <!-- EMPRESARIAL -->
             <div class="ssw-plan-card">
                 <div class="ssw-card-top-shine"></div>
-                <div class="ssw-plan-name">Enterprise</div>
+                <div class="ssw-plan-name">Empresarial</div>
                 <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios white-label com sua marca.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-consult-wrap">
@@ -158,9 +156,9 @@
                 <thead>
                     <tr>
                         <th class="ssw-th-feature">Funcionalidade</th>
-                        <th>Starter</th>
-                        <th class="ssw-th-featured">Pro</th>
-                        <th>Enterprise</th>
+                        <th>Inicial</th>
+                        <th class="ssw-th-featured">Plus</th>
+                        <th>Empresarial</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -220,40 +218,6 @@
         </div>
     </section>
 
-    <!-- ══ MARQUEE DE TECNOLOGIAS ══ -->
-    <section class="ssw-marquee-section">
-        <p class="ssw-marquee-label">Motor de auditoria impulsionado pelas melhores tecnologias</p>
-        <div class="ssw-marquee-outer">
-            <div class="ssw-marquee-fade-left"></div>
-            <div class="ssw-marquee-fade-right"></div>
-            <div class="ssw-marquee-track">
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/gm.ico" alt="Gemini" class="ssw-mi-icon ssw-mi-purple" style="width: 24px; height: 24px; object-fit: contain;"><span>Gemini AI</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/grok.ico" alt="Grok" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Grok AI</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/cm.ico" alt="Chromium" class="ssw-mi-icon ssw-mi-amber" style="width: 24px; height: 24px; object-fit: contain;"><span>Chromium Engine</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/sp.ico" alt="Supabase" class="ssw-mi-icon ssw-mi-green" style="width: 24px; height: 24px; object-fit: contain;"><span>Supabase Data</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/python.ico" alt="Python" class="ssw-mi-icon ssw-mi-blue" style="width: 24px; height: 24px; object-fit: contain;"><span>Python Engine</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/mc.ico" alt="Mercado Pago" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Mercado Pago</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/clf.ico" alt="Cloudflare" class="ssw-mi-icon ssw-mi-orange" style="width: 24px; height: 24px; object-fit: contain;"><span>Cloudflare</span></div>
-                <!-- duplicata 1 para loop contínuo -->
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/gm.ico" alt="Gemini" class="ssw-mi-icon ssw-mi-purple" style="width: 24px; height: 24px; object-fit: contain;"><span>Gemini AI</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/grok.ico" alt="Grok" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Grok AI</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/cm.ico" alt="Chromium" class="ssw-mi-icon ssw-mi-amber" style="width: 24px; height: 24px; object-fit: contain;"><span>Chromium Engine</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/sp.ico" alt="Supabase" class="ssw-mi-icon ssw-mi-green" style="width: 24px; height: 24px; object-fit: contain;"><span>Supabase Data</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/python.ico" alt="Python" class="ssw-mi-icon ssw-mi-blue" style="width: 24px; height: 24px; object-fit: contain;"><span>Python Engine</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/mc.ico" alt="Mercado Pago" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Mercado Pago</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/clf.ico" alt="Cloudflare" class="ssw-mi-icon ssw-mi-orange" style="width: 24px; height: 24px; object-fit: contain;"><span>Cloudflare</span></div>
-                <!-- duplicata 2 para loop contínuo -->
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/gm.ico" alt="Gemini" class="ssw-mi-icon ssw-mi-purple" style="width: 24px; height: 24px; object-fit: contain;"><span>Gemini AI</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/grok.ico" alt="Grok" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Grok AI</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/cm.ico" alt="Chromium" class="ssw-mi-icon ssw-mi-amber" style="width: 24px; height: 24px; object-fit: contain;"><span>Chromium Engine</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/sp.ico" alt="Supabase" class="ssw-mi-icon ssw-mi-green" style="width: 24px; height: 24px; object-fit: contain;"><span>Supabase Data</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/python.ico" alt="Python" class="ssw-mi-icon ssw-mi-blue" style="width: 24px; height: 24px; object-fit: contain;"><span>Python Engine</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/mc.ico" alt="Mercado Pago" class="ssw-mi-icon ssw-mi-cyan" style="width: 24px; height: 24px; object-fit: contain;"><span>Mercado Pago</span></div>
-                <div class="ssw-marquee-item"><img src="src/assets/images/Roda_de_precos/clf.ico" alt="Cloudflare" class="ssw-mi-icon ssw-mi-orange" style="width: 24px; height: 24px; object-fit: contain;"><span>Cloudflare</span></div>
-            </div>
-        </div>
-    </section>
-
     <!-- ══ FAQ ══ -->
     <section class="ssw-faq-section">
         <div class="ssw-faq-inner">
@@ -276,7 +240,7 @@
                     <i data-lucide="plus" class="ssw-faq-icon"></i>
                 </button>
                 <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">Absolutamente. O <strong>Pacote Pro</strong> foi desenhado para prospecção e fechamento B2B. Com a Exportação em PDF, você gera uma análise estratégica elegante que pode ser enviada ao prospecto, provando matematicamente as falhas do site antes da reunião de vendas.</p>
+                    <p class="ssw-faq-answer">Absolutamente. O <strong>Pacote Plus</strong> foi desenhado para prospecção e fechamento B2B. Com a Exportação em PDF, você gera uma análise estratégica elegante que pode ser enviada ao prospecto, provando matematicamente as falhas do site antes da reunião de vendas.</p>
                 </div>
             </div>
 
@@ -286,7 +250,7 @@
                     <i data-lucide="plus" class="ssw-faq-icon"></i>
                 </button>
                 <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">Disponível no Pro e Enterprise. Coloca o site do cliente lado a lado com o maior concorrente dele. A IA simula a jornada nos dois sites simultaneamente, extrai os gaps e gera um plano de ataque para superar o adversário em conversão e SEO.</p>
+                    <p class="ssw-faq-answer">Disponível no Plus e Empresarial. Coloca o site do cliente lado a lado com o maior concorrente dele. A IA simula a jornada nos dois sites simultaneamente, extrai os gaps e gera um plano de ataque para superar o adversário em conversão e SEO.</p>
                 </div>
             </div>
 
@@ -316,7 +280,7 @@
                     <i data-lucide="plus" class="ssw-faq-icon"></i>
                 </button>
                 <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">São funcionalidades exclusivas do <strong>Enterprise</strong>, feitas para SaaS e grandes agências que querem embutir nossa tecnologia dentro do próprio software usando sua logotipo. Entre em contato com nossa equipe de vendas para cotação.</p>
+                    <p class="ssw-faq-answer">São funcionalidades exclusivas do <strong>Empresarial</strong>, feitas para SaaS e grandes agências que querem embutir nossa tecnologia dentro do próprio software usando sua logotipo. Entre em contato com nossa equipe de vendas para cotação.</p>
                 </div>
             </div>
         </div>
@@ -329,10 +293,10 @@
             <div class="ssw-cta-glow"></div>
             <div class="ssw-cta-content">
                 <h2 class="ssw-cta-title">Pare de adivinhar onde o site perde dinheiro.</h2>
-                <p class="ssw-cta-sub">Adquira o Pacote Pro hoje, reduza seu CAC e venda projetos web com alto valor agregado — baseado em auditorias reais com IA.</p>
+                <p class="ssw-cta-sub">Adquira o Pacote Plus hoje, reduza seu CAC e venda projetos web com alto valor agregado — baseado em auditorias reais com IA.</p>
                 <button onclick="comprarPlano('recomendado')" class="ssw-btn-cta">
                     <i data-lucide="arrow-right" class="ssw-cta-icon"></i>
-                    Assinar Pro Agora — R$ 149,99
+                    Assinar Plus Agora — R$ 149,99
                 </button>
                 <p class="ssw-cta-note">Acesso imediato · Créditos não expiram · Cancele quando quiser</p>
             </div>

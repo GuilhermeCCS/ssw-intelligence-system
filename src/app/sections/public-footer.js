@@ -166,7 +166,6 @@
                             <div class="ssw-public-footer-col">
                                 <h2>Empresa</h2>
                                 <a href="/home"><i data-lucide="building-2"></i>SSW Intelligence</a>
-                                <a href="mailto:contato@sswintelligence.com.br"><i data-lucide="at-sign"></i>Contato comercial</a>
                             </div>
                         </div>
 
