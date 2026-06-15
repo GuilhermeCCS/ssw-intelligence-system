@@ -265,10 +265,10 @@
                     <i data-lucide="info" class="w-4 h-4"></i>
                     <span>Sobre a SSW</span>
                 </button>
-                <button type="button" onclick="showTermsCard(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
+                <a href="/termos/" target="_blank" rel="noopener noreferrer" onclick="toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="terms">
                     <i data-lucide="file-check" class="w-4 h-4"></i>
                     <span>Termos de uso</span>
-                </button>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
@@ -1614,36 +1614,65 @@
 
             </div>
 
-            <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-8 animate-fade-in-up">
-                <header class="flex justify-between items-center">
-                    <h2 class="text-3xl font-bold text-white">Termos de Uso</h2>
-                    <button onclick="nav('home')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
-                        <i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar
-                    </button>
+            <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-7 animate-fade-in-up">
+                <header class="history-hero">
+                    <div class="history-hero-copy">
+                        <span>Legal</span>
+                        <h2>Termos de Uso</h2>
+                        <p>Leia atentamente nossos termos de serviço antes de utilizar a plataforma SSW INTELLIGENCE.</p>
+                    </div>
                 </header>
-                <div class="glass-panel p-10 rounded-2xl border border-slate-800 text-slate-300 text-sm leading-relaxed h-[60vh] overflow-y-auto pr-4">
-                    <h3 class="text-white font-bold text-lg mb-4">1. Aceitação dos Termos</h3>
-                    <p class="mb-6">Ao acessar e usar a plataforma SSW INTELLIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">2. Uso da Licença</h3>
-                    <p class="mb-6">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site SSW INTELLIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">3. Isenção de Responsabilidade</h3>
-                    <p class="mb-6">Os materiais no site da SSW INTELLIGENCE são fornecidos 'como estão'. SSW INTELLIGENCE não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">4. Limitações</h3>
-                    <p class="mb-6">Em nenhum caso o SSW INTELLIGENCE ou seus fornecedores serão responsáveis por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em SSW INTELLIGENCE.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">5. Precisão dos Materiais</h3>
-                    <p class="mb-6">Os materiais exibidos no site da SSW INTELLIGENCE podem incluir erros técnicos, tipográficos ou fotográficos. SSW INTELLIGENCE não garante que qualquer material em seu site seja preciso, completo ou atual.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">6. Propriedade Intelectual</h3>
-                    <p class="mb-6">Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, imagens e software, é propriedade exclusiva da SSW INTELLIGENCE ou de seus licenciadores e está protegido por leis de direitos autorais e outras propriedades intelectuais.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">8. Pagamentos e Créditos</h3>
-                    <p class="mb-6">Os serviços da plataforma são oferecidos mediante sistema de créditos. Os créditos adquiridos não são reembolsáveis e devem ser utilizados dentro do prazo de validade estipulado. Preços e condições podem ser alterados a qualquer momento.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">9. Suspensão e Cancelamento</h3>
-                    <p class="mb-6">Reservamo-nos o direito de suspender ou cancelar contas que violem estes termos de uso ou envolvam atividades fraudulentas, ilegais ou prejudiciais à plataforma ou outros usuários.</p>
-                    <h3 class="text-white font-bold text-lg mb-4">10. Alterações nos Termos</h3>
-                    <p class="mb-6">A SSW INTELLIGENCE reserva-se o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor imediatamente após sua publicação na plataforma. O uso continuado dos serviços constitui aceitação das modificações.</p>
-                    <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-700 mt-8">
+
+                <section class="glass-panel p-6 md:p-8 rounded-2xl border border-white/10 space-y-8">
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">1. Aceitação dos Termos</h3>
+                        <p class="text-slate-300 leading-relaxed">Ao acessar e usar a plataforma SSW INTELLIGENCE, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">2. Uso da Licença</h3>
+                        <p class="text-slate-300 leading-relaxed">É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site SSW INTELLIGENCE, apenas para visualização transitória pessoal e não comercial.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">3. Isenção de Responsabilidade</h3>
+                        <p class="text-slate-300 leading-relaxed">Os materiais no site da SSW INTELLIGENCE são fornecidos 'como estão'. SSW INTELLIGENCE não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">4. Limitações</h3>
+                        <p class="text-slate-300 leading-relaxed">Em nenhum caso o SSW INTELLIGENCE ou seus fornecedores serão responsáveis por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em SSW INTELLIGENCE.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">5. Precisão dos Materiais</h3>
+                        <p class="text-slate-300 leading-relaxed">Os materiais exibidos no site da SSW INTELLIGENCE podem incluir erros técnicos, tipográficos ou fotográficos. SSW INTELLIGENCE não garante que qualquer material em seu site seja preciso, completo ou atual.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">6. Propriedade Intelectual</h3>
+                        <p class="text-slate-300 leading-relaxed">Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, imagens e software, é propriedade exclusiva da SSW INTELLIGENCE ou de seus licenciadores e está protegido por leis de direitos autorais e outras propriedades intelectuais.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">7. Pagamentos e Créditos</h3>
+                        <p class="text-slate-300 leading-relaxed">Os serviços da plataforma são oferecidos mediante sistema de créditos. Os créditos adquiridos não são reembolsáveis e devem ser utilizados dentro do prazo de validade estipulado. Preços e condições podem ser alterados a qualquer momento.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">8. Suspensão e Cancelamento</h3>
+                        <p class="text-slate-300 leading-relaxed">Reservamo-nos o direito de suspender ou cancelar contas que violem estes termos de uso ou envolvam atividades fraudulentas, ilegais ou prejudiciais à plataforma ou outros usuários.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-4">9. Alterações nos Termos</h3>
+                        <p class="text-slate-300 leading-relaxed">A SSW INTELLIGENCE reserva-se o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor imediatamente após sua publicação na plataforma. O uso continuado dos serviços constitui aceitação das modificações.</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-700">
                         <p class="text-xs text-slate-500 text-center">Última atualização: Fevereiro de 2026</p>
                     </div>
-                </div>
+                </section>
             </div>
             <script src="src/app/core/main.js?v=20260615-pricing-page-1"></script>
 <!-- Modal de Chat com Agent -->

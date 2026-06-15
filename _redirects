@@ -1,7 +1,9 @@
 # Configuração para SPA (Single Page Application) com URLs limpas
 # Rotas da plataforma são redirecionadas para index.html.
-# A página /precos/ fica fora do SPA e é servida por precos/index.html.
+# As páginas /precos/ e /termos/ ficam fora do SPA e são servidas por seus diretórios.
 /precos /precos/ 301
+/termos /termos/ 301
+/terms /termos/ 301
 /login /index.html 200
 /cadastro /index.html 200
 /home /index.html 200
@@ -10,5 +12,4 @@
 /history /index.html 200
 /ranking /index.html 200
 /about /index.html 200
-/terms /index.html 200
 /tutorial /index.html 200

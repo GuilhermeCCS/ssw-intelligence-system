@@ -602,6 +602,10 @@
                 openPricingPage();
                 return;
             }
+            if (view === 'terms') {
+                openTermsPage();
+                return;
+            }
             if (warnBeforeLeavingAudit()) {
                 if (!confirmLeavingAudit()) return;
                 clearActiveAuditSession();
@@ -2039,6 +2043,12 @@ function getCodigoHTML() {
             const pricingTab = window.open('/precos/', '_blank', 'noopener,noreferrer');
             if (!pricingTab) {
                 window.location.href = '/precos/';
+            }
+        }
+        function openTermsPage() {
+            const termsTab = window.open('/termos/', '_blank', 'noopener,noreferrer');
+            if (!termsTab) {
+                window.location.href = '/termos/';
             }
         }
         function comprarCreditos() { openPricingPage(); }
@@ -7131,6 +7141,8 @@ function getCodigoHTML() {
             });
         }
         function showTermsCard() {
+            openTermsPage();
+            return;
             // Remove modal anterior se existir
             const existingModal = document.getElementById('termsModal');
             if (existingModal) {
@@ -7473,6 +7485,7 @@ function getCodigoHTML() {
             toggleManualSelect,
             showSimplifiedSearch,
             openPricingPage,
+            openTermsPage,
             comprarCreditos,
             gerarPDFOficial,
             smoothScrollTo,

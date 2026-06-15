@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Termos de Uso da SSWINTELLIGENCE para auditoria web com IA, créditos, relatórios e serviços digitais.">
+    <title>Termos de Uso | SSWINTELLIGENCE</title>
+    <link rel="icon" type="image/x-icon" href="src/assets/images/logo/logos.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="src/app/sections/public-footer.js?v=20260615-public-pages-1" defer></script>
+    <style>
+        :root {
+            color-scheme: dark;
+            --terms-bg: #020408;
+            --terms-panel: #080d16;
+            --terms-soft: rgba(255, 255, 255, 0.045);
+            --terms-border: rgba(255, 255, 255, 0.09);
+            --terms-border-strong: rgba(34, 211, 238, 0.26);
+            --terms-text: #f0f4ff;
+            --terms-muted: #8292a8;
+            --terms-dim: #52637a;
+            --terms-cyan: #22d3ee;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100%;
+            margin: 0;
+            background: var(--terms-bg);
+            color: var(--terms-text);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .terms-shell {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 50% -10%, rgba(34, 211, 238, 0.09), transparent 42%),
+                linear-gradient(180deg, #020408 0%, #050914 100%);
+        }
+
+        .terms-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(2, 4, 8, 0.86);
+            backdrop-filter: blur(18px);
+        }
+
+        .terms-topbar-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 0 auto;
+        }
+
+        .terms-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+        }
+
+        .terms-brand img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .terms-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terms-top-actions a {
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 13px;
+            border: 1px solid var(--terms-border);
+            border-radius: 8px;
+            color: #dbeafe;
+            font-size: 13px;
+            font-weight: 750;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .terms-top-actions a:first-child {
+            background: #f4f7fb;
+            color: #020408;
+        }
+
+        .terms-hero {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 72px 0 34px;
+        }
+
+        .terms-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 18px;
+            color: var(--terms-cyan);
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .terms-kicker::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--terms-cyan);
+            box-shadow: 0 0 16px rgba(34, 211, 238, 0.72);
+        }
+
+        .terms-hero h1 {
+            max-width: 760px;
+            margin: 0;
+            color: #ffffff;
+            font-size: clamp(44px, 8vw, 92px);
+            font-weight: 900;
+            line-height: 0.94;
+            letter-spacing: 0;
+        }
+
+        .terms-hero p {
+            max-width: 720px;
+            margin: 22px 0 0;
+            color: var(--terms-muted);
+            font-size: 17px;
+            line-height: 1.75;
+        }
+
+        .terms-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .terms-meta-row span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border: 1px solid var(--terms-border);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.035);
+            color: #c5d0e2;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .terms-layout {
+            width: min(1180px, calc(100% - 32px));
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            gap: 34px;
+            align-items: flex-start;
+            margin: 0 auto;
+            padding: 18px 0 86px;
+        }
+
+        .terms-toc {
+            position: sticky;
+            top: 92px;
+            border: 1px solid var(--terms-border);
+            border-radius: 14px;
+            background: rgba(8, 13, 22, 0.72);
+            padding: 16px;
+        }
+
+        .terms-toc strong {
+            display: block;
+            margin-bottom: 12px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .terms-toc a {
+            display: block;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: #9dadc4;
+            font-size: 13px;
+            line-height: 1.35;
+            text-decoration: none;
+        }
+
+        .terms-toc a:hover {
+            background: rgba(34, 211, 238, 0.08);
+            color: #ffffff;
+        }
+
+        .terms-document {
+            border: 1px solid var(--terms-border);
+            border-radius: 18px;
+            background: rgba(8, 13, 22, 0.78);
+            overflow: hidden;
+        }
+
+        .terms-alert {
+            display: grid;
+            grid-template-columns: 22px minmax(0, 1fr);
+            gap: 12px;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--terms-border);
+            background: rgba(34, 211, 238, 0.07);
+            color: #dffbff;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .terms-alert svg {
+            width: 20px;
+            height: 20px;
+            color: var(--terms-cyan);
+            margin-top: 2px;
+        }
+
+        .terms-section {
+            padding: 34px 36px;
+            border-bottom: 1px solid var(--terms-border);
+            scroll-margin-top: 92px;
+        }
+
+        .terms-section:last-child {
+            border-bottom: 0;
+        }
+
+        .terms-section h2 {
+            margin: 0 0 14px;
+            color: #ffffff;
+            font-size: 25px;
+            line-height: 1.18;
+            font-weight: 850;
+            letter-spacing: 0;
+        }
+
+        .terms-section h3 {
+            margin: 24px 0 10px;
+            color: #e8f2ff;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .terms-section p,
+        .terms-section li {
+            color: #b7c4d7;
+            font-size: 15px;
+            line-height: 1.82;
+        }
+
+        .terms-section p {
+            margin: 0 0 14px;
+        }
+
+        .terms-section ul {
+            margin: 12px 0 0;
+            padding-left: 22px;
+        }
+
+        .terms-section li + li {
+            margin-top: 8px;
+        }
+
+        .terms-section strong {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .terms-contact-card {
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid var(--terms-border-strong);
+            border-radius: 12px;
+            background: rgba(34, 211, 238, 0.06);
+        }
+
+        .terms-contact-card a {
+            color: #dffbff;
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .terms-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .terms-toc {
+                position: static;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .terms-topbar-inner {
+                min-height: 74px;
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 14px 0;
+            }
+
+            .terms-top-actions {
+                width: 100%;
+            }
+
+            .terms-top-actions a {
+                flex: 1;
+            }
+
+            .terms-hero {
+                padding-top: 46px;
+            }
+
+            .terms-section {
+                padding: 26px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="terms-shell">
+        <header class="terms-topbar">
+            <div class="terms-topbar-inner">
+                <a class="terms-brand" href="/home" aria-label="Voltar para a SSW Intelligence">
+                    <img src="src/assets/images/logo/logos.ico" alt="">
+                    <span>SSWINTELLIGENCE</span>
+                </a>
+                <nav class="terms-top-actions" aria-label="Ações principais">
+                    <a href="/home"><i data-lucide="arrow-left"></i> Plataforma</a>
+                    <a href="/precos/"><i data-lucide="credit-card"></i> Preços</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="terms-hero">
+            <span class="terms-kicker">Documento legal</span>
+            <h1>Termos de Uso</h1>
+            <p>Estes termos regulam o acesso e o uso da plataforma SSWINTELLIGENCE, incluindo auditorias automatizadas, relatórios gerados por IA, créditos, histórico, integrações de pagamento e recursos associados.</p>
+            <div class="terms-meta-row" aria-label="Informações do documento">
+                <span>Última atualização: 15 de junho de 2026</span>
+                <span>Aplicável a usuários no Brasil</span>
+                <span>SSW INTELLIGENCE</span>
+            </div>
+        </section>
+
+        <main class="terms-layout">
+            <aside class="terms-toc" aria-label="Índice dos termos">
+                <strong>Nesta página</strong>
+                <a href="#aceite">1. Aceite dos termos</a>
+                <a href="#servico">2. Serviço oferecido</a>
+                <a href="#conta">3. Conta e segurança</a>
+                <a href="#creditos">4. Créditos, planos e pagamentos</a>
+                <a href="#auditorias">5. Auditorias e relatórios</a>
+                <a href="#uso-adequado">6. Uso adequado</a>
+                <a href="#privacidade">7. Dados pessoais e privacidade</a>
+                <a href="#propriedade">8. Propriedade intelectual</a>
+                <a href="#disponibilidade">9. Disponibilidade e terceiros</a>
+                <a href="#responsabilidade">10. Responsabilidades</a>
+                <a href="#cancelamento">11. Suspensão e encerramento</a>
+                <a href="#alteracoes">12. Alterações</a>
+                <a href="#lei">13. Lei aplicável</a>
+                <a href="#contato">14. Contato</a>
+            </aside>
+
+            <article class="terms-document">
+                <div class="terms-alert">
+                    <i data-lucide="scale"></i>
+                    <p>Este documento é uma base de proteção contratual para a operação da SSWINTELLIGENCE, mas não substitui revisão jurídica individualizada. Recomenda-se validação por advogado, especialmente para políticas de privacidade, reembolso, tributação e tratamento de dados pessoais.</p>
+                </div>
+
+                <section class="terms-section" id="aceite">
+                    <h2>1. Aceite dos termos</h2>
+                    <p>Ao criar uma conta, adquirir créditos, solicitar auditorias, acessar relatórios ou usar qualquer funcionalidade da SSWINTELLIGENCE, você declara que leu, compreendeu e concorda com estes Termos de Uso.</p>
+                    <p>Se você usa a plataforma em nome de empresa, agência, cliente ou terceiro, declara possuir poderes para assumir obrigações em nome dessa pessoa ou organização.</p>
+                </section>
+
+                <section class="terms-section" id="servico">
+                    <h2>2. Serviço oferecido</h2>
+                    <p>A SSWINTELLIGENCE é uma plataforma de auditoria web e inteligência digital que analisa URLs públicas para gerar diagnósticos sobre performance, SEO, acessibilidade, experiência do usuário, sinais técnicos, benchmarking e oportunidades de melhoria.</p>
+                    <p>Os relatórios podem combinar coleta automatizada, métricas de terceiros, processamento técnico, modelos de inteligência artificial e personas ou agents configurados pelo usuário.</p>
+                    <p>A plataforma não presta consultoria jurídica, contábil, médica, financeira, de segurança ofensiva ou garantia de resultado comercial. As recomendações são informações técnicas e estratégicas para apoio à decisão.</p>
+                </section>
+
+                <section class="terms-section" id="conta">
+                    <h2>3. Conta e segurança</h2>
+                    <p>Para usar recursos privados, você deve informar dados verdadeiros, manter seu e-mail atualizado e proteger suas credenciais de acesso. Toda ação realizada em sua conta será presumida como feita por você ou por pessoa autorizada.</p>
+                    <ul>
+                        <li>Não compartilhe senha, tokens, links privados, relatórios confidenciais ou códigos de verificação com terceiros não autorizados.</li>
+                        <li>Notifique a SSWINTELLIGENCE se suspeitar de acesso indevido, fraude, uso não autorizado ou comprometimento da conta.</li>
+                        <li>A plataforma pode exigir verificações adicionais, como captcha, confirmação por e-mail ou validação de segurança.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section" id="creditos">
+                    <h2>4. Créditos, planos e pagamentos</h2>
+                    <p>Auditorias e funcionalidades pagas podem consumir créditos, conforme descrito na página de preços, checkout ou comunicação comercial vigente no momento da compra.</p>
+                    <ul>
+                        <li>Os valores, pacotes, recursos e condições comerciais podem ser alterados para novas compras, sem afetar créditos já adquiridos, salvo obrigação legal ou abuso.</li>
+                        <li>Pagamentos podem ser processados por terceiros, como Mercado Pago, sujeitos aos termos, antifraude e disponibilidade desses provedores.</li>
+                        <li>Quando houver falha externa, bloqueio técnico ou cancelamento automático antes da geração válida do relatório, a plataforma poderá preservar o saldo conforme as regras operacionais exibidas no produto.</li>
+                        <li>Reembolsos, arrependimento e estornos serão tratados conforme o Código de Defesa do Consumidor, normas aplicáveis ao comércio eletrônico e políticas do meio de pagamento.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section" id="auditorias">
+                    <h2>5. Auditorias e relatórios</h2>
+                    <p>Você é responsável por informar URLs que tenha direito, interesse legítimo ou autorização para analisar. A SSWINTELLIGENCE utiliza informações publicamente acessíveis, automações legítimas e integrações técnicas para compor os relatórios.</p>
+                    <p>Resultados podem variar por cache, CDN, geolocalização, disponibilidade do site, configurações anti-bot, alterações de código, instabilidade de APIs externas, horário da análise ou limitações naturais de modelos de IA.</p>
+                    <p>Relatórios não devem ser interpretados como garantia de aumento de vendas, ranqueamento, conversão, conformidade legal, segurança absoluta ou ausência de falhas.</p>
+                </section>
+
+                <section class="terms-section" id="uso-adequado">
+                    <h2>6. Uso adequado</h2>
+                    <p>É proibido usar a plataforma para atividades ilícitas, abusivas ou que prejudiquem a SSWINTELLIGENCE, terceiros, clientes, provedores ou a infraestrutura analisada.</p>
+                    <ul>
+                        <li>Não use o serviço para atacar, invadir, explorar vulnerabilidades, contornar proteções, realizar scraping abusivo, coletar dados pessoais indevidamente ou violar direitos de terceiros.</li>
+                        <li>Não tente burlar limites, créditos, autenticação, mecanismos antifraude, captcha, rate limits ou controles de acesso.</li>
+                        <li>Não envie URLs com conteúdo ilegal, malware, phishing, abuso sexual, discriminação ilícita, violação de propriedade intelectual ou material que você não possa processar.</li>
+                        <li>Não revenda, sublicencie ou ofereça a plataforma como produto concorrente sem autorização formal.</li>
+                    </ul>
+                </section>
+
+                <section class="terms-section" id="privacidade">
+                    <h2>7. Dados pessoais e privacidade</h2>
+                    <p>A SSWINTELLIGENCE trata dados pessoais para cadastro, autenticação, prevenção a fraudes, suporte, pagamentos, emissão de relatórios, histórico de auditorias, segurança da conta e melhoria do serviço.</p>
+                    <p>O tratamento de dados deve observar a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018), o Marco Civil da Internet (Lei nº 12.965/2014) e demais normas aplicáveis.</p>
+                    <p>Você declara que possui base legal ou autorização necessária para inserir, processar ou compartilhar dados pessoais de terceiros na plataforma. Evite incluir dados sensíveis, credenciais, informações sigilosas ou dados pessoais desnecessários em URLs, descrições, prompts, personas e mensagens de suporte.</p>
+                    <h3>Direitos do titular</h3>
+                    <p>Quando aplicável, titulares podem solicitar confirmação de tratamento, acesso, correção, anonimização, bloqueio, eliminação, portabilidade, informação sobre compartilhamentos e revisão de decisões automatizadas, conforme a LGPD.</p>
+                </section>
+
+                <section class="terms-section" id="propriedade">
+                    <h2>8. Propriedade intelectual</h2>
+                    <p>A SSWINTELLIGENCE, sua marca, código, interfaces, fluxos, agentes, templates, componentes, identidade visual, textos, organização dos relatórios e tecnologias associadas pertencem à SSWINTELLIGENCE ou a seus licenciantes.</p>
+                    <p>Você mantém direitos sobre dados, marcas, URLs, conteúdos e materiais próprios que inserir na plataforma, concedendo à SSWINTELLIGENCE licença limitada para processá-los apenas na medida necessária à prestação do serviço, suporte, segurança e melhoria da plataforma.</p>
+                </section>
+
+                <section class="terms-section" id="disponibilidade">
+                    <h2>9. Disponibilidade e terceiros</h2>
+                    <p>A plataforma depende de infraestrutura, APIs e serviços de terceiros, incluindo provedores de hospedagem, pagamentos, captcha, modelos de IA, banco de dados, ferramentas de captura, métricas oficiais e navegadores automatizados.</p>
+                    <p>Podem ocorrer indisponibilidades, latência, falhas, manutenções, bloqueios por WAF/Cloudflare/anti-bot, limites externos, alterações de APIs ou interrupções fora do controle direto da SSWINTELLIGENCE.</p>
+                </section>
+
+                <section class="terms-section" id="responsabilidade">
+                    <h2>10. Responsabilidades</h2>
+                    <p>A SSWINTELLIGENCE emprega esforços razoáveis para oferecer diagnósticos úteis, consistentes e tecnicamente embasados. Ainda assim, o serviço é fornecido com limitações inerentes a automação, métricas externas, modelos de IA e variações de ambiente.</p>
+                    <p>Na máxima extensão permitida por lei, a SSWINTELLIGENCE não será responsável por perdas indiretas, lucros cessantes, perda de oportunidade, decisões de negócio tomadas exclusivamente com base no relatório, indisponibilidade de terceiros, alterações feitas pelo usuário ou uso indevido da plataforma.</p>
+                    <p>Nada nestes termos limita direitos obrigatórios do consumidor quando aplicáveis.</p>
+                </section>
+
+                <section class="terms-section" id="cancelamento">
+                    <h2>11. Suspensão e encerramento</h2>
+                    <p>A SSWINTELLIGENCE poderá suspender, limitar ou encerrar contas, auditorias, relatórios ou acessos em caso de suspeita de fraude, violação destes termos, risco à segurança, uso abusivo, inadimplência, ordem legal, solicitação de autoridade competente ou violação de direitos de terceiros.</p>
+                    <p>Você pode deixar de usar a plataforma a qualquer momento. A exclusão de dados e eventual retenção mínima por obrigação legal, antifraude, segurança, contabilidade ou defesa de direitos seguirá a legislação aplicável.</p>
+                </section>
+
+                <section class="terms-section" id="alteracoes">
+                    <h2>12. Alterações</h2>
+                    <p>Estes termos podem ser atualizados para refletir mudanças legais, operacionais, comerciais ou técnicas. A versão vigente será publicada nesta página com data de atualização.</p>
+                    <p>Quando mudanças relevantes afetarem direitos ou obrigações de usuários ativos, a SSWINTELLIGENCE poderá comunicar por aviso na plataforma, e-mail ou outro meio razoável.</p>
+                </section>
+
+                <section class="terms-section" id="lei">
+                    <h2>13. Lei aplicável</h2>
+                    <p>Estes termos são regidos pelas leis da República Federativa do Brasil, incluindo, quando aplicável, o Código de Defesa do Consumidor, o Marco Civil da Internet, a LGPD e normas de comércio eletrônico.</p>
+                    <p>Eventuais conflitos deverão ser resolvidos preferencialmente por contato direto e boa-fé. Na ausência de solução amigável, será observado o foro competente conforme a legislação aplicável ao caso concreto.</p>
+                </section>
+
+                <section class="terms-section" id="contato">
+                    <h2>14. Contato</h2>
+                    <p>Para dúvidas sobre estes termos, suporte, solicitações de dados ou assuntos comerciais, use os canais oficiais abaixo.</p>
+                    <div class="terms-contact-card">
+                        <a href="mailto:contato@sswintelligence.com.br">contato@sswintelligence.com.br</a>
+                        <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" rel="noopener noreferrer">WhatsApp: 82 99130-1991</a>
+                        <span>CNPJ: 65.283.065/0001-37</span>
+                    </div>
+                </section>
+            </article>
+        </main>
+    </div>
+
+    <div data-public-footer></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
