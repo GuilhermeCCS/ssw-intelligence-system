@@ -11,27 +11,6 @@
             <p class="ssw-hero-sub">
                 Compre créditos, audite sites com IA e feche contratos maiores entregando relatórios irrefutáveis.
             </p>
-            <div class="ssw-guarantees">
-                <span class="ssw-guarantee-item">
-                    <i data-lucide="shield-check" class="ssw-g-icon"></i>
-                    Pagamento seguro via Mercado Pago
-                </span>
-                <span class="ssw-guarantee-item">
-                    <i data-lucide="zap" class="ssw-g-icon"></i>
-                    Créditos liberados instantaneamente via PIX
-                </span>
-                <span class="ssw-guarantee-item">
-                    <i data-lucide="infinity" class="ssw-g-icon"></i>
-                    Créditos não expiram nunca
-                </span>
-            </div>
-            <div class="ssw-free-trial-banner">
-                <div>
-                    <strong>Teste gratuito disponível</strong>
-                    <span>Explore o sandbox, veja um relatório exemplo e crie sua conta sem cobrança inicial.</span>
-                </div>
-                <button type="button" onclick="showAuthScreen('register')">Começar grátis</button>
-            </div>
         </div>
     </section>
 
@@ -155,7 +134,7 @@
                     </li>
                     <li class="ssw-feature-item">
                         <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Histórico ilimitado</span>
+                        <span>Histórico personalizado</span>
                     </li>
                     <li class="ssw-feature-item">
                         <i data-lucide="check" class="ssw-check-dim"></i>
@@ -190,20 +169,20 @@
                         <td class="ssw-td-feature">Créditos de Análise</td>
                         <td>10</td>
                         <td class="ssw-td-featured">40</td>
-                        <td>Agentlizado</td>
+                        <td>Personalizado</td>
                     </tr>
                     <tr>
                         <td class="ssw-td-feature">Armazenamento de Histórico</td>
                         <td>30 dias</td>
                         <td class="ssw-td-featured">1 Ano</td>
-                        <td>Ilimitado</td>
+                        <td>personalizado</td>
                     </tr>
                     <tr class="ssw-group-row"><td colspan="4">Inteligência Artificial & Agents</td></tr>
                     <tr>
                         <td class="ssw-td-feature">Agents Simultâneas</td>
                         <td>3</td>
                         <td class="ssw-td-featured">3</td>
-                        <td>Ilimitado</td>
+                        <td>personalizado</td>
                     </tr>
                     <tr>
                         <td class="ssw-td-feature">Veredito Executivo IA</td>
