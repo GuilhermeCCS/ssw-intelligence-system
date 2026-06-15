@@ -2820,7 +2820,7 @@ function getCodigoHTML() {
             document.querySelector('input[name="auditMode"][value="auto"]').checked = true;
             positionLocalAuditHelp('auto');
             setModeOnlyCardsVisibility('auto');
-            setActiveNavButton('home');
+            setActiveNavButton('analisar');
             // Foca no input de URL
             if (auditUrl) {
                 setTimeout(() => {
