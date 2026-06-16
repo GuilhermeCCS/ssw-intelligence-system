@@ -6516,6 +6516,8 @@ body.auth-page-active #appTopbar {
     color: #111111 !important;
     font-size: 12px !important;
     font-weight: 800 !important;
+    box-shadow: none !important;
+    filter: none !important;
     overflow: hidden;
 }
 
@@ -7685,17 +7687,27 @@ body.auth-page-active #mainContent {
 }
 
 .sidebar-profile-button {
-    min-height: 50px !important;
-    padding: 7px 8px !important;
-    border-radius: 12px !important;
+    min-height: 42px !important;
+    padding: 5px 6px !important;
+    border-radius: 10px !important;
 }
 
 .user-avatar-button.sidebar-profile-avatar,
 .sidebar-profile-avatar {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 13px !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
     font-weight: 900 !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+.user-avatar-button.sidebar-profile-avatar:hover,
+.sidebar-profile-button:hover .user-avatar-button.sidebar-profile-avatar,
+.user-avatar-button.user-avatar-large:hover {
+    box-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
 }
 
 @media (min-width: 768px) {
@@ -7736,14 +7748,16 @@ body.auth-page-active #mainContent {
     }
 
     body.sidebar-collapsed .sidebar-profile-button {
-        width: 52px !important;
-        min-height: 52px !important;
-        height: 52px !important;
+        width: 44px !important;
+        min-height: 44px !important;
+        height: 44px !important;
     }
 
     body.sidebar-collapsed .user-avatar-button.sidebar-profile-avatar {
-        width: 38px !important;
-        height: 38px !important;
+        width: 30px !important;
+        height: 30px !important;
+        box-shadow: none !important;
+        filter: none !important;
     }
 
     body.sidebar-collapsed [data-sidebar-label]::after {
