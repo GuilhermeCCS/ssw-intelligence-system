@@ -8392,7 +8392,7 @@ body:not(.user-authenticated):not(.auth-page-active) .hero-elite.hero-section-pr
     }
 }
 
-/* Esconde hero section quando usuário está logado */
-body.user-authenticated #heroSection {
+/* Esconde conteúdo de landing quando usuário está logado */
+body.user-authenticated #heroSection > .relative.z-10 > div:not(.search-container) {
     display: none !important;
 }
