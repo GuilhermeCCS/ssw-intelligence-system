@@ -1845,6 +1845,48 @@
             };
         }
     }, 1000);
+
+    // Correção para enviarCodigoRecuperacao - reescreve a função com verificação de elemento
+    setTimeout(() => {
+        window.enviarCodigoRecuperacao = async function() {
+            const emailInput = document.getElementById('recuperarEmail');
+            if(!emailInput) {
+                Toast.error("Erro ao encontrar campo de e-mail. Tente novamente.");
+                return;
+            }
+            const email = emailInput.value.trim();
+            if(!email) {
+                Toast.warning("Preencha o campo de e-mail");
+                return;
+            }
+            // Continua com a lógica original da função
+            if(typeof loadingRecuperacao !== 'undefined') loadingRecuperacao = true;
+            if(typeof erroRecuperacao !== 'undefined') erroRecuperacao = '';
+            if(typeof renderAuthView === 'function') renderAuthView();
+            try {
+                const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.com";
+                const res = await fetch(`${API_URL}/api/recuperar-senha`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email})
+                });
+                if(typeof emailTemporario !== 'undefined') emailTemporario = email;
+                if(typeof loadingRecuperacao !== 'undefined') loadingRecuperacao = false;
+                if(typeof setAuthView === 'function') setAuthView('codigo');
+                if(res.ok) {
+                    Toast.success("código enviado para seu e-mail!");
+                } else {
+                    Toast.info("Se o e-mail existir, você receberá um código.");
+                }
+            } catch(e) {
+                console.error('Erro ao enviar código:', e);
+                if(typeof loadingRecuperacao !== 'undefined') loadingRecuperacao = false;
+                if(typeof emailTemporario !== 'undefined') emailTemporario = email;
+                if(typeof setAuthView === 'function') setAuthView('codigo');
+                Toast.info("Se o e-mail existir, você receberá um código.");
+            }
+        };
+    }, 1000);
 </script>
 </body>
 <script src="src/app/ui/promo-countdown.js"></script>
