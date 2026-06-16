@@ -8398,3 +8398,8 @@ body.user-authenticated #heroSection > .absolute.inset-0,
 body.user-authenticated #heroSection > .relative.z-10 > div:not(.search-container) {
     display: none !important;
 }
+
+/* Remove fundo cinza da hero section quando usuário está logado */
+body.user-authenticated #heroSection {
+    background: transparent !important;
+}
