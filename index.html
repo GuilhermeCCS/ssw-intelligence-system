@@ -411,7 +411,7 @@
                             <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">
                                 Domine o Mercado
                             </span>
-                            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] via-[#3b82f6] to-[#00D4FF] mt-2">
+                            <span class="block text-white mt-2">
                                 com Inteligência
                             </span>
                         </h1>
@@ -1786,6 +1786,55 @@
                         showSimplifiedSearch();
                     }
                 }, 100);
+            };
+        }
+    }, 1000);
+
+    // Função para controlar a barra de rolagem do mainContent
+    function controlMainScroll(showScroll) {
+        const mainContent = document.getElementById('mainContent');
+        if (mainContent) {
+            if (showScroll) {
+                mainContent.classList.remove('overflow-y-hidden');
+                mainContent.classList.add('overflow-y-auto');
+            } else {
+                mainContent.classList.remove('overflow-y-auto');
+                mainContent.classList.add('overflow-y-hidden');
+            }
+        }
+    }
+
+    // Intercepta runAudit para controlar o scroll baseado no modo
+    setTimeout(() => {
+        if (typeof runAudit !== 'undefined') {
+            const originalRunAudit = runAudit;
+            window.runAudit = async function() {
+                const mode = document.getElementById('auditMode')?.value || 'auto';
+                // Esconde scroll se for auto ou compare
+                if (mode === 'auto' || mode === 'compare') {
+                    controlMainScroll(false);
+                }
+                // Chama a função original
+                const result = await originalRunAudit.apply(this, arguments);
+                // Mostra scroll após a auditoria terminar
+                controlMainScroll(true);
+                return result;
+            };
+        }
+    }, 1000);
+
+    // Intercepta runCompare para controlar o scroll
+    setTimeout(() => {
+        if (typeof runCompare !== 'undefined') {
+            const originalRunCompare = runCompare;
+            window.runCompare = async function() {
+                // Esconde scroll ao iniciar comparação
+                controlMainScroll(false);
+                // Chama a função original
+                const result = await originalRunCompare.apply(this, arguments);
+                // Mostra scroll após a comparação terminar
+                controlMainScroll(true);
+                return result;
             };
         }
     }, 1000);
