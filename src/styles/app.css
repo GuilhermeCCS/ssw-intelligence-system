@@ -8403,3 +8403,8 @@ body.user-authenticated #heroSection > .relative.z-10 > div:not(.search-containe
 body.user-authenticated #heroSection {
     background: transparent !important;
 }
+
+/* Mostra search-container quando usuário está logado */
+body.user-authenticated .search-container {
+    display: block !important;
+}

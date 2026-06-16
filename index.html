@@ -1761,6 +1761,34 @@
     </div>
 </div>
 <script src="src/app/auth/verification.js"></script>
+<script>
+    // Script para mostrar área de análise quando usuário está logado
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            if (typeof USER !== 'undefined' && USER && USER.email) {
+                // Usuário está logado, mostra área de análise
+                if (typeof showSimplifiedSearch === 'function') {
+                    showSimplifiedSearch();
+                }
+            }
+        }, 500);
+    });
+
+    // Intercepta loginSuccess para mostrar área de análise após login
+    setTimeout(() => {
+        if (typeof loginSuccess !== 'undefined') {
+            const originalLoginSuccess = loginSuccess;
+            window.loginSuccess = function() {
+                originalLoginSuccess.apply(this, arguments);
+                setTimeout(() => {
+                    if (typeof showSimplifiedSearch === 'function') {
+                        showSimplifiedSearch();
+                    }
+                }, 100);
+            };
+        }
+    }, 1000);
+</script>
 </body>
 <script src="src/app/ui/promo-countdown.js"></script>
 </html>
