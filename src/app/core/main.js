@@ -59,6 +59,7 @@
             // Verifica pathname inicial ao carregar a página
             handlePopState();
             initHeroTypewriter();
+            initKineticNeuralWave();
 
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
@@ -181,6 +182,35 @@
             const authScreen = document.getElementById('authScreen');
             const collapseButton = document.getElementById('sidebarCollapseButton');
             const revealButton = document.getElementById('sidebarRevealButton');
+            const mobileMenu = document.getElementById('mobileMenuDropdown');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isGuestLanding = (!USER || !USER.email) && !document.body.classList.contains('auth-page-active');
+
+            if (isGuestLanding) {
+                document.body.classList.remove('sidebar-collapsed', 'mobile-menu-open');
+                if (sidebar) {
+                    sidebar.classList.add('hidden');
+                    sidebar.style.removeProperty('width');
+                    sidebar.style.removeProperty('left');
+                    sidebar.style.removeProperty('transform');
+                    sidebar.style.removeProperty('opacity');
+                    sidebar.style.removeProperty('pointer-events');
+                }
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                if (overlay) overlay.classList.add('hidden');
+                if (mainWrapper) {
+                    mainWrapper.style.removeProperty('transition');
+                    mainWrapper.style.removeProperty('width');
+                    mainWrapper.style.removeProperty('max-width');
+                    mainWrapper.style.removeProperty('margin-left');
+                }
+                if (revealButton) {
+                    revealButton.classList.add('hidden');
+                    revealButton.style.setProperty('display', 'none', 'important');
+                }
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
 
             document.body.classList.toggle('sidebar-collapsed', shouldCollapse);
             if (collapseButton) {
@@ -366,6 +396,212 @@
             };
 
             window.setTimeout(typeNext, 260);
+        }
+
+        function initKineticNeuralWave() {
+            const canvas = document.getElementById('neural-wave-canvas');
+            const hero = document.getElementById('heroSection');
+            if (!canvas || !hero || canvas.dataset.neuralWaveReady === 'true') return;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            if (!ctx) return;
+
+            canvas.dataset.neuralWaveReady = 'true';
+            const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const pointer = { x: 0, y: 0, active: false };
+            const nodes = [];
+            let width = 1;
+            let height = 1;
+            let dpr = 1;
+            let lastTime = 0;
+            let frameCount = 0;
+
+            const rand = (min, max) => min + Math.random() * (max - min);
+
+            const resize = () => {
+                const rect = hero.getBoundingClientRect();
+                width = Math.max(1, rect.width);
+                height = Math.max(1, rect.height);
+                dpr = Math.min(window.devicePixelRatio || 1, reducedMotion ? 1 : 1.65);
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                canvas.style.width = `${width}px`;
+                canvas.style.height = `${height}px`;
+                canvas.dataset.neuralWaveWidth = String(Math.round(width));
+                canvas.dataset.neuralWaveHeight = String(Math.round(height));
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                buildNodes();
+            };
+
+            const buildNodes = () => {
+                nodes.length = 0;
+                const target = Math.min(132, Math.max(58, Math.floor((width * height) / 11200)));
+                const cols = Math.ceil(Math.sqrt(target * (width / height)));
+                const rows = Math.ceil(target / cols);
+                const spreadX = width * 1.18;
+                const spreadY = height * 1.05;
+
+                for (let row = 0; row < rows; row += 1) {
+                    for (let col = 0; col < cols && nodes.length < target; col += 1) {
+                        const baseX = ((col + 0.5) / cols - 0.5) * spreadX + rand(-24, 24);
+                        const baseY = ((row + 0.5) / rows - 0.5) * spreadY + rand(-24, 24);
+                        const baseZ = rand(-230, 240);
+                        nodes.push({
+                            baseX,
+                            baseY,
+                            baseZ,
+                            x: baseX + rand(-18, 18),
+                            y: baseY + rand(-18, 18),
+                            z: baseZ + rand(-28, 28),
+                            vx: rand(-0.18, 0.18),
+                            vy: rand(-0.18, 0.18),
+                            vz: rand(-0.12, 0.12),
+                            phase: rand(0, Math.PI * 2),
+                            p: { x: 0, y: 0, scale: 1, alpha: 1 }
+                        });
+                    }
+                }
+            };
+
+            const projectNode = (node, time) => {
+                const driftZ = Math.sin(time * 0.00045 + node.phase) * 70;
+                const depth = node.z + driftZ + 690;
+                const scale = 640 / Math.max(300, depth);
+                const waveX = Math.sin(time * 0.0002 + node.phase) * 18;
+                const waveY = Math.cos(time * 0.00026 + node.phase) * 14;
+                return {
+                    x: width * 0.5 + (node.x + waveX) * scale,
+                    y: height * 0.5 + (node.y + waveY) * scale,
+                    scale,
+                    alpha: Math.max(0.18, Math.min(1, scale * 1.08))
+                };
+            };
+
+            const drawBackground = (time) => {
+                const pulse = 0.45 + Math.sin(time * 0.0006) * 0.08;
+                const centerGlow = ctx.createRadialGradient(width * 0.5, height * 0.5, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.78);
+                centerGlow.addColorStop(0, `rgba(0, 212, 255, ${0.08 + pulse * 0.04})`);
+                centerGlow.addColorStop(0.42, 'rgba(59, 130, 246, 0.055)');
+                centerGlow.addColorStop(1, 'rgba(7, 11, 20, 0)');
+                ctx.fillStyle = centerGlow;
+                ctx.fillRect(0, 0, width, height);
+            };
+
+            const scheduleFrame = () => {
+                if (document.hidden) {
+                    window.setTimeout(() => step(Date.now()), 33);
+                    return;
+                }
+                requestAnimationFrame(step);
+            };
+
+            const step = (time) => {
+                frameCount += 1;
+                canvas.dataset.neuralWaveFrames = String(frameCount);
+                canvas.dataset.neuralWaveNodes = String(nodes.length);
+                canvas.dataset.neuralWavePointer = pointer.active ? 'active' : 'idle';
+                const dt = Math.min(32, time - (lastTime || time)) / 16.67;
+                lastTime = time;
+                ctx.clearRect(0, 0, width, height);
+                drawBackground(time);
+
+                const radius = Math.min(260, Math.max(150, width * 0.17));
+                const spring = reducedMotion ? 0.012 : 0.018;
+                const damping = reducedMotion ? 0.84 : 0.89;
+
+                for (const node of nodes) {
+                    node.p = projectNode(node, time);
+                    let ax = (node.baseX - node.x) * spring;
+                    let ay = (node.baseY - node.y) * spring;
+                    let az = (node.baseZ - node.z) * spring;
+
+                    if (pointer.active) {
+                        const dx = node.p.x - pointer.x;
+                        const dy = node.p.y - pointer.y;
+                        const distance = Math.max(1, Math.hypot(dx, dy));
+                        if (distance < radius) {
+                            const influence = (1 - distance / radius) ** 2;
+                            const force = influence * 12;
+                            ax += (dx / distance) * force / Math.max(0.45, node.p.scale);
+                            ay += (dy / distance) * force / Math.max(0.45, node.p.scale);
+                            az += influence * 10;
+                        }
+                    }
+
+                    node.vx = (node.vx + ax * dt) * damping;
+                    node.vy = (node.vy + ay * dt) * damping;
+                    node.vz = (node.vz + az * dt) * damping;
+                    node.x += node.vx * dt;
+                    node.y += node.vy * dt;
+                    node.z += node.vz * dt;
+                    node.p = projectNode(node, time);
+                }
+
+                ctx.save();
+                ctx.globalCompositeOperation = 'lighter';
+                for (let i = 0; i < nodes.length; i += 1) {
+                    const a = nodes[i].p;
+                    for (let j = i + 1; j < nodes.length; j += 1) {
+                        const b = nodes[j].p;
+                        const dx = a.x - b.x;
+                        const dy = a.y - b.y;
+                        const distance = Math.hypot(dx, dy);
+                        const limit = 126 * Math.min(1.25, (a.scale + b.scale) * 0.62);
+                        if (distance < limit) {
+                            const alpha = (1 - distance / limit) * 0.16 * Math.min(a.alpha, b.alpha);
+                            ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
+                            ctx.lineWidth = Math.max(0.45, (a.scale + b.scale) * 0.42);
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                for (const node of nodes) {
+                    const p = node.p;
+                    const size = Math.max(1.2, 2.4 * p.scale);
+                    const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 8);
+                    halo.addColorStop(0, `rgba(0, 212, 255, ${0.3 * p.alpha})`);
+                    halo.addColorStop(0.4, `rgba(59, 130, 246, ${0.1 * p.alpha})`);
+                    halo.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                    ctx.fillStyle = halo;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, size * 8, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = `rgba(224, 247, 255, ${0.68 * p.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+
+                window.__sswNeuralWaveReady = {
+                    nodes: nodes.length,
+                    width,
+                    height,
+                    activePointer: pointer.active,
+                    frames: frameCount
+                };
+                scheduleFrame();
+            };
+
+            const updatePointer = event => {
+                const rect = hero.getBoundingClientRect();
+                pointer.x = event.clientX - rect.left;
+                pointer.y = event.clientY - rect.top;
+                pointer.active = true;
+            };
+
+            hero.addEventListener('pointermove', updatePointer, { passive: true });
+            hero.addEventListener('pointerleave', () => { pointer.active = false; }, { passive: true });
+            hero.addEventListener('pointerdown', updatePointer, { passive: true });
+            window.addEventListener('resize', resize, { passive: true });
+
+            resize();
+            scheduleFrame();
         }
 
         function setHomePresentationVisible(visible) {
@@ -1916,10 +2152,10 @@ function getCodigoHTML() {
             mobileMenuButton.setAttribute('tabindex', '-1');
         }
         if (appSidebar) {
-            appSidebar.classList.remove('hidden');
-            appSidebar.classList.add('flex');
+            appSidebar.classList.add('hidden');
+            appSidebar.classList.remove('flex');
         }
-        if (mobileMenu && window.innerWidth < 768) mobileMenu.classList.add('hidden');
+        if (mobileMenu) mobileMenu.classList.add('hidden');
         if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
         if (sidebarUserInfo) sidebarUserInfo.classList.add('hidden');
         document.body.classList.remove('mobile-menu-open');
@@ -2061,6 +2297,33 @@ function getCodigoHTML() {
             }
         }
         function comprarCreditos() { openPricingPage(); }
+        function showCreditsEndedModal() {
+            const modal = document.getElementById('creditsEndedModal');
+            if (!modal) {
+                Toast.warning('Seus créditos acabaram. Adquira mais créditos para continuar analisando.');
+                return;
+            }
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('credits-ended-active');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            requestAnimationFrame(() => {
+                modal.querySelector('.credits-ended-primary')?.focus();
+            });
+        }
+        function hideCreditsEndedModal() {
+            const modal = document.getElementById('creditsEndedModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('credits-ended-active');
+        }
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('creditsEndedModal');
+                if (modal && !modal.classList.contains('hidden')) hideCreditsEndedModal();
+            }
+        });
         // Função falarComVendas movida para pricing-section.js
         function mudarSenha() {
             // Fecha o menu do usuário
@@ -4737,7 +5000,11 @@ function getCodigoHTML() {
             const urlInput = document.getElementById('auditUrl');
             const url = sanitizeUrlInputValue(urlInput);
             if (bloquearUrlLocalSeNecessario(url)) return;
-            if(USER.credits <= 0) return comprarCreditos();
+            if(!USER || !USER.email) {
+                showAuthScreen('login');
+                return;
+            }
+            if(Number(USER.credits || 0) <= 0) return showCreditsEndedModal();
             const mode = document.getElementById('auditMode')?.value || 'auto';
             const selected = mode === 'manual'
                 ? Array.from(document.querySelectorAll('.agent-radio:checked')).map(el => el.value).filter(Boolean)
@@ -4793,7 +5060,7 @@ function getCodigoHTML() {
                         document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
                         stopAuditLoadingAnimation();
                         document.getElementById('auditLoading').classList.add('hidden');
-                        comprarCreditos();
+                        showCreditsEndedModal();
                         return;
                     } else {
                         resetAuditCaptcha();
@@ -5073,7 +5340,7 @@ function getCodigoHTML() {
                 document.getElementById('emptyStateCards').classList.remove('hidden');
                 document.getElementById('heroSection').classList.remove('hidden');
                 document.getElementById('manualSelectArea').classList.add('hidden');
-                return comprarCreditos();
+                return showCreditsEndedModal();
             }
             // 2. Coleta de Inputs
             const elA = document.getElementById('compareUrlA_main') || document.getElementById('compareUrlA');
@@ -7558,6 +7825,8 @@ function getCodigoHTML() {
             openPricingPage,
             openTermsPage,
             comprarCreditos,
+            showCreditsEndedModal,
+            hideCreditsEndedModal,
             gerarPDFOficial,
             smoothScrollTo,
             setHomePresentationVisible,

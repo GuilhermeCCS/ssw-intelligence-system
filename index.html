@@ -58,7 +58,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260615-audit-loading-fix-1">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260615-neural-wave-3">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
@@ -181,6 +181,28 @@
         </div>
         <p>Saindo da conta</p>
     </div>
+    <div id="creditsEndedModal" class="credits-ended-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="creditsEndedTitle">
+        <div class="credits-ended-backdrop" onclick="hideCreditsEndedModal()"></div>
+        <section class="credits-ended-card">
+            <button type="button" class="credits-ended-close" onclick="hideCreditsEndedModal()" aria-label="Fechar aviso de créditos">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="credits-ended-icon" aria-hidden="true">
+                <i data-lucide="coins" class="w-6 h-6"></i>
+            </div>
+            <p class="credits-ended-kicker">Créditos esgotados</p>
+            <h2 id="creditsEndedTitle">Seus créditos acabaram</h2>
+            <p>Para continuar analisando sites com IA, adquira um novo plano ou mais créditos para sua conta.</p>
+            <div class="credits-ended-actions">
+                <button type="button" class="credits-ended-primary" onclick="hideCreditsEndedModal(); comprarCreditos();">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    <span>Adquirir mais créditos</span>
+                </button>
+                <button type="button" class="credits-ended-secondary" onclick="hideCreditsEndedModal()">Agora não</button>
+            </div>
+            <span class="credits-ended-note">A análise continua disponível assim que o novo saldo for liberado.</span>
+        </section>
+    </div>
     <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar(false)"></div>
     <button id="sidebarRevealButton" type="button" class="sidebar-reveal-button hidden" aria-label="Mostrar menu lateral">
         <i data-lucide="panel-left-open" class="w-4 h-4"></i>
@@ -222,10 +244,6 @@
                 <button onclick="showSimplifiedSearch(); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-nav-target="analisar" data-sidebar-label="Analisar" title="Analisar">
                     <i data-lucide="square-pen" class="w-4 h-4"></i>
                     <span>Analisar</span>
-                </button>
-                <button onclick="nav('home'); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-nav-target="home" data-sidebar-label="Dashboard" title="Dashboard">
-                    <i data-lucide="gauge-circle" class="w-4 h-4"></i>
-                    <span>Dashboard</span>
                 </button>
                 <button onclick="nav('history'); toggleSidebar(false);" class="sidebar-nav-item sidebar-compact-visible border border-transparent" data-nav-target="history" data-sidebar-label="Histórico" title="Histórico">
                     <i data-lucide="history" class="w-4 h-4"></i>
@@ -349,155 +367,143 @@
     <main class="flex-1 md:h-screen overflow-y-auto overflow-x-hidden relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;"></main>
         <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper" style="background: transparent !important;">
             <div id="view-home" class="command-center max-w-6xl mx-auto space-y-8 animate-fade-in-up">
-                <!-- HERO SECTION PREMIUM -->
-                <div id="heroSection" class="hero-section-premium">
-                    <div class="ssw-hero-shell">
-                        <div class="ssw-hero-copy">
-                            <div class="hero-title-container">
-                                <h1 class="hero-title-premium" data-typewriter="true" aria-label="S.S.W Intelligence">
-                                    <span class="title-line typing-target" data-typewriter-text="S.S.W">S.S.W</span>
-                                    <span class="title-highlight typing-target" data-typewriter-text="Intelligence">Intelligence</span>
-                                </h1>
-                            </div>
+                <!-- HERO SECTION ACETERNITY STYLE -->
+                <section id="heroSection" class="hero-elite hero-section-premium relative w-full min-h-screen bg-slate-950 overflow-hidden flex items-center justify-center">
+                    
+                    <!-- CIRCULAR REVEAL OVERLAY -->
+                    <div class="circular-reveal-overlay"></div>
+                    
+                    <!-- PASSO 1: GRID BACKGROUND -->
+                    <div class="absolute inset-0 pointer-events-none">
+                        <!-- Grid Pattern -->
+                        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                        <!-- Radial Mask para fade nas bordas -->
+                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#020617_100%)]"></div>
+                    </div>
 
-                            <div class="hero-subtitle-container">
-                                <p class="hero-subtitle-premium">
-                                    Monitore, compare e otimize experiências digitais com auditorias em tempo real, leitura comportamental e evidências prontas para decisão.
-                                </p>
-                            </div>
+                    <!-- PASSO 2: BACKGROUND BEAMS (Feixes de Luz) -->
+                    <div class="absolute inset-0 pointer-events-none overflow-hidden" id="beams-container">
+                        <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:0" />
+                                    <stop offset="50%" style="stop-color:#00D4FF;stop-opacity:0.6" />
+                                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Beam paths serão animados via CSS -->
+                            <path class="beam-path" d="M0,200 Q400,100 800,200 T1600,200" fill="none" stroke="url(#beam-gradient)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+                            <path class="beam-path beam-delay-1" d="M0,400 Q400,300 800,400 T1600,400" fill="none" stroke="url(#beam-gradient)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+                            <path class="beam-path beam-delay-2" d="M0,600 Q400,500 800,600 T1600,600" fill="none" stroke="url(#beam-gradient)" stroke-width="1" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+                        </svg>
+                    </div>
 
-                            <div class="hero-auth-cta-container">
-                                <button type="button" onclick="showSimplifiedSearch()" class="hero-auth-cta">
-                                    <span>Testar agora</span>
-                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <!-- PASSO 3: CONTEÚDO FRONTAL -->
+                    <div class="relative z-10 text-center px-4 max-w-5xl mx-auto pointer-events-auto">
+                        
+                        <!-- Badge -->
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm mb-8 animate-fade-in-up">
+                            <span class="text-2xl font-medium text-white/90">S.S.W Intelligence</span>
+                        </div>
+
+                        <!-- H1 com Gradient -->
+                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6 tracking-tight leading-tight animate-fade-in-up" style="animation-delay: 0.1s">
+                            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">
+                                Domine o Mercado
+                            </span>
+                            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] via-[#3b82f6] to-[#00D4FF] mt-2">
+                                com Inteligência
+                            </span>
+                        </h1>
+
+                        <!-- Parágrafo -->
+                        <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto font-light animate-fade-in-up" style="animation-delay: 0.2s">
+                            Auditoria web avançada com IA. Analise sites, compare concorrentes e gere insights valiosos em tempo real.
+                        </p>
+
+                        <!-- Botões -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style="animation-delay: 0.3s">
+                            <button type="button" onclick="showSimplifiedSearch()" class="group relative px-8 py-4 bg-gradient-to-r from-[#00D4FF] to-[#3b82f6] text-white font-semibold rounded-full hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all duration-300 hover:scale-105">
+                                <span class="relative z-10 flex items-center gap-2">
+                                    Iniciar Análise
+                                </span>
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-[#00D4FF] to-[#3b82f6] opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-300"></div>
+                            </button>
+                            
+                            <button type="button" onclick="nav('precos')" class="px-8 py-4 bg-white/5 border border-white/10 text-white font-semibold rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+                                <span class="flex items-center gap-2">
+                                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                                    Ver Planos
+                                </span>
+                            </button>
+                        </div>
+
+                        <div class="search-container pointer-events-auto">
+                            <div id="normalSearchBar" class="search-bar-hero">
+                                <div class="search-input-wrapper">
+                                    <i data-lucide="globe-2" class="w-5 h-5 search-icon"></i>
+                                    <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
+                                </div>
+                                <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
+                                    <i data-lucide="activity" class="w-4 h-4"></i>
+                                    <span>Analisar</span>
                                 </button>
                             </div>
 
-                            <div class="search-container">
-                                <div id="normalSearchBar" class="search-bar-hero">
-                                    <div class="search-input-wrapper">
-                                        <i data-lucide="globe-2" class="w-5 h-5 search-icon"></i>
-                                        <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
-                                    </div>
-                                    <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
-                                        <i data-lucide="activity" class="w-4 h-4"></i>
-                                        <span>Analisar</span>
-                                    </button>
-                                </div>
+                            <p id="localAuditHelp" class="text-xs text-slate-400 mt-2 text-left flex items-center justify-center sm:justify-start gap-1">
+                                <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
+                                <span>Testando um site local? Veja o nosso <span onclick="abrirTutorialNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
+                            </p>
 
-                                <p id="localAuditHelp" class="text-xs text-slate-400 mt-2 text-left flex items-center justify-center sm:justify-start gap-1">
-                                    <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
-                                    <span>Testando um site local? Veja o nosso <span onclick="abrirTutorialNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
-                                </p>
-
-                                <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
-                                    <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                                </div>
-
-                                <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
-                                    <div class="compare-input-block">
-                                        <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                        <input type="text" id="compareUrlA" placeholder="Site A - https://site-a.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('compareUrlB').focus();}">
-                                    </div>
-                                    <div class="compare-divider"></div>
-                                    <div class="compare-input-block">
-                                        <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                        <input type="text" id="compareUrlB" placeholder="Site B - https://site-b.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runCompare();}">
-                                    </div>
-                                    <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runCompare()" class="search-button">
-                                        <i data-lucide="git-compare" class="w-4 h-4"></i>
-                                        <span>Comparar</span>
-                                    </button>
-                                </div>
-
-                                <div id="turnstile-compare" class="hidden flex justify-center mt-4 min-h-[65px] items-center">
-                                    <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                                </div>
-
-                                <div class="ssw-mode-selector" aria-label="Modo de auditoria">
-                                    <label>
-                                        <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
-                                        <span>Automático</span>
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
-                                        <span>Manual</span>
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
-                                        <span>Comparativo</span>
-                                    </label>
-                                </div>
-
-                                <select id="auditMode" class="hidden">
-                                    <option value="auto">Seleção Automática</option>
-                                    <option value="manual">Seleção Manual</option>
-                                    <option value="compare">Modo Comparativo</option>
-                                </select>
+                            <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
+                                <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
                             </div>
-                        </div>
 
-                        <div class="stats-container-premium ssw-hero-visual" aria-label="Prévia do painel SSW Intelligence">
-                            <div class="ssw-dashboard-frame">
-                                <div class="ssw-dashboard-rail">
-                                    <span></span>
-                                    <span class="is-active"></span>
-                                    <span></span>
-                                    <span></span>
+                            <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
+                                <div class="compare-input-block">
+                                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                                    <input type="text" id="compareUrlA" placeholder="Site A - https://site-a.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('compareUrlB').focus();}">
                                 </div>
-
-                                <div class="ssw-dashboard-main">
-                                    <div class="ssw-dashboard-head">
-                                        <div>
-                                            <span>Web Auditing</span>
-                                            <strong>Score operacional ao vivo</strong>
-                                        </div>
-                                        <img src="src/assets/images/logo/logos.ico" alt="" aria-hidden="true">
-                                    </div>
-
-                                    <div class="ssw-dashboard-grid">
-                                        <div class="ssw-chart-widget ssw-chart-wide">
-                                            <div class="ssw-widget-lines"><span></span><span></span></div>
-                                            <svg viewBox="0 0 320 150" role="img" aria-label="Curvas de auditoria">
-                                                <path d="M10 116 C48 74 76 96 112 58 C148 18 172 126 214 74 C252 30 272 98 310 54" class="ssw-chart-line ssw-chart-line-cyan"></path>
-                                                <path d="M10 132 C46 108 74 130 114 86 C154 48 178 136 218 96 C250 68 274 118 310 86" class="ssw-chart-line ssw-chart-line-violet"></path>
-                                            </svg>
-                                        </div>
-
-                                        <div class="ssw-score-widget">
-                                            <svg viewBox="0 0 120 120" aria-hidden="true">
-                                                <circle cx="60" cy="60" r="42" class="ssw-ring-bg"></circle>
-                                                <circle cx="60" cy="60" r="42" class="ssw-ring-progress"></circle>
-                                            </svg>
-                                            <strong>86</strong>
-                                        </div>
-
-                                        <div class="ssw-score-widget ssw-score-widget-alt">
-                                            <svg viewBox="0 0 120 120" aria-hidden="true">
-                                                <circle cx="60" cy="60" r="42" class="ssw-ring-bg"></circle>
-                                                <circle cx="60" cy="60" r="42" class="ssw-ring-progress"></circle>
-                                            </svg>
-                                            <strong>74</strong>
-                                        </div>
-
-                                        <div class="ssw-network-widget">
-                                            <div class="ssw-widget-lines"><span></span><span></span></div>
-                                            <svg viewBox="0 0 500 190" role="img" aria-label="Mapa de sinais da auditoria">
-                                                <path d="M28 72 C110 46 122 154 196 128 C264 104 250 30 318 62 C382 92 390 162 474 130" class="ssw-network-line"></path>
-                                                <path d="M28 134 C96 92 154 72 208 94 C270 118 282 158 346 140 C414 120 424 68 474 72" class="ssw-network-line ssw-network-line-alt"></path>
-                                            </svg>
-                                            <span class="ssw-node ssw-node-a"></span>
-                                            <span class="ssw-node ssw-node-b"></span>
-                                            <span class="ssw-node ssw-node-c"></span>
-                                            <span class="ssw-node ssw-node-d"></span>
-                                            <span class="ssw-node ssw-node-e"></span>
-                                        </div>
-                                    </div>
+                                <div class="compare-divider"></div>
+                                <div class="compare-input-block">
+                                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                                    <input type="text" id="compareUrlB" placeholder="Site B - https://site-b.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runCompare();}">
                                 </div>
+                                <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runCompare()" class="search-button">
+                                    <i data-lucide="git-compare" class="w-4 h-4"></i>
+                                    <span>Comparar</span>
+                                </button>
                             </div>
+
+                            <div id="turnstile-compare" class="hidden flex justify-center mt-4 min-h-[65px] items-center">
+                                <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
+                            </div>
+
+                            <div class="ssw-mode-selector" aria-label="Modo de auditoria">
+                                <label>
+                                    <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
+                                    <span>Automático</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
+                                    <span>Manual</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
+                                    <span>Comparativo</span>
+                                </label>
+                            </div>
+
+                            <select id="auditMode" class="hidden">
+                                <option value="auto">Seleção Automática</option>
+                                <option value="manual">Seleção Manual</option>
+                                <option value="compare">Modo Comparativo</option>
+                            </select>
                         </div>
                     </div>
-                </div>
+
+                    <div class="absolute inset-0 shadow-[inset_0_0_150px_rgba(7,11,20,1)] pointer-events-none z-0"></div>
+                </section>
                 <!-- Manual Selection Area -->
                 <div id="manualSelectArea" class="hidden manual-persona-panel">
                     <div class="manual-persona-head">
@@ -1676,7 +1682,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260615-pricing-page-1"></script>
+            <script src="src/app/core/main.js?v=20260615-neural-wave-3"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">
