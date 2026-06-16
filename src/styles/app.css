@@ -8391,3 +8391,8 @@ body:not(.user-authenticated):not(.auth-page-active) .hero-elite.hero-section-pr
         clip-path: circle(150% at 50% 50%);
     }
 }
+
+/* Esconde hero section quando usuário está logado */
+body.user-authenticated #heroSection {
+    display: none !important;
+}
