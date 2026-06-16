@@ -306,6 +306,54 @@
         .auth-register-form {
             gap: 20px;
         }
+        .auth-register-step {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .auth-register-step.hidden {
+            display: none !important;
+        }
+        .auth-register-email-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 12px 14px;
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            border-radius: 10px;
+            background: rgba(34, 211, 238, 0.07);
+        }
+        .auth-register-email-summary span {
+            color: var(--ssw-muted, #8292a8);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .auth-register-email-summary strong {
+            overflow: hidden;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 850;
+            line-height: 1.25;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .auth-register-back {
+            width: 100%;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--ssw-muted, #8292a8);
+            font-size: 13px;
+            font-weight: 750;
+            line-height: 1.35;
+            cursor: pointer;
+            transition: color 0.18s ease;
+        }
+        .auth-register-back:hover,
+        .auth-register-back:focus-visible {
+            color: #ffffff;
+        }
         .auth-login-field {
             display: flex;
             flex-direction: column;

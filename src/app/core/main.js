@@ -978,6 +978,8 @@
         // States para recuperação de senha
         let authView = 'login'; // 'login', 'email', 'codigo'
         let emailTemporario = '';
+        let codigoCadastroVerificado = '';
+        let cadastroEtapa = 'email';
         let loadingRecuperacao = false;
         let erroRecuperacao = '';
         let sucessoRecuperacao = '';
@@ -1012,6 +1014,90 @@
         function getRegisterFormField(id) {
             const form = getActiveRegisterForm();
             return form?.querySelector(`[id="${id}"]`) || getVisibleElementById(id);
+        }
+
+        function isValidEmailAddress(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+        }
+
+        function getRegisterDisplayNameFromEmail(email) {
+            const localPart = String(email || '').split('@')[0] || 'Usuário';
+            return localPart
+                .replace(/[._-]+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .replace(/\b\w/g, letter => letter.toUpperCase()) || 'Usuário';
+        }
+
+        function generateTemporaryRegisterPassword() {
+            const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+            const values = new Uint32Array(18);
+            if (window.crypto?.getRandomValues) {
+                window.crypto.getRandomValues(values);
+            } else {
+                for (let index = 0; index < values.length; index++) {
+                    values[index] = Math.floor(Math.random() * alphabet.length);
+                }
+            }
+            const randomPart = Array.from(values, value => alphabet[value % alphabet.length]).join('');
+            return `Ssw@${randomPart}9!`;
+        }
+
+        function setRegisterStep(step, options = {}) {
+            cadastroEtapa = step === 'password' ? 'password' : 'email';
+            const emailStep = document.getElementById('registerEmailStep');
+            const passwordStep = document.getElementById('registerPasswordStep');
+            const title = document.getElementById('registerTitle');
+            const subtitle = document.getElementById('registerSubtitle');
+            const verifiedEmail = document.getElementById('registerVerifiedEmail');
+            const isPasswordStep = cadastroEtapa === 'password';
+
+            if (emailStep) emailStep.classList.toggle('hidden', isPasswordStep);
+            if (passwordStep) passwordStep.classList.toggle('hidden', !isPasswordStep);
+            if (title) title.textContent = isPasswordStep ? 'Crie sua senha' : 'Criar uma conta';
+            if (subtitle) {
+                subtitle.textContent = isPasswordStep
+                    ? 'Seu e-mail foi confirmado. Agora defina uma senha segura para acessar a SSW.'
+                    : 'Informe seu e-mail para receber o código de confirmação';
+            }
+            if (verifiedEmail) verifiedEmail.textContent = emailTemporario || options.email || 'seu e-mail';
+
+            setTimeout(() => {
+                const focusTarget = isPasswordStep ? getRegisterFormField('regPass') : getRegisterFormField('regEmail');
+                if (options.focus !== false && focusTarget) focusTarget.focus();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }, 80);
+        }
+
+        function resetCadastroFluxo(options = {}) {
+            codigoCadastroVerificado = '';
+            senhaTemporaria = null;
+            if (!options.keepEmail) {
+                emailTemporario = '';
+                const emailInput = getRegisterFormField('regEmail');
+                if (emailInput) emailInput.value = '';
+            }
+            resetRegisterPasswordStrength();
+            setRegisterStep('email', options);
+            resetRegisterCaptcha();
+        }
+
+        function openRegisterPasswordStep(email, codigo) {
+            emailTemporario = email || emailTemporario;
+            codigoCadastroVerificado = codigo || codigoCadastroVerificado;
+            setAuthPageState(true);
+            const authScreen = document.getElementById('authScreen');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const verifyModal = document.getElementById('verifyModal');
+            if (authScreen) authScreen.classList.remove('hidden');
+            if (loginForm) loginForm.classList.add('hidden');
+            if (registerForm) registerForm.classList.remove('hidden');
+            if (verifyModal) verifyModal.classList.add('hidden');
+            if (window.location.pathname !== '/cadastro') {
+                window.history.pushState({}, '', '/cadastro');
+            }
+            setRegisterStep('password', { email: emailTemporario });
         }
 
         function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark', size = 'normal' }) {
@@ -1457,12 +1543,22 @@
         }
 
         function setRegisterSubmitLoading(isLoading) {
-            const btn = document.getElementById('registerSubmitBtn');
-            if (!btn) return;
-            btn.disabled = isLoading;
-            btn.textContent = isLoading ? 'Criando conta...' : 'Criar conta';
-            btn.classList.toggle('opacity-70', isLoading);
-            btn.classList.toggle('cursor-not-allowed', isLoading);
+            const emailBtn = document.getElementById('registerSubmitBtn');
+            const passwordBtn = document.getElementById('registerPasswordSubmitBtn');
+            const isPasswordStep = cadastroEtapa === 'password';
+
+            if (emailBtn) {
+                emailBtn.disabled = isLoading;
+                emailBtn.textContent = isLoading && !isPasswordStep ? 'Enviando código...' : 'Enviar código';
+                emailBtn.classList.toggle('opacity-70', isLoading);
+                emailBtn.classList.toggle('cursor-not-allowed', isLoading);
+            }
+            if (passwordBtn) {
+                passwordBtn.disabled = isLoading;
+                passwordBtn.textContent = isLoading && isPasswordStep ? 'Salvando senha...' : 'Definir senha';
+                passwordBtn.classList.toggle('opacity-70', isLoading);
+                passwordBtn.classList.toggle('cursor-not-allowed', isLoading);
+            }
         }
 
         function getPasswordStrength(pass) {
@@ -1666,29 +1762,16 @@
             }
         }
         async function fazerCadastro() {
+            if (cadastroEtapa === 'password') {
+                return finalizarCadastroSenha();
+            }
+
             const registerForm = getActiveRegisterForm();
-            const nomeInput = registerForm?.querySelector('#regNome') || getRegisterFormField('regNome');
             const emailInput = registerForm?.querySelector('#regEmail') || getRegisterFormField('regEmail');
-            const passInput = registerForm?.querySelector('#regPass') || getRegisterFormField('regPass');
-            const confirmInput = registerForm?.querySelector('#regPassConfirm') || getRegisterFormField('regPassConfirm');
-            const nome = nomeInput?.value || '';
-            const email = emailInput?.value || '';
-            const pass = passInput?.value || '';
-            const confirmPass = confirmInput?.value || '';
+            const email = String(emailInput?.value || '').trim().toLowerCase();
 
-            if(!nome || !email || !pass || !confirmPass) return Toast.warning("Preencha todos os campos");
-
-            if (pass !== confirmPass) {
-                Toast.warning("As senhas não conferem.");
-                return;
-            }
-
-            updateRegisterPasswordStrength();
-            const passwordStrength = getPasswordStrength(pass);
-            if (!passwordStrength.strong) {
-                Toast.warning("Crie uma senha mais forte antes de continuar.");
-                return;
-            }
+            if(!email) return Toast.warning("Informe seu e-mail para continuar.");
+            if(!isValidEmailAddress(email)) return Toast.warning("Informe um e-mail válido.");
 
             const cfToken = getRegisterCaptchaToken();
             if (!cfToken) {
@@ -1698,34 +1781,32 @@
             }
 
             try {
+                const nome = getRegisterDisplayNameFromEmail(email);
+                const tempPassword = generateTemporaryRegisterPassword();
                 setRegisterSubmitLoading(true);
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ nome, email, senha: pass, cf_token: cfToken })
+                    body: JSON.stringify({ nome, email, senha: tempPassword, cf_token: cfToken })
                 });
                 const data = await res.json().catch(() => ({}));
 
                 if(res.ok) {
-                    Toast.success("Conta criada! Um código de verificação foi enviado para seu e-mail.");
-                    // Limpa formulário
-                    if (nomeInput) nomeInput.value = "";
-                    if (emailInput) emailInput.value = "";
+                    Toast.success("Enviamos um código de confirmação para seu e-mail.");
                     resetRegisterPasswordStrength();
                     resetRegisterCaptcha();
-                    // Esconde formulário de cadastro
-                    (registerForm || document.getElementById('registerForm'))?.classList.add('hidden');
-                    // Mostra tela de verificação diretamente
-                    document.getElementById('verifyModal').classList.remove('hidden');
-                    lucide.createIcons();
-                    // Inicia a contagem de reenvio
-                    iniciarContagemReenvio();
-                    // Salva email e senha temporários para verificação e login automático
                     emailTemporario = email;
-                    senhaTemporaria = pass;
-                    // O reload só acontecerá após confirmar o código em confirmarCodigoAPI()
+                    senhaTemporaria = tempPassword;
+                    codigoCadastroVerificado = '';
+                    const authScreen = document.getElementById('authScreen');
+                    const verifyModal = document.getElementById('verifyModal');
+                    if (authScreen) authScreen.classList.add('hidden');
+                    if (registerForm) registerForm.classList.add('hidden');
+                    if (verifyModal) verifyModal.classList.remove('hidden');
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    iniciarContagemReenvio();
                 } else {
                     console.error('Erro no cadastro:', data);
-                    Toast.error(data.detail || "Erro ao criar conta. Verifique os dados e tente novamente.");
+                    Toast.error(data.detail || "Não foi possível iniciar o cadastro. Verifique o e-mail e tente novamente.");
                     resetRegisterCaptcha();
                 }
             } catch(e) {
@@ -1739,6 +1820,71 @@
                 } else {
                     Toast.error("Ocorreu um erro inesperado.");
                 }
+            } finally {
+                setRegisterSubmitLoading(false);
+            }
+        }
+        async function finalizarCadastroSenha() {
+            const passInput = getRegisterFormField('regPass');
+            const confirmInput = getRegisterFormField('regPassConfirm');
+            const pass = passInput?.value || '';
+            const confirmPass = confirmInput?.value || '';
+
+            if (!emailTemporario || !codigoCadastroVerificado) {
+                Toast.warning("Confirme seu e-mail antes de criar a senha.");
+                resetCadastroFluxo({ keepEmail: Boolean(emailTemporario) });
+                return;
+            }
+
+            if(!pass || !confirmPass) return Toast.warning("Preencha a senha e a confirmação.");
+
+            if (pass !== confirmPass) {
+                Toast.warning("As senhas não conferem.");
+                return;
+            }
+
+            updateRegisterPasswordStrength();
+            const passwordStrength = getPasswordStrength(pass);
+            if (!passwordStrength.strong) {
+                Toast.warning("Use pelo menos 8 caracteres, número e símbolo.");
+                return;
+            }
+
+            try {
+                setRegisterSubmitLoading(true);
+                const res = await fetch(`${API_URL}/api/nova-senha`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: emailTemporario,
+                        codigo: codigoCadastroVerificado,
+                        nova_senha: pass
+                    })
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (res.ok) {
+                    const emailCriado = emailTemporario;
+                    Toast.success("Senha criada com sucesso. Faça login para continuar.");
+                    emailTemporario = '';
+                    senhaTemporaria = null;
+                    codigoCadastroVerificado = '';
+                    resetRegisterPasswordStrength();
+                    setRegisterStep('email', { focus: false });
+                    showAuthScreen('login');
+                    setTimeout(() => {
+                        const loginEmailInput = document.getElementById('loginEmail');
+                        const loginPassInput = document.getElementById('loginPass');
+                        if (loginEmailInput) loginEmailInput.value = emailCriado;
+                        if (loginPassInput) loginPassInput.focus();
+                    }, 180);
+                    return;
+                }
+
+                Toast.error(data.detail || "Não foi possível definir sua senha. Tente reenviar o código.");
+            } catch (error) {
+                console.error('Erro ao finalizar cadastro:', error);
+                Toast.error("Erro de conexão ao definir senha.");
             } finally {
                 setRegisterSubmitLoading(false);
             }
@@ -2449,19 +2595,13 @@ function getCodigoHTML() {
                 const data = await res.json();
                 if (res.ok) {
                     // SUCESSO!
-                    Toast.success(isCadastroFlow ? "Conta verificada. Faça login para continuar." : "Conta verificada com sucesso! Bem-vindo.");
+                    Toast.success(isCadastroFlow ? "E-mail confirmado. Agora crie sua senha." : "Conta verificada com sucesso! Bem-vindo.");
 
                     if (isCadastroFlow) {
                         const emailVerificado = emailTemporario || emailParaVerificar;
-                        emailTemporario = null;
-                        senhaTemporaria = null;
+                        codigoCadastroVerificado = codigo;
                         document.getElementById('verifyModal').classList.add('hidden');
-                        showAuthScreen('login');
-                        const loginEmailInput = document.getElementById('loginEmail');
-                        if (loginEmailInput && emailVerificado) loginEmailInput.value = emailVerificado;
-                        setTimeout(() => {
-                            if (typeof initTurnstileLogin === 'function') initTurnstileLogin();
-                        }, 300);
+                        openRegisterPasswordStep(emailVerificado, codigo);
                     } else {
                         // Fluxo normal de login (usuário já logado)
                         USER.verificado = true;

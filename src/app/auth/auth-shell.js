@@ -111,7 +111,11 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
     if (type === 'register') {
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('registerForm').classList.remove('hidden');
-        updateRegisterPasswordStrength();
+        if (typeof resetCadastroFluxo === 'function') {
+            resetCadastroFluxo({ focus: false });
+        } else if (typeof updateRegisterPasswordStrength === 'function') {
+            updateRegisterPasswordStrength();
+        }
         setTimeout(() => {
             initTurnstileRegister();
             if (typeof renderGoogleSignInButton === 'function') {

@@ -110,48 +110,53 @@
             </div>
             <div class="auth-login-card auth-register-card hidden" id="registerForm">
                 <div class="auth-login-heading">
-                    <h2>Criar uma conta</h2>
-                    <p>Informe seus dados abaixo para criar sua conta</p>
+                    <h2 id="registerTitle">Criar uma conta</h2>
+                    <p id="registerSubtitle">Informe seu e-mail para receber o código de confirmação</p>
                 </div>
                 <div class="auth-login-form auth-register-form">
-                    <div class="auth-login-field">
-                        <label for="regNome" class="auth-login-label">Nome completo</label>
-                        <input type="text" id="regNome" autocomplete="name" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regEmail').focus();}">
-                    </div>
-                    <div class="auth-login-field">
-                        <label for="regEmail" class="auth-login-label">E-mail</label>
-                        <input type="email" id="regEmail" autocomplete="email" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPass').focus();}">
-                        <p class="auth-register-note">Usaremos este e-mail para contato. Não compartilharemos com ninguém.</p>
-                    </div>
-                    <div class="auth-login-field">
-                        <label for="regPass" class="auth-login-label">Senha</label>
-                        <div class="auth-password-wrap">
-                            <input type="password" id="regPass" autocomplete="new-password" class="input-pro auth-login-input" oninput="updateRegisterPasswordStrength()" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPassConfirm').focus();}">
-                            <button type="button" onclick="togglePasswordVisibility('regPass', this)" aria-label="Mostrar senha" class="auth-password-toggle">
-                                <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
-                            </button>
+                    <div id="registerEmailStep" class="auth-register-step">
+                        <div class="auth-login-field">
+                            <label for="regEmail" class="auth-login-label">E-mail</label>
+                            <input type="email" id="regEmail" autocomplete="email" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
+                            <p class="auth-register-note">Enviaremos um código para confirmar que este e-mail é seu.</p>
                         </div>
-                        <p id="regPasswordStrengthHint" class="auth-register-note">Use pelo menos 8 caracteres, número e símbolo.</p>
-                    </div>
-                    <div class="auth-login-field">
-                        <label for="regPassConfirm" class="auth-login-label">Confirmar senha</label>
-                        <div class="auth-password-wrap">
-                            <input type="password" id="regPassConfirm" autocomplete="new-password" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();fazerCadastro();}">
-                            <button type="button" onclick="togglePasswordVisibility('regPassConfirm', this)" aria-label="Mostrar senha" class="auth-password-toggle">
-                                <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
-                            </button>
+                        <div id="turnstile-register" class="auth-login-captcha">
+                            <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
                         </div>
-                        <p class="auth-register-note">Confirme sua senha.</p>
+                        <button id="registerSubmitBtn" onclick="event.preventDefault(); fazerCadastro()" class="btn-primary auth-login-submit">
+                            Enviar código
+                        </button>
                     </div>
-                    <div id="turnstile-register" class="auth-login-captcha">
-                        <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                    </div>
-                    <button id="registerSubmitBtn" onclick="event.preventDefault(); fazerCadastro()" class="btn-primary auth-login-submit">
-                        Criar conta
-                    </button>
-                    <div class="auth-login-google">
-                        <div id="googleSignInRegister" class="google-auth-slot"></div>
-                        <p id="googleSignInRegisterHint" class="google-auth-hint hidden"></p>
+                    <div id="registerPasswordStep" class="auth-register-step hidden">
+                        <div class="auth-register-email-summary">
+                            <span>Código confirmado para</span>
+                            <strong id="registerVerifiedEmail">seu e-mail</strong>
+                        </div>
+                        <div class="auth-login-field">
+                            <label for="regPass" class="auth-login-label">Crie sua senha</label>
+                            <div class="auth-password-wrap">
+                                <input type="password" id="regPass" autocomplete="new-password" class="input-pro auth-login-input" oninput="updateRegisterPasswordStrength()" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('regPassConfirm').focus();}">
+                                <button type="button" onclick="togglePasswordVisibility('regPass', this)" aria-label="Mostrar senha" class="auth-password-toggle">
+                                    <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                                </button>
+                            </div>
+                            <p id="regPasswordStrengthHint" class="auth-register-note">Use pelo menos 8 caracteres, número e símbolo.</p>
+                        </div>
+                        <div class="auth-login-field">
+                            <label for="regPassConfirm" class="auth-login-label">Confirmar senha</label>
+                            <div class="auth-password-wrap">
+                                <input type="password" id="regPassConfirm" autocomplete="new-password" class="input-pro auth-login-input" onkeydown="if(event.key==='Enter'){event.preventDefault();finalizarCadastroSenha();}">
+                                <button type="button" onclick="togglePasswordVisibility('regPassConfirm', this)" aria-label="Mostrar senha" class="auth-password-toggle">
+                                    <i data-lucide="eye" class="w-4 h-4 pointer-events-none"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="registerPasswordSubmitBtn" onclick="event.preventDefault(); finalizarCadastroSenha()" class="btn-primary auth-login-submit">
+                            Definir senha
+                        </button>
+                        <button type="button" onclick="resetCadastroFluxo()" class="auth-register-back">
+                            Usar outro e-mail
+                        </button>
                     </div>
                     <p class="auth-login-register">
                         Já tem uma conta?
