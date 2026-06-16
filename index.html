@@ -439,6 +439,22 @@
                         </div>
 
                         <div class="search-container pointer-events-auto">
+                            <!-- Seletor de Modo de Auditoria -->
+                            <div class="ssw-mode-selector mb-4" aria-label="Modo de auditoria">
+                                <label>
+                                    <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
+                                    <span>Automático</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
+                                    <span>Manual</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
+                                    <span>Comparativo</span>
+                                </label>
+                            </div>
+
                             <div id="normalSearchBar" class="search-bar-hero">
                                 <div class="search-input-wrapper">
                                     <i data-lucide="globe-2" class="w-5 h-5 search-icon"></i>
@@ -477,21 +493,6 @@
 
                             <div id="turnstile-compare" class="hidden flex justify-center mt-4 min-h-[65px] items-center">
                                 <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                            </div>
-
-                            <div class="ssw-mode-selector" aria-label="Modo de auditoria">
-                                <label>
-                                    <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
-                                    <span>Automático</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
-                                    <span>Manual</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
-                                    <span>Comparativo</span>
-                                </label>
                             </div>
 
                             <select id="auditMode" class="hidden">
