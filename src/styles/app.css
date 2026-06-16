@@ -8392,7 +8392,9 @@ body:not(.user-authenticated):not(.auth-page-active) .hero-elite.hero-section-pr
     }
 }
 
-/* Esconde conteúdo de landing quando usuário está logado */
+/* Esconde conteúdo de landing e elementos de fundo quando usuário está logado */
+body.user-authenticated #heroSection .circular-reveal-overlay,
+body.user-authenticated #heroSection > .absolute.inset-0,
 body.user-authenticated #heroSection > .relative.z-10 > div:not(.search-container) {
     display: none !important;
 }
