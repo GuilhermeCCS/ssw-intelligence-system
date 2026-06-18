@@ -85,6 +85,11 @@
             flex: 0 0 auto;
         }
 
+        .ssw-public-footer--sites .ssw-public-footer-brand span,
+        .ssw-public-footer--sites .ssw-public-footer-col svg {
+            color: #25d366;
+        }
+
         .ssw-public-footer-bottom {
             display: flex;
             justify-content: space-between;
@@ -139,6 +144,7 @@
     function renderPublicFooter() {
         ensurePublicFooterStyles();
         document.querySelectorAll('[data-public-footer]').forEach(root => {
+            const isSitesFooter = root.dataset.publicFooter === 'sites';
             root.innerHTML = `
                 <footer class="ssw-public-footer">
                     <div class="ssw-public-footer-inner">
@@ -176,6 +182,45 @@
                     </div>
                 </footer>
             `;
+
+            if (isSitesFooter) {
+                const footer = root.querySelector('.ssw-public-footer');
+                const brand = root.querySelector('.ssw-public-footer-brand');
+                const columns = root.querySelectorAll('.ssw-public-footer-col');
+
+                footer?.classList.add('ssw-public-footer--sites');
+                if (brand) {
+                    brand.querySelector('strong').textContent = 'S.S.W';
+                    brand.querySelector('span').textContent = 'Sites';
+                    brand.querySelector('p').textContent = 'Landing pages e sites institucionais r\u00e1pidos, responsivos e pensados para transformar visitas em oportunidades reais de neg\u00f3cio.';
+                }
+
+                if (columns.length === 3) {
+                    columns[0].setAttribute('aria-label', 'Servi\u00e7os de cria\u00e7\u00e3o de sites');
+                    columns[0].innerHTML = `
+                        <h2>Servi\u00e7os</h2>
+                        <a href="#diferenciais"><i data-lucide="sparkles"></i>Diferenciais</a>
+                        <a href="#processo"><i data-lucide="route"></i>Como trabalhamos</a>
+                        <a href="#faq"><i data-lucide="circle-help"></i>D\u00favidas frequentes</a>
+                    `;
+
+                    columns[1].setAttribute('aria-label', 'Contato para cria\u00e7\u00e3o de sites');
+                    columns[1].innerHTML = `
+                        <h2>Contato</h2>
+                        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i>Solicitar or\u00e7amento</a>
+                        <a href="mailto:contato@sswintelligence.com.br"><i data-lucide="mail"></i>E-mail</a>
+                        <a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer"><i data-lucide="camera"></i>Instagram</a>
+                    `;
+
+                    columns[2].setAttribute('aria-label', 'SSW Intelligence');
+                    columns[2].innerHTML = `
+                        <h2>SSW</h2>
+                        <a href="/home"><i data-lucide="building-2"></i>Plataforma</a>
+                        <a href="/precos/"><i data-lucide="credit-card"></i>Planos e pre\u00e7os</a>
+                        <a href="/termos/"><i data-lucide="file-check"></i>Termos de uso</a>
+                    `;
+                }
+            }
         });
 
         if (typeof lucide !== 'undefined') {
