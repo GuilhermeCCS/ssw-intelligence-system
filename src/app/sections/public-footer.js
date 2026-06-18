@@ -87,7 +87,7 @@
 
         .ssw-public-footer--sites .ssw-public-footer-brand span,
         .ssw-public-footer--sites .ssw-public-footer-col svg {
-            color: #25d366;
+            color: #22d3ee;
         }
 
         .ssw-public-footer-bottom {
@@ -207,7 +207,7 @@
                     columns[1].setAttribute('aria-label', 'Contato para cria\u00e7\u00e3o de sites');
                     columns[1].innerHTML = `
                         <h2>Contato</h2>
-                        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i>Solicitar or\u00e7amento</a>
+                        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i>Solicitar or\u00e7amento</a>
                         <a href="mailto:contato@sswintelligence.com.br"><i data-lucide="mail"></i>E-mail</a>
                         <a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer"><i data-lucide="camera"></i>Instagram</a>
                     `;
