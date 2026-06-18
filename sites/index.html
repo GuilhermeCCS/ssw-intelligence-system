@@ -39,14 +39,14 @@
             position: fixed;
             inset: 0 0 auto;
             z-index: 100;
-            background: #070a13;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: #050a0f;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
             pointer-events: none;
         }
 
         .site-header-inner {
-            width: min(1180px, calc(100% - 40px));
-            min-height: 78px;
+            width: min(1470px, calc(100% - 48px));
+            min-height: 74px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -60,31 +60,41 @@
             align-items: center;
             grid-column: 1;
             justify-self: start;
-            gap: 11px;
+            gap: 12px;
+            color: #ffffff;
+            font-size: 15px;
             font-weight: 850;
             letter-spacing: -0.02em;
         }
 
-        .brand-link img { width: 38px; height: 38px; object-fit: contain; }
-        .brand-link span span { color: #a4b0c2; }
+        .brand-link img {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .brand-link span span { color: #22d3ee; }
 
         .header-nav {
             display: flex;
             grid-column: 2;
             align-items: center;
             justify-self: center;
-            gap: 28px;
-            color: #cbd5e1;
+            gap: 32px;
+            color: #929aa6;
             font-size: 14px;
             font-weight: 650;
         }
 
         .header-cta {
             width: auto;
+            min-width: 176px;
             min-height: 44px;
             grid-column: 3;
             justify-self: end;
-            padding-inline: 18px;
+            padding-inline: 22px;
+            border-radius: 8px;
             font-size: 13px;
         }
 
@@ -258,8 +268,10 @@
         }
 
         .cta-primary.header-cta {
+            min-width: 176px;
             min-height: 44px;
-            padding-inline: 18px;
+            padding-inline: 22px;
+            border-radius: 8px;
             font-size: 13px;
         }
 
@@ -597,7 +609,6 @@
             </nav>
 
             <a class="cta-primary header-cta" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20entender%20qual%20site%20faz%20sentido%20para%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener noreferrer">
-                <i data-lucide="message-circle"></i>
                 Solicitar diagnóstico
             </a>
         </div>
