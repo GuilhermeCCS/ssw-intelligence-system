@@ -137,6 +137,153 @@
         .slide-faq { background: #080e19; }
         .slide-final { background: #070a13; }
 
+
+        .problem-layout {
+            width: min(1220px, 100%);
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(380px, 0.82fr);
+            align-items: center;
+            gap: clamp(54px, 8vw, 132px);
+        }
+
+        .problem-copy { max-width: 580px; }
+
+        .problem-kicker {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 28px;
+            color: #22d3ee;
+            font-size: 11px;
+            font-weight: 850;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .problem-kicker::before {
+            content: "";
+            width: 44px;
+            height: 2px;
+            flex: 0 0 44px;
+            background: #22d3ee;
+        }
+
+        .problem-index { color: #ffffff; }
+        .problem-separator { color: #64748b; }
+
+        .problem-heading {
+            max-width: 580px;
+            margin: 0;
+            color: #ffffff;
+            font-size: clamp(3.5rem, 5.1vw, 5.35rem);
+            font-weight: 880;
+            letter-spacing: -0.06em;
+            line-height: 0.94;
+        }
+
+        .problem-heading-line { display: block; }
+
+        .problem-divider {
+            width: 68px;
+            height: 2px;
+            margin: 32px 0 25px;
+            background: #22d3ee;
+        }
+
+        .problem-description {
+            max-width: 500px;
+            margin: 0;
+            color: #aeb9c9;
+            font-size: clamp(1rem, 1.2vw, 1.16rem);
+            line-height: 1.58;
+        }
+
+        .problem-cards {
+            width: min(100%, 510px);
+            display: grid;
+            gap: 14px;
+            justify-self: end;
+        }
+
+        .problem-card {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr);
+            align-items: start;
+            gap: 18px;
+            padding: 21px 22px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-left: 2px solid rgba(34, 211, 238, 0.62);
+            border-radius: 14px;
+            background: rgba(5, 10, 15, 0.76);
+            box-shadow: none;
+            transition:
+                opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 180ms ease,
+                background-color 180ms ease;
+        }
+
+        .problem-card:hover {
+            border-color: rgba(34, 211, 238, 0.48);
+            background: rgba(5, 10, 15, 0.88);
+        }
+
+        .problem-card.is-reveal-ready {
+            opacity: 0;
+            transform: translate3d(0, 30px, 0);
+        }
+
+        .problem-card.is-reveal-ready.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+            transition-delay: var(--reveal-delay, 0ms);
+        }
+
+        .problem-card-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(34, 211, 238, 0.34);
+            border-radius: 12px;
+            color: #22d3ee;
+            background: rgba(34, 211, 238, 0.06);
+        }
+
+        .problem-card-icon svg { width: 21px; height: 21px; }
+
+        .problem-card-title-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 7px;
+        }
+
+        .problem-card h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+        }
+
+        .problem-card-number {
+            flex: 0 0 auto;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+        }
+
+        .problem-card p {
+            margin: 0;
+            color: #aeb9c9;
+            font-size: 13.5px;
+            line-height: 1.58;
+        }
+
         .slide-content { width: min(1100px, 100%); margin: 0 auto; }
         .slide-content.narrow { width: min(820px, 100%); }
 
@@ -528,6 +675,22 @@
         @media (max-width: 900px) {
             .header-nav { display: none; }
 
+            .slide-problem {
+                position: relative;
+                min-height: auto;
+                overflow: visible;
+                padding-block: 118px 84px;
+                background-position: 64% center;
+            }
+
+            .problem-layout {
+                grid-template-columns: 1fr;
+                gap: 52px;
+            }
+
+            .problem-copy { max-width: 640px; }
+            .problem-cards { width: 100%; max-width: 640px; justify-self: start; }
+
             .outline-grid.four,
             .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
@@ -564,6 +727,21 @@
 
             .story-slide { padding-inline: 18px; }
             .slide-hero { background-position: 58% center; }
+            .slide-problem { background-position: 68% center; }
+
+            .problem-layout { gap: 40px; }
+            .problem-kicker { margin-bottom: 24px; }
+            .problem-kicker::before { width: 36px; flex-basis: 36px; }
+            .problem-heading { font-size: clamp(2.85rem, 14vw, 4.25rem); }
+            .problem-divider { margin-block: 27px 22px; }
+            .problem-description { font-size: 1rem; }
+            .problem-card {
+                grid-template-columns: 44px minmax(0, 1fr);
+                gap: 15px;
+                padding: 19px 17px;
+            }
+            .problem-card-icon { width: 44px; height: 44px; }
+            .problem-card-title-row { gap: 10px; }
 
             .outline-grid.three,
             .outline-grid.four,
@@ -593,6 +771,13 @@
             }
 
             .story-slide { position: relative; min-height: auto; }
+
+            .problem-card.is-reveal-ready,
+            .problem-card.is-reveal-ready.is-visible {
+                opacity: 1;
+                transform: none;
+                transition-delay: 0ms;
+            }
         }
 
         ::selection {
@@ -647,32 +832,59 @@
         </section>
 
         <section class="story-slide slide-problem" id="problema">
-            <div class="slide-content">
-                <span class="eyebrow">O problema</span>
-                <h2 class="section-heading">Um site pode parecer bonito e ainda afastar clientes.</h2>
-                <p class="section-copy">
-                    Quando a página demora, não explica seu valor ou esconde o próximo passo, o visitante não reclama: ele simplesmente vai embora. Estes são os três vazamentos mais comuns.
-                </p>
-
-                <div class="outline-grid three">
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="snail"></i></div>
-                        <h3>Lentidão que interrompe</h3>
-                        <p>Uma experiência pesada aumenta a desistência antes mesmo de sua proposta ser compreendida, especialmente no celular.</p>
-                    </article>
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="scan-eye"></i></div>
-                        <h3>Mensagem sem clareza</h3>
-                        <p>Se o visitante não entende rapidamente o que você oferece, para quem e por que confiar, ele não encontra motivo para continuar.</p>
-                    </article>
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="mouse-pointer-click"></i></div>
-                        <h3>Jornada sem direção</h3>
-                        <p>Botões genéricos e uma hierarquia confusa deixam o usuário sem saber o que fazer — e a oportunidade esfria.</p>
-                    </article>
+            <div class="slide-content problem-layout">
+                <div class="problem-copy">
+                    <div class="problem-kicker" aria-label="Seção 01, O problema">
+                        <span class="problem-index">01</span>
+                        <span class="problem-separator" aria-hidden="true">|</span>
+                        <span>O problema</span>
+                    </div>
+                    <h2 class="problem-heading">
+                        <span class="problem-heading-line">Sites sem</span>
+                        <span class="problem-heading-line">estratégia</span>
+                        <span class="problem-heading-line">afastam</span>
+                        <span class="problem-heading-line">oportunidades.</span>
+                    </h2>
+                    <div class="problem-divider" aria-hidden="true"></div>
+                    <p class="problem-description">
+                        Lentidão, confusão visual e falta de clareza técnica transformam potenciais clientes em desistências imediatas.
+                    </p>
                 </div>
 
-                <p class="section-note">A correção não é adicionar mais elementos. É remover ruído e organizar cada seção para responder à próxima dúvida do cliente.</p>
+                <div class="problem-cards" aria-label="Principais problemas de um site sem estratégia">
+                    <article class="problem-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="snail"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Lentidão que interrompe</h3>
+                                <span class="problem-card-number" aria-hidden="true">01</span>
+                            </div>
+                            <p>Uma experiência pesada aumenta a desistência antes mesmo de sua proposta ser compreendida, especialmente no celular.</p>
+                        </div>
+                    </article>
+
+                    <article class="problem-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="scan-eye"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Mensagem sem clareza</h3>
+                                <span class="problem-card-number" aria-hidden="true">02</span>
+                            </div>
+                            <p>Se o visitante não entende rapidamente o que você oferece, para quem e por que confiar, ele não encontra motivo para continuar.</p>
+                        </div>
+                    </article>
+
+                    <article class="problem-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="mouse-pointer-click"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Jornada sem direção</h3>
+                                <span class="problem-card-number" aria-hidden="true">03</span>
+                            </div>
+                            <p>Botões genéricos e uma hierarquia confusa deixam o usuário sem saber o que fazer — e a oportunidade esfria.</p>
+                        </div>
+                    </article>
+                </div>
             </div>
         </section>
         <section class="story-slide slide-solution" id="solucao">
@@ -910,6 +1122,27 @@
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
+
+        const problemSection = document.querySelector('.slide-problem');
+        const problemCards = Array.from(document.querySelectorAll('.problem-card'));
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (problemSection && problemCards.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
+            problemCards.forEach((card, index) => {
+                card.classList.add('is-reveal-ready');
+                card.style.setProperty('--reveal-delay', `${index * 150}ms`);
+            });
+
+            const problemObserver = new IntersectionObserver(entries => {
+                const [entry] = entries;
+                if (!entry.isIntersecting) return;
+
+                problemCards.forEach(card => card.classList.add('is-visible'));
+                problemObserver.unobserve(problemSection);
+            }, { threshold: 0.2 });
+
+            problemObserver.observe(problemSection);
+        }
 
         const faqItems = Array.from(document.querySelectorAll('.faq-item'));
 
