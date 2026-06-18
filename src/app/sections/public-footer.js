@@ -196,12 +196,13 @@
                 }
 
                 if (columns.length === 3) {
-                    columns[0].setAttribute('aria-label', 'Servi\u00e7os de cria\u00e7\u00e3o de sites');
+                    columns[0].setAttribute('aria-label', 'Navega\u00e7\u00e3o da p\u00e1gina de Sites');
                     columns[0].innerHTML = `
-                        <h2>Servi\u00e7os</h2>
-                        <a href="#diferenciais"><i data-lucide="sparkles"></i>Diferenciais</a>
-                        <a href="#processo"><i data-lucide="route"></i>Como trabalhamos</a>
-                        <a href="#faq"><i data-lucide="circle-help"></i>D\u00favidas frequentes</a>
+                        <h2>Navega\u00e7\u00e3o</h2>
+                        <a href="#problema"><i data-lucide="circle-alert"></i>O problema</a>
+                        <a href="#processo"><i data-lucide="route"></i>Como funciona</a>
+                        <a href="#comparacao"><i data-lucide="git-compare"></i>Compara\u00e7\u00e3o</a>
+                        <a href="#faq"><i data-lucide="circle-help"></i>D\u00favidas</a>
                     `;
 
                     columns[1].setAttribute('aria-label', 'Contato para cria\u00e7\u00e3o de sites');
