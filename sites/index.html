@@ -114,7 +114,7 @@
             scroll-margin-top: 0;
         }
 
-        .story-slide:not(.slide-final) {
+        .story-slide:not(:last-child) {
             margin-bottom: clamp(120px, 20vh, 220px);
         }
 
@@ -134,12 +134,9 @@
             background-position: center;
             background-size: cover;
         }
-        .slide-solution { background: #0c1424; }
         .slide-process { background: #080d18; }
         .slide-comparison { background: #0b1220; }
-        .slide-cta { background: #0c1424; }
         .slide-faq { background: #080e19; }
-        .slide-final { background: #070a13; }
 
 
         .problem-layout {
@@ -187,7 +184,6 @@
 
         .problem-heading-line { display: block; }
 
-        .solution-heading,
         .process-heading {
             font-size: clamp(3rem, 4.2vw, 4.6rem);
         }
@@ -309,8 +305,6 @@
             line-height: 1.58;
         }
 
-        .solution-cards { gap: 12px; }
-        .solution-card { padding-block: 18px; }
 
 
         .process-flow {
@@ -615,45 +609,91 @@
             line-height: 1.65;
         }
 
+        .comparison-layout { width: min(1480px, 100%); }
+
         .comparison-wrap {
             margin-top: 34px;
             overflow-x: auto;
-            border-block: 1px solid var(--line);
+            border: 1px solid #1c2935;
+            border-radius: 13px;
+            background: #080f18;
         }
 
         .comparison-table {
             width: 100%;
-            min-width: 720px;
-            border-collapse: collapse;
+            min-width: 900px;
+            border-spacing: 0;
+            border-collapse: separate;
+            table-layout: fixed;
         }
 
         .comparison-table th,
         .comparison-table td {
-            padding: 15px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 33.333%;
+            padding: 16px 24px;
+            border-right: 1px solid #1c2935;
+            border-bottom: 1px solid #17222e;
             text-align: left;
-            font-size: 14px;
+            vertical-align: middle;
         }
 
-        .comparison-table tr:last-child td { border-bottom: 0; }
+        .comparison-table th:last-child,
+        .comparison-table td:last-child { border-right: 0; }
+        .comparison-table tbody tr:last-child td { border-bottom: 0; }
 
         .comparison-table th {
-            color: #dce5f0;
-            font-size: 12px;
+            height: 48px;
+            background: #0e151f;
+            color: #657286;
+            font-size: 11px;
             font-weight: 850;
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
 
-        .comparison-table th:not(:first-child),
-        .comparison-table td:not(:first-child) { text-align: center; }
+        .comparison-table th:nth-child(3) {
+            background: #0d2028;
+            color: #22d3ee;
+        }
 
-        .comparison-table td:first-child { color: #edf2f7; font-weight: 720; }
-        .comparison-table td:nth-child(2) { color: #93a1b5; }
-        .comparison-table td:nth-child(3) { color: #ffffff; font-weight: 760; }
-        .comparison-table svg { width: 17px; height: 17px; margin: 0 auto; }
-        .icon-no { color: #fb7185; }
-        .icon-yes { color: var(--green); }
+        .comparison-table td {
+            height: 53px;
+            background: #080f18;
+            color: #c8d4e3;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .comparison-table td:first-child {
+            color: #cbd7e6;
+            font-weight: 650;
+        }
+
+        .comparison-table td:nth-child(2) { color: #647187; }
+
+        .comparison-table td:nth-child(3) {
+            background: #071821;
+            color: #dbe7f3;
+            font-weight: 520;
+        }
+
+        .comparison-cell,
+        .comparison-header-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .comparison-table svg {
+            width: 14px;
+            height: 14px;
+            flex: 0 0 14px;
+            stroke-width: 1.8;
+        }
+
+        .comparison-header-label svg { width: 13px; height: 13px; }
+        .icon-no { color: #b23a48; }
+        .icon-yes { color: #22d3ee; }
 
         .cta-kicker {
             display: inline-flex;
@@ -723,19 +763,6 @@
 
         .faq-item[data-open="true"] .faq-icon { transform: rotate(45deg); }
 
-        .final-points {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px 24px;
-            margin-top: 28px;
-            color: #c5d0de;
-            font-size: 13px;
-        }
-
-        .final-points span { display: inline-flex; align-items: center; gap: 7px; }
-        .final-points svg { width: 16px; height: 16px; color: var(--green); }
-
         .floating-whatsapp {
             position: fixed;
             right: 24px;
@@ -764,10 +791,9 @@
 
         @media (max-width: 900px) {
             .header-nav { display: none; }
-            .story-slide:not(.slide-final) { margin-bottom: 0; }
+            .story-slide:not(:last-child) { margin-bottom: 0; }
 
             .slide-problem,
-            .slide-solution,
             .slide-process {
                 position: relative;
                 min-height: auto;
@@ -801,7 +827,7 @@
                 overflow: visible;
             }
 
-            .story-slide:not(.slide-final) { margin-bottom: 0; }
+            .story-slide:not(:last-child) { margin-bottom: 0; }
 
         }
 
@@ -993,80 +1019,11 @@
                 </div>
             </div>
         </section>
-        <section class="story-slide slide-solution" id="solucao">
-            <div class="slide-content problem-layout solution-layout">
-                <div class="problem-copy solution-copy">
-                    <div class="problem-kicker solution-kicker" aria-label="Seção 02, A solução">
-                        <span class="problem-index">02</span>
-                        <span class="problem-separator" aria-hidden="true">|</span>
-                        <span>A solução</span>
-                    </div>
-                    <h2 class="problem-heading solution-heading">
-                        <span class="problem-heading-line">Uma experiência</span>
-                        <span class="problem-heading-line">criada para</span>
-                        <span class="problem-heading-line">informar,</span>
-                        <span class="problem-heading-line">convencer e</span>
-                        <span class="problem-heading-line">converter.</span>
-                    </h2>
-                    <div class="problem-divider" aria-hidden="true"></div>
-                    <p class="problem-description">
-                        Estratégia, texto, interface e desenvolvimento trabalham juntos. O resultado é um site coerente com sua marca e útil para o seu processo comercial.
-                    </p>
-                </div>
-
-                <div class="problem-cards solution-cards" aria-label="Pilares de um site criado com estratégia">
-                    <article class="problem-card solution-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="zap"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Velocidade real</h3>
-                                <span class="problem-card-number" aria-hidden="true">01</span>
-                            </div>
-                            <p>Estrutura enxuta, mídia otimizada e boas práticas técnicas para carregar rápido em diferentes dispositivos.</p>
-                        </div>
-                    </article>
-
-                    <article class="problem-card solution-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="gem"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Design com autoridade</h3>
-                                <span class="problem-card-number" aria-hidden="true">02</span>
-                            </div>
-                            <p>Uma identidade visual consistente que transmite profissionalismo sem competir com a mensagem principal.</p>
-                        </div>
-                    </article>
-
-                    <article class="problem-card solution-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="target"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Copy orientada à ação</h3>
-                                <span class="problem-card-number" aria-hidden="true">03</span>
-                            </div>
-                            <p>Textos que antecipam objeções, tornam benefícios concretos e conduzem o visitante ao próximo passo.</p>
-                        </div>
-                    </article>
-
-                    <article class="problem-card solution-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="search-check"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Base técnica sólida</h3>
-                                <span class="problem-card-number" aria-hidden="true">04</span>
-                            </div>
-                            <p>Responsividade, SEO técnico e auditoria com IA antes da entrega para reduzir falhas evitáveis.</p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
         <section class="story-slide slide-process" id="processo">
             <div class="slide-content problem-layout process-layout">
                 <div class="problem-copy process-copy">
-                    <div class="problem-kicker process-kicker" aria-label="Seção 03, Como funciona">
-                        <span class="problem-index">03</span>
+                    <div class="problem-kicker process-kicker" aria-label="Seção 02, Como funciona">
+                        <span class="problem-index">02</span>
                         <span class="problem-separator" aria-hidden="true">|</span>
                         <span>Como funciona</span>
                     </div>
@@ -1111,7 +1068,7 @@
         </section>
 
         <section class="story-slide slide-comparison" id="comparacao">
-            <div class="slide-content">
+            <div class="slide-content comparison-layout">
                 <span class="eyebrow">Comparação</span>
                 <h2 class="section-heading">Não é apenas “ter um site”. É fazer o site cumprir uma função.</h2>
                 <p class="section-copy">A diferença aparece na clareza, na experiência e na capacidade de transformar tráfego em conversas comerciais.</p>
@@ -1120,41 +1077,43 @@
                     <table class="comparison-table">
                         <thead>
                             <tr>
-                                <th>Critério</th>
-                                <th>Site genérico</th>
-                                <th>Projeto S.S.W</th>
+                                <th scope="col">Critério</th>
+                                <th scope="col">Site genérico</th>
+                                <th scope="col">
+                                    <span class="comparison-header-label"><i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i>Projeto S.S.W</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Mensagem principal</td>
-                                <td>Fala sobre a empresa</td>
-                                <td>Mostra valor para o cliente</td>
+                                <td><span class="comparison-cell"><i class="icon-no" data-lucide="x" aria-hidden="true"></i>Fala sobre a empresa</span></td>
+                                <td><span class="comparison-cell"><i class="icon-yes" data-lucide="check" aria-hidden="true"></i>Mostra valor para o cliente</span></td>
                             </tr>
                             <tr>
                                 <td>Velocidade</td>
-                                <td><i class="icon-no" data-lucide="x"></i></td>
-                                <td><i class="icon-yes" data-lucide="check"></i></td>
+                                <td><span class="comparison-cell"><i class="icon-no" data-lucide="x" aria-hidden="true"></i>Lenta ou inconsistente</span></td>
+                                <td><span class="comparison-cell"><i class="icon-yes" data-lucide="check" aria-hidden="true"></i>Otimizada desde o início</span></td>
                             </tr>
                             <tr>
                                 <td>Experiência mobile</td>
-                                <td>Adaptação posterior</td>
-                                <td>Planejada desde o início</td>
+                                <td><span class="comparison-cell"><i class="icon-no" data-lucide="x" aria-hidden="true"></i>Adaptação posterior</span></td>
+                                <td><span class="comparison-cell"><i class="icon-yes" data-lucide="check" aria-hidden="true"></i>Planejada desde o início</span></td>
                             </tr>
                             <tr>
                                 <td>Chamadas para ação</td>
-                                <td>Botões genéricos</td>
-                                <td>Próximos passos claros</td>
+                                <td><span class="comparison-cell"><i class="icon-no" data-lucide="x" aria-hidden="true"></i>Botões genéricos</span></td>
+                                <td><span class="comparison-cell"><i class="icon-yes" data-lucide="check" aria-hidden="true"></i>Próximos passos claros</span></td>
                             </tr>
                             <tr>
                                 <td>SEO técnico</td>
-                                <td>Configuração básica</td>
-                                <td>Estrutura preparada</td>
+                                <td><span class="comparison-cell"><i class="icon-no" data-lucide="x" aria-hidden="true"></i>Configuração básica</span></td>
+                                <td><span class="comparison-cell"><i class="icon-yes" data-lucide="check" aria-hidden="true"></i>Estrutura preparada</span></td>
                             </tr>
                             <tr>
                                 <td>Validação antes da entrega</td>
-                                <td><i class="icon-no" data-lucide="x"></i></td>
-                                <td>Testes + auditoria S.S.W</td>
+                                <td><span class="comparison-cell"><i class="icon-no" data-lucide="x" aria-hidden="true"></i>Não inclusa</span></td>
+                                <td><span class="comparison-cell"><i class="icon-yes" data-lucide="check" aria-hidden="true"></i>Testes + auditoria S.S.W</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1162,28 +1121,6 @@
             </div>
         </section>
 
-        <section class="story-slide slide-cta" id="diagnostico">
-            <div class="slide-content narrow cta-layout">
-                <span class="eyebrow">Próximo passo</span>
-                <h2 class="section-heading centered">Antes de falar em preço, precisamos entender o que seu site deve resolver.</h2>
-                <p class="section-copy centered">
-                    Em uma conversa objetiva, analisamos seu momento, suas prioridades e o tipo de página que faz sentido para sua operação. Você sai com uma direção clara, mesmo antes da proposta.
-                </p>
-
-                <div class="cta-group">
-                    <a class="cta-primary" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="file-text"></i>
-                        Solicitar orçamento
-                    </a>
-                    <a class="cta-secondary" href="#faq">
-                        Tirar dúvidas primeiro
-                        <i data-lucide="arrow-down"></i>
-                    </a>
-                </div>
-
-                <span class="cta-kicker"><i data-lucide="clock-3"></i> Conversa inicial, sem compromisso e focada no seu cenário.</span>
-            </div>
-        </section>
         <section class="story-slide slide-faq" id="faq">
             <div class="slide-content narrow">
                 <span class="eyebrow">Dúvidas frequentes</span>
@@ -1238,32 +1175,6 @@
             </div>
         </section>
 
-        <section class="story-slide slide-final" id="contato">
-            <div class="slide-content narrow cta-layout">
-                <span class="eyebrow">Vamos construir</span>
-                <h2 class="section-heading centered">Seu próximo cliente pode conhecer sua empresa pelo site. A primeira impressão precisa trabalhar a seu favor.</h2>
-                <p class="section-copy centered">
-                    Conte o que você vende, para quem vende e o que deseja melhorar. Nós transformamos essas respostas em uma direção prática para o projeto.
-                </p>
-
-                <div class="cta-group">
-                    <a class="cta-primary" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20come%C3%A7ar%20o%20projeto%20do%20site%20da%20minha%20empresa." target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="message-circle"></i>
-                        Conversar sobre meu projeto
-                    </a>
-                    <a class="cta-secondary" href="mailto:contato@sswintelligence.com.br?subject=Briefing%20para%20novo%20site">
-                        <i data-lucide="mail"></i>
-                        Enviar briefing por e-mail
-                    </a>
-                </div>
-
-                <div class="final-points">
-                    <span><i data-lucide="check"></i> Escopo definido antes de começar</span>
-                    <span><i data-lucide="check"></i> Acompanhamento por etapas</span>
-                    <span><i data-lucide="check"></i> Auditoria antes da publicação</span>
-                </div>
-            </div>
-        </section>
     </main>
 
     <a class="floating-whatsapp" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank" rel="noopener noreferrer" aria-label="Falar com a S.S.W pelo WhatsApp" title="Falar pelo WhatsApp">
@@ -1297,12 +1208,10 @@
             '.problem-divider',
             '.problem-description',
             '.outline-card',
-            '.solution-card',
             '.process-flow-step',
             '.comparison-wrap',
             '.cta-group',
-            '.faq-item',
-            '.final-points'
+            '.faq-item'
         ].join(',');
 
         if ('IntersectionObserver' in window && !prefersReducedMotion) {
