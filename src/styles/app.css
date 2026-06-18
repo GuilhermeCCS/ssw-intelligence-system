@@ -4607,6 +4607,7 @@ body.auth-page-active #appTopbar {
 }
 
 .home-editorial-section {
+    display: none !important;
     position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
@@ -4729,6 +4730,7 @@ body.auth-page-active #appTopbar {
 }
 
 #homeFooterSpacer {
+    display: none !important;
     min-height: 24vh !important;
 }
 
