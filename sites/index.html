@@ -187,6 +187,11 @@
 
         .problem-heading-line { display: block; }
 
+        .solution-heading,
+        .process-heading {
+            font-size: clamp(3rem, 4.2vw, 4.6rem);
+        }
+
         .problem-divider {
             width: 68px;
             height: 2px;
@@ -303,6 +308,71 @@
             font-size: 13.5px;
             line-height: 1.58;
         }
+
+        .solution-cards { gap: 12px; }
+        .solution-card { padding-block: 18px; }
+
+
+        .process-flow {
+            position: relative;
+            width: min(100%, 520px);
+            min-height: 420px;
+            justify-self: end;
+        }
+
+        .process-flow-list {
+            position: relative;
+            z-index: 2;
+            min-height: 420px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            gap: 58px 48px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .process-flow-step {
+            min-width: 0;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 360ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .process-flow-marker {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 18px;
+            border: 1px solid rgba(34, 211, 238, 0.48);
+            border-radius: 50%;
+            background: #080d18;
+            color: #22d3ee;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 0.06em;
+            transition: border-color 240ms ease, background-color 240ms ease, color 240ms ease;
+        }
+
+        .process-flow-step h3 {
+            margin: 0 0 9px;
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+        }
+
+        .process-flow-step p {
+            margin: 0;
+            color: #aeb9c9;
+            font-size: 13px;
+            line-height: 1.56;
+        }
+
+
 
         .slide-content { width: min(1100px, 100%); margin: 0 auto; }
         .slide-content.narrow { width: min(820px, 100%); }
@@ -692,17 +762,40 @@
             height: 27px;
         }
 
+        @media (min-width: 1280px) and (min-height: 800px) {
+            .story-slide > .slide-content {
+                width: min(880px, 80%);
+                zoom: 1.25;
+            }
+
+            .story-slide > .slide-content.narrow {
+                width: min(656px, 80%);
+            }
+
+            .story-slide > .hero-layout {
+                width: min(960px, 80%);
+                max-width: none;
+            }
+
+            .story-slide > .problem-layout {
+                width: min(976px, 80%);
+            }
+        }
+
         @media (max-width: 900px) {
             .header-nav { display: none; }
             .story-slide:not(.slide-final) { margin-bottom: 0; }
 
-            .slide-problem {
+            .slide-problem,
+            .slide-solution,
+            .slide-process {
                 position: relative;
                 min-height: auto;
                 overflow: visible;
                 padding-block: 118px 84px;
-                background-position: 64% center;
             }
+
+            .slide-problem { background-position: 64% center; }
 
             .problem-layout {
                 grid-template-columns: 1fr;
@@ -711,6 +804,7 @@
 
             .problem-copy { max-width: 640px; }
             .problem-cards { width: 100%; max-width: 640px; justify-self: start; }
+            .process-flow { width: 100%; max-width: 640px; justify-self: start; }
 
             .outline-grid.four,
             .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -765,6 +859,13 @@
             }
             .problem-card-icon { width: 44px; height: 44px; }
             .problem-card-title-row { gap: 10px; }
+
+            .process-flow,
+            .process-flow-list { min-height: 390px; }
+            .process-flow-list { gap: 42px 22px; }
+            .process-flow-marker { width: 44px; height: 44px; margin-bottom: 14px; }
+            .process-flow-step h3 { font-size: 15px; }
+            .process-flow-step p { font-size: 12px; line-height: 1.5; }
 
             .outline-grid.three,
             .outline-grid.four,
@@ -913,65 +1014,118 @@
             </div>
         </section>
         <section class="story-slide slide-solution" id="solucao">
-            <div class="slide-content">
-                <span class="eyebrow">A solução</span>
-                <h2 class="section-heading">Uma experiência criada para informar, convencer e converter.</h2>
-                <p class="section-copy">
-                    Estratégia, texto, interface e desenvolvimento trabalham juntos. O resultado é um site coerente com sua marca e útil para o seu processo comercial.
-                </p>
+            <div class="slide-content problem-layout solution-layout">
+                <div class="problem-copy solution-copy">
+                    <div class="problem-kicker solution-kicker" aria-label="Seção 02, A solução">
+                        <span class="problem-index">02</span>
+                        <span class="problem-separator" aria-hidden="true">|</span>
+                        <span>A solução</span>
+                    </div>
+                    <h2 class="problem-heading solution-heading">
+                        <span class="problem-heading-line">Uma experiência</span>
+                        <span class="problem-heading-line">criada para</span>
+                        <span class="problem-heading-line">informar,</span>
+                        <span class="problem-heading-line">convencer e</span>
+                        <span class="problem-heading-line">converter.</span>
+                    </h2>
+                    <div class="problem-divider" aria-hidden="true"></div>
+                    <p class="problem-description">
+                        Estratégia, texto, interface e desenvolvimento trabalham juntos. O resultado é um site coerente com sua marca e útil para o seu processo comercial.
+                    </p>
+                </div>
 
-                <div class="outline-grid four">
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="zap"></i></div>
-                        <h3>Velocidade real</h3>
-                        <p>Estrutura enxuta, mídia otimizada e boas práticas técnicas para carregar rápido em diferentes dispositivos.</p>
+                <div class="problem-cards solution-cards" aria-label="Pilares de um site criado com estratégia">
+                    <article class="problem-card solution-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="zap"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Velocidade real</h3>
+                                <span class="problem-card-number" aria-hidden="true">01</span>
+                            </div>
+                            <p>Estrutura enxuta, mídia otimizada e boas práticas técnicas para carregar rápido em diferentes dispositivos.</p>
+                        </div>
                     </article>
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="gem"></i></div>
-                        <h3>Design com autoridade</h3>
-                        <p>Uma identidade visual consistente que transmite profissionalismo sem competir com a mensagem principal.</p>
+
+                    <article class="problem-card solution-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="gem"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Design com autoridade</h3>
+                                <span class="problem-card-number" aria-hidden="true">02</span>
+                            </div>
+                            <p>Uma identidade visual consistente que transmite profissionalismo sem competir com a mensagem principal.</p>
+                        </div>
                     </article>
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="target"></i></div>
-                        <h3>Copy orientada à ação</h3>
-                        <p>Textos que antecipam objeções, tornam benefícios concretos e conduzem o visitante ao próximo passo.</p>
+
+                    <article class="problem-card solution-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="target"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Copy orientada à ação</h3>
+                                <span class="problem-card-number" aria-hidden="true">03</span>
+                            </div>
+                            <p>Textos que antecipam objeções, tornam benefícios concretos e conduzem o visitante ao próximo passo.</p>
+                        </div>
                     </article>
-                    <article class="outline-card">
-                        <div class="outline-card-icon"><i data-lucide="search-check"></i></div>
-                        <h3>Base técnica sólida</h3>
-                        <p>Responsividade, SEO técnico e auditoria com IA antes da entrega para reduzir falhas evitáveis.</p>
+
+                    <article class="problem-card solution-card">
+                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="search-check"></i></div>
+                        <div>
+                            <div class="problem-card-title-row">
+                                <h3>Base técnica sólida</h3>
+                                <span class="problem-card-number" aria-hidden="true">04</span>
+                            </div>
+                            <p>Responsividade, SEO técnico e auditoria com IA antes da entrega para reduzir falhas evitáveis.</p>
+                        </div>
                     </article>
                 </div>
             </div>
         </section>
 
         <section class="story-slide slide-process" id="processo">
-            <div class="slide-content">
-                <span class="eyebrow">Como funciona</span>
-                <h2 class="section-heading">Do primeiro diagnóstico ao site publicado, sem etapas escondidas.</h2>
-                <p class="section-copy">Você acompanha decisões importantes, aprova a direção e sabe o que está sendo produzido em cada momento.</p>
+            <div class="slide-content problem-layout process-layout">
+                <div class="problem-copy process-copy">
+                    <div class="problem-kicker process-kicker" aria-label="Seção 03, Como funciona">
+                        <span class="problem-index">03</span>
+                        <span class="problem-separator" aria-hidden="true">|</span>
+                        <span>Como funciona</span>
+                    </div>
+                    <h2 class="problem-heading process-heading">
+                        <span class="problem-heading-line">Do primeiro</span>
+                        <span class="problem-heading-line">diagnóstico ao</span>
+                        <span class="problem-heading-line">site publicado,</span>
+                        <span class="problem-heading-line">sem etapas</span>
+                        <span class="problem-heading-line">escondidas.</span>
+                    </h2>
+                    <div class="problem-divider" aria-hidden="true"></div>
+                    <p class="problem-description">
+                        Você acompanha decisões importantes, aprova a direção e sabe o que está sendo produzido em cada momento.
+                    </p>
+                </div>
 
-                <div class="process-list">
-                    <article class="process-step">
-                        <div class="step-number">1</div>
-                        <h3>Diagnóstico e briefing</h3>
-                        <p>Entendemos público, oferta, diferenciais, objetivos e o caminho atual até a venda.</p>
-                    </article>
-                    <article class="process-step">
-                        <div class="step-number">2</div>
-                        <h3>Estrutura e mensagem</h3>
-                        <p>Organizamos a jornada, a hierarquia das seções e os textos que sustentam sua proposta.</p>
-                    </article>
-                    <article class="process-step">
-                        <div class="step-number">3</div>
-                        <h3>Design e desenvolvimento</h3>
-                        <p>Transformamos a estratégia em uma interface responsiva, rápida e alinhada à sua marca.</p>
-                    </article>
-                    <article class="process-step">
-                        <div class="step-number">4</div>
-                        <h3>Auditoria e publicação</h3>
-                        <p>Testamos conteúdo, navegação, mobile, performance e SEO antes de colocar o projeto no ar.</p>
-                    </article>
+                <div class="process-flow" aria-label="Etapas do processo de criação do site">
+                    <ol class="process-flow-list">
+                        <li class="process-flow-step" data-process-step="1">
+                            <span class="process-flow-marker" aria-hidden="true">01</span>
+                            <h3>Diagnóstico e briefing</h3>
+                            <p>Entendemos público, oferta, diferenciais, objetivos e o caminho atual até a venda.</p>
+                        </li>
+                        <li class="process-flow-step" data-process-step="2">
+                            <span class="process-flow-marker" aria-hidden="true">02</span>
+                            <h3>Estrutura e mensagem</h3>
+                            <p>Organizamos a jornada, a hierarquia das seções e os textos que sustentam sua proposta.</p>
+                        </li>
+                        <li class="process-flow-step" data-process-step="3">
+                            <span class="process-flow-marker" aria-hidden="true">03</span>
+                            <h3>Design e desenvolvimento</h3>
+                            <p>Transformamos a estratégia em uma interface responsiva, clara e tecnicamente consistente.</p>
+                        </li>
+                        <li class="process-flow-step" data-process-step="4">
+                            <span class="process-flow-marker" aria-hidden="true">04</span>
+                            <h3>Auditoria e publicação</h3>
+                            <p>Revisamos conteúdo, links, formulários, responsividade e pontos críticos antes de colocar o site no ar.</p>
+                        </li>
+                    </ol>
                 </div>
             </div>
         </section>
@@ -1133,7 +1287,9 @@
     </main>
 
     <a class="floating-whatsapp" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank" rel="noopener noreferrer" aria-label="Falar com a S.S.W pelo WhatsApp" title="Falar pelo WhatsApp">
-        <i data-lucide="message-circle" aria-hidden="true"></i>
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93a7.898 7.898 0 0 0-2.327-5.607zm-5.607 12.2a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.25a6.56 6.56 0 0 1-1.007-3.505c0-3.66 2.98-6.64 6.645-6.64a6.6 6.6 0 0 1 4.717 1.956 6.59 6.59 0 0 1 1.949 4.72c-.004 3.66-2.984 6.64-6.724 6.64zm3.644-4.978c-.2-.1-1.18-.582-1.363-.65-.182-.067-.315-.1-.448.1-.132.2-.514.65-.63.782-.116.133-.232.15-.43.05-.2-.1-.84-.31-1.6-.99-.592-.527-.992-1.18-1.108-1.38-.116-.2-.012-.307.087-.407.09-.09.2-.232.3-.348.1-.116.133-.2.2-.332.067-.133.034-.25-.017-.35-.05-.1-.448-1.08-.614-1.47-.16-.389-.325-.336-.448-.342-.116-.006-.249-.007-.382-.007a.733.733 0 0 0-.53.25c-.182.2-.696.682-.696 1.66s.713 1.927.813 2.06c.1.133 1.404 2.143 3.4 3.005.475.206.845.329 1.13.42.475.151.907.13 1.25.079.38-.057 1.18-.482 1.346-.948.166-.466.166-.865.116-.948-.05-.083-.182-.133-.38-.232z"/>
+        </svg>
     </a>
 
     <div data-public-footer="sites"></div>
@@ -1161,7 +1317,8 @@
             '.problem-divider',
             '.problem-description',
             '.outline-card',
-            '.process-step',
+            '.solution-card',
+            '.process-flow-step',
             '.comparison-wrap',
             '.cta-group',
             '.faq-item',
@@ -1200,7 +1357,7 @@
         }
 
         const problemSection = document.querySelector('.slide-problem');
-        const problemCards = Array.from(document.querySelectorAll('.problem-card'));
+        const problemCards = Array.from(document.querySelectorAll('.slide-problem .problem-card'));
 
         if (problemSection && problemCards.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
             problemCards.forEach((card, index) => {
