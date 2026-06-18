@@ -114,6 +114,10 @@
             scroll-margin-top: 0;
         }
 
+        .story-slide:not(.slide-final) {
+            margin-bottom: clamp(120px, 20vh, 220px);
+        }
+
         .slide-hero {
             background-color: #070a13;
             background-image: url("/src/assets/images/sites/hero-digital-layout.jpg");
@@ -217,8 +221,8 @@
             background: rgba(5, 10, 15, 0.76);
             box-shadow: none;
             transition:
-                opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
-                transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 780ms cubic-bezier(0.22, 1, 0.36, 1),
                 border-color 180ms ease,
                 background-color 180ms ease;
         }
@@ -237,6 +241,22 @@
             opacity: 1;
             transform: translate3d(0, 0, 0);
             transition-delay: var(--reveal-delay, 0ms);
+        }
+
+
+        .section-reveal-item.is-reveal-ready {
+            opacity: 0;
+            transform: translate3d(0, 28px, 0);
+            will-change: opacity, transform;
+            transition:
+                opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .section-reveal-item.is-reveal-ready.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+            transition-delay: var(--section-reveal-delay, 0ms);
         }
 
         .problem-card-icon {
@@ -674,6 +694,7 @@
 
         @media (max-width: 900px) {
             .header-nav { display: none; }
+            .story-slide:not(.slide-final) { margin-bottom: 0; }
 
             .slide-problem {
                 position: relative;
@@ -705,6 +726,8 @@
                 padding-block: 118px 72px;
                 overflow: visible;
             }
+
+            .story-slide:not(.slide-final) { margin-bottom: 0; }
 
         }
 
@@ -773,7 +796,9 @@
             .story-slide { position: relative; min-height: auto; }
 
             .problem-card.is-reveal-ready,
-            .problem-card.is-reveal-ready.is-visible {
+            .problem-card.is-reveal-ready.is-visible,
+            .section-reveal-item.is-reveal-ready,
+            .section-reveal-item.is-reveal-ready.is-visible {
                 opacity: 1;
                 transform: none;
                 transition-delay: 0ms;
@@ -1123,14 +1148,64 @@
             });
         });
 
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const compactRevealLayout = window.matchMedia('(max-width: 900px), (max-height: 760px)').matches;
+        const revealThreshold = compactRevealLayout ? 0.16 : 0.68;
+        const revealSelectors = [
+            '.eyebrow',
+            '.section-heading',
+            '.section-copy',
+            '.section-note',
+            '.problem-kicker',
+            '.problem-heading',
+            '.problem-divider',
+            '.problem-description',
+            '.outline-card',
+            '.process-step',
+            '.comparison-wrap',
+            '.cta-group',
+            '.faq-item',
+            '.final-points'
+        ].join(',');
+
+        if ('IntersectionObserver' in window && !prefersReducedMotion) {
+            const sections = Array.from(document.querySelectorAll('.story-slide'));
+            const sectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+
+                    const items = Array.from(entry.target.querySelectorAll('.section-reveal-item.is-reveal-ready'));
+                    items.forEach(item => item.classList.add('is-visible'));
+                    sectionObserver.unobserve(entry.target);
+
+                    const longestDelay = Math.min(Math.max(items.length - 1, 0) * 110, 770);
+                    window.setTimeout(() => {
+                        items.forEach(item => {
+                            item.classList.remove('is-reveal-ready', 'is-visible');
+                            item.style.removeProperty('--section-reveal-delay');
+                        });
+                    }, longestDelay + 900);
+                });
+            }, { threshold: revealThreshold });
+
+            sections.forEach(section => {
+                const items = Array.from(section.querySelectorAll(revealSelectors));
+                items.forEach((item, index) => {
+                    item.classList.add('section-reveal-item', 'is-reveal-ready');
+                    item.style.setProperty('--section-reveal-delay', `${Math.min(index * 110, 770)}ms`);
+                });
+
+                if (items.length) sectionObserver.observe(section);
+            });
+        }
+
         const problemSection = document.querySelector('.slide-problem');
         const problemCards = Array.from(document.querySelectorAll('.problem-card'));
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (problemSection && problemCards.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
             problemCards.forEach((card, index) => {
                 card.classList.add('is-reveal-ready');
-                card.style.setProperty('--reveal-delay', `${index * 150}ms`);
+                card.style.setProperty('--reveal-delay', `${index * 210}ms`);
             });
 
             const problemObserver = new IntersectionObserver(entries => {
@@ -1139,7 +1214,7 @@
 
                 problemCards.forEach(card => card.classList.add('is-visible'));
                 problemObserver.unobserve(problemSection);
-            }, { threshold: 0.2 });
+            }, { threshold: revealThreshold });
 
             problemObserver.observe(problemSection);
         }
