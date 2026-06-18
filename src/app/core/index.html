@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criação de Sites de Alta Performance — S.S.W Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/src/app/sections/public-footer.js?v=20260615-public-pages-2" defer></script>
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #0d0d0d;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.18);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #777777;
+            --whatsapp: #25D366;
+            --whatsapp-dark: #128C7E;
+            --blue-hover: #3b82f6;
+            --blue-glow: rgba(59, 130, 246, 0.25);
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Cards e painéis */
+        .glass-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+        .glass-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: var(--border-hover);
+            background: #141414;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Botão WhatsApp */
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.01em;
+            border: none;
+        }
+        .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(37, 211, 102, 0.35);
+            filter: brightness(1.08);
+        }
+        .btn-whatsapp:active {
+            transform: translateY(-1px);
+            filter: brightness(0.95);
+        }
+
+        /* Botão secundário (hover azul) */
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.01em;
+        }
+        .btn-outline:hover {
+            border-color: var(--blue-hover);
+            background: rgba(59, 130, 246, 0.08);
+            box-shadow: 0 8px 28px var(--blue-glow);
+            color: #fff;
+        }
+
+        /* Botão primário (hover azul) */
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            font-weight: 700;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.01em;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #e0e0e0;
+            box-shadow: 0 8px 28px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        /* Badge */
+        .badge-neutral {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            color: #ccc;
+            border-radius: 9999px;
+        }
+
+        /* Pulse dot */
+        .pulse-dot {
+            position: absolute;
+        }
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            animation: pulseRing 2s ease-out infinite;
+        }
+        @keyframes pulseRing {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+        }
+
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.015);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding-bottom: 1.5rem;
+        }
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+        .faq-icon {
+            transition: transform 0.3s ease;
+            color: #999;
+        }
+
+        /* Tabela */
+        .table-highlight {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Linha do processo */
+        .process-connector {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        /* Scrollbar sutil */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 640px) {
+            .glass-card:hover {
+                transform: translateY(-2px);
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ============ HEADER ============ -->
+    <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-5 flex items-center justify-between relative z-20">
+        <a href="#" class="flex items-center gap-3">
+            <img src="/src/assets/images/logo/logos.ico" alt="S.S.W Intelligence Logo" class="w-10 h-10 object-contain">
+            <span class="font-bold text-lg text-white hidden sm:inline tracking-tight">
+                S.S.W <span class="text-gray-400">Sites</span>
+            </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+            <a href="#diferenciais" class="hover:text-white transition-colors">Diferenciais</a>
+            <a href="#processo" class="hover:text-white transition-colors">Processo</a>
+            <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+            <a href="#contato" class="hover:text-white transition-colors">Contato</a>
+        </nav>
+        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank"
+        class="btn-whatsapp px-5 py-2.5 rounded-xl font-semibold text-sm inline-flex items-center gap-2">
+        <i data-lucide="message-circle" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Falar com Especialista</span>
+        <span class="sm:hidden">WhatsApp</span>
+    </a>
+    </header>
+
+<!-- ============ HERO ============ -->
+<section class="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-16 md:pt-24 pb-16 text-center relative z-10">
+    <div class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full badge-neutral font-medium text-sm mb-10">
+        <span class="pulse-dot relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+        </span>
+        Apenas <strong class="text-white mx-0.5">3 vagas</strong> disponíveis este mês
+    </div>
+
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[1.08] mb-6 tracking-tighter max-w-4xl mx-auto">
+        Seu site não precisa ser apenas bonito.<br>
+        Ele precisa ser <span class="underline decoration-gray-500 decoration-4 underline-offset-8">uma máquina de vendas</span>.
+    </h1>
+
+    <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Criamos Landing Pages e Sites Institucionais com <strong class="text-white">design premium</strong>,
+        <strong class="text-white">velocidade extrema</strong> e arquitetura focada em
+        <strong class="text-white">conversão de visitantes em clientes</strong>.
+        Cada projeto é auditado com inteligência artificial da plataforma S.S.W.
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Vim%20pela%20landing%20page%20e%20quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank"
+        class="btn-whatsapp px-8 py-4 rounded-2xl font-bold text-lg inline-flex items-center gap-3 w-full sm:w-auto justify-center shadow-2xl">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        Quero um Site que Vende
+    </a>
+    <a href="#diferenciais" class="btn-outline px-8 py-4 rounded-2xl font-semibold text-lg inline-flex items-center gap-2 w-full sm:w-auto justify-center">
+        Ver Diferenciais
+        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+    </a>
+</div>
+
+<div class="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500">
+    <span class="flex items-center gap-1.5">
+        <i data-lucide="shield-check" class="w-4 h-4 text-gray-400"></i> Projetos entregues com garantia
+    </span>
+    <span class="flex items-center gap-1.5">
+        <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> Resposta em até 2h no WhatsApp
+    </span>
+    <span class="flex items-center gap-1.5">
+        <i data-lucide="star" class="w-4 h-4 text-gray-400"></i> +80 clientes atendidos
+    </span>
+</div>
+</section>
+
+<!-- ============ PROBLEMA ============ -->
+<section class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-20 relative z-10" id="diferenciais">
+    <div class="text-center mb-14">
+        <span class="text-gray-500 font-semibold text-sm tracking-widest uppercase mb-3 block">O Problema</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-5 tracking-tight">
+            Seu site atual está <span class="text-gray-400">deixando dinheiro na mesa</span>?
+        </h2>
+        <p class="text-gray-400 text-lg max-w-xl mx-auto">
+            A maioria dos sites peca em pelo menos um desses pontos. Reconhece algum?
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+        <div class="glass-card p-7 text-center">
+            <div class="w-12 h-12 rounded-xl bg-transparent border border-gray-700 flex items-center justify-center text-gray-400 mx-auto mb-5">
+                <i data-lucide="snail" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Carregamento Lento</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Cada segundo extra de carregamento <strong class="text-white">derruba sua taxa de conversão em 7%</strong>. Visitantes impacientes vão embora.
+            </p>
+        </div>
+        <div class="glass-card p-7 text-center">
+            <div class="w-12 h-12 rounded-xl bg-transparent border border-gray-700 flex items-center justify-center text-gray-400 mx-auto mb-5">
+                <i data-lucide="smartphone" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Não Responsivo</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Mais de <strong class="text-white">60% do tráfego é mobile</strong>. Um site quebrado no celular é dinheiro jogado fora.
+            </p>
+        </div>
+        <div class="glass-card p-7 text-center">
+            <div class="w-12 h-12 rounded-xl bg-transparent border border-gray-700 flex items-center justify-center text-gray-400 mx-auto mb-5">
+                <i data-lucide="mouse-pointer-click" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Sem Call-to-Action Claro</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Visitante confuso <strong class="text-white">não compra</strong>. Seu site precisa guiar o usuário até a conversão.
+            </p>
+        </div>
+    </div>
+    </section>
+
+<!-- ============ SOLUÇÃO ============ -->
+<section class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-16 relative z-10">
+    <div class="text-center mb-14">
+        <span class="text-gray-500 font-semibold text-sm tracking-widest uppercase mb-3 block">A Solução</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-5 tracking-tight">
+            Sites que trabalham <span class="text-white">24 horas por dia</span> vendendo
+        </h2>
+        <p class="text-gray-400 text-lg max-w-xl mx-auto">
+            Enquanto você dorme, seu site está convertendo visitantes em clientes.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="glass-card p-7 text-left">
+            <div class="w-11 h-11 rounded-lg bg-transparent border border-gray-700 flex items-center justify-center text-gray-300 mb-5">
+                <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Velocidade Supersônica</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Otimização agressiva de performance. Carregamento em <strong class="text-white">menos de 2 segundos</strong> para manter o visitante engajado.
+            </p>
+        </div>
+        <div class="glass-card p-7 text-left">
+            <div class="w-11 h-11 rounded-lg bg-transparent border border-gray-700 flex items-center justify-center text-gray-300 mb-5">
+                <i data-lucide="gem" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Design de Autoridade</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Visual impactante que transmite <strong class="text-white">credibilidade instantânea</strong>. Seu cliente confia antes mesmo de falar com você.
+            </p>
+        </div>
+        <div class="glass-card p-7 text-left">
+            <div class="w-11 h-11 rounded-lg bg-transparent border border-gray-700 flex items-center justify-center text-gray-300 mb-5">
+                <i data-lucide="target" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Conversão Científica</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Copywriting estratégico e hierarquia visual que <strong class="text-white">guiam o olhar</strong> até o botão de compra.
+            </p>
+        </div>
+        <div class="glass-card p-7 text-left">
+            <div class="w-11 h-11 rounded-lg bg-transparent border border-gray-700 flex items-center justify-center text-gray-300 mb-5">
+                <i data-lucide="cpu" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Auditoria com IA</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Seu site passa pelo crivo da <strong class="text-white">inteligência artificial S.S.W</strong> antes de ir ao ar. Performance garantida.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ PROCESSO ============ -->
+<section class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-20 relative z-10" id="processo">
+    <div class="glass-panel p-8 md:p-14">
+        <div class="text-center mb-14">
+            <span class="text-gray-500 font-semibold text-sm tracking-widest uppercase mb-3 block">Como Funciona</span>
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">
+                Do briefing ao <span class="text-white">site no ar</span> em 4 passos
+            </h2>
+            <p class="text-gray-400 text-lg">Processo transparente, sem surpresas.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="text-center relative">
+                <div class="w-14 h-14 rounded-xl bg-white/[0.04] border border-gray-700 flex items-center justify-center text-white mx-auto mb-5 text-xl font-black">1</div>
+                <h3 class="text-lg font-bold text-white mb-2">Briefing</h3>
+                <p class="text-gray-400 text-sm">Conversamos sobre seus objetivos, público e referências. Tudo alinhado antes de começar.</p>
+                <div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-px process-connector"></div>
+            </div>
+            <div class="text-center relative">
+                <div class="w-14 h-14 rounded-xl bg-white/[0.04] border border-gray-700 flex items-center justify-center text-white mx-auto mb-5 text-xl font-black">2</div>
+                <h3 class="text-lg font-bold text-white mb-2">Design & Copy</h3>
+                <p class="text-gray-400 text-sm">Criamos o layout premium e o copywriting persuasivo. Você aprova cada etapa.</p>
+                <div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-px process-connector"></div>
+            </div>
+            <div class="text-center relative">
+                <div class="w-14 h-14 rounded-xl bg-white/[0.04] border border-gray-700 flex items-center justify-center text-white mx-auto mb-5 text-xl font-black">3</div>
+                <h3 class="text-lg font-bold text-white mb-2">Desenvolvimento</h3>
+                <p class="text-gray-400 text-sm">Codificação limpa, SEO técnico e auditoria com IA. Tudo otimizado para performance.</p>
+                <div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-px process-connector"></div>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-xl bg-white/[0.04] border border-gray-700 flex items-center justify-center text-white mx-auto mb-5 text-xl font-black">4</div>
+                <h3 class="text-lg font-bold text-white mb-2">Lançamento</h3>
+                <p class="text-gray-400 text-sm">Site no ar, testado e aprovado. Você recebe treinamento para gerenciar tudo com autonomia.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ COMPARAÇÃO ============ -->
+<section class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-20 relative z-10">
+    <div class="text-center mb-14">
+        <span class="text-gray-500 font-semibold text-sm tracking-widest uppercase mb-3 block">Comparação</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">
+            Site comum <span class="text-gray-500">vs</span> Máquina de Vendas
+        </h2>
+    </div>
+
+    <div class="glass-panel overflow-hidden">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="border-b border-white/5">
+                    <th class="py-4 px-6 text-gray-500 font-semibold text-sm">Critério</th>
+                    <th class="py-4 px-6 text-center text-gray-500 font-semibold text-sm">Site Comum</th>
+                    <th class="py-4 px-6 text-center text-white font-semibold text-sm table-highlight">Máquina de Vendas S.S.W</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                <tr class="border-b border-white/3 hover:bg-white/[0.01] transition-colors">
+                    <td class="py-4 px-6 text-gray-300 font-medium">Velocidade de carregamento</td>
+                    <td class="py-4 px-6 text-center text-gray-500">5-10 segundos</td>
+                    <td class="py-4 px-6 text-center text-white font-semibold table-highlight">< 2 segundos</td>
+                </tr>
+                <tr class="border-b border-white/3 hover:bg-white/[0.01] transition-colors">
+                    <td class="py-4 px-6 text-gray-300 font-medium">Design</td>
+                    <td class="py-4 px-6 text-center text-gray-500">Genérico / Template</td>
+                    <td class="py-4 px-6 text-center text-white font-semibold table-highlight">Premium e exclusivo</td>
+                </tr>
+                <tr class="border-b border-white/3 hover:bg-white/[0.01] transition-colors">
+                    <td class="py-4 px-6 text-gray-300 font-medium">Copywriting</td>
+                    <td class="py-4 px-6 text-center text-gray-500">"Lorem ipsum" ou amador</td>
+                    <td class="py-4 px-6 text-center text-white font-semibold table-highlight">Persuasivo e estratégico</td>
+                </tr>
+                <tr class="border-b border-white/3 hover:bg-white/[0.01] transition-colors">
+                    <td class="py-4 px-6 text-gray-300 font-medium">Responsividade mobile</td>
+                    <td class="py-4 px-6 text-center text-gray-500">Quebrado / Adaptado</td>
+                    <td class="py-4 px-6 text-center text-white font-semibold table-highlight">Mobile-first perfeito</td>
+                </tr>
+                <tr class="border-b border-white/3 hover:bg-white/[0.01] transition-colors">
+                    <td class="py-4 px-6 text-gray-300 font-medium">SEO Técnico</td>
+                    <td class="py-4 px-6 text-center text-gray-500">Inexistente</td>
+                    <td class="py-4 px-6 text-center text-white font-semibold table-highlight">Otimizado desde o código</td>
+                </tr>
+                <tr class="hover:bg-white/[0.01] transition-colors">
+                    <td class="py-4 px-6 text-gray-300 font-medium">Auditoria com IA</td>
+                    <td class="py-4 px-6 text-center text-gray-500">Não</td>
+                    <td class="py-4 px-6 text-center text-white font-semibold table-highlight">Sim — S.S.W Intelligence</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ============ CTA MEIO ============ -->
+<section class="w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="glass-panel p-10 md:p-14 text-center">
+        <h2 class="text-2xl md:text-3xl font-black text-white mb-5 tracking-tight">
+            Chega de perder clientes por causa de um site fraco
+        </h2>
+        <p class="text-gray-400 text-lg mb-8 max-w-lg mx-auto">
+            Sua empresa merece um site à altura. Fale com um especialista agora e descubra como podemos ajudar.
+        </p>
+        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20um%20or%C3%A7amento%20para%20cria%C3%A7%C3%A3o%20do%20meu%20site." target="_blank"
+        class="btn-whatsapp px-10 py-4 rounded-2xl font-bold text-lg inline-flex items-center gap-3 shadow-2xl">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        Solicitar Orçamento Gratuito
+    </a>
+    <p class="mt-4 text-xs text-gray-600">Resposta rápida · Sem compromisso</p>
+</div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="w-full max-w-3xl mx-auto px-4 sm:px-6 py-20 relative z-10" id="faq">
+    <div class="text-center mb-14">
+        <span class="text-gray-500 font-semibold text-sm tracking-widest uppercase mb-3 block">Dúvidas</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">
+            Perguntas <span class="text-white">frequentes</span>
+        </h2>
+    </div>
+
+    <div class="glass-panel divide-y divide-white/5">
+        <div class="faq-item open px-6 py-5" onclick="this.classList.toggle('open')">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-white font-semibold text-base">Quanto custa um site profissional?</h3>
+                <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0"></i>
+            </div>
+            <div class="faq-answer">
+                <p class="text-gray-400 text-sm leading-relaxed pt-3">
+                    Cada projeto é único. O valor depende da complexidade, número de páginas e funcionalidades. Entre em contato pelo WhatsApp para uma avaliação gratuita e personalizada. Temos opções para diferentes necessidades e orçamentos.
+                </p>
+            </div>
+        </div>
+        <div class="faq-item px-6 py-5" onclick="this.classList.toggle('open')">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-white font-semibold text-base">Em quanto tempo meu site fica pronto?</h3>
+                <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0"></i>
+            </div>
+            <div class="faq-answer">
+                <p class="text-gray-400 text-sm leading-relaxed pt-3">
+                    O prazo médio é de <strong class="text-white">7 a 15 dias úteis</strong> para landing pages e sites institucionais, dependendo da complexidade. Projetos maiores têm cronograma definido no briefing. Sempre entregamos no prazo combinado.
+                </p>
+            </div>
+        </div>
+        <div class="faq-item px-6 py-5" onclick="this.classList.toggle('open')">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-white font-semibold text-base">Vou conseguir editar o site depois de pronto?</h3>
+                <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0"></i>
+            </div>
+            <div class="faq-answer">
+                <p class="text-gray-400 text-sm leading-relaxed pt-3">
+                    Sim! Entregamos o site com um painel de administração intuitivo e você recebe um <strong class="text-white">treinamento completo</strong> para fazer edições de texto, imagens e contato sem depender de terceiros. Autonomia total.
+                </p>
+            </div>
+        </div>
+        <div class="faq-item px-6 py-5" onclick="this.classList.toggle('open')">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-white font-semibold text-base">O site já vem otimizado para Google (SEO)?</h3>
+                <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0"></i>
+            </div>
+            <div class="faq-answer">
+                <p class="text-gray-400 text-sm leading-relaxed pt-3">
+                    Sim. Todos os projetos já saem com <strong class="text-white">SEO técnico implementado</strong>: meta tags, headings hierarquizados, dados estruturados, sitemap XML e velocidade otimizada — fatores que o Google valoriza para ranqueamento.
+                </p>
+            </div>
+        </div>
+        <div class="faq-item px-6 py-5" onclick="this.classList.toggle('open')">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-white font-semibold text-base">E se eu não gostar do resultado?</h3>
+                <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0"></i>
+            </div>
+            <div class="faq-answer">
+                <p class="text-gray-400 text-sm leading-relaxed pt-3">
+                    Trabalhamos com <strong class="text-white">aprovação por etapas</strong>. Você acompanha e valida cada fase: wireframe, design, copywriting e versão final. Alterações são bem-vindas durante o processo. Nosso objetivo é sua satisfação total.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="w-full max-w-3xl mx-auto px-4 sm:px-6 py-20 relative z-10 text-center" id="contato">
+    <div class="glass-panel p-10 md:p-16">
+        <span class="text-gray-500 font-semibold text-sm tracking-widest uppercase mb-4 block">Pronto para decolar?</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-5 tracking-tight">
+            Vamos criar o site que sua <span class="text-white">empresa merece</span>
+        </h2>
+        <p class="text-gray-400 text-lg mb-10 max-w-lg mx-auto">
+            Não deixe para amanhã o cliente que você pode conquistar hoje. Fale agora com um especialista S.S.W.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20iniciar%20meu%20projeto%20de%20site%20com%20a%20S.S.W." target="_blank"
+            class="btn-whatsapp px-10 py-4 rounded-2xl font-bold text-lg inline-flex items-center gap-3 w-full sm:w-auto justify-center shadow-2xl">
+            <i data-lucide="message-circle" class="w-6 h-6"></i>
+            Iniciar Meu Projeto
+        </a>
+        <a href="mailto:contato@sswintelligence.com.br"
+        class="btn-outline px-8 py-4 rounded-2xl font-semibold text-lg inline-flex items-center gap-2 w-full sm:w-auto justify-center">
+        <i data-lucide="mail" class="w-5 h-5"></i>
+        Enviar E-mail
+    </a>
+</div>
+<p class="mt-6 text-sm text-gray-600 flex items-center justify-center gap-2">
+    <i data-lucide="clock" class="w-4 h-4 text-gray-500"></i> Resposta em até 2 horas no WhatsApp
+</p>
+</div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<div data-public-footer></div>
+
+<script>
+    lucide.createIcons();
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        item.addEventListener('click', function() {
+            this.classList.toggle('open');
+            setTimeout(() => lucide.createIcons(), 100);
+        });
+    });
+    if (faqItems.length > 0) {
+        faqItems[0].classList.add('open');
+    }
+    setTimeout(() => lucide.createIcons(), 200);
+</script>
+</body>
+</html>
