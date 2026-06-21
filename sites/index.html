@@ -17,15 +17,15 @@
             --dim: #7f8da3;
             --line: rgba(255, 255, 255, 0.16);
             --line-strong: rgba(255, 255, 255, 0.28);
-            --green: #22d3ee;
-            --green-deep: #0891b2;
+            --green: #43b7d6;
+            --green-deep: #2a84a4;
         }
 
         * { box-sizing: border-box; scroll-behavior: smooth; }
 
         html, body {
             margin: 0;
-            background: #020408;
+            background: #050e17;
             color: var(--text);
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -39,7 +39,7 @@
             position: fixed;
             inset: 0 0 auto;
             z-index: 100;
-            background: #050a0f;
+            background: #06111b;
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
             pointer-events: none;
         }
@@ -74,7 +74,7 @@
             border-radius: 50%;
             object-fit: cover;
         }
-        .brand-link span span { color: #22d3ee; }
+        .brand-link span span { color: var(--green); }
 
         .header-nav {
             display: flex;
@@ -119,24 +119,28 @@
         }
 
         .slide-hero {
-            background-color: #070a13;
+            background-color: #06111b;
             background-image: url("/src/assets/images/sites/hero-digital-layout.jpg");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
         }
+
         .slide-problem {
-            background-color: #09101c;
-            background-image:
-                linear-gradient(rgba(9, 16, 28, 0.18), rgba(9, 16, 28, 0.18)),
-                url("/src/assets/images/sites/problem-background.png");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
+            background: linear-gradient(135deg, #06111b 0%, #0a1b28 54%, #0d2635 100%);
         }
-        .slide-process { background: #080d18; }
-        .slide-comparison { background: #0b1220; }
-        .slide-faq { background: #080e19; }
+
+        .slide-process {
+            background: linear-gradient(135deg, #07141f 0%, #0a202e 58%, #0d2938 100%);
+        }
+
+        .slide-comparison {
+            background: linear-gradient(135deg, #06121d 0%, #091c29 56%, #0c2432 100%);
+        }
+
+        .slide-faq {
+            background: linear-gradient(135deg, #050f18 0%, #081923 58%, #0b202c 100%);
+        }
 
 
         .problem-layout {
@@ -154,7 +158,7 @@
             align-items: center;
             gap: 11px;
             margin-bottom: 28px;
-            color: #22d3ee;
+            color: var(--green);
             font-size: 11px;
             font-weight: 850;
             letter-spacing: 0.06em;
@@ -166,7 +170,7 @@
             width: 44px;
             height: 2px;
             flex: 0 0 44px;
-            background: #22d3ee;
+            background: var(--green);
         }
 
         .problem-index { color: #ffffff; }
@@ -192,7 +196,7 @@
             width: 68px;
             height: 2px;
             margin: 32px 0 25px;
-            background: #22d3ee;
+            background: var(--green);
         }
 
         .problem-description {
@@ -267,7 +271,7 @@
             place-items: center;
             border: 1px solid rgba(34, 211, 238, 0.34);
             border-radius: 12px;
-            color: #22d3ee;
+            color: var(--green);
             background: rgba(34, 211, 238, 0.06);
         }
 
@@ -343,7 +347,7 @@
             border: 1px solid rgba(34, 211, 238, 0.48);
             border-radius: 50%;
             background: #080d18;
-            color: #22d3ee;
+            color: var(--green);
             font-size: 12px;
             font-weight: 850;
             letter-spacing: 0.06em;
@@ -439,6 +443,19 @@
             display: block;
         }
 
+
+        .hero-accent { color: var(--green); }
+
+        @supports ((background-clip: text) or (-webkit-background-clip: text)) {
+            .hero-accent {
+                background: linear-gradient(90deg, #d8edf4 0%, #7cc8dd 42%, var(--green) 72%, #287f9f 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
         @media (min-width: 900px) {
             .hero-heading-line {
                 white-space: nowrap;
@@ -485,8 +502,8 @@
         }
 
         .cta-primary {
-            border: 1px solid #22d3ee;
-            background: #22d3ee;
+            border: 1px solid var(--green);
+            background: var(--green);
             color: #ffffff;
         }
 
@@ -497,13 +514,13 @@
         }
 
         .cta-primary:hover {
-            border-color: #0891b2;
-            background: #0891b2;
+            border-color: var(--green-deep);
+            background: var(--green-deep);
         }
 
         .cta-secondary:hover {
-            border-color: #22d3ee;
-            color: #22d3ee;
+            border-color: var(--green);
+            color: var(--green);
         }
 
         .cta-primary.header-cta {
@@ -611,6 +628,32 @@
 
         .comparison-layout { width: min(1480px, 100%); }
 
+
+        .comparison-intro {
+            --comparison-label-size: clamp(1rem, 1.25vw, 1.2rem);
+            text-align: center;
+        }
+
+        .comparison-kicker {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: var(--comparison-label-size);
+        }
+
+        .comparison-kicker::before { display: none; }
+
+        .comparison-title {
+            margin: 0 auto;
+            color: #ffffff;
+            font-size: calc(var(--comparison-label-size) * 1.5);
+            font-weight: 850;
+            letter-spacing: -0.035em;
+            line-height: 1.12;
+            text-align: center;
+            text-wrap: balance;
+        }
+
         .comparison-wrap {
             margin-top: 34px;
             overflow-x: auto;
@@ -653,7 +696,7 @@
 
         .comparison-table th:nth-child(3) {
             background: #0d2028;
-            color: #22d3ee;
+            color: var(--green);
         }
 
         .comparison-table td {
@@ -693,7 +736,7 @@
 
         .comparison-header-label svg { width: 13px; height: 13px; }
         .icon-no { color: #b23a48; }
-        .icon-yes { color: #22d3ee; }
+        .icon-yes { color: var(--green); }
 
         .cta-kicker {
             display: inline-flex;
@@ -801,8 +844,6 @@
                 padding-block: 118px 84px;
             }
 
-            .slide-problem { background-position: 64% center; }
-
             .problem-layout {
                 grid-template-columns: 1fr;
                 gap: 52px;
@@ -850,7 +891,6 @@
 
             .story-slide { padding-inline: 18px; }
             .slide-hero { background-position: 58% center; }
-            .slide-problem { background-position: 68% center; }
 
             .problem-layout { gap: 40px; }
             .problem-kicker { margin-bottom: 24px; }
@@ -944,7 +984,7 @@
             <div class="slide-content hero-layout">
                 <h1 class="section-heading">
                     <span class="hero-heading-line">Seu site precisa transformar</span>
-                    <span class="hero-heading-line">atenção em oportunidades reais.</span>
+                    <span class="hero-heading-line"><span class="hero-accent">atenção</span> em oportunidades reais.</span>
                 </h1>
                 <p class="section-copy">
                     Criamos landing pages e sites institucionais rápidos, persuasivos e preparados para conduzir o visitante da primeira impressão até o contato — com auditoria da S.S.W antes da publicação.
@@ -1069,9 +1109,10 @@
 
         <section class="story-slide slide-comparison" id="comparacao">
             <div class="slide-content comparison-layout">
-                <span class="eyebrow">Comparação</span>
-                <h2 class="section-heading">Não é apenas “ter um site”. É fazer o site cumprir uma função.</h2>
-                <p class="section-copy">A diferença aparece na clareza, na experiência e na capacidade de transformar tráfego em conversas comerciais.</p>
+                <div class="comparison-intro">
+                    <span class="eyebrow comparison-kicker">Comparação</span>
+                    <h2 class="comparison-title">Site Comum X Site Criado pela SSW</h2>
+                </div>
 
                 <div class="comparison-wrap">
                     <table class="comparison-table">
@@ -1209,6 +1250,7 @@
             '.problem-description',
             '.outline-card',
             '.process-flow-step',
+            '.comparison-title',
             '.comparison-wrap',
             '.cta-group',
             '.faq-item'
