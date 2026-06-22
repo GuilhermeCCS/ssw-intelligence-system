@@ -8656,3 +8656,54 @@ body.user-authenticated #heroSection > .absolute.inset-0 {
         font-size: clamp(2.6rem, 12vw, 4.6rem) !important;
     }
 }
+
+/* O workspace autenticado usa somente o formulário de análise, sem a hero comercial. */
+body.user-authenticated #heroSection {
+    min-height: 100dvh !important;
+    height: 100dvh !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #050505 !important;
+}
+
+body.user-authenticated #heroSection > .absolute.inset-0,
+body.user-authenticated #heroSection > .circular-reveal-overlay,
+body.user-authenticated #heroSection > .hero-showcase-carousel {
+    display: none !important;
+}
+
+body.user-authenticated #heroSection > .relative.z-10 {
+    align-self: auto !important;
+    display: block !important;
+    width: min(100%, 860px) !important;
+    max-width: 860px !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: 32px !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+body.user-authenticated #heroSection > .relative.z-10 > :not(.search-container) {
+    display: none !important;
+}
+
+body.user-authenticated #heroSection .search-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 780px !important;
+    margin: 0 auto !important;
+}
+
+@media (max-width: 900px) {
+    body.user-authenticated #heroSection {
+        min-height: 100dvh !important;
+        height: auto !important;
+        flex-direction: row !important;
+    }
+
+    body.user-authenticated #heroSection > .relative.z-10 {
+        min-height: 0 !important;
+        padding: 24px 18px !important;
+    }
+}
