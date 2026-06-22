@@ -9128,3 +9128,157 @@ body.user-authenticated.audit-workspace-locked #view-home.command-center {
         padding: 24px 18px !important;
     }
 }
+
+/* Divisor interativo da hero pública. */
+.hero-split-control {
+    display: none;
+}
+
+@media (min-width: 901px) {
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection {
+        --hero-split: 50%;
+        --hero-left-shift: 0vw;
+        --hero-right-shift: 0vw;
+        --hero-left-opacity: 1;
+        --hero-right-opacity: 1;
+        background: linear-gradient(
+            90deg,
+            #050505 0 var(--hero-split),
+            #f5f7f9 var(--hero-split) 100%
+        ) !important;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > #beams-container {
+        width: var(--hero-split) !important;
+        will-change: width;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 {
+        width: var(--hero-split) !important;
+        margin: 0 calc(100% - var(--hero-split)) 0 0 !important;
+        will-change: width, margin-right;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .inline-flex,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > h1,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > p,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .flex {
+        opacity: var(--hero-left-opacity) !important;
+        transform: translate3d(var(--hero-left-shift), 0, 0) !important;
+        transition: opacity 180ms ease-out, transform 220ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+        will-change: opacity, transform;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-carousel {
+        inset: 0 0 0 var(--hero-split) !important;
+        will-change: left;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-copy,
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-frame {
+        opacity: var(--hero-right-opacity);
+        transition: opacity 180ms ease-out, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: opacity, transform;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-copy {
+        transform: translate3d(var(--hero-right-shift), 0, 0);
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-frame {
+        transform: none;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) .hero-split-control {
+        position: absolute;
+        z-index: 30;
+        top: 0;
+        bottom: 0;
+        left: var(--hero-split);
+        display: flex;
+        width: 52px;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        outline: none;
+        cursor: ew-resize;
+        touch-action: none;
+        transform: translateX(-50%);
+        user-select: none;
+        -webkit-user-select: none;
+        will-change: left;
+    }
+
+    .hero-split-knob {
+        position: relative;
+        display: grid;
+        width: 46px;
+        height: 64px;
+        place-items: center;
+        overflow: hidden;
+        border: 1px solid rgba(34, 193, 220, 0.56);
+        border-radius: 999px;
+        background: #0b1118;
+        box-shadow: 0 12px 30px rgba(2, 8, 23, 0.24);
+        transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+    }
+
+    .hero-split-knob::before {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    .hero-split-knob svg {
+        width: 30px;
+        height: 20px;
+        fill: none;
+        stroke: #67d9ed;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .hero-split-control:hover .hero-split-knob,
+    .hero-split-control:focus-visible .hero-split-knob,
+    .hero-split-control.is-dragging .hero-split-knob {
+        border-color: #22c1dc;
+        background: #101923;
+        transform: scale(1.045);
+    }
+
+    .hero-split-control:focus-visible .hero-split-knob {
+        box-shadow: 0 0 0 4px rgba(34, 193, 220, 0.2), 0 12px 30px rgba(2, 8, 23, 0.24);
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging * {
+        cursor: ew-resize !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging > .relative.z-10 > .inline-flex,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging > .relative.z-10 > h1,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging > .relative.z-10 > p,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging > .relative.z-10 > .flex,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging .hero-showcase-copy,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging .hero-showcase-frame {
+        transition: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-split-knob,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .inline-flex,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > h1,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > p,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .flex,
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-copy,
+    body:not(.user-authenticated):not(.auth-page-active) .hero-showcase-frame {
+        transition: none !important;
+    }
+}

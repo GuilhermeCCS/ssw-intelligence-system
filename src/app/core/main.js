@@ -61,6 +61,7 @@
             initHeroTypewriter();
             initKineticNeuralWave();
             initHeroShowcaseCarousel();
+            initHeroSplitControl();
             
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
@@ -449,6 +450,120 @@
 
             showSlide(0);
             startCarousel();
+        }
+
+        function initHeroSplitControl() {
+            const hero = document.getElementById('heroSection');
+            const control = document.getElementById('heroSplitControl');
+            if (!hero || !control || control.dataset.splitReady === 'true') return;
+
+            control.dataset.splitReady = 'true';
+            const min = Number(control.dataset.min) || 8;
+            const max = Number(control.dataset.max) || 92;
+            const center = 50;
+            const desktopMedia = window.matchMedia('(min-width: 901px)');
+            let value = center;
+            let pointerId = null;
+            let pendingValue = null;
+            let frameId = null;
+
+            const clamp = (number, lower, upper) => Math.min(upper, Math.max(lower, number));
+            const fadeProgress = (number) => Math.pow(clamp(number, 0, 1), 1.35);
+
+            const render = nextValue => {
+                value = clamp(nextValue, min, max);
+                const delta = value - center;
+                const leftOpacity = value >= center
+                    ? 1
+                    : fadeProgress((value - min) / (center - min));
+                const rightOpacity = value <= center
+                    ? 1
+                    : fadeProgress((max - value) / (max - center));
+                const roundedValue = Math.round(value);
+
+                hero.style.setProperty('--hero-split', `${value}%`);
+                hero.style.setProperty('--hero-left-shift', `${delta / 2}vw`);
+                hero.style.setProperty('--hero-right-shift', `${-delta / 2}vw`);
+                hero.style.setProperty('--hero-left-opacity', leftOpacity.toFixed(3));
+                hero.style.setProperty('--hero-right-opacity', rightOpacity.toFixed(3));
+                hero.dataset.splitPosition = value.toFixed(1);
+                control.setAttribute('aria-valuenow', String(roundedValue));
+                control.setAttribute(
+                    'aria-valuetext',
+                    `${roundedValue}% apresentação, ${100 - roundedValue}% demonstração`
+                );
+            };
+
+            const scheduleRender = nextValue => {
+                pendingValue = nextValue;
+                if (frameId !== null) return;
+                frameId = window.requestAnimationFrame(() => {
+                    frameId = null;
+                    render(pendingValue);
+                });
+            };
+
+            const valueFromPointer = event => {
+                const rect = hero.getBoundingClientRect();
+                if (!rect.width) return value;
+                return ((event.clientX - rect.left) / rect.width) * 100;
+            };
+
+            const stopDragging = event => {
+                if (pointerId === null) return;
+                if (control.hasPointerCapture?.(pointerId)) {
+                    control.releasePointerCapture(pointerId);
+                }
+                pointerId = null;
+                hero.classList.remove('is-split-dragging');
+                control.classList.remove('is-dragging');
+                if (event) scheduleRender(valueFromPointer(event));
+            };
+
+            control.addEventListener('pointerdown', event => {
+                if (!desktopMedia.matches || document.body.classList.contains('user-authenticated')) return;
+                event.preventDefault();
+                pointerId = event.pointerId;
+                control.setPointerCapture?.(pointerId);
+                hero.classList.add('is-split-dragging');
+                control.classList.add('is-dragging');
+                scheduleRender(valueFromPointer(event));
+            });
+
+            control.addEventListener('pointermove', event => {
+                if (event.pointerId !== pointerId) return;
+                event.preventDefault();
+                scheduleRender(valueFromPointer(event));
+            });
+
+            control.addEventListener('pointerup', stopDragging);
+            control.addEventListener('pointercancel', stopDragging);
+            control.addEventListener('lostpointercapture', () => {
+                pointerId = null;
+                hero.classList.remove('is-split-dragging');
+                control.classList.remove('is-dragging');
+            });
+
+            control.addEventListener('keydown', event => {
+                if (!desktopMedia.matches) return;
+                let nextValue = value;
+                if (event.key === 'ArrowLeft') nextValue -= event.shiftKey ? 10 : 2;
+                else if (event.key === 'ArrowRight') nextValue += event.shiftKey ? 10 : 2;
+                else if (event.key === 'Home') nextValue = min;
+                else if (event.key === 'End') nextValue = max;
+                else if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') nextValue = center;
+                else return;
+
+                event.preventDefault();
+                render(nextValue);
+            });
+
+            control.addEventListener('dblclick', event => {
+                event.preventDefault();
+                render(center);
+            });
+
+            render(center);
         }
 
         function initKineticNeuralWave() {
