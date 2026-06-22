@@ -58,7 +58,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260622-auth-workspace-scroll">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260622-hero-uiux-refine">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -406,6 +406,11 @@
                                     <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
                                 </linearGradient>
                             </defs>
+                            <g class="beam-tracks" aria-hidden="true">
+                                <path d="M0,200 Q400,100 800,200 T1600,200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+                                <path d="M0,400 Q400,300 800,400 T1600,400" fill="none" stroke="#00d4ff" stroke-width="0.8"/>
+                                <path d="M0,600 Q400,500 800,600 T1600,600" fill="none" stroke="#3b82f6" stroke-width="0.7"/>
+                            </g>
                             <!-- Beam paths serão animados via CSS -->
                             <path class="beam-path" d="M0,200 Q400,100 800,200 T1600,200" fill="none" stroke="url(#beam-gradient)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000"/>
                             <path class="beam-path beam-delay-1" d="M0,400 Q400,300 800,400 T1600,400" fill="none" stroke="url(#beam-gradient)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000"/>
@@ -414,6 +419,11 @@
                     </div>
 
                     <div id="heroShowcaseCarousel" class="hero-showcase-carousel" data-interval="7000" aria-label="Demonstração dos serviços S.S.W">
+                        <div class="hero-showcase-copy">
+                            <span>Ecossistema S.S.W</span>
+                            <h2>Estratégia digital da análise à execução.</h2>
+                            <p>Conheça a plataforma de auditoria e o serviço de sites preparados para gerar oportunidades.</p>
+                        </div>
                         <div class="hero-showcase-frame">
                             <img class="hero-showcase-slide is-active" src="src/assets/images/hero/ssw-platform-audit.png?v=20260622-3" alt="Tela da plataforma S.S.W Intelligence para auditoria de sites" aria-hidden="false">
                             <img class="hero-showcase-slide" src="src/assets/images/hero/ssw-sites-service.png" alt="Landing page do serviço de criação de sites da S.S.W" aria-hidden="true">
@@ -435,10 +445,10 @@
                         <!-- H1 com Gradient -->
                         <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6 tracking-tight leading-tight animate-fade-in-up" style="animation-delay: 0.1s">
                             <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">
-                                Domine o Mercado
+                                Domine o mercado
                             </span>
                             <span class="block text-white mt-2">
-                                com Inteligência
+                                com inteligência
                             </span>
                         </h1>
 
