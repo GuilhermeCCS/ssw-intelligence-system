@@ -9098,3 +9098,33 @@ body:not(.user-authenticated):not(.auth-page-active) .guest-auth-primary:hover {
         transition: opacity 120ms linear !important;
     }
 }
+
+/* O fluxo de auditoria deve substituir completamente o formulário enquanto processa. */
+body.user-authenticated #heroSection.hidden {
+    display: none !important;
+}
+
+body.user-authenticated.audit-home-workspace #auditLoading:not(.hidden) {
+    box-sizing: border-box;
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    margin: 0 !important;
+    padding: clamp(28px, 6vw, 72px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #050505;
+}
+
+body.user-authenticated.audit-workspace-locked #view-home.command-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+}
+
+@media (max-width: 767px) {
+    body.user-authenticated.audit-home-workspace #auditLoading:not(.hidden) {
+        padding: 24px 18px !important;
+    }
+}
