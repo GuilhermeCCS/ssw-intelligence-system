@@ -61,30 +61,6 @@
             initHeroTypewriter();
             initKineticNeuralWave();
             
-            // Injetar botão "Serviços" no topo esquerdo da Hero Section
-            const heroSection = document.getElementById('heroSection');
-            if (heroSection && !document.getElementById('servicosDropdown')) {
-                const dropdownHtml = `
-                    <div id="servicosDropdown" class="nav-cluster" style="position: absolute; top: 24px; left: 24px; z-index: 50;">
-                        <button class="nav-cluster-trigger glass-panel" style="border-radius: 8px; padding: 8px 16px; cursor: pointer;">
-                            Serviços
-                            <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i>
-                        </button>
-                        <div class="nav-cluster-menu">
-                            <button onclick="handleAuthButton()" style="cursor: pointer;">
-                                <i data-lucide="cpu" class="w-4 h-4"></i>
-                                IA de Auditoria
-                            </button>
-                            <button onclick="nav('sites')" style="cursor: pointer;">
-                                <i data-lucide="layout" class="w-4 h-4"></i>
-                                Sites
-                            </button>
-                        </div>
-                    </div>
-                `;
-                heroSection.insertAdjacentHTML('afterbegin', dropdownHtml);
-            }
-
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
                 // Esconder todas as seções

@@ -286,6 +286,10 @@
                 </button>
 
                 <p class="sidebar-section-label">Empresa</p>
+                <button type="button" onclick="nav('sites'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="sites">
+                    <i data-lucide="layout-template" class="w-4 h-4"></i>
+                    <span>Sites</span>
+                </button>
                 <button type="button" onclick="showAboutCard(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
                     <i data-lucide="info" class="w-4 h-4"></i>
                     <span>Sobre a SSW</span>
@@ -1690,7 +1694,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260615-neural-wave-3"></script>
+            <script src="src/app/core/main.js?v=20260622-services-nav"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">
