@@ -2533,10 +2533,7 @@ function getCodigoHTML() {
             }
         }
         function openSitesPage() {
-            const sitesTab = window.open('/sites/', '_blank', 'noopener,noreferrer');
-            if (!sitesTab) {
-                window.location.href = '/sites/';
-            }
+            window.open('/sites/', '_blank', 'noopener,noreferrer');
         }
         function comprarCreditos() { openPricingPage(); }
         function showCreditsEndedModal() {
