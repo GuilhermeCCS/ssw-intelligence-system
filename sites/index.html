@@ -4,667 +4,479 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Landing pages e sites institucionais rápidos, estratégicos e orientados à conversão, criados pela S.S.W Intelligence.">
-    <title>Criação de Sites de Alta Performance — S.S.W Intelligence</title>
+    <title>Sites estratégicos para gerar oportunidades — S.S.W Intelligence</title>
     <link rel="icon" type="image/x-icon" href="/src/assets/images/logo/logos.ico">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/src/app/sections/public-footer.js?v=20260618-sites-footer-2" defer></script>
+    <script>document.documentElement.classList.add('js');</script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="/src/app/sections/public-footer.js?v=20260622-sites-conversion" defer></script>
     <style>
         :root {
-            color-scheme: dark;
-            --text: #f8fafc;
-            --muted: #b3bfd0;
-            --dim: #7f8da3;
-            --line: rgba(255, 255, 255, 0.16);
-            --line-strong: rgba(255, 255, 255, 0.28);
-            --green: #43b7d6;
-            --green-deep: #2a84a4;
+            color-scheme: light dark;
+            --ink: #05070a;
+            --paper: #f4f7f9;
+            --accent: #22c1dc;
+            --white: #ffffff;
+            --ink-soft: #101820;
+            --text-dark: #17212b;
+            --text-light: #f7fafc;
+            --muted-dark: #5d6a78;
+            --muted-light: #a7b3c2;
+            --line-dark: rgba(5, 7, 10, 0.13);
+            --line-light: rgba(255, 255, 255, 0.13);
+            --container: 1240px;
+            --header-height: 76px;
         }
 
-        * { box-sizing: border-box; scroll-behavior: smooth; }
+        * { box-sizing: border-box; }
 
-        html, body {
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: calc(var(--header-height) + 20px);
+        }
+
+        body {
             margin: 0;
-            background: #050e17;
-            color: var(--text);
+            overflow-x: hidden;
+            background: var(--ink);
+            color: var(--text-light);
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
-        body { overflow-x: hidden; }
         a { color: inherit; text-decoration: none; }
-        button { font: inherit; }
+        button { color: inherit; font: inherit; }
+        img { max-width: 100%; }
+
+        :focus-visible {
+            outline: 3px solid rgba(34, 193, 220, 0.5);
+            outline-offset: 4px;
+        }
+
+        .container {
+            width: min(var(--container), calc(100% - 48px));
+            margin-inline: auto;
+        }
 
         .site-header {
             position: fixed;
             inset: 0 0 auto;
             z-index: 100;
-            background: #06111b;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-            pointer-events: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(5, 7, 10, 0.91);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
         }
 
         .site-header-inner {
-            width: min(1470px, calc(100% - 48px));
-            min-height: 74px;
-            margin: 0 auto;
+            min-height: var(--header-height);
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            grid-template-columns: minmax(190px, 1fr) auto minmax(190px, 1fr);
             align-items: center;
-            gap: 24px;
-            pointer-events: auto;
+            gap: 28px;
         }
 
         .brand-link {
             display: inline-flex;
             align-items: center;
-            grid-column: 1;
             justify-self: start;
-            gap: 12px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 850;
-            letter-spacing: -0.02em;
+            gap: 11px;
+            color: var(--white);
+            font-size: 0.92rem;
+            font-weight: 820;
+            letter-spacing: -0.025em;
         }
 
         .brand-link img {
-            width: 48px;
-            height: 48px;
-            flex: 0 0 48px;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 50%;
             object-fit: cover;
         }
-        .brand-link span span { color: var(--green); }
+
+        .brand-accent { color: var(--accent); }
 
         .header-nav {
             display: flex;
-            grid-column: 2;
             align-items: center;
-            justify-self: center;
-            gap: 32px;
-            color: #929aa6;
-            font-size: 14px;
-            font-weight: 650;
+            justify-content: center;
+            gap: clamp(22px, 2.3vw, 36px);
+            color: #9ba7b5;
+            font-size: 0.82rem;
+            font-weight: 680;
+            white-space: nowrap;
+        }
+
+        .header-nav a {
+            position: relative;
+            padding-block: 28px;
+            transition: color 180ms ease;
+        }
+
+        .header-nav a::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: -1px;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 180ms ease;
+        }
+
+        .header-nav a:hover,
+        .header-nav a[aria-current="true"] { color: var(--white); }
+
+        .header-nav a[aria-current="true"]::after { transform: scaleX(1); }
+
+        .button {
+            min-height: 52px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 0 23px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font-size: 0.91rem;
+            font-weight: 800;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+        }
+
+        .button:hover { transform: translateY(-1px); }
+
+        .button-primary {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: var(--ink);
+        }
+
+        .button-primary:hover {
+            border-color: #48cee4;
+            background: #48cee4;
+        }
+
+        .button-secondary {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.035);
+            color: var(--white);
+        }
+
+        .button-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.38);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .header-cta {
-            width: auto;
-            min-width: 176px;
-            min-height: 44px;
-            grid-column: 3;
+            min-height: 42px;
             justify-self: end;
-            padding-inline: 22px;
+            padding-inline: 19px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 0.79rem;
         }
 
-        .header-nav a { transition: color 180ms ease; }
-        .header-nav a:hover { color: #ffffff; }
-        .sticky-story { position: relative; }
+        .header-cta-short { display: none; }
 
-        .story-slide {
-            position: sticky;
-            top: 0;
+        .hero {
+            position: relative;
             min-height: 100svh;
             display: flex;
             align-items: center;
+            isolation: isolate;
             overflow: hidden;
-            padding: 112px 24px 54px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            scroll-margin-top: 0;
-        }
-
-        .story-slide:not(:last-child) {
-            margin-bottom: clamp(120px, 20vh, 220px);
-        }
-
-        .slide-hero {
-            background-color: #06111b;
-            background-image: url("/src/assets/images/sites/hero-digital-layout.jpg");
+            padding: calc(var(--header-height) + 72px) 0 72px;
+            background-color: var(--ink);
+            background-image:
+                linear-gradient(90deg, rgba(5, 7, 10, 0.99) 0%, rgba(5, 7, 10, 0.96) 38%, rgba(5, 7, 10, 0.69) 63%, rgba(5, 7, 10, 0.24) 100%),
+                url("/src/assets/images/sites/hero-digital-layout.jpg");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
         }
 
-        .slide-problem {
-            background: linear-gradient(135deg, #06111b 0%, #0a1b28 54%, #0d2635 100%);
-        }
-
-        .slide-process {
-            background: linear-gradient(135deg, #07141f 0%, #0a202e 58%, #0d2938 100%);
-        }
-
-        .slide-comparison {
-            background: linear-gradient(135deg, #06121d 0%, #091c29 56%, #0c2432 100%);
-        }
-
-        .slide-faq {
-            background: linear-gradient(135deg, #050f18 0%, #081923 58%, #0b202c 100%);
-        }
-
-
-        .problem-layout {
-            width: min(1220px, 100%);
-            display: grid;
-            grid-template-columns: minmax(0, 0.95fr) minmax(380px, 0.82fr);
-            align-items: center;
-            gap: clamp(54px, 8vw, 132px);
-        }
-
-        .problem-copy { max-width: 580px; }
-
-        .problem-kicker {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            margin-bottom: 28px;
-            color: var(--green);
-            font-size: 11px;
-            font-weight: 850;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-
-        .problem-kicker::before {
+        .hero::after {
             content: "";
-            width: 44px;
-            height: 2px;
-            flex: 0 0 44px;
-            background: var(--green);
+            position: absolute;
+            inset: auto 0 0;
+            z-index: -1;
+            height: 190px;
+            background: linear-gradient(to bottom, transparent, var(--ink));
+            pointer-events: none;
         }
 
-        .problem-index { color: #ffffff; }
-        .problem-separator { color: #64748b; }
-
-        .problem-heading {
-            max-width: 580px;
-            margin: 0;
-            color: #ffffff;
-            font-size: clamp(3.5rem, 5.1vw, 5.35rem);
-            font-weight: 880;
-            letter-spacing: -0.06em;
-            line-height: 0.94;
-        }
-
-        .problem-heading-line { display: block; }
-
-        .process-heading {
-            font-size: clamp(3rem, 4.2vw, 4.6rem);
-        }
-
-        .problem-divider {
-            width: 68px;
-            height: 2px;
-            margin: 32px 0 25px;
-            background: var(--green);
-        }
-
-        .problem-description {
-            max-width: 500px;
-            margin: 0;
-            color: #aeb9c9;
-            font-size: clamp(1rem, 1.2vw, 1.16rem);
-            line-height: 1.58;
-        }
-
-        .problem-cards {
-            width: min(100%, 510px);
-            display: grid;
-            gap: 14px;
-            justify-self: end;
-        }
-
-        .problem-card {
-            display: grid;
-            grid-template-columns: 48px minmax(0, 1fr);
-            align-items: start;
-            gap: 18px;
-            padding: 21px 22px;
-            border: 1px solid rgba(148, 163, 184, 0.22);
-            border-left: 2px solid rgba(34, 211, 238, 0.62);
-            border-radius: 14px;
-            background: rgba(5, 10, 15, 0.76);
-            box-shadow: none;
-            transition:
-                opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
-                transform 780ms cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 180ms ease,
-                background-color 180ms ease;
-        }
-
-        .problem-card:hover {
-            border-color: rgba(34, 211, 238, 0.48);
-            background: rgba(5, 10, 15, 0.88);
-        }
-
-        .problem-card.is-reveal-ready {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-        }
-
-        .problem-card.is-reveal-ready.is-visible {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-            transition-delay: var(--reveal-delay, 0ms);
-        }
-
-
-        .section-reveal-item.is-reveal-ready {
-            opacity: 0;
-            transform: translate3d(0, 28px, 0);
-            will-change: opacity, transform;
-            transition:
-                opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
-                transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .section-reveal-item.is-reveal-ready.is-visible {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-            transition-delay: var(--section-reveal-delay, 0ms);
-        }
-
-        .problem-card-icon {
-            width: 48px;
-            height: 48px;
-            display: grid;
-            place-items: center;
-            border: 1px solid rgba(34, 211, 238, 0.34);
-            border-radius: 12px;
-            color: var(--green);
-            background: rgba(34, 211, 238, 0.06);
-        }
-
-        .problem-card-icon svg { width: 21px; height: 21px; }
-
-        .problem-card-title-row {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 18px;
-            margin-bottom: 7px;
-        }
-
-        .problem-card h3 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.25;
-        }
-
-        .problem-card-number {
-            flex: 0 0 auto;
-            color: #64748b;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-        }
-
-        .problem-card p {
-            margin: 0;
-            color: #aeb9c9;
-            font-size: 13.5px;
-            line-height: 1.58;
-        }
-
-
-
-        .process-flow {
-            position: relative;
-            width: min(100%, 520px);
-            min-height: 420px;
-            justify-self: end;
-        }
-
-        .process-flow-list {
-            position: relative;
-            z-index: 2;
-            min-height: 420px;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            grid-template-rows: repeat(2, minmax(0, 1fr));
-            gap: 58px 48px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .process-flow-step {
-            min-width: 0;
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 360ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .process-flow-marker {
-            width: 50px;
-            height: 50px;
-            display: grid;
-            place-items: center;
-            margin-bottom: 18px;
-            border: 1px solid rgba(34, 211, 238, 0.48);
-            border-radius: 50%;
-            background: #080d18;
-            color: var(--green);
-            font-size: 12px;
-            font-weight: 850;
-            letter-spacing: 0.06em;
-            transition: border-color 240ms ease, background-color 240ms ease, color 240ms ease;
-        }
-
-        .process-flow-step h3 {
-            margin: 0 0 9px;
-            color: #ffffff;
-            font-size: 17px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.25;
-        }
-
-        .process-flow-step p {
-            margin: 0;
-            color: #aeb9c9;
-            font-size: 13px;
-            line-height: 1.56;
-        }
-
-
-
-        .slide-content { width: min(1100px, 100%); margin: 0 auto; }
-        .slide-content.narrow { width: min(820px, 100%); }
+        .hero-copy { max-width: 900px; }
 
         .eyebrow {
             display: inline-flex;
             align-items: center;
-            gap: 9px;
-            margin-bottom: 20px;
-            color: #d8e2ef;
-            font-size: 12px;
-            font-weight: 850;
-            letter-spacing: 0.18em;
+            gap: 12px;
+            margin: 0 0 25px;
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 820;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
         }
 
         .eyebrow::before {
             content: "";
-            width: 28px;
+            width: 30px;
             height: 1px;
             background: currentColor;
-            opacity: 0.65;
         }
 
-        .section-heading {
-            max-width: 840px;
+        .hero h1 {
+            max-width: 900px;
             margin: 0;
-            color: #ffffff;
-            font-size: clamp(2.35rem, 5vw, 4.6rem);
-            font-weight: 900;
-            letter-spacing: -0.055em;
+            color: var(--white);
+            font-size: clamp(3.2rem, 5.2vw, 5.2rem);
+            font-weight: 820;
+            letter-spacing: -0.062em;
+            line-height: 0.94;
+            text-wrap: balance;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero-lead {
+            max-width: 650px;
+            margin: 29px 0 0;
+            color: #c1ccd8;
+            font-size: clamp(1rem, 1.45vw, 1.18rem);
+            line-height: 1.68;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .hero-signals {
+            max-width: 760px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0;
+            margin: 54px 0 0;
+            padding: 0;
+            border-top: 1px solid var(--line-light);
+            list-style: none;
+        }
+
+        .hero-signal {
+            min-height: 82px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 19px 18px 0 0;
+            color: #bbc6d2;
+            font-size: 0.79rem;
+            font-weight: 620;
+            line-height: 1.45;
+        }
+
+        .hero-signal + .hero-signal {
+            padding-left: 18px;
+            border-left: 1px solid var(--line-light);
+        }
+
+        .hero-signal svg {
+            width: 17px;
+            height: 17px;
+            flex: 0 0 17px;
+            color: var(--accent);
+        }
+
+        .section {
+            position: relative;
+            padding: clamp(92px, 10vw, 148px) 0;
+        }
+
+        .section-dark {
+            background: var(--ink);
+            color: var(--text-light);
+        }
+
+        .section-light {
+            background: var(--paper);
+            color: var(--text-dark);
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(440px, 1.1fr);
+            align-items: start;
+            gap: clamp(64px, 9vw, 132px);
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 820;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .section-label-number { color: inherit; }
+        .section-label-divider { width: 28px; height: 1px; background: currentColor; }
+
+        .section-title {
+            max-width: 790px;
+            margin: 0;
+            font-size: clamp(2.55rem, 4.7vw, 4.9rem);
+            font-weight: 820;
+            letter-spacing: -0.058em;
             line-height: 0.98;
             text-wrap: balance;
         }
 
-        .section-heading.centered { margin-inline: auto; }
+        .section-dark .section-title { color: var(--white); }
+        .section-light .section-title { color: var(--ink); }
 
-        .section-copy {
-            max-width: 690px;
-            margin: 24px 0 0;
-            color: var(--muted);
-            font-size: clamp(1rem, 1.7vw, 1.2rem);
+        .section-intro {
+            max-width: 610px;
+            margin: 25px 0 0;
+            font-size: 1.02rem;
             line-height: 1.72;
         }
 
-        .section-copy.centered { margin-inline: auto; }
-        .cta-layout { text-align: center; }
+        .section-dark .section-intro { color: var(--muted-light); }
+        .section-light .section-intro { color: var(--muted-dark); }
 
-        .story-slide.slide-hero {
-            padding-left: clamp(28px, 7vw, 112px);
-        }
-
-        .hero-layout {
-            width: 100%;
-            max-width: 1200px;
+        .pain-list {
             margin: 0;
-            text-align: left;
+            padding: 0;
+            border-top: 1px solid var(--line-light);
+            list-style: none;
         }
 
-        .hero-layout .section-heading {
-            max-width: 1200px;
-            margin: 0;
-            font-size: clamp(2.6rem, 4.4vw, 4.25rem);
-            line-height: 0.98;
-            letter-spacing: -0.045em;
-            text-transform: uppercase;
-        }
-
-        .hero-heading-line {
-            display: block;
-        }
-
-
-        .hero-accent { color: var(--green); }
-
-        @supports ((background-clip: text) or (-webkit-background-clip: text)) {
-            .hero-accent {
-                background: linear-gradient(90deg, #d8edf4 0%, #7cc8dd 42%, var(--green) 72%, #287f9f 100%);
-                background-clip: text;
-                -webkit-background-clip: text;
-                color: transparent;
-                -webkit-text-fill-color: transparent;
-            }
-        }
-
-        @media (min-width: 900px) {
-            .hero-heading-line {
-                white-space: nowrap;
-            }
-        }
-
-        .hero-layout .section-copy {
-            max-width: 680px;
-            margin: 32px 0 0;
-            color: #e2e8f0;
-            font-size: clamp(0.98rem, 1.45vw, 1.16rem);
-            line-height: 1.65;
-            letter-spacing: 0.065em;
-        }
-
-        .hero-layout .cta-group {
-            justify-content: flex-start;
-            margin-top: 30px;
-        }
-
-        .cta-group {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-top: 34px;
-        }
-
-        .cta-primary,
-        .cta-secondary {
-            min-height: 54px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 0 25px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 800;
-            box-shadow: none;
-            filter: none;
-            transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
-        }
-
-        .cta-primary {
-            border: 1px solid var(--green);
-            background: var(--green);
-            color: #ffffff;
-        }
-
-        .cta-secondary {
-            border: 1px solid rgba(34, 211, 238, 0.32);
-            background: transparent;
-            color: #ffffff;
-        }
-
-        .cta-primary:hover {
-            border-color: var(--green-deep);
-            background: var(--green-deep);
-        }
-
-        .cta-secondary:hover {
-            border-color: var(--green);
-            color: var(--green);
-        }
-
-        .cta-primary.header-cta {
-            min-width: 176px;
-            min-height: 44px;
-            padding-inline: 22px;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-
-        .outline-grid { display: grid; gap: 18px; margin-top: 42px; }
-        .outline-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .outline-grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
-        .outline-card {
-            min-height: 100%;
-            padding: 25px;
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            background: transparent;
-            transition: transform 180ms ease, border-color 180ms ease;
-        }
-
-        .outline-card:hover { transform: translateY(-4px); border-color: var(--line-strong); }
-
-        .outline-card-icon {
-            width: 43px;
-            height: 43px;
+        .pain-item {
             display: grid;
-            place-items: center;
-            margin-bottom: 20px;
-            border: 1px solid var(--line-strong);
-            border-radius: 12px;
-            color: #ffffff;
+            grid-template-columns: 52px minmax(0, 1fr);
+            gap: 22px;
+            padding: 29px 0;
+            border-bottom: 1px solid var(--line-light);
         }
 
-        .outline-card-icon svg { width: 21px; height: 21px; }
-
-        .outline-card h3 {
-            margin: 0 0 10px;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 820;
+        .pain-number {
+            color: var(--accent);
+            font-size: 0.76rem;
+            font-weight: 830;
+            letter-spacing: 0.12em;
         }
 
-        .outline-card p {
+        .pain-item h3 {
+            margin: 0 0 8px;
+            color: var(--white);
+            font-size: 1.18rem;
+            font-weight: 760;
+            letter-spacing: -0.025em;
+        }
+
+        .pain-item p {
+            max-width: 560px;
             margin: 0;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.66;
-        }
-        .section-note {
-            max-width: 760px;
-            margin: 28px 0 0;
-            color: #d5deea;
-            font-size: 14px;
+            color: var(--muted-light);
+            font-size: 0.9rem;
             line-height: 1.65;
         }
 
-        .process-list {
+        .process-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.65fr);
+            align-items: end;
+            gap: 64px;
+        }
+
+        .process-head .section-intro { margin: 0; }
+
+        .process-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 0;
-            margin-top: 46px;
+            margin-top: 72px;
+            margin-bottom: 0;
+            padding: 0;
+            border-top: 1px solid var(--line-dark);
+            border-bottom: 1px solid var(--line-dark);
+            list-style: none;
         }
 
-        .process-step { position: relative; padding: 0 26px 0 0; }
-
-        .process-step:not(:last-child)::after {
-            content: "";
-            position: absolute;
-            top: 24px;
-            right: 10px;
-            width: calc(100% - 68px);
-            height: 1px;
-            transform: translateX(50%);
-            background: rgba(255, 255, 255, 0.26);
+        .process-step {
+            min-height: 290px;
+            padding: 31px 28px 32px;
         }
 
-        .step-number {
-            width: 48px;
-            height: 48px;
-            display: grid;
-            place-items: center;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.38);
-            border-radius: 999px;
-            color: #ffffff;
-            font-weight: 900;
+        .process-step + .process-step { border-left: 1px solid var(--line-dark); }
+
+        .process-number {
+            display: block;
+            margin-bottom: 50px;
+            color: #087f94;
+            font-size: 0.78rem;
+            font-weight: 850;
+            letter-spacing: 0.13em;
         }
 
         .process-step h3 {
-            margin: 0 0 10px;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 820;
+            min-height: 48px;
+            margin: 0 0 13px;
+            color: var(--ink);
+            font-size: 1.13rem;
+            font-weight: 780;
+            letter-spacing: -0.028em;
+            line-height: 1.3;
         }
 
         .process-step p {
             margin: 0;
-            color: var(--muted);
-            font-size: 14px;
+            color: var(--muted-dark);
+            font-size: 0.88rem;
             line-height: 1.65;
         }
 
-        .comparison-layout { width: min(1480px, 100%); }
+        .process-deliverable {
+            display: inline-flex;
+            margin-top: 19px;
+            color: #087f94;
+            font-size: 0.73rem;
+            font-weight: 800;
+        }
 
-
-        .comparison-intro {
-            --comparison-label-size: clamp(1rem, 1.25vw, 1.2rem);
+        .comparison-head {
+            max-width: 920px;
+            margin-inline: auto;
             text-align: center;
         }
 
-        .comparison-kicker {
-            width: 100%;
-            justify-content: center;
-            margin-bottom: 12px;
-            font-size: var(--comparison-label-size);
-        }
-
-        .comparison-kicker::before { display: none; }
-
-        .comparison-title {
-            margin: 0 auto;
-            color: #ffffff;
-            font-size: calc(var(--comparison-label-size) * 1.5);
-            font-weight: 850;
-            letter-spacing: -0.035em;
-            line-height: 1.12;
-            text-align: center;
-            text-wrap: balance;
-        }
+        .comparison-head .section-label { justify-content: center; }
+        .comparison-head .section-title { margin-inline: auto; }
+        .comparison-head .section-intro { margin-inline: auto; }
 
         .comparison-wrap {
-            margin-top: 34px;
+            margin-top: 58px;
             overflow-x: auto;
-            border: 1px solid #1c2935;
-            border-radius: 13px;
-            background: #080f18;
+            border: 1px solid #1c2732;
+            border-radius: 14px;
+            background: #080d12;
         }
 
         .comparison-table {
             width: 100%;
-            min-width: 900px;
+            min-width: 860px;
             border-spacing: 0;
             border-collapse: separate;
             table-layout: fixed;
@@ -673,9 +485,9 @@
         .comparison-table th,
         .comparison-table td {
             width: 33.333%;
-            padding: 16px 24px;
-            border-right: 1px solid #1c2935;
-            border-bottom: 1px solid #17222e;
+            padding: 18px 24px;
+            border-right: 1px solid #1c2732;
+            border-bottom: 1px solid #17212b;
             text-align: left;
             vertical-align: middle;
         }
@@ -685,99 +497,94 @@
         .comparison-table tbody tr:last-child td { border-bottom: 0; }
 
         .comparison-table th {
-            height: 48px;
-            background: #0e151f;
-            color: #657286;
-            font-size: 11px;
+            background: #0d131a;
+            color: #718094;
+            font-size: 0.69rem;
             font-weight: 850;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.09em;
             text-transform: uppercase;
         }
 
         .comparison-table th:nth-child(3) {
-            background: #0d2028;
-            color: var(--green);
+            background: #0a2027;
+            color: var(--accent);
         }
 
         .comparison-table td {
-            height: 53px;
-            background: #080f18;
-            color: #c8d4e3;
-            font-size: 14px;
+            background: #080d12;
+            color: #c8d2dd;
+            font-size: 0.87rem;
             line-height: 1.45;
         }
 
         .comparison-table td:first-child {
-            color: #cbd7e6;
-            font-weight: 650;
+            color: #e2e8ef;
+            font-weight: 680;
         }
 
-        .comparison-table td:nth-child(2) { color: #647187; }
+        .comparison-table td:nth-child(2) { color: #718094; }
 
         .comparison-table td:nth-child(3) {
-            background: #071821;
-            color: #dbe7f3;
-            font-weight: 520;
+            background: #07171c;
+            color: #e6f0f4;
         }
 
         .comparison-cell,
-        .comparison-header-label {
+        .comparison-brand {
             display: inline-flex;
             align-items: center;
             gap: 9px;
         }
 
-        .comparison-table svg {
-            width: 14px;
-            height: 14px;
-            flex: 0 0 14px;
-            stroke-width: 1.8;
+        .comparison-cell svg,
+        .comparison-brand svg {
+            width: 15px;
+            height: 15px;
+            flex: 0 0 15px;
         }
 
-        .comparison-header-label svg { width: 13px; height: 13px; }
-        .icon-no { color: #b23a48; }
-        .icon-yes { color: var(--green); }
+        .icon-no { color: #a94a55; }
+        .icon-yes { color: var(--accent); }
 
-        .cta-kicker {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 26px;
-            color: #b8c5d5;
-            font-size: 13px;
+        .faq-grid {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.78fr) minmax(460px, 1.1fr);
+            align-items: start;
+            gap: clamp(64px, 9vw, 130px);
         }
 
-        .faq-list { margin-top: 36px; border-top: 1px solid var(--line); }
-        .faq-item { border-bottom: 1px solid var(--line); }
+        .faq-list {
+            margin: 0;
+            border-top: 1px solid var(--line-dark);
+        }
+
+        .faq-item { border-bottom: 1px solid var(--line-dark); }
 
         .faq-trigger {
             width: 100%;
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto auto;
+            grid-template-columns: minmax(0, 1fr) auto;
             align-items: center;
-            gap: 18px;
-            padding: 21px 0;
+            gap: 20px;
+            padding: 24px 0;
             border: 0;
             background: transparent;
-            color: #ffffff;
+            color: var(--ink);
             text-align: left;
             cursor: pointer;
         }
 
-        .faq-trigger h3 { margin: 0; font-size: 17px; font-weight: 780; }
-
-        .faq-action-label {
-            color: #aebbd0;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+        .faq-trigger h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 760;
+            letter-spacing: -0.016em;
         }
 
         .faq-icon {
-            width: 20px;
-            height: 20px;
-            color: #dce5f0;
+            width: 21px;
+            height: 21px;
+            color: #087f94;
             transition: transform 220ms ease;
         }
 
@@ -785,185 +592,186 @@
             display: grid;
             grid-template-rows: 0fr;
             opacity: 0;
-            transition: grid-template-rows 280ms ease, opacity 220ms ease, padding 280ms ease;
+            transition: grid-template-rows 260ms ease, opacity 200ms ease, padding 260ms ease;
         }
 
         .faq-answer > div { overflow: hidden; }
 
         .faq-answer p {
-            max-width: 740px;
+            max-width: 680px;
             margin: 0;
-            color: var(--muted);
-            font-size: 14px;
+            color: var(--muted-dark);
+            font-size: 0.9rem;
             line-height: 1.72;
         }
 
         .faq-item[data-open="true"] .faq-answer {
             grid-template-rows: 1fr;
             opacity: 1;
-            padding-bottom: 22px;
+            padding-bottom: 24px;
         }
 
         .faq-item[data-open="true"] .faq-icon { transform: rotate(45deg); }
 
+        .final-cta {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 42px;
+            margin-top: clamp(78px, 9vw, 124px);
+            padding: clamp(38px, 5vw, 66px);
+            border-radius: 18px;
+            background: var(--ink);
+            color: var(--white);
+        }
+
+        .final-cta h2 {
+            max-width: 800px;
+            margin: 0;
+            font-size: clamp(2rem, 3.5vw, 3.65rem);
+            font-weight: 810;
+            letter-spacing: -0.05em;
+            line-height: 1.02;
+            text-wrap: balance;
+        }
+
+        .final-cta p {
+            max-width: 680px;
+            margin: 16px 0 0;
+            color: var(--muted-light);
+            font-size: 0.94rem;
+            line-height: 1.65;
+        }
+
+        .final-cta-action { text-align: center; }
+
+        .final-cta-note {
+            display: block;
+            margin-top: 10px;
+            color: #8795a5;
+            font-size: 0.7rem;
+        }
+
         .floating-whatsapp {
             position: fixed;
-            right: 24px;
-            bottom: 24px;
+            right: 22px;
+            bottom: 22px;
             z-index: 120;
-            width: 58px;
-            height: 58px;
+            width: 56px;
+            height: 56px;
             display: grid;
             place-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.22);
+            border: 2px solid var(--paper);
             border-radius: 50%;
             background: #25d366;
-            color: #ffffff;
-            box-shadow: none;
-            transition: background-color 180ms ease;
+            color: var(--white);
+            transition: background-color 180ms ease, transform 180ms ease;
         }
 
         .floating-whatsapp:hover {
             background: #1eaf53;
+            transform: translateY(-2px);
         }
 
-        .floating-whatsapp svg {
-            width: 27px;
-            height: 27px;
+        .floating-whatsapp svg { width: 26px; height: 26px; }
+
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 680ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        @media (max-width: 900px) {
+        .js .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: var(--reveal-delay, 0ms);
+        }
+
+        @media (max-width: 1080px) {
+            .site-header-inner { grid-template-columns: minmax(170px, 1fr) auto minmax(170px, 1fr); }
+            .header-nav { gap: 18px; }
+            .section-grid { grid-template-columns: minmax(0, 0.8fr) minmax(400px, 1.1fr); gap: 58px; }
+            .process-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .process-step:nth-child(3) { border-left: 0; border-top: 1px solid var(--line-dark); }
+            .process-step:nth-child(4) { border-top: 1px solid var(--line-dark); }
+        }
+
+        @media (max-width: 880px) {
+            :root { --header-height: 70px; }
+            .container { width: min(var(--container), calc(100% - 36px)); }
+            .site-header-inner { grid-template-columns: 1fr auto; }
             .header-nav { display: none; }
-            .story-slide:not(:last-child) { margin-bottom: 0; }
-
-            .slide-problem,
-            .slide-process {
-                position: relative;
+            .hero {
                 min-height: auto;
-                overflow: visible;
-                padding-block: 118px 84px;
+                padding-top: calc(var(--header-height) + 86px);
+                padding-bottom: 76px;
+                background-image:
+                    linear-gradient(90deg, rgba(5, 7, 10, 0.98) 0%, rgba(5, 7, 10, 0.88) 68%, rgba(5, 7, 10, 0.58) 100%),
+                    url("/src/assets/images/sites/hero-digital-layout.jpg");
+                background-position: 62% center;
             }
-
-            .problem-layout {
-                grid-template-columns: 1fr;
-                gap: 52px;
-            }
-
-            .problem-copy { max-width: 640px; }
-            .problem-cards { width: 100%; max-width: 640px; justify-self: start; }
-            .process-flow { width: 100%; max-width: 640px; justify-self: start; }
-
-            .outline-grid.four,
-            .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-            .process-list { gap: 30px 18px; }
-            .process-step::after { display: none; }
+            .hero h1 { font-size: clamp(3rem, 11vw, 5rem); }
+            .hero-signals { grid-template-columns: 1fr; }
+            .hero-signal { min-height: 0; padding: 15px 0; border-bottom: 1px solid var(--line-light); }
+            .hero-signal + .hero-signal { padding-left: 0; border-left: 0; }
+            .section-grid,
+            .process-head,
+            .faq-grid { grid-template-columns: 1fr; gap: 48px; }
+            .section-grid > :first-child,
+            .faq-grid > :first-child { max-width: 680px; }
+            .process-head .section-intro { margin-top: 22px; }
+            .final-cta { grid-template-columns: 1fr; }
+            .final-cta-action { justify-self: start; text-align: left; }
         }
 
-        @media (max-width: 720px), (max-height: 760px) {
-            .story-slide {
-                position: relative;
-                min-height: auto;
-                padding-block: 118px 72px;
-                overflow: visible;
-            }
-
-            .story-slide:not(:last-child) { margin-bottom: 0; }
-
-        }
-
-        @media (max-width: 640px) {
-            .floating-whatsapp {
-                right: 16px;
-                bottom: 16px;
-                width: 54px;
-                height: 54px;
-            }
-
-            .site-header-inner { min-height: 68px; }
+        @media (max-width: 580px) {
+            .container { width: min(var(--container), calc(100% - 32px)); }
             .brand-link span { display: none; }
-
-            .header-cta {
-                min-height: 42px;
-                padding-inline: 16px;
-                font-size: 13px;
-            }
-
-            .story-slide { padding-inline: 18px; }
-            .slide-hero { background-position: 58% center; }
-
-            .problem-layout { gap: 40px; }
-            .problem-kicker { margin-bottom: 24px; }
-            .problem-kicker::before { width: 36px; flex-basis: 36px; }
-            .problem-heading { font-size: clamp(2.85rem, 14vw, 4.25rem); }
-            .problem-divider { margin-block: 27px 22px; }
-            .problem-description { font-size: 1rem; }
-            .problem-card {
-                grid-template-columns: 44px minmax(0, 1fr);
-                gap: 15px;
-                padding: 19px 17px;
-            }
-            .problem-card-icon { width: 44px; height: 44px; }
-            .problem-card-title-row { gap: 10px; }
-
-            .process-flow,
-            .process-flow-list { min-height: 390px; }
-            .process-flow-list { gap: 42px 22px; }
-            .process-flow-marker { width: 44px; height: 44px; margin-bottom: 14px; }
-            .process-flow-step h3 { font-size: 15px; }
-            .process-flow-step p { font-size: 12px; line-height: 1.5; }
-
-            .outline-grid.three,
-            .outline-grid.four,
-            .process-list { grid-template-columns: 1fr; }
-
-            .outline-card { padding: 22px; }
-
-            .cta-group {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .cta-group .cta-primary,
-            .cta-group .cta-secondary { width: 100%; }
-
-            .header-cta { width: auto; }
-
-            .faq-trigger { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; }
-            .faq-action-label { display: none; }
+            .brand-link img { width: 43px; height: 43px; flex-basis: 43px; }
+            .header-cta { min-width: 0; padding-inline: 15px; }
+            .header-cta-full { display: none; }
+            .header-cta-short { display: inline; }
+            .hero { padding-top: calc(var(--header-height) + 70px); }
+            .hero h1 { font-size: clamp(2.65rem, 14vw, 4.1rem); }
+            .hero-lead { font-size: 0.98rem; }
+            .hero-actions { align-items: stretch; flex-direction: column; }
+            .hero-actions .button { width: 100%; }
+            .section { padding-block: 84px; }
+            .section-title { font-size: clamp(2.35rem, 12vw, 3.5rem); }
+            .pain-item { grid-template-columns: 38px minmax(0, 1fr); gap: 15px; }
+            .process-grid { grid-template-columns: 1fr; margin-top: 50px; }
+            .process-step { min-height: 0; padding: 28px 4px; }
+            .process-step + .process-step,
+            .process-step:nth-child(3),
+            .process-step:nth-child(4) { border-top: 1px solid var(--line-dark); border-left: 0; }
+            .process-number { margin-bottom: 26px; }
+            .process-step h3 { min-height: 0; }
+            .comparison-wrap { margin-right: -16px; margin-left: -16px; border-radius: 0; }
+            .final-cta { margin-right: -4px; margin-left: -4px; padding: 34px 24px; }
+            .final-cta-action,
+            .final-cta .button { width: 100%; }
+            .floating-whatsapp { right: 15px; bottom: 15px; width: 52px; height: 52px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            * {
-                scroll-behavior: auto !important;
-                transition-duration: 0.01ms !important;
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
                 animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
-
-            .story-slide { position: relative; min-height: auto; }
-
-            .problem-card.is-reveal-ready,
-            .problem-card.is-reveal-ready.is-visible,
-            .section-reveal-item.is-reveal-ready,
-            .section-reveal-item.is-reveal-ready.is-visible {
-                opacity: 1;
-                transform: none;
-                transition-delay: 0ms;
-            }
+            .js .reveal { opacity: 1; transform: none; }
         }
 
-        ::selection {
-            background: rgba(34, 211, 238, 0.28);
-            color: #ffffff;
-        }
+        ::selection { background: rgba(34, 193, 220, 0.32); color: var(--white); }
     </style>
 </head>
 <body>
     <header class="site-header">
-        <div class="site-header-inner">
-            <a class="brand-link" href="/home" aria-label="Ir para a SSW Intelligence">
-                <img src="/src/assets/images/logo/logos.ico" alt="">
-                <span>S.S.W <span>Sites</span></span>
+        <div class="container site-header-inner">
+            <a class="brand-link" href="/home" aria-label="Ir para a S.S.W Intelligence">
+                <img src="/src/assets/images/logo/logos.ico" alt="Logo S.S.W">
+                <span>S.S.W <span class="brand-accent">Sites</span></span>
             </a>
 
             <nav class="header-nav" aria-label="Navegação da página">
@@ -973,156 +781,131 @@
                 <a href="#faq">Dúvidas</a>
             </nav>
 
-            <a class="cta-primary header-cta" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" rel="noopener noreferrer">
-                Solicitar orçamento
+            <a class="button button-primary header-cta" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" rel="noopener noreferrer">
+                <span class="header-cta-full">Solicitar orçamento</span>
+                <span class="header-cta-short">Orçamento</span>
             </a>
         </div>
     </header>
 
-    <main class="sticky-story">
-        <section class="story-slide slide-hero" id="inicio">
-            <div class="slide-content hero-layout">
-                <h1 class="section-heading">
-                    <span class="hero-heading-line">Seu site precisa transformar</span>
-                    <span class="hero-heading-line"><span class="hero-accent">atenção</span> em oportunidades reais.</span>
-                </h1>
-                <p class="section-copy">
-                    Criamos landing pages e sites institucionais rápidos, persuasivos e preparados para conduzir o visitante da primeira impressão até o contato — com auditoria da S.S.W antes da publicação.
-                </p>
-
-                <div class="cta-group">
-                    <a class="cta-primary" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="message-circle"></i>
-                        Solicitar orçamento
-                    </a>
-                    <a class="cta-secondary" href="#problema">
-                        Entender o que está travando
-                        <i data-lucide="arrow-down"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section class="story-slide slide-problem" id="problema">
-            <div class="slide-content problem-layout">
-                <div class="problem-copy">
-                    <div class="problem-kicker" aria-label="Seção 01, O problema">
-                        <span class="problem-index">01</span>
-                        <span class="problem-separator" aria-hidden="true">|</span>
-                        <span>O problema</span>
-                    </div>
-                    <h2 class="problem-heading">
-                        <span class="problem-heading-line">Sites sem</span>
-                        <span class="problem-heading-line">estratégia</span>
-                        <span class="problem-heading-line">afastam</span>
-                        <span class="problem-heading-line">oportunidades.</span>
-                    </h2>
-                    <div class="problem-divider" aria-hidden="true"></div>
-                    <p class="problem-description">
-                        Lentidão, confusão visual e falta de clareza técnica transformam potenciais clientes em desistências imediatas.
+    <main>
+        <section class="hero" id="inicio">
+            <div class="container">
+                <div class="hero-copy">
+                    <p class="eyebrow reveal">Sites estratégicos S.S.W</p>
+                    <h1 class="reveal">Transforme visitas em <span>oportunidades reais.</span></h1>
+                    <p class="hero-lead reveal">
+                        Criamos landing pages e sites institucionais que deixam sua proposta clara, conduzem o visitante até o contato e passam por uma auditoria S.S.W antes da publicação.
                     </p>
-                </div>
 
-                <div class="problem-cards" aria-label="Principais problemas de um site sem estratégia">
-                    <article class="problem-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="snail"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Lentidão que interrompe</h3>
-                                <span class="problem-card-number" aria-hidden="true">01</span>
-                            </div>
-                            <p>Uma experiência pesada aumenta a desistência antes mesmo de sua proposta ser compreendida, especialmente no celular.</p>
-                        </div>
-                    </article>
-
-                    <article class="problem-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="scan-eye"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Mensagem sem clareza</h3>
-                                <span class="problem-card-number" aria-hidden="true">02</span>
-                            </div>
-                            <p>Se o visitante não entende rapidamente o que você oferece, para quem e por que confiar, ele não encontra motivo para continuar.</p>
-                        </div>
-                    </article>
-
-                    <article class="problem-card">
-                        <div class="problem-card-icon" aria-hidden="true"><i data-lucide="mouse-pointer-click"></i></div>
-                        <div>
-                            <div class="problem-card-title-row">
-                                <h3>Jornada sem direção</h3>
-                                <span class="problem-card-number" aria-hidden="true">03</span>
-                            </div>
-                            <p>Botões genéricos e uma hierarquia confusa deixam o usuário sem saber o que fazer — e a oportunidade esfria.</p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-        <section class="story-slide slide-process" id="processo">
-            <div class="slide-content problem-layout process-layout">
-                <div class="problem-copy process-copy">
-                    <div class="problem-kicker process-kicker" aria-label="Seção 02, Como funciona">
-                        <span class="problem-index">02</span>
-                        <span class="problem-separator" aria-hidden="true">|</span>
-                        <span>Como funciona</span>
+                    <div class="hero-actions reveal">
+                        <a class="button button-primary" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20uma%20proposta%20para%20o%20meu%20site." target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="message-circle" aria-hidden="true"></i>
+                            Solicitar proposta
+                        </a>
+                        <a class="button button-secondary" href="#processo">
+                            Ver como funciona
+                            <i data-lucide="arrow-down" aria-hidden="true"></i>
+                        </a>
                     </div>
-                    <h2 class="problem-heading process-heading">
-                        <span class="problem-heading-line">Do primeiro</span>
-                        <span class="problem-heading-line">diagnóstico ao</span>
-                        <span class="problem-heading-line">site publicado,</span>
-                        <span class="problem-heading-line">sem etapas</span>
-                        <span class="problem-heading-line">escondidas.</span>
-                    </h2>
-                    <div class="problem-divider" aria-hidden="true"></div>
-                    <p class="problem-description">
-                        Você acompanha decisões importantes, aprova a direção e sabe o que está sendo produzido em cada momento.
-                    </p>
-                </div>
 
-                <div class="process-flow" aria-label="Etapas do processo de criação do site">
-                    <ol class="process-flow-list">
-                        <li class="process-flow-step" data-process-step="1">
-                            <span class="process-flow-marker" aria-hidden="true">01</span>
-                            <h3>Diagnóstico e briefing</h3>
-                            <p>Entendemos público, oferta, diferenciais, objetivos e o caminho atual até a venda.</p>
-                        </li>
-                        <li class="process-flow-step" data-process-step="2">
-                            <span class="process-flow-marker" aria-hidden="true">02</span>
-                            <h3>Estrutura e mensagem</h3>
-                            <p>Organizamos a jornada, a hierarquia das seções e os textos que sustentam sua proposta.</p>
-                        </li>
-                        <li class="process-flow-step" data-process-step="3">
-                            <span class="process-flow-marker" aria-hidden="true">03</span>
-                            <h3>Design e desenvolvimento</h3>
-                            <p>Transformamos a estratégia em uma interface responsiva, clara e tecnicamente consistente.</p>
-                        </li>
-                        <li class="process-flow-step" data-process-step="4">
-                            <span class="process-flow-marker" aria-hidden="true">04</span>
-                            <h3>Auditoria e publicação</h3>
-                            <p>Revisamos conteúdo, links, formulários, responsividade e pontos críticos antes de colocar o site no ar.</p>
-                        </li>
-                    </ol>
+                    <ul class="hero-signals reveal" aria-label="Diferenciais do serviço">
+                        <li class="hero-signal"><i data-lucide="message-square-text" aria-hidden="true"></i><span>Mensagem orientada ao que o cliente precisa entender</span></li>
+                        <li class="hero-signal"><i data-lucide="smartphone" aria-hidden="true"></i><span>Experiência mobile planejada desde o início</span></li>
+                        <li class="hero-signal"><i data-lucide="scan-search" aria-hidden="true"></i><span>Auditoria técnica antes da publicação</span></li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <section class="story-slide slide-comparison" id="comparacao">
-            <div class="slide-content comparison-layout">
-                <div class="comparison-intro">
-                    <span class="eyebrow comparison-kicker">Comparação</span>
-                    <h2 class="comparison-title">Site Comum X Site Criado pela SSW</h2>
+        <section class="section section-dark" id="problema">
+            <div class="container section-grid">
+                <div>
+                    <div class="section-label reveal"><span class="section-label-number">01</span><span class="section-label-divider" aria-hidden="true"></span><span>O problema</span></div>
+                    <h2 class="section-title reveal">Sites sem estratégia afastam oportunidades.</h2>
+                    <p class="section-intro reveal">O visitante decide em poucos segundos se continua ou sai. Quando mensagem, velocidade e próximos passos não trabalham juntos, até um bom serviço parece difícil de escolher.</p>
                 </div>
 
-                <div class="comparison-wrap">
+                <ol class="pain-list" aria-label="Problemas que reduzem a conversão">
+                    <li class="pain-item reveal">
+                        <span class="pain-number">01</span>
+                        <div>
+                            <h3>A proposta demora para ser entendida</h3>
+                            <p>Se o benefício principal não aparece rapidamente, o visitante precisa interpretar demais — e tende a desistir.</p>
+                        </div>
+                    </li>
+                    <li class="pain-item reveal">
+                        <span class="pain-number">02</span>
+                        <div>
+                            <h3>A experiência cria atrito</h3>
+                            <p>Lentidão, excesso de informação e navegação ruim no celular interrompem a jornada antes do contato.</p>
+                        </div>
+                    </li>
+                    <li class="pain-item reveal">
+                        <span class="pain-number">03</span>
+                        <div>
+                            <h3>O próximo passo não está claro</h3>
+                            <p>CTAs genéricos e uma hierarquia visual fraca deixam o usuário sem saber como avançar.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section section-light" id="processo">
+            <div class="container">
+                <div class="process-head">
+                    <div>
+                        <div class="section-label reveal"><span class="section-label-number">02</span><span class="section-label-divider" aria-hidden="true"></span><span>Como funciona</span></div>
+                        <h2 class="section-title reveal">Da estratégia à publicação, sem etapas escondidas.</h2>
+                    </div>
+                    <p class="section-intro reveal">Você participa das decisões essenciais e acompanha uma sequência objetiva. Cada etapa termina com uma entrega clara antes da próxima começar.</p>
+                </div>
+
+                <ol class="process-grid" aria-label="Etapas de criação do site">
+                    <li class="process-step reveal">
+                        <span class="process-number">01</span>
+                        <h3>Diagnóstico e briefing</h3>
+                        <p>Entendemos público, oferta, diferenciais, objetivo comercial e o caminho atual até a venda.</p>
+                        <span class="process-deliverable">Entrega: direção do projeto</span>
+                    </li>
+                    <li class="process-step reveal">
+                        <span class="process-number">02</span>
+                        <h3>Estrutura e mensagem</h3>
+                        <p>Organizamos a jornada, a hierarquia das seções e os argumentos que sustentam sua proposta.</p>
+                        <span class="process-deliverable">Entrega: mapa da página</span>
+                    </li>
+                    <li class="process-step reveal">
+                        <span class="process-number">03</span>
+                        <h3>Design e desenvolvimento</h3>
+                        <p>Transformamos a estratégia em uma interface rápida, responsiva e visualmente consistente.</p>
+                        <span class="process-deliverable">Entrega: site funcional</span>
+                    </li>
+                    <li class="process-step reveal">
+                        <span class="process-number">04</span>
+                        <h3>Auditoria e publicação</h3>
+                        <p>Revisamos conteúdo, links, formulários, experiência mobile e pontos técnicos antes do lançamento.</p>
+                        <span class="process-deliverable">Entrega: site publicado</span>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section section-dark" id="comparacao">
+            <div class="container">
+                <div class="comparison-head">
+                    <div class="section-label reveal"><span class="section-label-number">03</span><span class="section-label-divider" aria-hidden="true"></span><span>Comparação</span></div>
+                    <h2 class="section-title reveal">Site comum <span aria-hidden="true">×</span> site criado pela S.S.W</h2>
+                    <p class="section-intro reveal">A diferença não está em adicionar mais elementos. Está em fazer cada decisão cumprir uma função na jornada do cliente.</p>
+                </div>
+
+                <div class="comparison-wrap reveal" tabindex="0" aria-label="Tabela comparativa; deslize horizontalmente em telas pequenas">
                     <table class="comparison-table">
                         <thead>
                             <tr>
                                 <th scope="col">Critério</th>
                                 <th scope="col">Site genérico</th>
-                                <th scope="col">
-                                    <span class="comparison-header-label"><i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i>Projeto S.S.W</span>
-                                </th>
+                                <th scope="col"><span class="comparison-brand"><i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i>Projeto S.S.W</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1162,60 +945,65 @@
             </div>
         </section>
 
-        <section class="story-slide slide-faq" id="faq">
-            <div class="slide-content narrow">
-                <span class="eyebrow">Dúvidas frequentes</span>
-                <h2 class="section-heading">Informação clara antes de começar.</h2>
-                <p class="section-copy">Abra cada pergunta para ver a resposta. Se o seu caso exigir algo diferente, conversamos e definimos o escopo antes da proposta.</p>
+        <section class="section section-light" id="faq">
+            <div class="container">
+                <div class="faq-grid">
+                    <div>
+                        <div class="section-label reveal"><span class="section-label-number">04</span><span class="section-label-divider" aria-hidden="true"></span><span>Dúvidas</span></div>
+                        <h2 class="section-title reveal">Clareza antes de começar.</h2>
+                        <p class="section-intro reveal">Escopo, prazo e investimento são definidos antes da produção. Assim, você sabe exatamente o que será entregue.</p>
+                    </div>
 
-                <div class="faq-list">
-                    <article class="faq-item" data-open="false">
-                        <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-1">
-                            <h3>Quanto custa um site profissional?</h3>
-                            <span class="faq-action-label">Ver resposta</span>
-                            <i class="faq-icon" data-lucide="plus"></i>
-                        </button>
-                        <div class="faq-answer" id="faq-answer-1">
-                            <div><p>O investimento depende do tipo de projeto, quantidade de páginas, integrações e volume de conteúdo. Depois do diagnóstico, você recebe uma proposta com escopo, prazo e entregáveis bem definidos — sem itens vagos ou custos escondidos.</p></div>
-                        </div>
-                    </article>
+                    <div class="faq-list reveal">
+                        <article class="faq-item" data-open="false">
+                            <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-1">
+                                <h3>Quanto custa um site profissional?</h3>
+                                <i class="faq-icon" data-lucide="plus" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer" id="faq-answer-1"><div><p>O investimento depende do tipo de projeto, quantidade de páginas, integrações e volume de conteúdo. Depois do diagnóstico, você recebe uma proposta com escopo, prazo e entregáveis definidos — sem itens vagos ou custos escondidos.</p></div></div>
+                        </article>
 
-                    <article class="faq-item" data-open="false">
-                        <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-2">
-                            <h3>Em quanto tempo meu site fica pronto?</h3>
-                            <span class="faq-action-label">Ver resposta</span>
-                            <i class="faq-icon" data-lucide="plus"></i>
-                        </button>
-                        <div class="faq-answer" id="faq-answer-2">
-                            <div><p>Landing pages e sites institucionais costumam levar de 7 a 15 dias úteis, conforme a complexidade e a velocidade das aprovações. O cronograma é combinado no briefing, com marcos claros para conteúdo, design, desenvolvimento e publicação.</p></div>
-                        </div>
-                    </article>
+                        <article class="faq-item" data-open="false">
+                            <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-2">
+                                <h3>Em quanto tempo meu site fica pronto?</h3>
+                                <i class="faq-icon" data-lucide="plus" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer" id="faq-answer-2"><div><p>Landing pages e sites institucionais costumam levar de 7 a 15 dias úteis, conforme a complexidade e a velocidade das aprovações. O cronograma é combinado no briefing, com marcos claros para cada etapa.</p></div></div>
+                        </article>
 
-                    <article class="faq-item" data-open="false">
-                        <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-3">
-                            <h3>Vou conseguir editar o site depois de pronto?</h3>
-                            <span class="faq-action-label">Ver resposta</span>
-                            <i class="faq-icon" data-lucide="plus"></i>
-                        </button>
-                        <div class="faq-answer" id="faq-answer-3">
-                            <div><p>Isso é definido de acordo com o projeto. Quando o escopo inclui gestão de conteúdo, entregamos uma estrutura adequada e orientamos você sobre as edições do dia a dia. Também podemos cuidar da manutenção quando você preferir não operar a parte técnica.</p></div>
-                        </div>
-                    </article>
+                        <article class="faq-item" data-open="false">
+                            <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-3">
+                                <h3>Vou conseguir editar o site depois de pronto?</h3>
+                                <i class="faq-icon" data-lucide="plus" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer" id="faq-answer-3"><div><p>Isso é definido de acordo com o projeto. Quando o escopo inclui gestão de conteúdo, entregamos uma estrutura adequada e orientamos você sobre as edições do dia a dia. Também podemos cuidar da manutenção.</p></div></div>
+                        </article>
 
-                    <article class="faq-item" data-open="false">
-                        <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-4">
-                            <h3>O site já vem preparado para o Google?</h3>
-                            <span class="faq-action-label">Ver resposta</span>
-                            <i class="faq-icon" data-lucide="plus"></i>
-                        </button>
-                        <div class="faq-answer" id="faq-answer-4">
-                            <div><p>Sim. A entrega inclui uma base de SEO técnico: hierarquia correta de títulos, metadados, URLs organizadas, responsividade, performance e orientações de indexação. Posicionamento orgânico também depende de conteúdo, autoridade e estratégia contínua.</p></div>
-                        </div>
-                    </article>
+                        <article class="faq-item" data-open="false">
+                            <button class="faq-trigger" type="button" aria-expanded="false" aria-controls="faq-answer-4">
+                                <h3>O site já vem preparado para o Google?</h3>
+                                <i class="faq-icon" data-lucide="plus" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer" id="faq-answer-4"><div><p>Sim. A entrega inclui uma base de SEO técnico: hierarquia correta de títulos, metadados, URLs organizadas, responsividade e performance. O posicionamento orgânico também depende de conteúdo, autoridade e estratégia contínua.</p></div></div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="final-cta reveal">
+                    <div>
+                        <h2>Seu site pode conduzir mais pessoas até uma conversa comercial.</h2>
+                        <p>Conte o que você vende e o que espera melhorar. A S.S.W responde com as perguntas certas para definir o projeto.</p>
+                    </div>
+                    <div class="final-cta-action">
+                        <a class="button button-primary" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20uma%20proposta%20para%20o%20meu%20site." target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="message-circle" aria-hidden="true"></i>
+                            Solicitar proposta
+                        </a>
+                        <span class="final-cta-note">Atendimento inicial pelo WhatsApp</span>
+                    </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <a class="floating-whatsapp" href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20sites." target="_blank" rel="noopener noreferrer" aria-label="Falar com a S.S.W pelo WhatsApp" title="Falar pelo WhatsApp">
@@ -1227,146 +1015,79 @@
     <div data-public-footer="sites"></div>
 
     <script>
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        function getStorySectionTop(target) {
-            let top = 0;
-            let element = target;
-
-            while (element) {
-                top += element.offsetTop || 0;
-                element = element.offsetParent;
-            }
-
-            return Math.max(0, top);
+        function initializeIcons() {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        function navigateToStorySection(target, options = {}) {
-            if (!target) return;
-            const behavior = options.instant || prefersReducedMotion ? 'auto' : 'smooth';
-            window.scrollTo({ top: getStorySectionTop(target), behavior });
-
-            if (options.updateHistory !== false && target.id) {
-                window.history.pushState(null, '', `#${target.id}`);
-            }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeIcons);
+        } else {
+            initializeIcons();
         }
+        window.addEventListener('load', initializeIcons, { once: true });
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', event => {
-                const targetId = anchor.getAttribute('href').slice(1);
-                const target = document.getElementById(targetId);
-                if (!target) return;
-                event.preventDefault();
-                navigateToStorySection(target);
-            });
-        });
-
-        window.addEventListener('popstate', () => {
-            const target = document.getElementById(window.location.hash.slice(1));
-            if (target) navigateToStorySection(target, { updateHistory: false });
-        });
-
-        window.addEventListener('load', () => {
-            const target = document.getElementById(window.location.hash.slice(1));
-            if (!target) return;
-            window.requestAnimationFrame(() => {
-                navigateToStorySection(target, { instant: true, updateHistory: false });
-            });
-        });
-
-        const compactRevealLayout = window.matchMedia('(max-width: 900px), (max-height: 760px)').matches;
-        const revealThreshold = compactRevealLayout ? 0.16 : 0.68;
-        const revealSelectors = [
-            '.eyebrow',
-            '.section-heading',
-            '.section-copy',
-            '.section-note',
-            '.problem-kicker',
-            '.problem-heading',
-            '.problem-divider',
-            '.problem-description',
-            '.outline-card',
-            '.process-flow-step',
-            '.comparison-title',
-            '.comparison-wrap',
-            '.cta-group',
-            '.faq-item'
-        ].join(',');
-
-        if ('IntersectionObserver' in window && !prefersReducedMotion) {
-            const sections = Array.from(document.querySelectorAll('.story-slide'));
-            const sectionObserver = new IntersectionObserver(entries => {
+        const revealItems = Array.from(document.querySelectorAll('.reveal'));
+        if (!reduceMotion && 'IntersectionObserver' in window) {
+            const revealObserver = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (!entry.isIntersecting) return;
-
-                    const items = Array.from(entry.target.querySelectorAll('.section-reveal-item.is-reveal-ready'));
-                    items.forEach(item => item.classList.add('is-visible'));
-                    sectionObserver.unobserve(entry.target);
-
-                    const longestDelay = Math.min(Math.max(items.length - 1, 0) * 110, 770);
-                    window.setTimeout(() => {
-                        items.forEach(item => {
-                            item.classList.remove('is-reveal-ready', 'is-visible');
-                            item.style.removeProperty('--section-reveal-delay');
-                        });
-                    }, longestDelay + 900);
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
                 });
-            }, { threshold: revealThreshold });
+            }, { threshold: 0.16, rootMargin: '0px 0px -7% 0px' });
 
-            sections.forEach(section => {
-                const items = Array.from(section.querySelectorAll(revealSelectors));
-                items.forEach((item, index) => {
-                    item.classList.add('section-reveal-item', 'is-reveal-ready');
-                    item.style.setProperty('--section-reveal-delay', `${Math.min(index * 110, 770)}ms`);
-                });
-
-                if (items.length) sectionObserver.observe(section);
+            revealItems.forEach((item, index) => {
+                item.style.setProperty('--reveal-delay', `${Math.min((index % 4) * 70, 210)}ms`);
+                revealObserver.observe(item);
             });
-        }
-
-        const problemSection = document.querySelector('.slide-problem');
-        const problemCards = Array.from(document.querySelectorAll('.slide-problem .problem-card'));
-
-        if (problemSection && problemCards.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
-            problemCards.forEach((card, index) => {
-                card.classList.add('is-reveal-ready');
-                card.style.setProperty('--reveal-delay', `${index * 210}ms`);
-            });
-
-            const problemObserver = new IntersectionObserver(entries => {
-                const [entry] = entries;
-                if (!entry.isIntersecting) return;
-
-                problemCards.forEach(card => card.classList.add('is-visible'));
-                problemObserver.unobserve(problemSection);
-            }, { threshold: revealThreshold });
-
-            problemObserver.observe(problemSection);
+        } else {
+            revealItems.forEach(item => item.classList.add('is-visible'));
         }
 
         const faqItems = Array.from(document.querySelectorAll('.faq-item'));
-
-        function setFaqState(item, shouldOpen) {
-            const trigger = item.querySelector('.faq-trigger');
-            const label = item.querySelector('.faq-action-label');
-
-            item.dataset.open = String(shouldOpen);
-            trigger.setAttribute('aria-expanded', String(shouldOpen));
-            label.textContent = shouldOpen ? 'Ocultar resposta' : 'Ver resposta';
-        }
-
         faqItems.forEach(item => {
             const trigger = item.querySelector('.faq-trigger');
             trigger.addEventListener('click', () => {
                 const shouldOpen = item.dataset.open !== 'true';
-                faqItems.forEach(otherItem => setFaqState(otherItem, false));
-                setFaqState(item, shouldOpen);
+                faqItems.forEach(other => {
+                    other.dataset.open = 'false';
+                    other.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+                });
+                item.dataset.open = String(shouldOpen);
+                trigger.setAttribute('aria-expanded', String(shouldOpen));
             });
         });
 
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+        const navLinks = Array.from(document.querySelectorAll('.header-nav a'));
+        const observedSections = navLinks
+            .map(link => document.querySelector(link.getAttribute('href')))
+            .filter(Boolean);
+
+        let navigationFrame = 0;
+        function updateActiveNavigation() {
+            navigationFrame = 0;
+            const marker = window.scrollY + 76 + (window.innerHeight * 0.28);
+            let currentSection = null;
+
+            observedSections.forEach(section => {
+                if (section.offsetTop <= marker) currentSection = section;
+            });
+
+            navLinks.forEach(link => {
+                const active = currentSection && link.getAttribute('href') === `#${currentSection.id}`;
+                if (active) link.setAttribute('aria-current', 'true');
+                else link.removeAttribute('aria-current');
+            });
         }
+
+        window.addEventListener('scroll', () => {
+            if (navigationFrame) return;
+            navigationFrame = window.requestAnimationFrame(updateActiveNavigation);
+        }, { passive: true });
+        window.addEventListener('resize', updateActiveNavigation);
+        updateActiveNavigation();
     </script>
 </body>
 </html>
