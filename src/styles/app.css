@@ -9192,18 +9192,19 @@ body.user-authenticated.audit-workspace-locked #view-home.command-center {
     body:not(.user-authenticated):not(.auth-page-active) .hero-split-control {
         position: absolute;
         z-index: 30;
-        top: 0;
-        bottom: 0;
+        top: 50%;
+        bottom: auto;
         left: var(--hero-split);
         display: flex;
-        width: 52px;
+        width: 40px;
+        height: 64px;
         align-items: center;
         justify-content: center;
         border: 0;
         outline: none;
         cursor: ew-resize;
         touch-action: none;
-        transform: translateX(-50%);
+        transform: translate(-50%, -50%) !important;
         user-select: none;
         -webkit-user-select: none;
         will-change: left;
@@ -9212,29 +9213,29 @@ body.user-authenticated.audit-workspace-locked #view-home.command-center {
     .hero-split-knob {
         position: relative;
         display: grid;
-        width: 46px;
-        height: 64px;
+        width: 32px;
+        height: 42px;
         place-items: center;
         overflow: hidden;
         border: 1px solid rgba(34, 193, 220, 0.56);
         border-radius: 999px;
         background: #0b1118;
-        box-shadow: 0 12px 30px rgba(2, 8, 23, 0.24);
+        box-shadow: 0 8px 22px rgba(2, 8, 23, 0.22);
         transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
     }
 
     .hero-split-knob::before {
         content: "";
         position: absolute;
-        inset: 5px;
+        inset: 4px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: inherit;
         pointer-events: none;
     }
 
     .hero-split-knob svg {
-        width: 30px;
-        height: 20px;
+        width: 23px;
+        height: 15px;
         fill: none;
         stroke: #67d9ed;
         stroke-width: 2;
@@ -9251,7 +9252,7 @@ body.user-authenticated.audit-workspace-locked #view-home.command-center {
     }
 
     .hero-split-control:focus-visible .hero-split-knob {
-        box-shadow: 0 0 0 4px rgba(34, 193, 220, 0.2), 0 12px 30px rgba(2, 8, 23, 0.24);
+        box-shadow: 0 0 0 3px rgba(34, 193, 220, 0.2), 0 8px 22px rgba(2, 8, 23, 0.22);
     }
 
     body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging,
@@ -9268,6 +9269,12 @@ body.user-authenticated.audit-workspace-locked #view-home.command-center {
     body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging .hero-showcase-copy,
     body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-split-dragging .hero-showcase-frame {
         transition: none !important;
+    }
+
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-left-closed > #heroPrimaryContent,
+    body:not(.user-authenticated):not(.auth-page-active) #heroSection.is-right-closed > .hero-showcase-carousel {
+        visibility: hidden !important;
+        pointer-events: none !important;
     }
 }
 

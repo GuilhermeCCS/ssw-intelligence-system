@@ -458,8 +458,12 @@
             if (!hero || !control || control.dataset.splitReady === 'true') return;
 
             control.dataset.splitReady = 'true';
-            const min = Number(control.dataset.min) || 8;
-            const max = Number(control.dataset.max) || 92;
+            const primaryContent = document.getElementById('heroPrimaryContent');
+            const showcase = document.getElementById('heroShowcaseCarousel');
+            const parsedMin = Number(control.dataset.min);
+            const parsedMax = Number(control.dataset.max);
+            const min = Number.isFinite(parsedMin) ? parsedMin : 0;
+            const max = Number.isFinite(parsedMax) ? parsedMax : 100;
             const center = 50;
             const desktopMedia = window.matchMedia('(min-width: 901px)');
             let value = center;
@@ -479,6 +483,8 @@
                 const rightOpacity = value <= center
                     ? 1
                     : fadeProgress((max - value) / (max - center));
+                const leftClosed = value <= min + 0.05;
+                const rightClosed = value >= max - 0.05;
                 const roundedValue = Math.round(value);
 
                 hero.style.setProperty('--hero-split', `${value}%`);
@@ -487,6 +493,10 @@
                 hero.style.setProperty('--hero-left-opacity', leftOpacity.toFixed(3));
                 hero.style.setProperty('--hero-right-opacity', rightOpacity.toFixed(3));
                 hero.dataset.splitPosition = value.toFixed(1);
+                hero.classList.toggle('is-left-closed', leftClosed);
+                hero.classList.toggle('is-right-closed', rightClosed);
+                primaryContent?.setAttribute('aria-hidden', String(leftClosed));
+                showcase?.setAttribute('aria-hidden', String(rightClosed));
                 control.setAttribute('aria-valuenow', String(roundedValue));
                 control.setAttribute(
                     'aria-valuetext',
