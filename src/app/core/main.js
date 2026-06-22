@@ -671,11 +671,44 @@
             if (!active) setAnalysisModeState('auto');
         }
 
+        function syncAuditWorkspaceLayout(hasResultsOverride = null) {
+            const viewHome = document.getElementById('view-home');
+            const heroSection = document.getElementById('heroSection');
+            const manualArea = document.getElementById('manualSelectArea');
+            const auditResults = document.getElementById('auditResults');
+            const mode = document.getElementById('auditMode')?.value || 'auto';
+            const hasResults = typeof hasResultsOverride === 'boolean'
+                ? hasResultsOverride
+                : Boolean(auditResults && !auditResults.classList.contains('hidden'));
+            const isAuthenticatedHome = Boolean(
+                USER?.email
+                && window.currentView === 'home'
+                && viewHome
+                && !viewHome.classList.contains('hidden')
+            );
+            const heroVisible = Boolean(heroSection && !heroSection.classList.contains('hidden'));
+            const manualInputVisible = Boolean(
+                mode === 'manual'
+                && heroVisible
+                && manualArea
+                && !manualArea.classList.contains('hidden')
+            );
+            const isInputWorkspace = isAuthenticatedHome && !hasResults;
+            const shouldLockScroll = isInputWorkspace && !manualInputVisible;
+
+            [document.documentElement, document.body].forEach(element => {
+                element.classList.toggle('audit-home-workspace', isInputWorkspace);
+                element.classList.toggle('audit-workspace-locked', shouldLockScroll);
+                element.classList.toggle('audit-manual-open', isInputWorkspace && manualInputVisible);
+            });
+        }
+
         function setAnalysisModeState(mode = 'auto') {
             const heroSection = document.getElementById('heroSection');
             if (!heroSection) return;
             heroSection.classList.toggle('is-manual-mode', mode === 'manual');
             heroSection.classList.toggle('is-compare-mode', mode === 'compare');
+            window.requestAnimationFrame(() => syncAuditWorkspaceLayout());
         }
 
         function showHomeLandingState({ focusInput = false } = {}) {
@@ -6367,6 +6400,7 @@ function getCodigoHTML() {
         }
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
         function adjustFooterPosition(hasAuditResults = false) {
+            syncAuditWorkspaceLayout(hasAuditResults);
             const footerHost = document.getElementById('footer-container');
             const footerAnchor = document.getElementById('footer-anchor');
             const footer = document.getElementById('mainFooter');

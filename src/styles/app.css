@@ -8707,3 +8707,65 @@ body.user-authenticated #heroSection .search-container {
         padding: 24px 18px !important;
     }
 }
+
+/* Preenche o workspace autenticado e libera rolagem apenas quando necessário. */
+body.user-authenticated.audit-home-workspace #mainContentWrapper {
+    min-height: 100dvh !important;
+    padding: 0 !important;
+    background: #050505 !important;
+}
+
+html.audit-home-workspace,
+body.user-authenticated.audit-home-workspace {
+    background: #050505 !important;
+}
+
+body.user-authenticated.audit-home-workspace #view-home.command-center {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #050505 !important;
+}
+
+body.user-authenticated.audit-home-workspace #homeFooterSpacer,
+body.user-authenticated.audit-home-workspace #footer-anchor,
+body.user-authenticated.audit-home-workspace #footer-container {
+    display: none !important;
+}
+
+html.audit-workspace-locked,
+body.user-authenticated.audit-workspace-locked {
+    height: 100dvh !important;
+    overflow: hidden !important;
+}
+
+body.user-authenticated.audit-workspace-locked #mainContentWrapper,
+body.user-authenticated.audit-workspace-locked #view-home.command-center {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+}
+
+html.audit-manual-open,
+body.user-authenticated.audit-manual-open {
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+body.user-authenticated.audit-manual-open #mainContentWrapper,
+body.user-authenticated.audit-manual-open #view-home.command-center {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+@media (max-width: 767px) {
+    body.user-authenticated.audit-home-workspace #mainContentWrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+    }
+}
