@@ -1227,16 +1227,53 @@
     <div data-public-footer="sites"></div>
 
     <script>
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function getStorySectionTop(target) {
+            let top = 0;
+            let element = target;
+
+            while (element) {
+                top += element.offsetTop || 0;
+                element = element.offsetParent;
+            }
+
+            return Math.max(0, top);
+        }
+
+        function navigateToStorySection(target, options = {}) {
+            if (!target) return;
+            const behavior = options.instant || prefersReducedMotion ? 'auto' : 'smooth';
+            window.scrollTo({ top: getStorySectionTop(target), behavior });
+
+            if (options.updateHistory !== false && target.id) {
+                window.history.pushState(null, '', `#${target.id}`);
+            }
+        }
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', event => {
-                const target = document.querySelector(anchor.getAttribute('href'));
+                const targetId = anchor.getAttribute('href').slice(1);
+                const target = document.getElementById(targetId);
                 if (!target) return;
                 event.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                navigateToStorySection(target);
             });
         });
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.addEventListener('popstate', () => {
+            const target = document.getElementById(window.location.hash.slice(1));
+            if (target) navigateToStorySection(target, { updateHistory: false });
+        });
+
+        window.addEventListener('load', () => {
+            const target = document.getElementById(window.location.hash.slice(1));
+            if (!target) return;
+            window.requestAnimationFrame(() => {
+                navigateToStorySection(target, { instant: true, updateHistory: false });
+            });
+        });
+
         const compactRevealLayout = window.matchMedia('(max-width: 900px), (max-height: 760px)').matches;
         const revealThreshold = compactRevealLayout ? 0.16 : 0.68;
         const revealSelectors = [
