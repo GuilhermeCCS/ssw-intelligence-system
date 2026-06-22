@@ -60,6 +60,7 @@
             handlePopState();
             initHeroTypewriter();
             initKineticNeuralWave();
+            initHeroShowcaseCarousel();
             
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
@@ -396,6 +397,58 @@
             };
 
             window.setTimeout(typeNext, 260);
+        }
+
+        function initHeroShowcaseCarousel() {
+            const carousel = document.getElementById('heroShowcaseCarousel');
+            if (!carousel || carousel.dataset.carouselReady === 'true') return;
+
+            const slides = Array.from(carousel.querySelectorAll('.hero-showcase-slide'));
+            const dots = Array.from(carousel.querySelectorAll('.hero-showcase-dot'));
+            if (slides.length < 2) return;
+
+            carousel.dataset.carouselReady = 'true';
+            const interval = Number(carousel.dataset.interval) || 7000;
+            let activeIndex = 0;
+            let timerId = null;
+
+            const showSlide = (index) => {
+                activeIndex = (index + slides.length) % slides.length;
+                slides.forEach((slide, slideIndex) => {
+                    const isActive = slideIndex === activeIndex;
+                    slide.classList.toggle('is-active', isActive);
+                    slide.setAttribute('aria-hidden', String(!isActive));
+                });
+                dots.forEach((dot, dotIndex) => {
+                    const isActive = dotIndex === activeIndex;
+                    dot.classList.toggle('is-active', isActive);
+                    dot.setAttribute('aria-current', String(isActive));
+                });
+                carousel.dataset.activeSlide = String(activeIndex);
+            };
+
+            const startCarousel = () => {
+                window.clearInterval(timerId);
+                timerId = window.setInterval(() => showSlide(activeIndex + 1), interval);
+            };
+
+            dots.forEach((dot, dotIndex) => {
+                dot.addEventListener('click', () => {
+                    showSlide(dotIndex);
+                    startCarousel();
+                });
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    window.clearInterval(timerId);
+                } else {
+                    startCarousel();
+                }
+            });
+
+            showSlide(0);
+            startCarousel();
         }
 
         function initKineticNeuralWave() {
