@@ -1108,6 +1108,7 @@
                 'tutorial': 'Como Usar o Sistema',
                 'home': 'Painel Principal'
             };
+            titles.domains = 'Liberar Auditoria';
             if(view === 'agents') loadManageAgents();
             if(view === 'domains') loadAuthorizedDomains();
             if(view === 'history') loadAuditHistory();
@@ -4145,7 +4146,70 @@ function getCodigoHTML() {
             }
         }
 
+        function testAuthorizedDomainAudit(domain) {
+            const cleanDomain = decodeURIComponent(String(domain || '')).trim();
+            showSimplifiedSearch();
+            const input = document.getElementById('auditUrl');
+            if (input && cleanDomain) {
+                input.value = cleanDomain.startsWith('http') ? cleanDomain : `https://${cleanDomain}`;
+                input.focus();
+            }
+            Toast.info('Auditoria pronta para teste. Clique em Analisar para tentar novamente.', 8000);
+        }
+
         function renderAuthorizedDomainSetup(item) {
+            {
+                const auditToken = item.audit_token || '';
+                const domain = item.domain || '';
+                const headerName = item.header_name || 'X-SSW-Audit-Token';
+                const userAgent = item.user_agent || 'SSW-Intelligence-Auditor/1.0';
+                const userAgentMarker = 'SSW-Intelligence-Auditor';
+                const inline = value => encodeURIComponent(String(value || ''));
+                const developerMessage = [
+                    `Olá! Preciso liberar a auditoria da S.S.W Intelligence no site ${domain}.`,
+                    '',
+                    'Por favor, crie uma regra no Cloudflare, firewall, WAF ou sistema de segurança para permitir requisições com:',
+                    '',
+                    `User-Agent contendo: ${userAgentMarker}`,
+                    `Header: ${headerName}`,
+                    `Valor do header: ${auditToken}`,
+                    '',
+                    'A regra deve pular desafios de bot/captcha apenas quando esses dois sinais existirem ao mesmo tempo.',
+                    'Depois me avise para eu testar a auditoria novamente.'
+                ].join('\n');
+                const technicalData = [
+                    `User-Agent contém: ${userAgentMarker}`,
+                    `${headerName}: ${auditToken}`,
+                    `User-Agent completo enviado pela S.S.W: ${userAgent}`
+                ].join('\n');
+
+                return [
+                    '<div class="mt-5 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.045] p-5">',
+                        '<div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">',
+                            '<div class="min-w-0">',
+                                '<p class="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">Instrução única</p>',
+                                '<h4 class="mt-2 text-lg font-black text-white">Copie e envie para quem cuida do site</h4>',
+                                '<p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">A S.S.W já vai enviar estes sinais na auditoria. O técnico só precisa liberar a ferramenta no Cloudflare, firewall, WAF ou plugin de segurança.</p>',
+                            '</div>',
+                            '<div class="flex flex-wrap gap-2">',
+                                `<button class="rounded-lg bg-cyan-400 px-4 py-2 text-xs font-black text-slate-950 hover:bg-cyan-300" onclick="copyAuthorizedDomainValue('${inline(developerMessage)}')">Copiar instrução</button>`,
+                                `<button class="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold text-slate-100 hover:bg-white/[0.08]" onclick="testAuthorizedDomainAudit('${inline(domain)}')">Testar auditoria</button>`,
+                            '</div>',
+                        '</div>',
+                        '<div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">',
+                            '<div class="rounded-xl border border-white/10 bg-black/25 p-4">',
+                                '<span class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">User-Agent</span>',
+                                `<code class="mt-2 block break-all text-xs text-cyan-100">${safeAuditText(userAgentMarker)}</code>`,
+                            '</div>',
+                            '<div class="rounded-xl border border-white/10 bg-black/25 p-4">',
+                                '<span class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Header privado</span>',
+                                `<code class="mt-2 block break-all text-xs text-cyan-100">${safeAuditText(headerName)}: ${safeAuditText(auditToken)}</code>`,
+                            '</div>',
+                        '</div>',
+                        `<button class="mt-4 text-xs font-bold text-cyan-200 hover:text-white" onclick="copyAuthorizedDomainValue('${inline(technicalData)}')">Copiar apenas dados técnicos</button>`,
+                    '</div>'
+                ].join('');
+            }
             const token = item.verification_token || '';
             const auditToken = item.audit_token || '';
             const domain = item.domain || '';
@@ -4188,6 +4252,48 @@ function getCodigoHTML() {
         function renderAuthorizedDomains(items = []) {
             const list = document.getElementById('authorizedDomainsList');
             if (!list) return;
+
+            {
+                if (!items.length) {
+                    list.innerHTML = [
+                        '<div class="history-empty-state">',
+                            '<i data-lucide="shield-check" class="w-6 h-6"></i>',
+                            '<strong>Nenhum site liberado ainda</strong>',
+                            '<p>Adicione o domínio apenas quando a captura for bloqueada. A plataforma vai gerar uma instrução única para liberar a S.S.W Intelligence no Cloudflare, firewall ou plugin de segurança.</p>',
+                        '</div>'
+                    ].join('');
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    return;
+                }
+
+                list.innerHTML = items.map(item => {
+                    const statusClass = 'border-cyan-400/25 bg-cyan-400/[0.04]';
+                    const statusText = 'A S.S.W já enviará o User-Agent e o header privado nas próximas auditorias deste domínio. Se o site ainda bloquear, envie a instrução abaixo para quem cuida do Cloudflare, firewall ou plugin de segurança.';
+                    const idArg = encodeURIComponent(String(item.id || ''));
+                    const domainArg = encodeURIComponent(String(item.domain || ''));
+
+                    return [
+                        `<article class="rounded-2xl border ${statusClass} p-5 md:p-6">`,
+                            '<div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">',
+                                '<div>',
+                                    '<span class="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100"><i data-lucide="badge-check" class="w-3.5 h-3.5"></i>Pronto para teste</span>',
+                                    `<h3 class="mt-3 text-2xl font-black text-white">${safeAuditText(item.domain)}</h3>`,
+                                    `<p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">${statusText}</p>`,
+                                '</div>',
+                                '<div class="flex flex-wrap gap-2">',
+                                    `<button class="rounded-lg border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-xs font-bold text-cyan-100 hover:bg-cyan-400/20" onclick="testAuthorizedDomainAudit('${domainArg}')">Testar</button>`,
+                                    `<button class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[0.08]" onclick="rotateAuthorizedDomainToken(decodeURIComponent('${idArg}'))">Gerar novo código</button>`,
+                                    `<button class="rounded-lg border border-red-400/25 bg-red-400/10 px-3 py-2 text-xs font-bold text-red-100 hover:bg-red-400/20" onclick="deleteAuthorizedDomain(decodeURIComponent('${idArg}'))">Excluir</button>`,
+                                '</div>',
+                            '</div>',
+                            renderAuthorizedDomainSetup(item),
+                        '</article>'
+                    ].join('');
+                }).join('');
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
 
             if (!items.length) {
                 list.innerHTML = [
@@ -4236,7 +4342,7 @@ function getCodigoHTML() {
             if (!list) return;
 
             if (!USER || !USER.token) {
-                list.innerHTML = `<div class="history-empty-state"><strong>Login necessário</strong><p>Entre na sua conta para gerenciar domínios autorizados.</p><button onclick="showAuthScreen('login')">Fazer login</button></div>`;
+                list.innerHTML = `<div class="history-empty-state"><strong>Login necessário</strong><p>Entre na sua conta para liberar auditorias em sites protegidos.</p><button onclick="showAuthScreen('login')">Fazer login</button></div>`;
                 return;
             }
 
@@ -4275,7 +4381,7 @@ function getCodigoHTML() {
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível adicionar este domínio.'));
                 if (input) input.value = '';
-                Toast.success('Domínio adicionado. Publique o token e clique em verificar.');
+                Toast.success('Site adicionado. Copie a instrução e envie para quem cuida da segurança do site.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
                 Toast.error(error.message || 'Erro ao adicionar domínio.');
@@ -4284,18 +4390,18 @@ function getCodigoHTML() {
 
         async function verifyAuthorizedDomain(domainId) {
             try {
-                Toast.info('Verificando DNS, arquivo e meta tag...', 10000);
+                Toast.info('Confirmando liberação no sistema...', 10000);
                 const res = await fetch(`${API_URL}/api/authorized-domains/${encodeURIComponent(domainId)}/verify`, {
                     method: 'POST',
                     headers: authHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ method: 'all' })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Token ainda não encontrado no domínio.'));
-                Toast.success('Domínio verificado. O fallback autorizado está ativo para bloqueios anti-bot.');
+                if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível confirmar a liberação.'));
+                Toast.success('Liberação confirmada. Teste a auditoria novamente.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
-                Toast.warning(error.message || 'Não encontramos o token neste domínio.', 10000);
+                Toast.warning(error.message || 'Não foi possível confirmar a liberação.', 10000);
             }
         }
 
@@ -4308,7 +4414,7 @@ function getCodigoHTML() {
                 });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível rotacionar o token.'));
-                Toast.success('Token rotacionado. Atualize a regra no firewall.');
+                Toast.success('Novo código gerado. Copie a instrução atualizada e envie para o técnico.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
                 Toast.error(error.message || 'Erro ao rotacionar token.');
@@ -4316,7 +4422,7 @@ function getCodigoHTML() {
         }
 
         async function deleteAuthorizedDomain(domainId) {
-            if (!confirm('Excluir este domínio autorizado? A SSW deixará de usar o header secreto como fallback para ele.')) return;
+            if (!confirm('Excluir esta liberação? A SSW deixará de enviar o header privado para este site.')) return;
             try {
                 const res = await fetch(`${API_URL}/api/authorized-domains/${encodeURIComponent(domainId)}`, {
                     method: 'DELETE',
@@ -4324,7 +4430,7 @@ function getCodigoHTML() {
                 });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(getAuthorizedDomainApiError(data, 'Não foi possível excluir este domínio.'));
-                Toast.success(data.msg || 'Domínio autorizado removido.');
+                Toast.success(data.msg || 'Liberação removida.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
                 Toast.error(error.message || 'Erro ao excluir domínio.');
@@ -4337,6 +4443,7 @@ function getCodigoHTML() {
         window.rotateAuthorizedDomainToken = rotateAuthorizedDomainToken;
         window.deleteAuthorizedDomain = deleteAuthorizedDomain;
         window.copyAuthorizedDomainValue = copyAuthorizedDomainValue;
+        window.testAuthorizedDomainAudit = testAuthorizedDomainAudit;
 
         let auditHistoryFilter = 'all';
 
@@ -5146,7 +5253,7 @@ function getCodigoHTML() {
             }
 
             if (lower.includes('captcha') || isAntiBotAuditError(clean)) {
-                return 'O site parece estar bloqueando automações legítimas por anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para auditar esse domínio, valide a propriedade e libere o header secreto da SSW no firewall do site.';
+                return 'O site parece estar bloqueando automações legítimas por anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para fazer a análise completa, libere a S.S.W Intelligence no sistema de segurança do site ou continue sem captura visual.';
             }
 
             if (stage === 'pagespeed' || lower.includes('pagespeed') || lower.includes('metricas oficiais') || lower.includes('métricas oficiais')) {
@@ -5211,7 +5318,7 @@ function getCodigoHTML() {
             const reasonText = String(reason || '').trim();
             const antiBotDetected = isAntiBotAuditError(reasonText);
             const message = antiBotDetected
-                ? 'O site bloqueou a auditoria por uma proteção anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para liberar esse domínio, valide a propriedade e configure o header secreto da SSW no firewall do site.'
+                ? 'O site bloqueou a auditoria por uma proteção anti-bot, WAF ou Cloudflare. A análise foi cancelada e seu saldo foi mantido. Para liberar a análise completa, adicione este site em Liberar auditoria e envie a instrução gerada para quem cuida da segurança do site.'
                 : (String(displayMessage || '').trim() || AUDIT_CANCEL_MESSAGE);
 
             if (!searchContainer) {
@@ -5229,7 +5336,7 @@ function getCodigoHTML() {
                 ? `
                     <div class="audit-cancel-guidance">
                         <strong>Como resolver</strong>
-                        <p>Peça ao dono do site para validar o domínio na SSW e permitir requisições com o header <code>X-SSW-Audit-Token</code> e User-Agent contendo <code>SSW-Intelligence-Auditor/1.0</code>.</p>
+                        <p>Adicione o site em <strong>Liberar auditoria</strong>, copie a instrução e envie para quem cuida do Cloudflare, firewall ou plugin de segurança.</p>
                     </div>
                 `
                 : '';
@@ -5252,6 +5359,25 @@ function getCodigoHTML() {
                     </div>
                 </div>
             `;
+            if (antiBotDetected) {
+                const actions = notice.querySelector('.audit-cancel-actions');
+                if (actions) {
+                    [...actions.querySelectorAll('button')].forEach(button => {
+                        const text = String(button.textContent || '').toLowerCase();
+                        if (text.includes('tutorial') || text.includes('configurar')) button.remove();
+                    });
+                    const releaseButton = document.createElement('button');
+                    releaseButton.type = 'button';
+                    releaseButton.textContent = 'Liberar auditoria';
+                    releaseButton.onclick = () => nav('domains');
+                    const partialButton = document.createElement('button');
+                    partialButton.type = 'button';
+                    partialButton.textContent = 'Continuar sem captura';
+                    partialButton.onclick = () => showSimplifiedSearch();
+                    actions.insertBefore(partialButton, actions.children[1] || null);
+                    actions.insertBefore(releaseButton, partialButton);
+                }
+            }
             searchContainer.appendChild(notice);
             if (typeof lucide !== 'undefined') lucide.createIcons();
             Toast.warning(antiBotDetected ? 'Bloqueio anti-bot detectado. Seu saldo foi mantido.' : message, 10000);

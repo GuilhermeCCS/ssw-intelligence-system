@@ -304,7 +304,7 @@
                 </button>
                 <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    <span>Domínios autorizados</span>
+                    <span>Liberar auditoria</span>
                 </button>
 
                 <p class="sidebar-section-label">Crescimento</p>
@@ -694,14 +694,14 @@
             <div id="view-domains" class="hidden max-w-6xl mx-auto space-y-7 animate-fade-in-up">
                 <header class="history-hero">
                     <div class="history-hero-copy">
-                        <span>Acesso autorizado</span>
-                        <h2>Domínios autorizados</h2>
-                        <p>Use esta área apenas quando a auditoria normal for bloqueada por anti-bot, WAF ou Cloudflare. Primeiro tente analisar; se houver bloqueio, valide o domínio e libere a SSW no firewall do site.</p>
+                        <span>Captura bloqueada</span>
+                        <h2>Liberar auditoria</h2>
+                        <p>Use esta área quando um site bloquear a captura automática. Cadastre o domínio, copie a instrução gerada e envie para quem cuida do Cloudflare, firewall ou plugin de segurança.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="abrirTutorialDominioAutorizado()" class="history-refresh-btn">
                             <i data-lucide="book-open" class="w-4 h-4"></i>
-                            Ver tutorial
+                            Como funciona
                         </button>
                         <button onclick="loadAuthorizedDomains(true)" class="history-refresh-btn">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
@@ -712,24 +712,23 @@
 
                 <section class="glass-panel p-6 md:p-8 rounded-2xl border border-white/10">
                     <div class="mb-6 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.04] p-4">
-                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Fluxo correto</p>
-                        <p class="mt-2 text-sm leading-relaxed text-slate-300">A SSW sempre tenta auditar normalmente primeiro. A autorização de domínio entra como plano de desbloqueio quando o site do cliente recusa automações legítimas. Assim, sites públicos continuam funcionando sem configuração extra.</p>
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Fluxo simples</p>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-300">A S.S.W sempre tenta auditar normalmente primeiro. Se o site bloquear, você só precisa liberar a S.S.W Intelligence como ferramenta confiável e testar novamente.</p>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6">
                         <div>
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Domínio do cliente</label>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Site que bloqueou a auditoria</label>
                             <div class="mt-2 flex flex-col sm:flex-row gap-3">
                                 <input id="authorizedDomainInput" type="text" placeholder="exemplo.com.br" class="input-pro flex-1 rounded-xl p-4 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();createAuthorizedDomain();}">
                                 <button onclick="createAuthorizedDomain()" class="btn-primary text-white font-bold px-6 py-4 rounded-xl">
-                                    Adicionar
+                                    Gerar instrução
                                 </button>
                             </div>
-                            <p class="mt-3 text-xs leading-relaxed text-slate-400">Depois de verificado, a SSW usa o token autorizado somente quando a auditoria normal falhar por bloqueio de acesso.</p>
+                            <p class="mt-3 text-xs leading-relaxed text-slate-400">Não precisa mexer em DNS, meta tag ou arquivo. O sistema gera um código privado e uma mensagem pronta para enviar ao técnico.</p>
                         </div>
                         <div class="rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-4">
-                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Header enviado na auditoria</p>
-                            <code class="mt-3 block rounded-lg border border-white/10 bg-black/30 p-3 text-xs text-slate-200">X-SSW-Audit-Token: token_do_domínio</code>
-                            <code class="mt-2 block rounded-lg border border-white/10 bg-black/30 p-3 text-xs text-slate-200">User-Agent: SSW-Intelligence-Auditor/1.0</code>
+                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">O que será liberado</p>
+                            <p class="mt-3 text-sm leading-relaxed text-slate-300">A auditoria será identificada por um User-Agent oficial e por um header privado único. O técnico só precisa permitir esses dois sinais juntos.</p>
                         </div>
                     </div>
                 </section>
@@ -817,7 +816,7 @@
                                     <button onclick="showTutorialSection('dominios-autorizados')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
                                         <span class="flex items-center gap-2">
                                             <i data-lucide="shield-check" class="w-4 h-4"></i>
-                                            Domínios Autorizados
+                                            Liberar auditoria
                                         </span>
                                     </button>
                                     <button onclick="showTutorialSection('batalha-comparativa')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
@@ -1124,8 +1123,64 @@
                                     </div>
                                 </div>
                             </section>
-                            <!-- SEÇÃO 3: Domínios Autorizados -->
+                            <!-- SEÇÃO 3: Liberar Auditoria -->
                             <section id="dominios-autorizados" class="hidden scroll-mt-24">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+                                    <div>
+                                        <p class="text-cyan-300 text-xs font-bold uppercase tracking-[0.2em] mb-3">Sites com anti-bot</p>
+                                        <h2 class="text-3xl font-semibold text-white">Como liberar a auditoria da S.S.W</h2>
+                                        <p class="text-slate-400 text-base leading-relaxed mt-3 max-w-2xl">
+                                            Use este guia quando a captura for bloqueada por Cloudflare, firewall, WAF, captcha ou plugin de segurança. A ideia é simples: a S.S.W envia dois sinais privados e o responsável pelo site permite esses sinais.
+                                        </p>
+                                    </div>
+                                    <button onclick="nav('domains')" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded border border-cyan-500 transition-colors no-print">
+                                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                        Abrir liberação
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                    <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
+                                        <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
+                                            <i data-lucide="plus-circle" class="w-4 h-4 text-cyan-300"></i>
+                                        </div>
+                                        <h3 class="text-white font-semibold mb-2">1. Adicione o domínio</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">Informe apenas o domínio principal, como <code class="text-cyan-200">exemplo.com.br</code>. A plataforma gera um código privado para aquele site.</p>
+                                    </div>
+                                    <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
+                                        <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
+                                            <i data-lucide="copy" class="w-4 h-4 text-cyan-300"></i>
+                                        </div>
+                                        <h3 class="text-white font-semibold mb-2">2. Copie a instrução</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">Envie a mensagem pronta para quem cuida do Cloudflare, firewall, WAF ou plugin de segurança. O usuário não precisa entender a parte técnica.</p>
+                                    </div>
+                                    <div class="border border-slate-800 bg-slate-950/70 rounded-xl p-5">
+                                        <div class="w-9 h-9 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center mb-4">
+                                            <i data-lucide="refresh-cw" class="w-4 h-4 text-cyan-300"></i>
+                                        </div>
+                                        <h3 class="text-white font-semibold mb-2">3. Teste novamente</h3>
+                                        <p class="text-slate-400 text-sm leading-relaxed">Depois que a regra for aplicada, rode a auditoria de novo. Se o site ainda bloquear, continue sem captura visual ou revise a regra criada.</p>
+                                    </div>
+                                </div>
+
+                                <div class="border border-cyan-400/20 bg-cyan-400/[0.04] rounded-xl p-5 mb-8">
+                                    <h3 class="text-xl font-semibold text-white mb-3">Mensagem que será enviada ao técnico</h3>
+                                    <p class="text-slate-300 text-sm leading-relaxed">
+                                        “Preciso liberar a auditoria da S.S.W Intelligence. Permita requisições com User-Agent contendo <code class="text-cyan-200">SSW-Intelligence-Auditor</code> e com o header <code class="text-cyan-200">X-SSW-Audit-Token</code> igual ao código gerado pela plataforma. Essa regra deve pular desafios de bot/captcha apenas quando os dois sinais existirem ao mesmo tempo.”
+                                    </p>
+                                </div>
+
+                                <div class="border border-slate-800 rounded-xl p-5 bg-slate-950/70">
+                                    <h3 class="text-lg font-semibold text-white mb-3 flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-cyan-300"></i> Regra de segurança</h3>
+                                    <p class="text-slate-400 text-sm leading-relaxed mb-3">Não libere qualquer robô. A liberação deve depender dos dois sinais juntos: User-Agent oficial + header privado. Se o código vazar, gere um novo código na tela de liberação.</p>
+                                    <button onclick="nav('domains')" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold transition-colors">
+                                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                        Liberar auditoria
+                                    </button>
+                                </div>
+                            </section>
+
+                            <section id="dominios-autorizados-legado" class="hidden scroll-mt-24">
                                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
                                     <div>
                                         <p class="text-cyan-300 text-xs font-bold uppercase tracking-[0.2em] mb-3">Sites com anti-bot</p>
@@ -1778,7 +1833,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260623-no-audit-snapshot-tab-v1"></script>
+            <script src="src/app/core/main.js?v=20260623-release-audit-v1"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">
