@@ -5471,6 +5471,8 @@ function getCodigoHTML() {
                 setAuditPillarsVisibility(mode === 'auto');
                 // Armazenar dados globalmente para exportação PDF
                 auditData = data.resultado;
+                auditData.images = data.images || auditData.images || {};
+                auditData.audit_mode = mode;
                 currentAuditUrl = url;
                 USER.credits = data.novo_saldo;
                 // Salva dados criptografados se secureStorage disponível
@@ -8170,6 +8172,379 @@ function getCodigoHTML() {
             }
         }
 
+        function gerarPDFOficialPremiumRouter(dadosOverride = null) {
+            const dados = dadosOverride || auditData;
+            if (!dados) {
+                Toast.error("Nenhum dado de auditoria disponível para exportar.");
+                return;
+            }
+            if (!dados.url && currentAuditUrl) dados.url = currentAuditUrl;
+
+            const isManualOrAutomatic = !!dados.technical_audit;
+            if (!isManualOrAutomatic) {
+                gerarPDFOficial(dados);
+                return;
+            }
+
+            gerarPDFAuditoriaPremium(dados);
+        }
+
+        function gerarPDFAuditoriaPremium(dados) {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const page = { w: 210, h: 297, left: 16, right: 194, top: 16, bottom: 276 };
+                const colors = {
+                    ink: [15, 23, 42],
+                    body: [51, 65, 85],
+                    muted: [100, 116, 139],
+                    subtle: [148, 163, 184],
+                    border: [226, 232, 240],
+                    surface: [248, 250, 252],
+                    surface2: [241, 245, 249],
+                    cyan: [8, 145, 178],
+                    cyanSoft: [236, 254, 255],
+                    green: [22, 163, 74],
+                    greenSoft: [220, 252, 231],
+                    yellow: [202, 138, 4],
+                    yellowSoft: [254, 249, 195],
+                    red: [220, 38, 38],
+                    redSoft: [254, 226, 226],
+                    orange: [234, 88, 12],
+                    orangeSoft: [255, 237, 213],
+                    white: [255, 255, 255]
+                };
+                const technical = dados.technical_audit || {};
+                const metrics = technical.real_metrics || {};
+                const url = dados.url || currentAuditUrl || 'URL não informada';
+                const dataGeracao = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                let y = 16;
+
+                const safeText = (value, fallback = '') => String(value ?? fallback).replace(/\s+/g, ' ').trim();
+                const limitPdfText = (value, max = 180) => {
+                    const text = safeText(value);
+                    return text.length > max ? `${text.substring(0, max - 3)}...` : text;
+                };
+                const parseScore = value => {
+                    if (typeof value === 'number' && Number.isFinite(value)) return value;
+                    const parsed = Number(String(value ?? '').replace(/[^\d.-]/g, ''));
+                    return Number.isFinite(parsed) ? parsed : null;
+                };
+                const scoreTone = value => {
+                    const score = parseScore(value);
+                    if (score === null) return { color: colors.subtle, soft: colors.surface2, label: 'Sem dado', score: null };
+                    if (score >= 90) return { color: colors.green, soft: colors.greenSoft, label: 'Excelente', score };
+                    if (score >= 50) return { color: colors.yellow, soft: colors.yellowSoft, label: 'Atenção', score };
+                    return { color: colors.red, soft: colors.redSoft, label: 'Crítico', score };
+                };
+                const timeTone = value => {
+                    const parsed = parseFloat(String(value || '').replace(',', '.'));
+                    if (!Number.isFinite(parsed)) return scoreTone(null);
+                    if (parsed <= 2.5) return { ...scoreTone(95), label: 'Excelente' };
+                    if (parsed <= 4) return { ...scoreTone(65), label: 'Atenção' };
+                    return { ...scoreTone(35), label: 'Crítico' };
+                };
+                const riskTone = value => {
+                    const text = safeText(value, 'Atenção').toUpperCase();
+                    if (text.includes('CRIT') || text.includes('CRÍT')) return { label: 'CRÍTICO', fill: colors.red };
+                    if (text.includes('ALTO') || text.includes('HIGH')) return { label: 'ALTO', fill: colors.orange };
+                    if (text.includes('MÉD') || text.includes('MED')) return { label: 'MÉDIO', fill: colors.yellow };
+                    if (text.includes('BAIX') || text.includes('LOW')) return { label: 'BAIXO', fill: colors.green };
+                    return { label: limitPdfText(value || 'ATENÇÃO', 12).toUpperCase(), fill: colors.cyan };
+                };
+                const normalizeTime = value => {
+                    const text = safeText(value, 'N/A');
+                    if (!text || text === '--') return 'N/A';
+                    return text.replace(/s+$/i, 's');
+                };
+                const normalizeDataUri = value => {
+                    const raw = safeText(value);
+                    if (!raw) return '';
+                    return raw.startsWith('data:') ? raw : `data:image/jpeg;base64,${raw}`;
+                };
+                const getCapture = kind => {
+                    const fromData = normalizeDataUri(dados.images?.[kind] || dados.captures?.[kind] || dados.screenshots?.[kind]);
+                    if (fromData) return fromData;
+                    const elementId = kind === 'desktop' ? 'printDesktop' : 'printMobile';
+                    return normalizeDataUri(document.getElementById(elementId)?.src || '');
+                };
+                const imageFormat = src => src.includes('image/png') ? 'PNG' : 'JPEG';
+                const wrap = (text, width, size = 9) => {
+                    doc.setFontSize(size);
+                    return doc.splitTextToSize(safeText(text), width);
+                };
+                const ensureSpace = needed => {
+                    if (y + needed > page.bottom) {
+                        doc.addPage();
+                        y = page.top;
+                    }
+                };
+                const card = (x, cardY, w, h, fill = colors.white, stroke = colors.border) => {
+                    doc.setFillColor(...fill);
+                    doc.setDrawColor(...stroke);
+                    doc.setLineWidth(0.3);
+                    doc.roundedRect(x, cardY, w, h, 3, 3, 'FD');
+                };
+                const textLines = (lines, x, lineY, size, color = colors.body, style = 'normal', lineHeight = 4.6) => {
+                    doc.setFont('helvetica', style);
+                    doc.setFontSize(size);
+                    doc.setTextColor(...color);
+                    const list = Array.isArray(lines) ? lines : [lines];
+                    list.forEach((line, index) => doc.text(String(line), x, lineY + index * lineHeight));
+                    return lineY + list.length * lineHeight;
+                };
+                const sectionTitle = (label, title) => {
+                    ensureSpace(20);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(7.4);
+                    doc.setTextColor(...colors.cyan);
+                    doc.text(label.toUpperCase(), page.left, y);
+                    y += 5;
+                    doc.setFontSize(14);
+                    doc.setTextColor(...colors.ink);
+                    doc.text(title, page.left, y);
+                    y += 8;
+                };
+                const progressBar = (x, barY, w, score, tone) => {
+                    doc.setFillColor(...colors.surface2);
+                    doc.roundedRect(x, barY, w, 2.4, 1.2, 1.2, 'F');
+                    if (score !== null) {
+                        doc.setFillColor(...tone.color);
+                        doc.roundedRect(x, barY, Math.max(2, w * Math.min(100, Math.max(0, score)) / 100), 2.4, 1.2, 1.2, 'F');
+                    }
+                };
+                const metricCard = (metric, x, cardY, w, h) => {
+                    const tone = metric.tone || scoreTone(metric.value);
+                    card(x, cardY, w, h);
+                    doc.setFillColor(...tone.soft);
+                    doc.roundedRect(x + 3, cardY + 3, 8, 8, 2, 2, 'F');
+                    doc.setFillColor(...tone.color);
+                    doc.circle(x + 7, cardY + 7, 1.3, 'F');
+                    textLines(metric.label, x + 3, cardY + 17, 7.1, colors.muted, 'bold', 4);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(metric.large ? 15 : 12);
+                    doc.setTextColor(...colors.ink);
+                    doc.text(String(metric.display), x + 3, cardY + 27);
+                    textLines(tone.label, x + 3, cardY + 34, 7, tone.color, 'bold', 3.8);
+                    if (tone.score !== null) progressBar(x + 3, cardY + h - 7, w - 6, tone.score, tone);
+                };
+                const imageCard = (title, src, x, cardY, w, h) => {
+                    card(x, cardY, w, h);
+                    textLines(title, x + 4, cardY + 7, 8, colors.ink, 'bold', 4);
+                    const imageX = x + 4;
+                    const imageY = cardY + 12;
+                    const imageW = w - 8;
+                    const imageH = h - 17;
+                    doc.setFillColor(...colors.surface);
+                    doc.roundedRect(imageX, imageY, imageW, imageH, 2.5, 2.5, 'F');
+                    if (!src) {
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(8);
+                        doc.setTextColor(...colors.muted);
+                        doc.text('Captura não encontrada', imageX + imageW / 2, imageY + imageH / 2, { align: 'center' });
+                        return;
+                    }
+                    try {
+                        doc.addImage(src, imageFormat(src), imageX, imageY, imageW, imageH, undefined, 'FAST');
+                    } catch (imageError) {
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(8);
+                        doc.setTextColor(...colors.muted);
+                        doc.text('Captura indisponível no PDF', imageX + imageW / 2, imageY + imageH / 2, { align: 'center' });
+                    }
+                };
+                const normalizeActions = plan => {
+                    if (!plan) return [];
+                    if (Array.isArray(plan)) return plan.flat().filter(Boolean);
+                    if (typeof plan === 'object') return Object.values(plan).flat().filter(Boolean);
+                    return [plan];
+                };
+                const uniqueActions = actions => [...new Set(actions.map(action => safeText(action)).filter(Boolean))];
+                const drawVectorCheck = (x, checkY) => {
+                    doc.setDrawColor(...colors.green);
+                    doc.setLineWidth(0.8);
+                    doc.circle(x, checkY, 3.1, 'S');
+                    doc.line(x - 1.6, checkY, x - 0.4, checkY + 1.4);
+                    doc.line(x - 0.4, checkY + 1.4, x + 2.2, checkY - 1.5);
+                };
+                const footer = () => {
+                    const pageCount = doc.internal.getNumberOfPages();
+                    for (let index = 1; index <= pageCount; index++) {
+                        doc.setPage(index);
+                        doc.setDrawColor(...colors.border);
+                        doc.line(page.left, 281, page.right, 281);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(7.5);
+                        doc.setTextColor(...colors.muted);
+                        doc.text('Gerado por S.S.W INTELLIGENCE - Inteligência em Conversão', page.left, 287);
+                        doc.text(`Página ${index} de ${pageCount}`, page.right, 287, { align: 'right' });
+                    }
+                };
+
+                doc.setFont('helvetica');
+                doc.setFillColor(...colors.surface);
+                doc.rect(0, 0, page.w, page.h, 'F');
+                card(page.left, 14, 178, 48, colors.white, colors.border);
+                doc.setFillColor(...colors.cyan);
+                doc.roundedRect(page.left + 5, 20, 8, 8, 2, 2, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(...colors.ink);
+                doc.text('S.S.W INTELLIGENCE', page.left + 17, 26);
+                doc.setFontSize(20);
+                doc.text('Auditoria de Alta Performance e Conversão', page.left + 5, 42);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                doc.setTextColor(...colors.muted);
+                doc.text(limitPdfText(url, 90), page.left + 5, 54);
+                doc.text(`Data: ${dataGeracao}`, page.right - 5, 54, { align: 'right' });
+                y = 74;
+
+                if (technical.executive_summary) {
+                    card(page.left, y, 178, 28, colors.white, colors.border);
+                    textLines('Resumo executivo', page.left + 5, y + 8, 8, colors.cyan, 'bold');
+                    textLines(wrap(technical.executive_summary, 166, 8.5).slice(0, 3), page.left + 5, y + 15, 8.5, colors.body, 'normal', 4.5);
+                    y += 38;
+                }
+
+                sectionTitle('Prova visual', 'Visualização da Plataforma');
+                imageCard('Desktop', getCapture('desktop'), page.left, y, 112, 66);
+                imageCard('Mobile', getCapture('mobile'), page.left + 120, y, 58, 66);
+                y += 78;
+
+                sectionTitle('Painel executivo', 'Métricas de Performance');
+                const perf = metrics.performance_score ?? technical.performance_score ?? technical.score;
+                const seo = metrics.seo_score ?? technical.seo_score;
+                const accessibility = metrics.accessibility_score ?? technical.accessibility_score;
+                const lcp = normalizeTime(metrics.lcp);
+                const loadTime = normalizeTime(metrics.load_time);
+                [
+                    { label: 'Performance', value: perf, display: parseScore(perf) ?? 'N/A', large: true },
+                    { label: 'SEO', value: seo, display: parseScore(seo) ?? 'N/A', large: true },
+                    { label: 'Acessibilidade', value: accessibility, display: parseScore(accessibility) ?? 'N/A', large: true },
+                    { label: 'LCP', display: lcp, tone: timeTone(lcp) },
+                    { label: 'Load Time', display: loadTime, tone: timeTone(loadTime) }
+                ].forEach((metric, index) => metricCard(metric, page.left + index * 36, y, 33.2, 44));
+                y += 58;
+
+                const vulnerabilities = Array.isArray(technical.vulnerabilities) ? technical.vulnerabilities : [];
+                if (vulnerabilities.length) {
+                    sectionTitle('Riscos identificados', 'Vulnerabilidades Identificadas');
+                    doc.autoTable({
+                        startY: y,
+                        theme: 'plain',
+                        margin: { left: page.left, right: page.w - page.right },
+                        head: [['Nível de Risco', 'Problema', 'Descrição técnica']],
+                        body: vulnerabilities.slice(0, 12).map(item => [
+                            riskTone(item.severity).label,
+                            limitPdfText(item.title || 'Problema sem título', 74),
+                            limitPdfText(item.description || 'Sem descrição técnica detalhada.', 150)
+                        ]),
+                        headStyles: {
+                            fillColor: colors.white,
+                            textColor: colors.ink,
+                            fontStyle: 'bold',
+                            fontSize: 8.2,
+                            cellPadding: { top: 2.8, bottom: 2.8, left: 2, right: 2 },
+                            lineColor: colors.border,
+                            lineWidth: { bottom: 0.25 }
+                        },
+                        bodyStyles: {
+                            textColor: colors.body,
+                            fontSize: 7.8,
+                            cellPadding: { top: 3, bottom: 3, left: 2, right: 2 },
+                            lineColor: colors.border,
+                            lineWidth: { bottom: 0.18 },
+                            overflow: 'linebreak'
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 34 },
+                            1: { cellWidth: 50 },
+                            2: { cellWidth: 94 }
+                        },
+                        didParseCell: tableData => {
+                            if (tableData.section === 'body' && tableData.column.index === 0) tableData.cell.text = [''];
+                        },
+                        didDrawCell: tableData => {
+                            if (tableData.section === 'body' && tableData.column.index === 0) {
+                                const label = tableData.row.raw[0];
+                                const tone = riskTone(label);
+                                const badgeW = Math.min(28, tableData.cell.width - 4);
+                                doc.setFillColor(...tone.fill);
+                                doc.roundedRect(tableData.cell.x + 2, tableData.cell.y + 2.6, badgeW, 5.8, 2.8, 2.8, 'F');
+                                doc.setFont('helvetica', 'bold');
+                                doc.setFontSize(6.6);
+                                doc.setTextColor(...colors.white);
+                                doc.text(label, tableData.cell.x + 2 + badgeW / 2, tableData.cell.y + 6.7, { align: 'center' });
+                            }
+                        },
+                        didDrawPage: tableData => { y = tableData.cursor.y + 10; }
+                    });
+                }
+
+                const agents = dados.agents_results || dados.personas_results || dados.behavioral_analysis || [];
+                if (Array.isArray(agents) && agents.length) {
+                    sectionTitle('Testes comportamentais', 'Análise de Agents');
+                    agents.slice(0, 5).forEach(agent => {
+                        const score = parseScore(agent.score);
+                        const tone = scoreTone(score === null ? null : score * 10);
+                        const quote = agent.direct_quote || agent.feedback || agent.reason || 'A persona não retornou uma citação detalhada.';
+                        const journey = Array.isArray(agent.journey_log) && agent.journey_log.length
+                            ? `${agent.journey_log[0].action || 'Ação observada'}: ${agent.journey_log[0].status || ''}`
+                            : '';
+                        const quoteLines = wrap(`"${quote}"`, 136, 8.2).slice(0, 4);
+                        const h = 28 + quoteLines.length * 4.1 + (journey ? 8 : 0);
+                        ensureSpace(h + 6);
+                        card(page.left, y, 178, h, colors.white, colors.border);
+                        doc.setFillColor(...tone.soft);
+                        doc.roundedRect(page.left + 5, y + 5, 18, 11, 3, 3, 'F');
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(9);
+                        doc.setTextColor(...tone.color);
+                        doc.text(score === null ? '--' : String(score), page.left + 14, y + 12, { align: 'center' });
+                        textLines(agent.profile_name || agent.agent || 'Persona S.S.W', page.left + 28, y + 9, 9.4, colors.ink, 'bold');
+                        textLines('Perfil simulado - Nota comportamental', page.left + 28, y + 15, 7.2, colors.muted, 'normal');
+                        doc.setDrawColor(...colors.cyan);
+                        doc.setLineWidth(0.6);
+                        doc.line(page.left + 6, y + 22, page.left + 6, y + 22 + quoteLines.length * 4.1);
+                        textLines(quoteLines, page.left + 10, y + 24, 8.2, colors.body, 'italic', 4.1);
+                        if (journey) textLines(limitPdfText(journey, 150), page.left + 10, y + h - 7, 7.4, colors.muted, 'normal');
+                        y += h + 7;
+                    });
+                }
+
+                const actions = uniqueActions([
+                    ...normalizeActions(technical.action_plan),
+                    ...normalizeActions(dados.action_plan)
+                ]);
+                sectionTitle('Próximos passos', 'Plano de Ação Recomendado');
+                if (!actions.length) {
+                    card(page.left, y, 178, 20, colors.white, colors.border);
+                    textLines('Nenhuma ação recomendada foi retornada pela análise.', page.left + 5, y + 12, 9, colors.body);
+                    y += 28;
+                } else {
+                    actions.slice(0, 12).forEach((action, index) => {
+                        const actionLines = wrap(action, 150, 8.3).slice(0, 3);
+                        const h = Math.max(16, 8 + actionLines.length * 4.4);
+                        ensureSpace(h + 5);
+                        card(page.left, y, 178, h, colors.white, colors.border);
+                        drawVectorCheck(page.left + 8, y + 8);
+                        textLines(`Passo ${String(index + 1).padStart(2, '0')}`, page.left + 16, y + 7, 7, colors.cyan, 'bold');
+                        textLines(actionLines, page.left + 16, y + 13, 8.3, colors.body, 'normal', 4.4);
+                        y += h + 5;
+                    });
+                }
+
+                footer();
+                const fileName = `auditoria-premium-${url.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 34) || 'site'}-${Date.now()}.pdf`;
+                doc.save(fileName);
+                Toast.success('Relatório executivo premium gerado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao gerar PDF premium:', error);
+                Toast.error('Erro ao gerar PDF premium. Tente novamente.');
+            }
+        }
+
         Object.assign(window, {
             nav,
             runAudit,
@@ -8187,7 +8562,7 @@ function getCodigoHTML() {
             comprarCreditos,
             showCreditsEndedModal,
             hideCreditsEndedModal,
-            gerarPDFOficial,
+            gerarPDFOficial: gerarPDFOficialPremiumRouter,
             smoothScrollTo,
             setHomePresentationVisible,
             showHomeLandingState
