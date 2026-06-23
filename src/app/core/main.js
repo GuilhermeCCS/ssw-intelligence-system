@@ -7922,7 +7922,7 @@ function getCodigoHTML() {
         // --- FUNÇÃO DE COMPRA COM CHECKOUT TRANSPARENTE MERCADO PAGO ---
         // Funções comprarPlano, togglePlanType, toggleFAQ e falarComVendas movidas para pricing-section.js
         // Função para gerar PDF oficial a partir dos dados brutos da API
-        function gerarPDFOficial(dadosOverride = null) {
+        function gerarPDFOficialLegado(dadosOverride = null) {
             try {
                 // Usar dados fornecidos ou dados globais
                 const dados = dadosOverride || auditData;
@@ -8172,7 +8172,7 @@ function getCodigoHTML() {
             }
         }
 
-        function gerarPDFOficialPremiumRouter(dadosOverride = null) {
+        function gerarPDFOficial(dadosOverride = null) {
             const dados = dadosOverride || auditData;
             if (!dados) {
                 Toast.error("Nenhum dado de auditoria disponível para exportar.");
@@ -8182,7 +8182,7 @@ function getCodigoHTML() {
 
             const isManualOrAutomatic = !!dados.technical_audit;
             if (!isManualOrAutomatic) {
-                gerarPDFOficial(dados);
+                gerarPDFOficialLegado(dados);
                 return;
             }
 
@@ -8562,7 +8562,7 @@ function getCodigoHTML() {
             comprarCreditos,
             showCreditsEndedModal,
             hideCreditsEndedModal,
-            gerarPDFOficial: gerarPDFOficialPremiumRouter,
+            gerarPDFOficial,
             smoothScrollTo,
             setHomePresentationVisible,
             showHomeLandingState
