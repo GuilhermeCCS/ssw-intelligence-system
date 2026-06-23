@@ -8269,6 +8269,30 @@ function getCodigoHTML() {
                     return normalizeDataUri(document.getElementById(elementId)?.src || '');
                 };
                 const imageFormat = src => src.includes('image/png') ? 'PNG' : 'JPEG';
+                const getLogoDataUri = () => {
+                    try {
+                        const logoElement = document.querySelector('img[src*="logos.ico"]');
+                        if (!logoElement || !logoElement.complete || !logoElement.naturalWidth) return '';
+                        const size = 128;
+                        const canvas = document.createElement('canvas');
+                        canvas.width = size;
+                        canvas.height = size;
+                        const context = canvas.getContext('2d');
+                        if (!context) return '';
+                        context.clearRect(0, 0, size, size);
+                        context.save();
+                        context.beginPath();
+                        context.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                        context.closePath();
+                        context.clip();
+                        context.drawImage(logoElement, 0, 0, size, size);
+                        context.restore();
+                        return canvas.toDataURL('image/png');
+                    } catch (logoError) {
+                        console.warn('Logo indisponível para o PDF:', logoError);
+                        return '';
+                    }
+                };
                 const wrap = (text, width, size = 9) => {
                     doc.setFontSize(size);
                     return doc.splitTextToSize(safeText(text), width);
@@ -8367,6 +8391,23 @@ function getCodigoHTML() {
                     doc.line(x - 1.6, checkY, x - 0.4, checkY + 1.4);
                     doc.line(x - 0.4, checkY + 1.4, x + 2.2, checkY - 1.5);
                 };
+                const drawBrandLogo = (x, logoY, size) => {
+                    doc.setFillColor(...colors.ink);
+                    doc.circle(x + size / 2, logoY + size / 2, size / 2, 'F');
+                    const logoSrc = getLogoDataUri();
+                    if (logoSrc) {
+                        try {
+                            doc.addImage(logoSrc, 'PNG', x, logoY, size, size, undefined, 'FAST');
+                            return;
+                        } catch (logoError) {
+                            console.warn('Falha ao inserir logo no PDF:', logoError);
+                        }
+                    }
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(8);
+                    doc.setTextColor(...colors.white);
+                    doc.text('S', x + size / 2, logoY + size / 2 + 2.4, { align: 'center' });
+                };
                 const footer = () => {
                     const pageCount = doc.internal.getNumberOfPages();
                     for (let index = 1; index <= pageCount; index++) {
@@ -8385,12 +8426,11 @@ function getCodigoHTML() {
                 doc.setFillColor(...colors.surface);
                 doc.rect(0, 0, page.w, page.h, 'F');
                 card(page.left, 14, 178, 48, colors.white, colors.border);
-                doc.setFillColor(...colors.cyan);
-                doc.roundedRect(page.left + 5, 20, 8, 8, 2, 2, 'F');
+                drawBrandLogo(page.left + 5, 19, 10);
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(9);
                 doc.setTextColor(...colors.ink);
-                doc.text('S.S.W INTELLIGENCE', page.left + 17, 26);
+                doc.text('S.S.W INTELLIGENCE', page.left + 19, 26);
                 doc.setFontSize(20);
                 doc.text('Auditoria de Alta Performance e Conversão', page.left + 5, 42);
                 doc.setFont('helvetica', 'normal');
@@ -8524,14 +8564,21 @@ function getCodigoHTML() {
                     y += 28;
                 } else {
                     actions.slice(0, 12).forEach((action, index) => {
-                        const actionLines = wrap(action, 150, 8.3).slice(0, 3);
-                        const h = Math.max(16, 8 + actionLines.length * 4.4);
-                        ensureSpace(h + 5);
+                        const actionFontSize = 7.7;
+                        const actionLineHeight = 4.4;
+                        const actionTextX = page.left + 17;
+                        const actionTextWidth = 142;
+                        const wrappedActionLines = wrap(action, actionTextWidth, actionFontSize);
+                        const actionLines = wrappedActionLines.length > 7
+                            ? [...wrappedActionLines.slice(0, 6), `${safeText(wrappedActionLines[6]).replace(/\.*$/, '')}...`]
+                            : wrappedActionLines;
+                        const h = Math.max(24, 18 + actionLines.length * actionLineHeight);
+                        ensureSpace(h + 6);
                         card(page.left, y, 178, h, colors.white, colors.border);
-                        drawVectorCheck(page.left + 8, y + 8);
-                        textLines(`Passo ${String(index + 1).padStart(2, '0')}`, page.left + 16, y + 7, 7, colors.cyan, 'bold');
-                        textLines(actionLines, page.left + 16, y + 13, 8.3, colors.body, 'normal', 4.4);
-                        y += h + 5;
+                        drawVectorCheck(page.left + 8, y + 10);
+                        textLines(`Passo ${String(index + 1).padStart(2, '0')}`, actionTextX, y + 8, 6.8, colors.cyan, 'bold');
+                        textLines(actionLines, actionTextX, y + 15, actionFontSize, colors.body, 'normal', actionLineHeight);
+                        y += h + 6;
                     });
                 }
 
