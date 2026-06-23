@@ -1,113 +1,196 @@
 (function() {
     const footerStyles = `
         .ssw-public-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            background: #020408;
-            color: #d1d5db;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid rgba(103, 232, 249, 0.12);
+            background: #05070b;
+            color: #a3adbd;
+        }
+
+        .ssw-public-footer::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 18% 14%, rgba(34, 211, 238, 0.12), transparent 28%),
+                radial-gradient(circle at 42% 40%, rgba(34, 211, 238, 0.05), transparent 24%),
+                linear-gradient(90deg, rgba(5, 7, 11, 0.94), rgba(5, 7, 11, 0.98) 52%, #030407);
+        }
+
+        .ssw-public-footer::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.08;
+            background-image:
+                linear-gradient(30deg, rgba(103, 232, 249, 0.34) 12%, transparent 12.5%, transparent 87%, rgba(103, 232, 249, 0.34) 87.5%, rgba(103, 232, 249, 0.34)),
+                linear-gradient(150deg, rgba(103, 232, 249, 0.34) 12%, transparent 12.5%, transparent 87%, rgba(103, 232, 249, 0.34) 87.5%, rgba(103, 232, 249, 0.34)),
+                linear-gradient(30deg, rgba(103, 232, 249, 0.34) 12%, transparent 12.5%, transparent 87%, rgba(103, 232, 249, 0.34) 87.5%, rgba(103, 232, 249, 0.34)),
+                linear-gradient(150deg, rgba(103, 232, 249, 0.34) 12%, transparent 12.5%, transparent 87%, rgba(103, 232, 249, 0.34) 87.5%, rgba(103, 232, 249, 0.34));
+            background-position: 0 0, 0 0, 18px 31px, 18px 31px;
+            background-size: 36px 62px;
+            mask-image: linear-gradient(90deg, #000 0%, transparent 58%);
         }
 
         .ssw-public-footer-inner {
-            width: min(1180px, calc(100% - 32px));
+            position: relative;
+            z-index: 1;
+            width: min(1180px, calc(100% - 40px));
             margin: 0 auto;
-            padding: 54px 0 28px;
+            padding: 42px 0 18px;
         }
 
         .ssw-public-footer-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(150px, 0.7fr));
-            gap: 34px;
-            align-items: flex-start;
+            grid-template-columns: minmax(250px, 1.45fr) repeat(4, minmax(120px, 0.66fr));
+            gap: clamp(24px, 4vw, 58px);
+            align-items: start;
+        }
+
+        .ssw-public-footer-brand-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #f8fafc;
+            text-decoration: none;
+        }
+
+        .ssw-public-footer-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            object-fit: cover;
+            box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.24);
         }
 
         .ssw-public-footer-brand strong {
             display: block;
-            color: #ffffff;
-            font-size: 20px;
+            color: #f8fafc;
+            font-size: 0.86rem;
             font-weight: 900;
+            line-height: 1;
             letter-spacing: 0.02em;
         }
 
-        .ssw-public-footer-brand span {
+        .ssw-public-footer-brand-mark > span > span {
             display: block;
-            margin-top: 2px;
+            margin-top: 4px;
             color: #22d3ee;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.14em;
+            font-size: 0.64rem;
+            font-weight: 850;
+            letter-spacing: 0.16em;
+            line-height: 1;
             text-transform: uppercase;
         }
 
         .ssw-public-footer-brand p {
-            max-width: 420px;
-            margin: 18px 0 0;
-            color: #8292a8;
-            font-size: 14px;
-            line-height: 1.75;
+            max-width: 360px;
+            margin: 22px 0 0;
+            color: #7f8ca2;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .ssw-public-footer-social {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 42px;
+        }
+
+        .ssw-public-footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            color: #f8fafc;
+            opacity: 0.78;
+            text-decoration: none;
+            transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
+        }
+
+        .ssw-public-footer-social a:hover {
+            color: #67e8f9;
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        .ssw-public-footer-social svg {
+            width: 16px;
+            height: 16px;
         }
 
         .ssw-public-footer-col h2 {
-            margin: 0 0 14px;
-            color: #ffffff;
-            font-size: 12px;
+            margin: 0 0 16px;
+            color: #f8fafc;
+            font-size: 0.76rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
 
         .ssw-public-footer-col a,
         .ssw-public-footer-col button {
-            min-height: 28px;
             display: flex;
-            align-items: center;
-            gap: 9px;
             width: fit-content;
-            margin: 0 0 8px;
+            margin: 0 0 11px;
             padding: 0;
             border: 0;
             background: transparent;
-            color: #aebbd0;
+            color: #8d97a8;
             font: inherit;
-            font-size: 14px;
+            font-size: 0.82rem;
+            line-height: 1.35;
+            text-align: left;
             text-decoration: none;
             cursor: pointer;
-            transition: color 0.18s ease;
+            transition: color 180ms ease, transform 180ms ease;
         }
 
         .ssw-public-footer-col a:hover,
         .ssw-public-footer-col button:hover {
-            color: #ffffff;
-        }
-
-        .ssw-public-footer-col svg {
-            width: 15px;
-            height: 15px;
-            color: #22d3ee;
-            flex: 0 0 auto;
-        }
-
-        .ssw-public-footer--sites .ssw-public-footer-brand span,
-        .ssw-public-footer--sites .ssw-public-footer-col svg {
-            color: #22d3ee;
+            color: #f8fafc;
+            transform: translateX(2px);
         }
 
         .ssw-public-footer-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            margin-top: 44px;
-            padding-top: 22px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            color: #64748b;
-            font-size: 12px;
+            gap: 20px;
+            margin-top: 34px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(148, 163, 184, 0.08);
+            color: #687386;
+            font-size: 0.76rem;
             line-height: 1.6;
         }
 
-        .ssw-public-footer-bottom span {
-            text-align: right;
+        .ssw-public-footer-bottom p {
+            margin: 0;
         }
 
-        @media (max-width: 820px) {
+        .ssw-public-footer-legal {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 9px 14px;
+        }
+
+        .ssw-public-footer-legal a,
+        .ssw-public-footer-legal span {
+            color: #687386;
+            text-decoration: none;
+        }
+
+        .ssw-public-footer-legal a:hover {
+            color: #dbeafe;
+        }
+
+        @media (max-width: 980px) {
             .ssw-public-footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
@@ -115,20 +198,28 @@
             .ssw-public-footer-brand {
                 grid-column: 1 / -1;
             }
+        }
+
+        @media (max-width: 640px) {
+            .ssw-public-footer-inner {
+                width: min(100% - 32px, 1180px);
+            }
+
+            .ssw-public-footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ssw-public-footer-social {
+                margin-top: 28px;
+            }
 
             .ssw-public-footer-bottom {
                 align-items: flex-start;
                 flex-direction: column;
             }
 
-            .ssw-public-footer-bottom span {
-                text-align: left;
-            }
-        }
-
-        @media (max-width: 560px) {
-            .ssw-public-footer-grid {
-                grid-template-columns: 1fr;
+            .ssw-public-footer-legal {
+                justify-content: flex-start;
             }
         }
     `;
@@ -141,87 +232,141 @@
         document.head.appendChild(style);
     }
 
+    function publicFooterData(isSitesFooter) {
+        if (isSitesFooter) {
+            return {
+                title: 'S.S.W Sites',
+                subtitle: 'Alta conversão',
+                description: 'Landing pages e sites institucionais rápidos, responsivos e pensados para transformar visitas em oportunidades reais de negócio.',
+                columns: [
+                    {
+                        label: 'Navegação',
+                        links: [
+                            { href: '#problema', text: 'O problema' },
+                            { href: '#processo', text: 'Como funciona' },
+                            { href: '#comparacao', text: 'Comparação' },
+                            { href: '#faq', text: 'Dúvidas' }
+                        ]
+                    },
+                    {
+                        label: 'Serviços',
+                        links: [
+                            { href: 'https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site.', text: 'Solicitar orçamento', external: true },
+                            { href: '/sites/', text: 'Sites e landing pages' },
+                            { href: '/home', text: 'Auditoria S.S.W' }
+                        ]
+                    },
+                    {
+                        label: 'Contato',
+                        links: [
+                            { href: 'mailto:contato@sswintelligence.com.br', text: 'E-mail' },
+                            { href: 'https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA', text: 'WhatsApp', external: true },
+                            { href: 'https://instagram.com/sswintelligence', text: 'Instagram', external: true }
+                        ]
+                    },
+                    {
+                        label: 'Empresa',
+                        links: [
+                            { href: '/home', text: 'S.S.W Intelligence' },
+                            { href: '/precos/', text: 'Planos e créditos' },
+                            { href: '/termos/', text: 'Termos de uso' }
+                        ]
+                    }
+                ]
+            };
+        }
+
+        return {
+            title: 'S.S.W Intelligence',
+            subtitle: 'Silva Serviços Web',
+            description: 'Auditoria web com IA, simulação de personas reais e desenvolvimento de sites e sistemas otimizados para performance, clareza e conversão.',
+            columns: [
+                {
+                    label: 'Plataforma',
+                    links: [
+                        { href: '/home', text: 'Nova análise' },
+                        { href: '/precos/', text: 'Planos e créditos' },
+                        { href: '/termos/', text: 'Termos de uso' }
+                    ]
+                },
+                {
+                    label: 'Serviços',
+                    links: [
+                        { href: '/sites/', text: 'Sites e sistemas' },
+                        { href: '/home', text: 'Auditoria com IA' },
+                        { href: '/agents', text: 'Personas IA' }
+                    ]
+                },
+                {
+                    label: 'Recursos',
+                    links: [
+                        { href: '/ranking', text: 'Ranking público' },
+                        { href: '/tutorial', text: 'Documentação' },
+                        { href: '/precos/', text: 'Preços' }
+                    ]
+                },
+                {
+                    label: 'Empresa',
+                    links: [
+                        { href: '/about', text: 'Sobre a S.S.W' },
+                        { href: 'mailto:contato@sswintelligence.com.br', text: 'Contato' },
+                        { href: 'https://instagram.com/sswintelligence', text: 'Instagram', external: true }
+                    ]
+                }
+            ]
+        };
+    }
+
+    function renderLink(link) {
+        const target = link.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${link.href}"${target}>${link.text}</a>`;
+    }
+
     function renderPublicFooter() {
         ensurePublicFooterStyles();
         document.querySelectorAll('[data-public-footer]').forEach(root => {
             const isSitesFooter = root.dataset.publicFooter === 'sites';
+            const data = publicFooterData(isSitesFooter);
+
             root.innerHTML = `
-                <footer class="ssw-public-footer">
+                <footer class="ssw-public-footer${isSitesFooter ? ' ssw-public-footer--sites' : ''}">
                     <div class="ssw-public-footer-inner">
                         <div class="ssw-public-footer-grid">
                             <div class="ssw-public-footer-brand">
-                                <strong>SSW</strong>
-                                <span>Intelligence</span>
-                                <p>Auditoria web com IA para identificar riscos técnicos, pontos de fricção e oportunidades de crescimento em experiências digitais.</p>
+                                <a class="ssw-public-footer-brand-mark" href="/home" aria-label="Ir para a S.S.W Intelligence">
+                                    <img class="ssw-public-footer-logo" src="/src/assets/images/logo/logos.ico" alt="">
+                                    <span>
+                                        <strong>${data.title}</strong>
+                                        <span>${data.subtitle}</span>
+                                    </span>
+                                </a>
+                                <p>${data.description}</p>
+                                <div class="ssw-public-footer-social" aria-label="Canais oficiais">
+                                    <a href="mailto:contato@sswintelligence.com.br" aria-label="E-mail"><i data-lucide="mail"></i></a>
+                                    <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i data-lucide="message-circle"></i></a>
+                                    <a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                                </div>
                             </div>
 
-                            <nav class="ssw-public-footer-col" aria-label="Produto">
-                                <h2>Produto</h2>
-                                <a href="/home"><i data-lucide="file-search"></i>Nova análise</a>
-                                <a href="/precos/"><i data-lucide="credit-card"></i>Preços</a>
-                                <a href="/termos/"><i data-lucide="file-check"></i>Termos de uso</a>
-                            </nav>
-
-                            <nav class="ssw-public-footer-col" aria-label="Suporte">
-                                <h2>Suporte</h2>
-                                <a href="mailto:contato@sswintelligence.com.br"><i data-lucide="mail"></i>E-mail</a>
-                                <a href="https://wa.me/5582991301991?text=PRECISO%20DE%20AJUDA" target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i>WhatsApp</a>
-                                <a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer"><i data-lucide="camera"></i>Instagram</a>
-                            </nav>
-
-                            <div class="ssw-public-footer-col">
-                                <h2>Empresa</h2>
-                                <a href="/home"><i data-lucide="building-2"></i>SSW Intelligence</a>
-                            </div>
+                            ${data.columns.map(column => `
+                                <nav class="ssw-public-footer-col" aria-label="${column.label}">
+                                    <h2>${column.label}</h2>
+                                    ${column.links.map(renderLink).join('')}
+                                </nav>
+                            `).join('')}
                         </div>
 
                         <div class="ssw-public-footer-bottom">
-                            <p>© 2026 SSW INTELLIGENCE. Todos os direitos reservados.</p>
-                            <span>CNPJ: 65.283.065/0001-37<br>Desenvolvido por Guilherme Cruz da Silva</span>
+                            <p>Copyright © 2026 S.S.W Intelligence. Todos os direitos reservados.</p>
+                            <div class="ssw-public-footer-legal" aria-label="Informações legais">
+                                <a href="/termos/">Termos de uso</a>
+                                <span>CNPJ 65.283.065/0001-37</span>
+                                <span>Desenvolvido por Guilherme Cruz da Silva</span>
+                            </div>
                         </div>
                     </div>
                 </footer>
             `;
-
-            if (isSitesFooter) {
-                const footer = root.querySelector('.ssw-public-footer');
-                const brand = root.querySelector('.ssw-public-footer-brand');
-                const columns = root.querySelectorAll('.ssw-public-footer-col');
-
-                footer?.classList.add('ssw-public-footer--sites');
-                if (brand) {
-                    brand.querySelector('strong').textContent = 'S.S.W';
-                    brand.querySelector('span').textContent = 'Sites';
-                    brand.querySelector('p').textContent = 'Landing pages e sites institucionais r\u00e1pidos, responsivos e pensados para transformar visitas em oportunidades reais de neg\u00f3cio.';
-                }
-
-                if (columns.length === 3) {
-                    columns[0].setAttribute('aria-label', 'Navega\u00e7\u00e3o da p\u00e1gina de Sites');
-                    columns[0].innerHTML = `
-                        <h2>Navega\u00e7\u00e3o</h2>
-                        <a href="#problema"><i data-lucide="circle-alert"></i>O problema</a>
-                        <a href="#processo"><i data-lucide="route"></i>Como funciona</a>
-                        <a href="#comparacao"><i data-lucide="git-compare"></i>Compara\u00e7\u00e3o</a>
-                        <a href="#faq"><i data-lucide="circle-help"></i>D\u00favidas</a>
-                    `;
-
-                    columns[1].setAttribute('aria-label', 'Contato para cria\u00e7\u00e3o de sites');
-                    columns[1].innerHTML = `
-                        <h2>Contato</h2>
-                        <a href="https://wa.me/5582991301991?text=Ol%C3%A1!%20Quero%20solicitar%20um%20or%C3%A7amento%20para%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i>Solicitar or\u00e7amento</a>
-                        <a href="mailto:contato@sswintelligence.com.br"><i data-lucide="mail"></i>E-mail</a>
-                        <a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer"><i data-lucide="camera"></i>Instagram</a>
-                    `;
-
-                    columns[2].setAttribute('aria-label', 'SSW Intelligence');
-                    columns[2].innerHTML = `
-                        <h2>SSW</h2>
-                        <a href="/home"><i data-lucide="building-2"></i>Plataforma</a>
-                        <a href="/precos/"><i data-lucide="credit-card"></i>Planos e pre\u00e7os</a>
-                        <a href="/termos/"><i data-lucide="file-check"></i>Termos de uso</a>
-                    `;
-                }
-            }
         });
 
         if (typeof lucide !== 'undefined') {
