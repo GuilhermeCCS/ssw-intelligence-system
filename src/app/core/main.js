@@ -1023,34 +1023,7 @@
         });
 
         function openAuditSnapshotTab() {
-            const auditResults = document.getElementById('auditResults');
-            if (!auditResults || auditResults.classList.contains('hidden') || auditSnapshotTabOpened) return;
-            auditSnapshotTabOpened = true;
-
-            const snapshot = window.open('', '_blank');
-            if (!snapshot) {
-                Toast.info('Seu navegador bloqueou a aba de backup. Salve o PDF ou converse com a persona antes de sair desta tela.');
-                return;
-            }
-
-            const reportTitle = currentAuditUrl || 'Auditoria SSW Intelligence';
-            snapshot.document.open();
-            snapshot.document.write(`<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${safeAuditText(reportTitle)} - SSW Intelligence</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link rel="stylesheet" href="/src/styles/cyber-theme.css">
-  <link rel="stylesheet" href="/src/styles/app.css">
-  <style>body{margin:0;background:#020408;color:#f8fafc;font-family:Inter,Arial,sans-serif;padding:32px;} .no-print,button{display:none!important;} #auditResults{display:block!important;max-width:1200px;margin:0 auto;} .audit-progress-nav{display:none!important;} .audit-reveal{opacity:1!important;transform:none!important;}</style>
-</head>
-<body>
-  <main>${auditResults.outerHTML}</main>
-</body>
-</html>`);
-            snapshot.document.close();
+            return false;
         }
 
         function nav(view) {
@@ -5654,8 +5627,6 @@ function getCodigoHTML() {
                 // Adiciona botão flutuante de chat
                 addFloatingChatButton(agentsResults);
                 hasUnsavedAuditSession = true;
-                auditSnapshotTabOpened = false;
-                openAuditSnapshotTab();
                 // Ajusta posição do footer para não sobrepor resultados
                 adjustFooterPosition(true);
                 // Verificação adicional para garantir o posicionamento
@@ -5925,8 +5896,6 @@ function getCodigoHTML() {
             }
             if (!resDiv.classList.contains('hidden')) {
                 hasUnsavedAuditSession = true;
-                auditSnapshotTabOpened = false;
-                openAuditSnapshotTab();
             }
         }
         // ===== RENDERIZADOR RELATÓRIO EXECUTIVO =====
@@ -6518,8 +6487,6 @@ function getCodigoHTML() {
                 lucide.createIcons();
             }
             hasUnsavedAuditSession = true;
-            auditSnapshotTabOpened = false;
-            openAuditSnapshotTab();
             adjustFooterPosition(true);
         }
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
