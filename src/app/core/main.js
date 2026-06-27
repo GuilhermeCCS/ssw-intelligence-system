@@ -3418,7 +3418,8 @@ function getCodigoHTML() {
         }
 
         function getTopAuditRisk(vulnerabilities = []) {
-            if (!Array.isArray(vulnerabilities) || !vulnerabilities.length) {
+            const barriers = getAuditRealBarriers(vulnerabilities);
+            if (!barriers.length) {
                 return {
                     title: 'Nenhuma barreira crítica',
                     text: 'A auditoria não encontrou um risco dominante, então o ganho deve vir de refinamentos progressivos.'
@@ -3431,12 +3432,35 @@ function getCodigoHTML() {
                 if (raw.includes('MÉD') || raw.includes('MED')) return 2;
                 return 1;
             };
-            const sorted = [...vulnerabilities].sort((a, b) => weight(b.severity) - weight(a.severity));
+            const sorted = [...barriers].sort((a, b) => weight(b.severity) - weight(a.severity));
             const top = sorted[0] || {};
             return {
                 title: top.title || 'Barreira sem título',
                 text: top.description || 'Existe um ponto de fricção que merece revisão antes de investir em mais tráfego.'
             };
+        }
+
+        function isAuditRealBarrier(item) {
+            if (!item) return false;
+            const text = [
+                item.severity,
+                item.title,
+                item.description
+            ].map(value => String(value || '').toLowerCase()).join(' ');
+            return ![
+                'sucesso',
+                'estrutura blindada',
+                'sem vulnerabilidade',
+                'sem vulnerabilidades',
+                'não apresenta',
+                'nao apresenta',
+                'perfeitamente otimizado'
+            ].some(term => text.includes(term));
+        }
+
+        function getAuditRealBarriers(vulnerabilities = []) {
+            if (!Array.isArray(vulnerabilities)) return [];
+            return vulnerabilities.filter(isAuditRealBarrier).slice(0, 4);
         }
 
         function getPersonaSignal(agents = []) {
@@ -5711,8 +5735,8 @@ function getCodigoHTML() {
                 if (reportUrlEl) reportUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
                 const resSummaryEl = document.getElementById('resSummary');
                 if (resSummaryEl) resSummaryEl.innerText = technicalAudit.executive_summary;
-                const reportVulnerabilities = technicalAudit.vulnerabilities || [];
-                const reportActionSteps = flattenAuditActionPlan(technicalAudit.action_plan || {});
+                const reportVulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
+                const reportActionSteps = flattenAuditActionPlan(technicalAudit.action_plan || {}).slice(0, reportVulnerabilities.length);
                 const reportAgents = data.resultado.agents_results || data.resultado.personas_results || [];
                 updateAuditExecutiveSnapshot({
                     technicalAudit,
@@ -5792,7 +5816,7 @@ function getCodigoHTML() {
     // Vulnerabilidades
     const vDiv = document.getElementById('vulnerabilitiesTableBody');
     if (vDiv) {
-        const vulnerabilities = technicalAudit.vulnerabilities || [];
+        const vulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
         console.log("Vulnerabilidades da API:", vulnerabilities);
         if (!vulnerabilities.length) {
             vDiv.innerHTML = '<div class="audit-empty-block"><strong>Nenhum risco cr?tico foi retornado.</strong><p>A auditoria n?o encontrou problemas relevantes o suficiente para compor uma matriz de vulnerabilidades.</p></div>';
@@ -5821,12 +5845,14 @@ function getCodigoHTML() {
                 if (actionPlanList) {
                     const actionPlan = data.resultado.technical_audit.action_plan || {};
                     console.log("Action Plan da API:", actionPlan);
+                    const maxCorrectionSteps = Math.min(4, getAuditRealBarriers(data.resultado.technical_audit.vulnerabilities || []).length);
                     const realSteps = [];
                     Object.keys(actionPlan).forEach(period => {
                         if (Array.isArray(actionPlan[period])) {
                             actionPlan[period].forEach(step => realSteps.push({ period, step }));
                         }
                     });
+                    realSteps.splice(maxCorrectionSteps);
                     console.log("Steps combinados:", realSteps);
                     if (!realSteps.length) {
                         actionPlanList.innerHTML = '<div class="audit-empty-block"><strong>Plano n?o retornado.</strong><p>A auditoria n?o trouxe a??es espec?ficas, mas voc? ainda pode baixar o PDF e revisar os pilares do diagn?stico.</p></div>';
@@ -6733,8 +6759,7 @@ function getCodigoHTML() {
                 const fallbackSteps = [
                     'Otimizar imagens e implementar lazy loading para melhorar performance.',
                     'Revisar meta tags e estrutura SEO para melhorar leitura por buscadores.',
-                    'Melhorar contraste, foco e navega??o por teclado para acessibilidade.',
-                    'Implementar cache de navegador para reduzir tempo de carregamento.'
+                    'Melhorar contraste, foco e navega??o por teclado para acessibilidade.'
                 ];
                 actionPlanList.innerHTML = fallbackSteps.map((stepText, i) => [
                     '<article class="audit-action-card">',
