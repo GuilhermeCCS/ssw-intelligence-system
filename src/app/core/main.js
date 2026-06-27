@@ -1355,7 +1355,7 @@
                     if (Date.now() - startedAt >= TURNSTILE_MAX_WAIT_MS) {
                         delete container.dataset.turnstileRendering;
                         container.innerHTML = retryButton;
-                        Toast.error('Não foi possível carregar o captcha. Verifique sua conexão e tente novamente.');
+                        console.warn('Turnstile indisponível no momento. O usuário será avisado apenas ao tentar uma ação protegida.');
                         return;
                     }
                     setTimeout(tryRender, TURNSTILE_RETRY_MS);
@@ -1373,7 +1373,7 @@
                         },
                         'error-callback': function() {
                             setToken(null);
-                            Toast.error('Erro na verificação do captcha. Tente novamente.');
+                            console.warn('Turnstile retornou erro de verificação.');
                         },
                         'expired-callback': function() {
                             setToken(null);
@@ -1385,7 +1385,7 @@
                     setWidget(null);
                     setToken(null);
                     container.innerHTML = retryButton;
-                    Toast.error('Erro ao carregar captcha. Clique em recarregar e tente novamente.');
+                    console.warn('Erro ao carregar captcha. O botão de recarregar foi exibido no próprio campo.', error);
                 } finally {
                     delete container.dataset.turnstileRendering;
                 }
