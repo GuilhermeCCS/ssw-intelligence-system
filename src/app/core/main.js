@@ -4764,6 +4764,7 @@ function getCodigoHTML() {
                 const urlLine = item.audit_type === 'compare'
                     ? `${item.url_a || 'Site A'} vs ${item.url_b || 'Site B'}`
                     : (item.url || 'URL não informada');
+                const urlPrefix = item.audit_type === 'compare' ? 'urls analisadas: ' : 'url analisada: ';
 
                 return [
                     `<article class="history-card history-card-${meta.tone}">`,
@@ -4774,7 +4775,7 @@ function getCodigoHTML() {
                         '<div class="history-card-body">',
                             '<div class="history-card-main">',
                                 `<h3>${safeAuditText(item.title || 'Análise SSW')}</h3>`,
-                                `<p class="history-card-url">${safeAuditText(urlLine)}</p>`,
+                                `<p class="history-card-url">${safeAuditText(urlPrefix + urlLine)}</p>`,
                                 `<p class="history-card-summary">${safeAuditText(item.summary || 'Resumo executivo não informado.')}</p>`,
                             '</div>',
                             `<div class="history-score history-score-${scoreTone}"><strong>${scoreLabel}</strong><span>score</span></div>`,
@@ -4937,6 +4938,7 @@ function getCodigoHTML() {
                     `<label class="history-action-check${checkedClass}" aria-checked="${isChecked ? 'true' : 'false'}" onclick="toggleHistoryActionCheck(event, this)">`,
                         `<input type="checkbox" data-history-action-checkbox data-action="${payload}" ${checked} onchange="syncHistoryActionCheckVisual(this)">`,
                         '<span>',
+                            `<em>Ação ${String(index + 1).padStart(2, '0')}</em>`,
                             `<strong>${safeAuditText(text)}</strong>`,
                             status ? `<small class="history-action-status history-action-status-${safeAuditText(status)}">${safeAuditText(status === 'corrigida' ? 'corrigida' : status === 'parcial' ? 'parcial' : status === 'inconclusiva' ? 'inconclusiva' : 'não corrigida')}</small>` : '',
                         '</span>',
@@ -5112,14 +5114,16 @@ function getCodigoHTML() {
                         '<div>',
                             `<span class="history-type-badge">${safeAuditText(meta.label)}</span>`,
                             `<h3>${safeAuditText(item.title || 'Análise SSW')}</h3>`,
-                            `<p>${safeAuditText(item.url || 'URL não informada')}</p>`,
+                            `<p>url analisada: ${safeAuditText(item.url || 'URL não informada')}</p>`,
                         '</div>',
                         `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>score</span></div>`,
                     '</div>',
                     `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo não informado.')}</div>`,
-                    '<div class="history-detail-grid">',
-                        renderHistoryVulnerabilitiesDetailed(vulnerabilities),
-                        renderHistoryAgentsBlock('Análise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name, chatAgents),
+                    '<div class="history-detail-grid history-detail-grid-with-plan">',
+                        '<div class="history-detail-left-stack">',
+                            renderHistoryVulnerabilitiesDetailed(vulnerabilities),
+                            renderHistoryAgentsBlock('Análise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name, chatAgents),
+                        '</div>',
                         renderHistoryActionChecklist(item, actions, verification),
                     '</div>',
                     '<div class="history-detail-actions">',
@@ -5155,7 +5159,7 @@ function getCodigoHTML() {
                         '<div>',
                             `<span class="history-type-badge">${safeAuditText(meta.label)}</span>`,
                             `<h3>${safeAuditText(item.title || 'Comparativo SSW')}</h3>`,
-                            `<p>${safeAuditText((item.url_a || 'Site A') + ' vs ' + (item.url_b || 'Site B'))}</p>`,
+                            `<p>urls analisadas: ${safeAuditText((item.url_a || 'Site A') + ' vs ' + (item.url_b || 'Site B'))}</p>`,
                         '</div>',
                         `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>média</span></div>`,
                     '</div>',
