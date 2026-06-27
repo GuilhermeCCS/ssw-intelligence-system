@@ -799,14 +799,16 @@
         function syncAuditWorkspaceLayout(hasResultsOverride = null) {
             const viewHome = document.getElementById('view-home');
             const heroSection = document.getElementById('heroSection');
+            const mainContent = document.getElementById('mainContent');
             const manualArea = document.getElementById('manualSelectArea');
             const auditResults = document.getElementById('auditResults');
             const mode = document.getElementById('auditMode')?.value || 'auto';
+            const isAuthenticated = Boolean(USER?.email || document.body.classList.contains('user-authenticated'));
             const hasResults = typeof hasResultsOverride === 'boolean'
                 ? hasResultsOverride
                 : Boolean(auditResults && !auditResults.classList.contains('hidden'));
             const isAuthenticatedHome = Boolean(
-                USER?.email
+                isAuthenticated
                 && window.currentView === 'home'
                 && viewHome
                 && !viewHome.classList.contains('hidden')
@@ -826,6 +828,13 @@
                 element.classList.toggle('audit-workspace-locked', shouldLockScroll);
                 element.classList.toggle('audit-manual-open', isInputWorkspace && manualInputVisible);
             });
+            if (mainContent && isInputWorkspace) {
+                mainContent.classList.remove('overflow-y-auto');
+                mainContent.classList.add('overflow-y-hidden');
+                mainContent.style.overflowY = 'hidden';
+                mainContent.style.height = '0px';
+                mainContent.style.minHeight = '0px';
+            }
         }
 
         function setAnalysisModeState(mode = 'auto') {
@@ -864,6 +873,7 @@
             });
             positionLocalAuditHelp('auto');
             adjustFooterPosition(false);
+            syncAuditWorkspaceLayout(false);
             if (focusInput) {
                 setTimeout(() => document.getElementById('auditUrl')?.focus(), 80);
             }
@@ -3731,6 +3741,7 @@ function getCodigoHTML() {
             if(mode === 'manual') {
                 console.log("Entrando no modo manual");
                 if (manualArea) manualArea.classList.remove('hidden');
+                syncAuditWorkspaceLayout(false);
                 requestAnimationFrame(focusManualPersonaPanel);
                 const cont = document.getElementById('checklistContainer');
                 console.log("Container encontrado:", cont);
@@ -3750,6 +3761,7 @@ function getCodigoHTML() {
                                 + '<button onclick="toggleManualSelect()" class="mt-4 px-4 py-2 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 text-xs font-bold hover:bg-cyan-500/25 transition">Tentar novamente</button>'
                                 + '</div>';
                             updateManualPersonaCount();
+                            syncAuditWorkspaceLayout(false);
                             return;
                         }
                         renderManualPersonaList();
@@ -3775,6 +3787,7 @@ function getCodigoHTML() {
                 // Mantém a área de comparação escondida pois agora está integrada na barra
                 if (compareArea) compareArea.classList.add('hidden');
             }
+            requestAnimationFrame(() => syncAuditWorkspaceLayout(false));
         }
         // === LOADING ANIMATION DINÂMICO ===
         var _auditLoadingInterval = null;

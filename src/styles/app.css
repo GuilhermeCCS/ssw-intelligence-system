@@ -9097,18 +9097,24 @@ body.user-authenticated #heroSection .search-container {
 }
 
 /* Preenche o workspace autenticado e libera rolagem apenas quando necessário. */
-body.user-authenticated.audit-home-workspace #mainContentWrapper {
+body.user-authenticated.audit-home-workspace #mainContentWrapper,
+body.audit-home-workspace #mainContentWrapper,
+html.audit-home-workspace body #mainContentWrapper {
     min-height: 100dvh !important;
     padding: 0 !important;
     background: #050505 !important;
 }
 
 html.audit-home-workspace,
-body.user-authenticated.audit-home-workspace {
+html.audit-home-workspace body,
+body.user-authenticated.audit-home-workspace,
+body.audit-home-workspace {
     background: #050505 !important;
 }
 
-body.user-authenticated.audit-home-workspace #view-home.command-center {
+body.user-authenticated.audit-home-workspace #view-home.command-center,
+body.audit-home-workspace #view-home.command-center,
+html.audit-home-workspace body #view-home.command-center {
     width: 100% !important;
     max-width: none !important;
     min-height: 100dvh !important;
@@ -9119,32 +9125,59 @@ body.user-authenticated.audit-home-workspace #view-home.command-center {
 
 body.user-authenticated.audit-home-workspace #homeFooterSpacer,
 body.user-authenticated.audit-home-workspace #footer-anchor,
-body.user-authenticated.audit-home-workspace #footer-container {
+body.user-authenticated.audit-home-workspace #footer-container,
+body.audit-home-workspace #homeFooterSpacer,
+body.audit-home-workspace #footer-anchor,
+body.audit-home-workspace #footer-container,
+html.audit-home-workspace body #homeFooterSpacer,
+html.audit-home-workspace body #footer-anchor,
+html.audit-home-workspace body #footer-container {
     display: none !important;
 }
 
 html.audit-workspace-locked,
-body.user-authenticated.audit-workspace-locked {
+html.audit-workspace-locked body,
+body.user-authenticated.audit-workspace-locked,
+body.audit-workspace-locked {
     height: 100dvh !important;
     overflow: hidden !important;
 }
 
+body.user-authenticated.audit-workspace-locked #mainContent,
+body.audit-workspace-locked #mainContent,
+html.audit-workspace-locked body #mainContent {
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+}
+
 body.user-authenticated.audit-workspace-locked #mainContentWrapper,
-body.user-authenticated.audit-workspace-locked #view-home.command-center {
+body.user-authenticated.audit-workspace-locked #view-home.command-center,
+body.audit-workspace-locked #mainContentWrapper,
+body.audit-workspace-locked #view-home.command-center,
+html.audit-workspace-locked body #mainContentWrapper,
+html.audit-workspace-locked body #view-home.command-center {
     height: 100dvh !important;
     max-height: 100dvh !important;
     overflow: hidden !important;
 }
 
 html.audit-manual-open,
-body.user-authenticated.audit-manual-open {
+html.audit-manual-open body,
+body.user-authenticated.audit-manual-open,
+body.audit-manual-open {
     height: auto !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
 }
 
 body.user-authenticated.audit-manual-open #mainContentWrapper,
-body.user-authenticated.audit-manual-open #view-home.command-center {
+body.user-authenticated.audit-manual-open #view-home.command-center,
+body.audit-manual-open #mainContentWrapper,
+body.audit-manual-open #view-home.command-center,
+html.audit-manual-open body #mainContentWrapper,
+html.audit-manual-open body #view-home.command-center {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
