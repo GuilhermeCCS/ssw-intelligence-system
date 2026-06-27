@@ -326,6 +326,11 @@
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
+        function scrollAuditReportTo(elementId) {
+            const target = document.getElementById(elementId);
+            if (!target) return;
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         function setActiveNavButton(view) {
             const buttons = document.querySelectorAll('#primarySidebarNav button');
             buttons.forEach(btn => {
@@ -3281,12 +3286,12 @@ function getCodigoHTML() {
                     </section>
 
                     <nav class="audit-progress-nav audit-reveal" aria-label="Mapa da auditoria">
-                        <a href="#audit-capturas">Evidência visual</a>
-                        <a href="#audit-metricas">Base técnica</a>
-                        <a href="#audit-pilares">Conversão</a>
-                        <a href="#audit-riscos">Barreiras</a>
-                        <a href="#audit-agents">Personas</a>
-                        <a href="#audit-plano">Correção</a>
+                        <button type="button" onclick="scrollAuditReportTo('audit-capturas')">Evidência visual</button>
+                        <button type="button" onclick="scrollAuditReportTo('audit-metricas')">Base técnica</button>
+                        <button type="button" onclick="scrollAuditReportTo('audit-pilares')">Conversão</button>
+                        <button type="button" onclick="scrollAuditReportTo('audit-riscos')">Barreiras</button>
+                        <button type="button" onclick="scrollAuditReportTo('audit-agents')">Personas</button>
+                        <button type="button" onclick="scrollAuditReportTo('audit-plano')">Correção</button>
                     </nav>
 
                     <section id="audit-capturas" class="audit-story-section audit-reveal">
@@ -3810,71 +3815,96 @@ function getCodigoHTML() {
             var modeColor = isCompare ? '#818cf8' : mode === 'manual' ? '#67e8f9' : '#22d3ee';
 
             var steps = isCompare ? [
-                'Abrindo Site A em ambiente controlado...',
-                'Abrindo Site B sob as mesmas condições...',
-                'Coletando sinais visuais e estruturais...',
+                'Abrindo o primeiro site em ambiente controlado...',
+                'Abrindo o segundo site sob as mesmas condições...',
+                'Normalizando tempo de resposta entre os dois domínios...',
+                'Coletando sinais visuais, técnicos e estruturais...',
                 'Aguardando métricas oficiais quando o Google demora mais...',
                 'Comparando estabilidade, velocidade e acessibilidade...',
-                'Lendo diferenças de SEO e semântica...',
-                'Simulando reações de agents em cada experiência...',
+                'Lendo diferenças de SEO, semântica e clareza comercial...',
+                'Identificando qual experiência gera mais confiança...',
+                'Simulando reações de perfis reais em cada jornada...',
                 'Cruzando percepção de usuário com dados técnicos...',
-                'Organizando vantagens e lacunas competitivas...',
+                'Separando vantagem competitiva de detalhe cosmético...',
+                'Organizando lacunas que podem afetar conversão...',
                 'Preparando o veredito executivo...',
                 'Conferindo consistência antes de liberar o resultado...'
             ] : [
                 'Abrindo a URL como um usuário real...',
                 'Mapeando estrutura, links e elementos principais...',
+                'Verificando se a página responde de forma estável...',
                 'Capturando evidências visuais em desktop e mobile...',
                 'Aguardando o Google PageSpeed concluir as métricas oficiais...',
                 'Lendo Core Web Vitals, SEO e acessibilidade...',
                 'Verificando sinais de confiança, segurança e estabilidade...',
                 'Observando fricções que podem afetar conversão...',
-                'Simulando jornadas com diferentes agents...',
+                'Analisando se a proposta de valor fica clara rapidamente...',
+                'Identificando pontos de dúvida antes do contato...',
+                'Simulando jornadas com perfis reais de clientes...',
+                'Interpretando o que a primeira dobra comunica...',
+                'Conferindo se os CTAs conduzem para o próximo passo...',
                 'Separando problemas críticos de ajustes cosméticos...',
                 'Priorizando ações pelo impacto na experiência...',
+                'Transformando evidências em recomendações práticas...',
                 'Conferindo coerência entre captura, métricas e IA...',
                 'Montando o relatório em uma leitura guiada...'
             ];
 
             var tips = [
+                'Estamos combinando dados técnicos com leitura de experiência para evitar um diagnóstico raso.',
                 'Algumas URLs fazem o PageSpeed levar mais tempo; a análise continua aguardando a resposta oficial.',
                 'A captura visual ajuda a explicar problemas que uma nota isolada não mostra.',
-                'A SSW combina sinais técnicos com percepção de usuário para priorizar melhor.',
+                'A S.S.W cruza performance, clareza, confiança e intenção de conversão.',
                 'Um site lento nem sempre parece quebrado, mas pode perder decisões importantes.',
                 'Acessibilidade, clareza e confiança costumam impactar conversão tanto quanto performance.',
                 'Quando há bloqueios ou atrasos externos, o sistema evita gerar conclusões apressadas.',
-                'As agents ajudam a transformar métricas em contexto de jornada.',
-                'O relatório final separa evidência, diagnóstico e plano de ação.',
+                'Os perfis simulados ajudam a transformar métricas em contexto de jornada.',
+                'O relatório final separa evidência, diagnóstico e plano de correção.',
                 'Métricas oficiais podem variar por CDN, localização e estado atual do servidor.',
-                'A leitura priorizada reduz ruído para equipes de produto, marketing e tecnologia.'
+                'A leitura priorizada reduz ruído para equipes de produto, marketing e tecnologia.',
+                'Nem toda melhoria urgente aparece como erro técnico; por isso a análise também observa comunicação.',
+                'A auditoria procura barreiras que reduzem confiança antes do usuário chegar ao contato.',
+                'O plano de correção é organizado para atacar o que tende a gerar mais impacto primeiro.',
+                'Sites parecidos podem converter de formas diferentes dependendo de nicho, oferta e prova social.',
+                'Se a página bloquear captura ou métrica externa, o sistema tenta seguir com o máximo de evidência segura.'
             ];
 
-            var displayUrl = url.length > 45 ? url.substring(0, 42) + '...' : url;
+            var displayUrl = safeAuditText(url.length > 58 ? url.substring(0, 55) + '...' : url);
+            var loadingContext = isCompare
+                ? 'Comparando sinais técnicos, visuais e comerciais entre as duas experiências.'
+                : mode === 'manual'
+                    ? 'Usando o perfil selecionado para interpretar a jornada com mais contexto.'
+                    : 'Analisando performance, confiança, clareza e barreiras de conversão.';
 
             container.innerHTML = [
-                '<div style="width:100%;max-width:480px;margin:0 auto;text-align:center;">',
-                  '<h2 style="color:white;font-size:20px;font-weight:700;margin:0 0 6px;">Processando Auditoria</h2>',
-                  '<div style="display:inline-flex;align-items:center;gap:7px;margin-bottom:28px;">',
-                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8292a8" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-                    '<span id="loadingUrlDisplay" style="color:#3d4f63;font-size:12px;font-family:monospace;">' + displayUrl + '</span>',
+                '<div style="width:100%;max-width:560px;margin:0 auto;text-align:left;padding:34px 34px 30px;border:1px solid rgba(34,211,238,0.16);border-radius:28px;background:linear-gradient(180deg,rgba(8,13,22,0.72),rgba(2,4,8,0.9));box-shadow:0 26px 80px rgba(0,0,0,0.44), inset 0 1px 0 rgba(255,255,255,0.04);">',
+                  '<div style="text-align:center;margin-bottom:30px;">',
+                    '<span style="display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;color:' + modeColor + ';font-size:11px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;">S.S.W Intelligence</span>',
+                    '<h2 style="color:#ffffff;font-size:24px;font-weight:850;line-height:1.15;margin:0 0 10px;text-shadow:0 0 18px rgba(255,255,255,0.12);">Processando auditoria</h2>',
+                    '<p style="color:#d7e4f4;font-size:13px;line-height:1.65;margin:0 auto;max-width:430px;">' + loadingContext + '</p>',
+                  '</div>',
+                  '<div style="display:flex;align-items:center;gap:9px;margin-bottom:26px;padding:10px 12px;border:1px solid rgba(148,163,184,0.18);border-radius:14px;background:rgba(15,23,42,0.36);">',
+                    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+                    '<span id="loadingUrlDisplay" style="color:#cbd5e1;font-size:12px;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + displayUrl + '</span>',
                   '</div>',
                   '<div style="margin-bottom:32px;">',
                     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">',
-                      '<span style="color:#8292a8;font-size:11px;letter-spacing:0.05em;">PROGRESSO</span>',
-                      '<span id="loadingPercent" style="color:' + modeColor + ';font-size:12px;font-weight:700;">0%</span>',
+                      '<span style="color:#dbeafe;font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;">Progresso</span>',
+                      '<span id="loadingPercent" style="color:' + modeColor + ';font-size:13px;font-weight:850;text-shadow:0 0 14px ' + modeColor + '66;">0%</span>',
                     '</div>',
-                    '<div style="height:4px;background:rgba(12,18,32,0.8);border-radius:4px;overflow:hidden;">',
-                      '<div id="loadingProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,' + modeColor + ',' + modeColor + '80);border-radius:4px;transition:width 0.7s ease;box-shadow:0 0 10px ' + modeColor + '50;"></div>',
-                    '</div>',
-                  '</div>',
-                  '<div style="min-height:56px;display:flex;align-items:center;justify-content:center;margin-bottom:32px;">',
-                    '<div id="auditCurrentStep" style="display:flex;align-items:center;gap:12px;opacity:1;transition:opacity 0.3s ease;">',
-                      '<div style="width:18px;height:18px;flex-shrink:0;border:2px solid rgba(71,85,105,0.25);border-top-color:' + modeColor + ';border-radius:50%;animation:auditSpin 0.8s linear infinite;"></div>',
-                      '<span id="auditCurrentStepText" style="color:#e2e8f0;font-size:15px;font-weight:500;">' + steps[0] + '</span>',
+                    '<div style="height:6px;background:rgba(30,41,59,0.72);border-radius:999px;overflow:hidden;border:1px solid rgba(148,163,184,0.12);">',
+                      '<div id="loadingProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,' + modeColor + ',#ffffff);border-radius:999px;transition:width 0.7s ease;box-shadow:0 0 18px ' + modeColor + '80;"></div>',
                     '</div>',
                   '</div>',
-                  '<div style="border-top:1px solid rgba(12,18,32,0.8);padding-top:16px;min-height:32px;">',
-                    '<p id="loadingTip" style="color:#3d4f63;font-size:11px;line-height:1.6;transition:opacity 0.4s ease;">' + tips[0] + '</p>',
+                  '<div style="min-height:72px;display:flex;align-items:center;justify-content:flex-start;margin-bottom:24px;">',
+                    '<div id="auditCurrentStep" style="display:flex;align-items:center;gap:14px;opacity:1;transition:opacity 0.3s ease;">',
+                      '<div style="width:22px;height:22px;flex-shrink:0;border:2px solid rgba(148,163,184,0.34);border-top-color:' + modeColor + ';border-right-color:' + modeColor + ';border-radius:50%;animation:auditSpin 0.75s linear infinite;box-shadow:0 0 18px ' + modeColor + '33;"></div>',
+                      '<span id="auditCurrentStepText" style="color:#ffffff;font-size:16px;line-height:1.55;font-weight:760;text-shadow:0 0 14px rgba(255,255,255,0.12);">' + safeAuditText(steps[0]) + '</span>',
+                    '</div>',
+                  '</div>',
+                  '<div style="border-top:1px solid rgba(148,163,184,0.15);padding-top:16px;min-height:56px;">',
+                    '<p style="margin:0 0 7px;color:#93c5fd;font-size:10px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;">Leitura em andamento</p>',
+                    '<p id="loadingTip" style="color:#cbd5e1;font-size:12px;line-height:1.75;margin:0;transition:opacity 0.4s ease;">' + safeAuditText(tips[0]) + '</p>',
                   '</div>',
                 '</div>'
             ].join('');
@@ -5985,7 +6015,6 @@ function getCodigoHTML() {
                             const score = Number(p.score);
                             const tone = score >= 8 ? 'strong' : score <= 4 ? 'critical' : 'attention';
                             const personaName = p.profile_name || 'Persona SSW';
-                            const personaInitial = String(personaName).trim().charAt(0).toUpperCase() || 'S';
                             const logs = Array.isArray(p.journey_log) ? p.journey_log.slice(0, 5) : [];
                             const journeyItems = logs.length ? logs : [
                                 { action: 'Primeira impressão', status: 'A persona não retornou etapas detalhadas para esta jornada.' },
@@ -6014,7 +6043,6 @@ function getCodigoHTML() {
                                     '</div>',
                                     '<div class="audit-agent-profile-panel">',
                                         '<div class="audit-agent-header">',
-                                            '<div class="audit-agent-avatar">' + safeAuditText(personaInitial) + '</div>',
                                             '<div>',
                                                 '<span>Persona simulada</span>',
                                                 '<h3>' + safeAuditText(personaName) + '</h3>',
@@ -6866,7 +6894,6 @@ function getCodigoHTML() {
                     pDiv.innerHTML = agentsToUse.map((agent, index) => {
                         const fallbackPersona = typeof agent === 'string' ? manualPersonaCache.find(p => p.id === agent) : null;
                         const agentName = fallbackPersona?.name || (typeof agent === 'string' ? agent.split(':')[0] : agent.name) || 'Persona SSW';
-                        const agentInitial = String(agentName).trim().charAt(0).toUpperCase() || 'S';
                         const agentScore = Math.floor(Math.random() * 4) + 6;
                         const tone = agentScore >= 8 ? 'strong' : agentScore <= 6 ? 'critical' : 'attention';
                         const quote = quotes[index % quotes.length];
@@ -6882,7 +6909,6 @@ function getCodigoHTML() {
                                 '</div>',
                                 '<div class="audit-agent-profile-panel">',
                                     '<div class="audit-agent-header">',
-                                        '<div class="audit-agent-avatar">' + safeAuditText(agentInitial) + '</div>',
                                         '<div>',
                                             '<span>Persona simulada</span>',
                                             '<h3>' + safeAuditText(agentName) + '</h3>',
@@ -6960,10 +6986,12 @@ function getCodigoHTML() {
             }
 
             if (hasAuditResults) {
+                document.documentElement.classList.add('audit-active');
                 document.body.classList.add('audit-active');
                 if (main) main.style.paddingBottom = '0';
             } else {
                 // Remove classe do body
+                document.documentElement.classList.remove('audit-active');
                 document.body.classList.remove('audit-active');
                 // Restaura overflow do body
                 document.body.style.overflow = '';
@@ -9014,6 +9042,7 @@ function getCodigoHTML() {
             hideCreditsEndedModal,
             gerarPDFOficial,
             smoothScrollTo,
+            scrollAuditReportTo,
             setHomePresentationVisible,
             showHomeLandingState
         });
