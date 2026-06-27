@@ -672,7 +672,7 @@
                     <h3 class="text-sm font-bold text-primary mb-6 uppercase tracking-wider flex items-center gap-2">
                         <i data-lucide="plus-circle" class="w-4 h-4"></i> Cadastrar Novo Perfil
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         <div class="md:col-span-3 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
                             <input type="text" id="newAgentName" maxlength="20" placeholder="Ex: Cliente ocupado" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newAgentDesc').focus();}">
@@ -686,7 +686,7 @@
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nicho</label>
                             <input type="text" id="newAgentNiche" maxlength="20" placeholder="Ex: restaurante" class="input-pro w-full rounded-xl p-3 text-white text-sm">
                         </div>
-                        <div class="md:col-span-2">
+                        <div class="md:col-span-2 md:pt-[24px]">
                             <button id="createAgentBtn" onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
                         </div>
                     </div>
