@@ -5934,25 +5934,45 @@ function getCodigoHTML() {
                         pGrid.innerHTML = agentsResults.map(p => {
                             const score = Number(p.score);
                             const tone = score >= 8 ? 'strong' : score <= 4 ? 'critical' : 'attention';
-                            const logs = Array.isArray(p.journey_log) ? p.journey_log.slice(0, 3) : [];
-                            const journeyHtml = logs.length ?
-                                '<div class="audit-agent-journey">' + logs.map(log => [
-                                    '<div>',
-                                        '<span>' + safeAuditText(log.action || 'A??o observada') + '</span>',
+                            const personaName = p.profile_name || 'Persona SSW';
+                            const personaInitial = String(personaName).trim().charAt(0).toUpperCase() || 'S';
+                            const logs = Array.isArray(p.journey_log) ? p.journey_log.slice(0, 5) : [];
+                            const journeyItems = logs.length ? logs : [
+                                { action: 'Primeira impressão', status: 'A persona não retornou etapas detalhadas para esta jornada.' },
+                                { action: 'Percepção da oferta', status: 'Use a fala principal como sinal de leitura comportamental.' },
+                                { action: 'Próximo passo', status: 'Revise a clareza do caminho até o contato.' }
+                            ];
+                            const journeyHtml = '<div class="audit-agent-journey-flow">' +
+                                '<div class="audit-agent-journey-title">Jornada simulada</div>' +
+                                '<div class="audit-agent-journey-line">' + journeyItems.map((log, index) => [
+                                    '<div class="audit-agent-journey-step">',
+                                        '<span class="audit-agent-dot">' + String(index + 1).padStart(2, '0') + '</span>',
+                                        '<strong>' + safeAuditText(log.action || 'Ação observada') + '</strong>',
                                         '<p>' + safeAuditText(log.status || 'Sem status detalhado.') + '</p>',
                                     '</div>'
-                                ].join('')).join('') + '</div>' : '';
+                                ].join('')).join('') + '</div>' +
+                            '</div>';
                             return [
                                 '<article class="audit-agent-card audit-agent-' + tone + '">',
-                                    '<div class="audit-agent-header">',
-                                        '<div>',
-                                            '<h3>' + safeAuditText(p.profile_name || 'Persona SSW') + '</h3>',
-                                            '<span>Score ' + (Number.isFinite(score) ? score : '--') + '/10</span>',
+                                    '<div class="audit-agent-insight-panel">',
+                                        '<span>Leitura da persona</span>',
+                                        '<blockquote>"' + safeAuditText(p.direct_quote || 'A persona não retornou uma citação direta.') + '"</blockquote>',
+                                        '<div class="audit-agent-score-chip">',
+                                            '<small>sensibilidade</small>',
+                                            '<strong>' + (Number.isFinite(score) ? score : '--') + '/10</strong>',
                                         '</div>',
-                                        '<strong>' + (Number.isFinite(score) ? score : '--') + '</strong>',
                                     '</div>',
-                                    '<blockquote>"' + safeAuditText(p.direct_quote || 'A persona n?o retornou uma cita??o direta.') + '"</blockquote>',
-                                    journeyHtml,
+                                    '<div class="audit-agent-profile-panel">',
+                                        '<div class="audit-agent-header">',
+                                            '<div class="audit-agent-avatar">' + safeAuditText(personaInitial) + '</div>',
+                                            '<div>',
+                                                '<span>Persona simulada</span>',
+                                                '<h3>' + safeAuditText(personaName) + '</h3>',
+                                                '<p>A leitura abaixo mostra como esse perfil tende a perceber clareza, confiança e caminho até o contato.</p>',
+                                            '</div>',
+                                        '</div>',
+                                        journeyHtml,
+                                    '</div>',
                                 '</article>'
                             ].join('');
                         }).join('');
@@ -6796,15 +6816,38 @@ function getCodigoHTML() {
                     pDiv.innerHTML = agentsToUse.map((agent, index) => {
                         const fallbackPersona = typeof agent === 'string' ? manualPersonaCache.find(p => p.id === agent) : null;
                         const agentName = fallbackPersona?.name || (typeof agent === 'string' ? agent.split(':')[0] : agent.name) || 'Persona SSW';
+                        const agentInitial = String(agentName).trim().charAt(0).toUpperCase() || 'S';
                         const agentScore = Math.floor(Math.random() * 4) + 6;
                         const tone = agentScore >= 8 ? 'strong' : agentScore <= 6 ? 'critical' : 'attention';
+                        const quote = quotes[index % quotes.length];
                         return [
                             '<article class="audit-agent-card audit-agent-' + tone + '">',
-                                '<div class="audit-agent-header">',
-                                    '<div><h3>' + safeAuditText(agentName) + '</h3><span>Score ' + agentScore + '/10</span></div>',
-                                    '<strong>' + agentScore + '</strong>',
+                                '<div class="audit-agent-insight-panel">',
+                                    '<span>Leitura da persona</span>',
+                                    '<blockquote>"' + safeAuditText(quote) + '"</blockquote>',
+                                    '<div class="audit-agent-score-chip">',
+                                        '<small>sensibilidade</small>',
+                                        '<strong>' + agentScore + '/10</strong>',
+                                    '</div>',
                                 '</div>',
-                                '<blockquote>"' + safeAuditText(quotes[index % quotes.length]) + '"</blockquote>',
+                                '<div class="audit-agent-profile-panel">',
+                                    '<div class="audit-agent-header">',
+                                        '<div class="audit-agent-avatar">' + safeAuditText(agentInitial) + '</div>',
+                                        '<div>',
+                                            '<span>Persona simulada</span>',
+                                            '<h3>' + safeAuditText(agentName) + '</h3>',
+                                            '<p>Leitura comportamental em modo de contingência para manter uma visão humana da experiência.</p>',
+                                        '</div>',
+                                    '</div>',
+                                    '<div class="audit-agent-journey-flow">',
+                                        '<div class="audit-agent-journey-title">Jornada simulada</div>',
+                                        '<div class="audit-agent-journey-line">',
+                                            '<div class="audit-agent-journey-step"><span class="audit-agent-dot">01</span><strong>Primeira impressão</strong><p>Observa clareza e confiança inicial.</p></div>',
+                                            '<div class="audit-agent-journey-step"><span class="audit-agent-dot">02</span><strong>Oferta</strong><p>Avalia se entende valor e próximo passo.</p></div>',
+                                            '<div class="audit-agent-journey-step"><span class="audit-agent-dot">03</span><strong>Contato</strong><p>Procura um caminho simples para avançar.</p></div>',
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
                             '</article>'
                         ].join('');
                     }).join('');

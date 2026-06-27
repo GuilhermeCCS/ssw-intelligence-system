@@ -2010,6 +2010,10 @@
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
         }
+        .audit-agent-grid {
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
         .audit-metric-card,
         .audit-pillar-card,
         .audit-risk-card,
@@ -2144,49 +2148,186 @@
             margin-bottom: 8px;
         }
         .audit-agent-card {
-            min-height: 230px;
-            padding: 18px;
+            min-height: 300px;
+            display: grid;
+            grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.45fr);
+            gap: 16px;
+            padding: 0;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.13), transparent 32%),
+                linear-gradient(135deg, rgba(13, 23, 43, 0.98), rgba(4, 8, 18, 0.98));
+            border-color: rgba(103, 232, 249, 0.16);
+            box-shadow: 0 22px 70px rgba(0, 0, 0, 0.24);
         }
-        .audit-agent-header {
+        .audit-agent-card.audit-agent-critical {
+            border-color: rgba(251, 113, 133, 0.24);
+        }
+        .audit-agent-card.audit-agent-attention {
+            border-color: rgba(250, 204, 21, 0.2);
+        }
+        .audit-agent-card.audit-agent-strong {
+            border-color: rgba(34, 197, 94, 0.22);
+        }
+        .audit-agent-insight-panel,
+        .audit-agent-profile-panel {
+            min-width: 0;
+            padding: 22px;
+        }
+        .audit-agent-insight-panel {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            gap: 14px;
-            margin-bottom: 14px;
+            gap: 18px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+                rgba(5, 10, 22, 0.56);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
         }
+        .audit-agent-insight-panel > span,
+        .audit-agent-journey-title,
         .audit-agent-header span {
             display: block;
-            margin-top: 5px;
             color: #67e8f9;
-            font-size: 0.78rem;
-            font-weight: 800;
+            font-size: 0.72rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.075em;
         }
-        .audit-agent-header strong {
-            color: #ffffff;
-            font-size: 2rem;
+        .audit-agent-insight-panel blockquote {
+            position: relative;
+            margin: 0;
+            color: #eaf6ff;
+            line-height: 1.72;
+            font-size: 0.98rem;
+            font-weight: 650;
+        }
+        .audit-agent-insight-panel blockquote::before {
+            content: "“";
+            position: absolute;
+            top: -28px;
+            left: -4px;
+            color: rgba(103, 232, 249, 0.18);
+            font-size: 5rem;
             line-height: 1;
             font-weight: 950;
         }
-        .audit-agent-card blockquote {
-            margin: 0;
-            color: #eaf6ff;
-            line-height: 1.65;
-            font-size: 0.95rem;
-        }
-        .audit-agent-journey {
+        .audit-agent-score-chip {
+            width: fit-content;
+            min-width: 118px;
             display: grid;
-            gap: 10px;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 2px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(103, 232, 249, 0.08);
+            border: 1px solid rgba(103, 232, 249, 0.2);
         }
-        .audit-agent-journey span {
+        .audit-agent-score-chip small {
+            color: #8eb4c6;
+            font-size: 0.68rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .audit-agent-score-chip strong {
             color: #ffffff;
-            font-size: 0.78rem;
+            font-size: 1.35rem;
+            line-height: 1;
+            font-weight: 950;
+        }
+        .audit-agent-profile-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 26px;
+            background: linear-gradient(135deg, rgba(22, 35, 62, 0.74), rgba(9, 15, 28, 0.72));
+        }
+        .audit-agent-header {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            gap: 18px;
+            align-items: center;
+        }
+        .audit-agent-avatar {
+            width: 72px;
+            height: 72px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #dce9f4;
+            background:
+                radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.84), transparent 24%),
+                linear-gradient(135deg, #a7b1c1, #647084 68%, #343b49);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+            font-size: 1.65rem;
+            font-weight: 950;
+        }
+        .audit-agent-header h3 {
+            margin: 5px 0 7px;
+            color: #ffffff;
+            font-size: 1.28rem;
+            line-height: 1.18;
+            font-weight: 950;
+            letter-spacing: -0.02em;
+        }
+        .audit-agent-header p {
+            margin: 0;
+            color: #a9bfd0;
+            line-height: 1.55;
+            font-size: 0.9rem;
+        }
+        .audit-agent-journey-flow {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.09);
+        }
+        .audit-agent-journey-line {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+        .audit-agent-journey-line::before {
+            content: "";
+            position: absolute;
+            left: 22px;
+            right: 22px;
+            top: 15px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(34, 211, 238, 0.2), rgba(103, 232, 249, 0.82), rgba(34, 211, 238, 0.16));
+        }
+        .audit-agent-journey-step {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+        .audit-agent-dot {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 10px;
+            border-radius: 999px;
+            color: #00131a;
+            background: #67e8f9;
+            border: 4px solid rgba(15, 27, 47, 1);
+            box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.35), 0 0 20px rgba(34, 211, 238, 0.28);
+            font-size: 0.66rem;
+            font-weight: 950;
+        }
+        .audit-agent-journey-step strong {
+            display: block;
+            color: #ffffff;
+            font-size: 0.82rem;
+            line-height: 1.25;
             font-weight: 900;
         }
-        .audit-agent-journey p {
-            margin-top: 4px;
-            font-size: 0.82rem;
+        .audit-agent-journey-step p {
+            margin-top: 6px;
+            color: #8fa8bb;
+            line-height: 1.45;
+            font-size: 0.76rem;
         }
         .audit-action-card {
             display: grid;
@@ -3422,6 +3563,10 @@
             .audit-executive-snapshot {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .audit-agent-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 640px) {
@@ -3468,6 +3613,39 @@
             .audit-risk-card,
             .audit-action-card {
                 grid-template-columns: 1fr;
+            }
+
+            .audit-agent-card {
+                grid-template-columns: 1fr;
+            }
+
+            .audit-agent-insight-panel {
+                border-right: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .audit-agent-header {
+                grid-template-columns: 58px minmax(0, 1fr);
+            }
+
+            .audit-agent-avatar {
+                width: 58px;
+                height: 58px;
+                font-size: 1.35rem;
+            }
+
+            .audit-agent-journey-line {
+                grid-template-columns: 1fr;
+            }
+
+            .audit-agent-journey-line::before {
+                left: 15px;
+                right: auto;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                height: auto;
+                background: linear-gradient(180deg, rgba(34, 211, 238, 0.2), rgba(103, 232, 249, 0.82), rgba(34, 211, 238, 0.16));
             }
 
             .audit-shot-desktop {
