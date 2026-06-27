@@ -3623,6 +3623,10 @@ function getCodigoHTML() {
                 showAuthScreen();
                 return;
             }
+            window.currentView = 'home';
+            hideHistorySurfaces();
+            hideAuditChatSurfaces();
+            document.body.classList.remove('pricing-view-active', 'audit-active');
             // Atualiza a URL para /home
             if (window.location.pathname !== '/home') {
                 window.history.pushState({}, '', '/home');
@@ -3683,6 +3687,7 @@ function getCodigoHTML() {
             positionLocalAuditHelp('auto');
             setModeOnlyCardsVisibility('auto');
             setActiveNavButton('analisar');
+            syncAuditWorkspaceLayout(false);
             // Foca no input de URL
             if (auditUrl) {
                 setTimeout(() => {
@@ -3694,6 +3699,8 @@ function getCodigoHTML() {
             if (mainContent) {
                 mainContent.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            window.scrollTo({ top: 0, behavior: 'auto' });
+            requestAnimationFrame(() => syncAuditWorkspaceLayout(false));
         }
         async function toggleManualSelect() {
             console.log("toggleManualSelect chamada");
