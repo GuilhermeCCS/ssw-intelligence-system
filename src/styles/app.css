@@ -996,15 +996,14 @@
         .history-type-badge {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
             width: fit-content;
-            min-height: 28px;
-            padding: 0 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(34, 211, 238, 0.24);
-            background: rgba(34, 211, 238, 0.09);
-            color: #baf6ff;
-            font-size: 10px;
+            min-height: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: #38bdf8;
+            font-size: 11px;
             font-weight: 900;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -1163,6 +1162,9 @@
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.07);
             background: rgba(255, 255, 255, 0.035);
+        }
+        .history-agents-block {
+            grid-column: span 2;
         }
         .history-detail-block h4 {
             margin: 0 0 12px;
@@ -1395,8 +1397,8 @@
             grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
             gap: 16px;
             margin-top: 16px;
-            padding: 18px;
-            border-radius: 18px;
+            padding: 14px;
+            border-radius: 14px;
             border: 1px solid rgba(34, 211, 238, 0.18);
             background: linear-gradient(135deg, rgba(34, 211, 238, 0.075), rgba(255, 255, 255, 0.025));
         }
@@ -1502,6 +1504,7 @@
                 height: 108px;
             }
             .history-vulnerability-detail,
+            .history-agents-block,
             .history-action-checklist {
                 grid-column: 1 / -1;
             }

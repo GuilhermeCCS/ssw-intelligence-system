@@ -4661,11 +4661,11 @@ function getCodigoHTML() {
         function getAuditHistoryTypeMeta(type) {
             const normalized = String(type || 'auto').toLowerCase();
             const map = {
-                auto: { label: 'Automatica', icon: 'sparkles', tone: 'auto' },
-                manual: { label: 'Manual', icon: 'user-check', tone: 'manual' },
-                compare: { label: 'Comparativa', icon: 'git-compare', tone: 'compare' }
+                auto: { label: 'Automatica', tone: 'auto' },
+                manual: { label: 'Manual', tone: 'manual' },
+                compare: { label: 'Comparativa', tone: 'compare' }
             };
-            return map[normalized] || { label: 'Análise', icon: 'file-search', tone: 'auto' };
+            return map[normalized] || { label: 'Análise', tone: 'auto' };
         }
 
         function formatHistoryDate(value) {
@@ -4768,7 +4768,7 @@ function getCodigoHTML() {
                 return [
                     `<article class="history-card history-card-${meta.tone}">`,
                         '<div class="history-card-top">',
-                            `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
+                            `<span class="history-type-badge">${safeAuditText(meta.label)}</span>`,
                             `<time>${safeAuditText(formatHistoryDate(item.created_at))}</time>`,
                         '</div>',
                         '<div class="history-card-body">',
@@ -5110,7 +5110,7 @@ function getCodigoHTML() {
                 '<article class="history-detail-panel">',
                     '<div class="history-detail-head">',
                         '<div>',
-                            `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
+                            `<span class="history-type-badge">${safeAuditText(meta.label)}</span>`,
                             `<h3>${safeAuditText(item.title || 'Análise SSW')}</h3>`,
                             `<p>${safeAuditText(item.url || 'URL não informada')}</p>`,
                         '</div>',
@@ -5119,12 +5119,10 @@ function getCodigoHTML() {
                     `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo não informado.')}</div>`,
                     '<div class="history-detail-grid">',
                         renderHistoryVulnerabilitiesDetailed(vulnerabilities),
-                        renderHistoryDetailBlock('Análise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name),
+                        renderHistoryAgentsBlock('Análise de agents', agents, value => value.profile_name || value.direct_quote || value.agent || value.name, chatAgents),
                         renderHistoryActionChecklist(item, actions, verification),
                     '</div>',
-                    renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
-                        item.url ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Rodar novamente</button>` : '',
                         `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir análise</button>`,
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
                     '</div>',
@@ -5155,7 +5153,7 @@ function getCodigoHTML() {
                 '<article class="history-detail-panel">',
                     '<div class="history-detail-head">',
                         '<div>',
-                            `<span class="history-type-badge"><i data-lucide="${meta.icon}" class="w-4 h-4"></i>${safeAuditText(meta.label)}</span>`,
+                            `<span class="history-type-badge">${safeAuditText(meta.label)}</span>`,
                             `<h3>${safeAuditText(item.title || 'Comparativo SSW')}</h3>`,
                             `<p>${safeAuditText((item.url_a || 'Site A') + ' vs ' + (item.url_b || 'Site B'))}</p>`,
                         '</div>',
@@ -5163,11 +5161,10 @@ function getCodigoHTML() {
                     '</div>',
                     `<div class="history-detail-summary"><strong>${safeAuditText(verdict.winner_site || 'Resultado comparativo')}</strong><p>${safeAuditText(verdict.summary || item.summary || 'Resumo comparativo não informado.')}</p></div>`,
                     '<div class="history-detail-grid">',
-                        renderHistoryDetailBlock('Preferência dos agents', agents, value => `${value.agent || 'Agent'}: ${value.preference || value.reason || ''}`),
+                        renderHistoryAgentsBlock('Preferência dos agents', agents, value => `${value.agent || 'Agent'}: ${value.preference || value.reason || ''}`, chatAgents),
                         renderHistoryDetailBlock('Confronto técnico', technical, value => `${value.criteria || 'Critério'}: ${value.analysis || value.winner || ''}`),
                         renderHistoryDetailBlock('Plano para superar', actions, value => value.step || value),
                     '</div>',
-                    renderHistoryChatAgents(chatAgents),
                     '<div class="history-detail-actions">',
                         `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir análise</button>`,
                         '<button onclick="document.getElementById(\'auditHistoryDetail\').classList.add(\'hidden\')">Fechar detalhes</button>',
@@ -5183,12 +5180,25 @@ function getCodigoHTML() {
             return `<section class="history-detail-block"><h4>${safeAuditText(title)}</h4><ul>${content}</ul></section>`;
         }
 
-        function renderHistoryChatAgents(agents) {
+        function renderHistoryAgentsBlock(title, items, getText, chatAgents = []) {
+            const content = items.length
+                ? items.map((item, index) => `<li><span>${String(index + 1).padStart(2, '0')}</span><p>${safeAuditText(getText(item) || 'Item sem descricao.')}</p></li>`).join('')
+                : '<li class="history-detail-muted"><p>Nenhum agent foi retornado para esta análise.</p></li>';
+            return [
+                '<section class="history-detail-block history-agents-block">',
+                    `<h4>${safeAuditText(title)}</h4>`,
+                    `<ul>${content}</ul>`,
+                    renderHistoryChatAgentsInline(chatAgents),
+                '</section>'
+            ].join('');
+        }
+
+        function renderHistoryChatAgentsInline(agents) {
             if (!agents || !agents.length) {
-                return '<section class="history-chat-agents history-chat-agents-empty"><h4>Conversar com personas</h4><p>Esta análise não retornou personas disponíveis para chat.</p></section>';
+                return '<div class="history-chat-agents history-chat-agents-empty"><p>Esta análise não retornou personas disponíveis para chat.</p></div>';
             }
             return [
-                '<section class="history-chat-agents">',
+                '<div class="history-chat-agents">',
                     '<div>',
                         '<h4>Conversar com personas desta análise</h4>',
                         '<p>O chat abre com o contexto salvo deste histórico, sem consumir uma nova auditoria.</p>',
@@ -5201,7 +5211,7 @@ function getCodigoHTML() {
                             '</button>'
                         ].join('')).join(''),
                     '</div>',
-                '</section>'
+                '</div>'
             ].join('');
         }
 
