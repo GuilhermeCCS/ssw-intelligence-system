@@ -3,6 +3,17 @@
         let isFloatingButtonVisible = true;
         let hasUnsavedAuditSession = false;
         let auditSnapshotTabOpened = false;
+        const CHAT_PERSONA_AVATARS = [
+            'src/assets/images/personas/p1.webp',
+            'src/assets/images/personas/p2.webp',
+            'src/assets/images/personas/p3.webp',
+            'src/assets/images/personas/p4.webp',
+            'src/assets/images/personas/p5.webp',
+            'src/assets/images/personas/p6.webp',
+            'src/assets/images/personas/p7.webp',
+            'src/assets/images/personas/p8.webp',
+            'src/assets/images/personas/p9.webp'
+        ];
         const AUDIT_LEAVE_MESSAGE = 'Você está saindo da auditoria atual. Se sair agora, pode perder o relatório e o chat com as personas. O ideal é salvar o PDF ou fazer suas perguntas à persona antes de sair.';
         const FRONTEND_PLAN_LIMITS = {
             starter: { chatInputTokens: 3000, chatOutputTokens: 280, historyLimit: 10, historyRetentionDays: 30, personaLimit: 3 },
@@ -7025,6 +7036,74 @@ function getCodigoHTML() {
             adjustFooterPosition(hasResults);
         }
         // === FUNÇÃO PARA BOTÃO FLUTUANTE DE CHAT ===
+        function hashChatPersona(value) {
+            const text = String(value || 'persona');
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = text.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return Math.abs(hash);
+        }
+
+        function getChatPersonaAvatar(agent, index = 0) {
+            const explicit = agent?.avatar_url || agent?.avatar || agent?.image_url || agent?.photo_url;
+            if (explicit) return explicit;
+            const key = agent?.id || agent?.profile_name || agent?.name || agent?.agent || `persona-${index}`;
+            return CHAT_PERSONA_AVATARS[hashChatPersona(key) % CHAT_PERSONA_AVATARS.length];
+        }
+
+        function enrichChatPersona(agent, index = 0) {
+            const normalized = normalizeChatPersona(agent);
+            return {
+                ...normalized,
+                avatar_url: getChatPersonaAvatar(normalized, index)
+            };
+        }
+
+        function pickInitialChatAgent(agents = []) {
+            if (!Array.isArray(agents) || !agents.length) return null;
+            const randomIndex = Math.floor(Math.random() * agents.length);
+            return agents[randomIndex] || agents[0];
+        }
+
+        function renderChatAvatarMarkup(agent, className = 'chat-avatar-ai') {
+            const avatar = getChatPersonaAvatar(agent);
+            const initials = getAgentInitials(agent);
+            if (avatar) {
+                return `<div class="${className}"><img src="${safeAuditText(avatar)}" alt="${safeAuditText(agent?.profile_name || 'Persona')}" loading="lazy"></div>`;
+            }
+            const color = window.currentAgentColor || getAgentColor(agent);
+            return `<div class="${className}" style="background:${color}20;color:${color};border:1px solid ${color}40;">${initials}</div>`;
+        }
+
+        function renderFloatingChatLauncher(agent) {
+            const existingBtn = document.getElementById('floatingChatBtn');
+            if (existingBtn) existingBtn.remove();
+            if (!agent) return null;
+
+            const chatBtn = document.createElement('button');
+            chatBtn.id = 'floatingChatBtn';
+            chatBtn.type = 'button';
+            chatBtn.className = 'ssw-chat-launcher no-print';
+            chatBtn.style.display = isFloatingButtonVisible ? 'inline-flex' : 'none';
+            chatBtn.innerHTML = `
+                <span class="ssw-chat-launcher-avatar">
+                    <img src="${safeAuditText(getChatPersonaAvatar(agent))}" alt="${safeAuditText(agent.profile_name || 'Persona')}" loading="lazy">
+                </span>
+                <span class="ssw-chat-launcher-copy">
+                    <strong>${safeAuditText(agent.profile_name || 'Persona')}</strong>
+                    <small>Continuar conversa</small>
+                </span>
+                <span class="ssw-chat-launcher-icon" aria-hidden="true">⌃</span>
+            `;
+            chatBtn.onclick = () => {
+                isFloatingButtonVisible = false;
+                openChat(currentAgent || agent);
+            };
+            document.body.appendChild(chatBtn);
+            return chatBtn;
+        }
+
         function addFloatingChatButton(agents) {
             // Verifica se está na página principal (home) e há resultados de auditoria
             const currentView = window.currentView || 'home';
@@ -7051,6 +7130,15 @@ function getCodigoHTML() {
             const existingBtn = document.getElementById('floatingChatBtn');
             if (existingBtn) existingBtn.remove();
             // Cria botão flutuante
+            const chatAgents = agents.map((agent, index) => enrichChatPersona(agent, index));
+            const selectedAgent = pickInitialChatAgent(chatAgents);
+            if (!selectedAgent) return;
+            window._lastAgentsList = chatAgents;
+            isFloatingButtonVisible = false;
+            renderFloatingChatLauncher(selectedAgent);
+            selectAgentForChat(selectedAgent);
+            return;
+
             const chatBtn = document.createElement('div');
             chatBtn.id = 'floatingChatBtn';
             chatBtn.className = 'no-print';
@@ -7312,19 +7400,28 @@ function getCodigoHTML() {
             document.body.appendChild(modal);
             // Preenche a lista de agents com botões criados dinamicamente para evitar problemas com JSON inline
             const list = document.getElementById('agentsList');
-            agents.forEach(function(agent) {
-                const normalizedAgent = normalizeChatPersona(agent);
+            agents.forEach(function(agent, index) {
+                const normalizedAgent = enrichChatPersona(agent, index);
                 const btn = document.createElement('button');
                 btn.className = 'agent-select-card';
-                btn.style.cssText = 'width:100%; background: rgba(8, 13, 22, 0.95); border: 1px solid rgba(255, 255, 255, 0.65); color: white; padding: 18px; border-radius: 20px; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; text-align: left; display: grid; gap: 8px;';
+                btn.style.cssText = 'width:100%; background: rgba(8, 13, 22, 0.95); border: 1px solid rgba(255, 255, 255, 0.18); color: white; padding: 14px; border-radius: 20px; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; text-align: left; display: grid; grid-template-columns: 44px minmax(0,1fr); gap: 12px; align-items:center;';
+                const avatar = document.createElement('img');
+                avatar.src = getChatPersonaAvatar(normalizedAgent, index);
+                avatar.alt = normalizedAgent.profile_name || 'Persona';
+                avatar.loading = 'lazy';
+                avatar.style.cssText = 'width:44px;height:44px;border-radius:999px;object-fit:cover;border:1px solid rgba(103,232,249,0.22);background:#111827;';
+                const content = document.createElement('div');
+                content.style.cssText = 'min-width:0;display:grid;gap:6px;';
                 const title = document.createElement('div');
                 title.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;';
                 title.innerHTML = `<span class="agent-select-card-title">${safeAuditText(normalizedAgent.profile_name)}</span><span class="agent-select-card-meta">Score ${normalizedAgent.score || '--'}/10</span>`;
                 const desc = document.createElement('div');
                 desc.style.cssText = 'font-size:13px; color: #cbd5e1; line-height:1.6;';
                 desc.innerText = normalizedAgent.description || 'Perspectiva projetada para análise estratégica e recomendações rápidas.';
-                btn.appendChild(title);
-                btn.appendChild(desc);
+                content.appendChild(title);
+                content.appendChild(desc);
+                btn.appendChild(avatar);
+                btn.appendChild(content);
                 btn.addEventListener('click', function() {
                     selectAgentForChat(normalizedAgent);
                     const m = document.getElementById('agentSelectorModal');
@@ -7414,6 +7511,7 @@ function getCodigoHTML() {
                 profile_name: profileName,
                 name: agent?.name || profileName,
                 score: agent?.score ?? null,
+                avatar_url: agent?.avatar_url || agent?.avatar || agent?.image_url || agent?.photo_url || '',
                 direct_quote: agent?.direct_quote || agent?.feedback || '',
                 description: agent?.description || agent?.profile_description || ''
             };
@@ -7429,10 +7527,12 @@ function getCodigoHTML() {
         }
         function openChat(agent) {
             isFloatingButtonVisible = false;
+            agentChatActive = true;
             const btn = document.getElementById('floatingChatBtn');
             if (btn) btn.style.display = 'none';
             agentChats = agentChats || {};
-            currentAgent = agent;
+            currentAgent = enrichChatPersona(agent);
+            agent = currentAgent;
             currentChatTokenLimit = getFrontendPlanLimits().chatInputTokens;
             window.currentAgentColor = getAgentColor(agent);
             const agentColor = window.currentAgentColor;
@@ -7451,10 +7551,10 @@ function getCodigoHTML() {
             }
             const headerAvatar = document.getElementById('chatHeaderAvatar');
             if (headerAvatar) {
-                headerAvatar.style.background = agentColor + '20';
+                headerAvatar.style.background = '#111827';
                 headerAvatar.style.color = agentColor;
-                headerAvatar.style.border = '2px solid ' + agentColor + '40';
-                headerAvatar.innerText = agentInitials;
+                headerAvatar.style.border = '1px solid rgba(103, 232, 249, 0.24)';
+                headerAvatar.innerHTML = `<img src="${safeAuditText(getChatPersonaAvatar(agent))}" alt="${safeAuditText(agent.profile_name || 'Persona')}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:999px;">`;
             }
             const container = document.getElementById('chatHistory');
             container.innerHTML = '';
@@ -7479,7 +7579,7 @@ function getCodigoHTML() {
             const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
             const shortName = agent.profile_name.split(' ')[0];
             welcomeDiv.innerHTML = `
-                <div class="chat-avatar-ai" style="background:${agentColor}20;color:${agentColor};border:1px solid ${agentColor}40;">${agentInitials}</div>
+                ${renderChatAvatarMarkup(agent)}
                 <div style="display:flex;flex-direction:column;max-width:75%;">
                     <div class="chat-bubble-assistant">Olá! Sou <strong>${shortName}</strong> e analisei seu site com foco no meu perfil. O que gostaria de saber? 👋</div>
                     <span class="chat-timestamp">${timeStr}</span>
@@ -7519,9 +7619,14 @@ function getCodigoHTML() {
         function closeChat() {
             document.getElementById('chatModal').classList.add('hidden');
             isFloatingButtonVisible = true;
+            agentChatActive = false;
             const btn = document.getElementById('floatingChatBtn');
-            if (btn) btn.style.display = 'inline-flex';
-}
+            if (btn) {
+                btn.style.display = 'inline-flex';
+            } else if (currentAgent) {
+                renderFloatingChatLauncher(currentAgent);
+            }
+        }
 
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -7605,7 +7710,7 @@ function getCodigoHTML() {
                 const agentInitials = getAgentInitials(currentAgent);
                 div.style.cssText = 'display:flex; justify-content:flex-start; margin-bottom:12px; align-items:flex-end; gap:8px;';
                 div.innerHTML = `
-                    <div class="chat-avatar-ai" style="background:${agentColor}20;color:${agentColor};border:1px solid ${agentColor}40;">${agentInitials}</div>
+                    ${renderChatAvatarMarkup(currentAgent)}
                     <div class="chat-typing-indicator">
                         <div class="chat-typing-dot"></div>
                         <div class="chat-typing-dot"></div>
@@ -7617,7 +7722,7 @@ function getCodigoHTML() {
                 const agentInitials = getAgentInitials(currentAgent);
                 div.style.cssText = 'display:flex; justify-content:flex-start; margin-bottom:12px; align-items:flex-end; gap:8px;';
                 div.innerHTML = `
-                    <div class="chat-avatar-ai" style="background:${agentColor}20;color:${agentColor};border:1px solid ${agentColor}40;">${agentInitials}</div>
+                    ${renderChatAvatarMarkup(currentAgent)}
                     <div style="display:flex;flex-direction:column;max-width:75%;">
                         <div class="chat-bubble-assistant">${formatChatText(text)}</div>
                         <span class="chat-timestamp">${timeStr}</span>

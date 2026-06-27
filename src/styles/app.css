@@ -2864,6 +2864,223 @@
         body.auth-page-active #floatingChatBtn {
             display: none !important;
         }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-7px); opacity: 1; }
+        }
+
+        @keyframes msgSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-msg-enter {
+            animation: msgSlideIn 0.22s ease forwards;
+        }
+
+        .ssw-chat-launcher {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 9999;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            max-width: min(340px, calc(100vw - 36px));
+            padding: 9px 10px 9px 9px;
+            color: #f8fafc;
+            background: rgba(8, 13, 22, 0.96);
+            border: 1px solid rgba(103, 232, 249, 0.18);
+            border-radius: 999px;
+            box-shadow: 0 18px 54px rgba(0, 0, 0, 0.42);
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .ssw-chat-launcher:hover {
+            transform: translateY(-2px);
+            border-color: rgba(103, 232, 249, 0.38);
+            background: rgba(11, 18, 32, 0.98);
+        }
+
+        .ssw-chat-launcher-avatar,
+        .chat-avatar-ai,
+        .chat-avatar-user {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 999px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ssw-chat-launcher-avatar img,
+        .chat-avatar-ai img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .ssw-chat-launcher-copy {
+            min-width: 0;
+            display: grid;
+            gap: 1px;
+            text-align: left;
+            line-height: 1.1;
+        }
+
+        .ssw-chat-launcher-copy strong {
+            max-width: 170px;
+            overflow: hidden;
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ssw-chat-launcher-copy small {
+            color: #8aa4b8;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .ssw-chat-launcher-icon {
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: #67e8f9;
+            background: rgba(34, 211, 238, 0.08);
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .chat-avatar-ai {
+            border: 1px solid rgba(103, 232, 249, 0.18);
+            background: #111827;
+        }
+
+        .chat-avatar-user {
+            color: #ffffff;
+            background: linear-gradient(135deg, #14b8a6, #0f766e);
+            font-size: 0.68rem;
+            font-weight: 800;
+        }
+
+        .chat-bubble-user,
+        .chat-bubble-assistant {
+            padding: 10px 13px;
+            font-size: 0.86rem;
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
+        .chat-bubble-user {
+            color: #020408;
+            background: linear-gradient(135deg, #67e8f9, #22d3ee);
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .chat-bubble-assistant {
+            color: #dce8f2;
+            background: rgba(15, 23, 42, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .chat-bubble-assistant strong {
+            color: #ffffff;
+        }
+
+        .chat-bubble-assistant em {
+            color: #cbd5e1;
+            font-style: italic;
+        }
+
+        .chat-timestamp {
+            display: block;
+            margin-top: 4px;
+            color: #61778a;
+            font-size: 0.62rem;
+        }
+
+        .chat-typing-indicator {
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 15px;
+            background: rgba(15, 23, 42, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .chat-typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #67e8f9;
+            animation: typingBounce 1.3s ease-in-out infinite;
+        }
+
+        .chat-typing-dot:nth-child(2) { animation-delay: 0.18s; }
+        .chat-typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+        .chat-quick-reply {
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(34, 211, 238, 0.28);
+            background: rgba(34, 211, 238, 0.06);
+            color: #67e8f9;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .chat-quick-reply:hover {
+            transform: translateY(-1px);
+            border-color: rgba(34, 211, 238, 0.5);
+            background: rgba(34, 211, 238, 0.13);
+        }
+
+        .chat-scrollbar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .chat-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-scrollbar::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .agent-select-card-title {
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 800;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .agent-select-card-meta {
+            color: #67e8f9;
+            font-size: 0.68rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
         body.auth-page-active #authScreen {
             background: #020408 !important;
             z-index: 100 !important;
