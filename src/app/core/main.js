@@ -3286,12 +3286,12 @@ function getCodigoHTML() {
                     </section>
 
                     <nav class="audit-progress-nav audit-reveal" aria-label="Mapa da auditoria">
-                        <button type="button" onclick="scrollAuditReportTo('audit-capturas')">Evidência visual</button>
-                        <button type="button" onclick="scrollAuditReportTo('audit-metricas')">Base técnica</button>
-                        <button type="button" onclick="scrollAuditReportTo('audit-pilares')">Conversão</button>
-                        <button type="button" onclick="scrollAuditReportTo('audit-riscos')">Barreiras</button>
-                        <button type="button" onclick="scrollAuditReportTo('audit-agents')">Personas</button>
-                        <button type="button" onclick="scrollAuditReportTo('audit-plano')">Correção</button>
+                        <button type="button" data-audit-target="audit-capturas" onclick="scrollAuditReportTo('audit-capturas')">Evidência visual</button>
+                        <button type="button" data-audit-target="audit-metricas" onclick="scrollAuditReportTo('audit-metricas')">Base técnica</button>
+                        <button type="button" data-audit-target="audit-pilares" onclick="scrollAuditReportTo('audit-pilares')">Conversão</button>
+                        <button type="button" data-audit-target="audit-riscos" onclick="scrollAuditReportTo('audit-riscos')">Barreiras</button>
+                        <button type="button" data-audit-target="audit-agents" onclick="scrollAuditReportTo('audit-agents')">Personas</button>
+                        <button type="button" data-audit-target="audit-plano" onclick="scrollAuditReportTo('audit-plano')">Correção</button>
                     </nav>
 
                     <section id="audit-capturas" class="audit-story-section audit-reveal">
@@ -3329,7 +3329,7 @@ function getCodigoHTML() {
                                 <p>Velocidade, SEO e acessibilidade entram aqui como fatores de confiança. Se a base falha, a jornada perde força antes mesmo da proposta ser compreendida.</p>
                             </div>
                         </div>
-                        <div class="audit-metrics-grid">
+                        <div class="audit-metrics-grid" aria-label="Resumo técnico da auditoria">
                             <div class="audit-metric-card">
                                 <span>Performance</span>
                                 <strong id="realPerformanceScore">--</strong>
@@ -3345,12 +3345,12 @@ function getCodigoHTML() {
                                 <strong id="realA11yScore">--</strong>
                                 <p>Base para uso claro, legível e inclusivo.</p>
                             </div>
-                            <div class="audit-metric-card audit-metric-wide">
+                            <div class="audit-metric-card">
                                 <span>Primeira impressão visual</span>
                                 <strong id="realLcp">--</strong>
                                 <p>Tempo até o principal conteúdo aparecer para o usuário.</p>
                             </div>
-                            <div class="audit-metric-card audit-metric-wide">
+                            <div class="audit-metric-card">
                                 <span>Carregamento total</span>
                                 <strong id="realLoadTime">--</strong>
                                 <p>Quanto tempo a página leva para entregar uma experiência utilizável.</p>
@@ -4319,7 +4319,7 @@ function getCodigoHTML() {
 
         function setAuditPillarsVisibility(show) {
             const section = document.getElementById('audit-pilares');
-            const navLink = document.querySelector('.audit-progress-nav a[href="#audit-pilares"]');
+            const navLink = document.querySelector('.audit-progress-nav [data-audit-target="audit-pilares"], .audit-progress-nav a[href="#audit-pilares"]');
             if (section) section.classList.toggle('hidden', !show);
             if (navLink) navLink.classList.toggle('hidden', !show);
         }
@@ -5883,53 +5883,56 @@ function getCodigoHTML() {
                 });
                 // Função para determinar cor baseada no score
                 function getScoreColor(score) {
-                    if (score >= 90) return "text-green-400";
-                    if (score >= 50) return "text-yellow-500";
-                    return "text-red-500";
+                    score = Number(score);
+                    if (!Number.isFinite(score)) return "";
+                    if (score >= 90) return "audit-metric-good";
+                    if (score >= 50) return "audit-metric-warning";
+                    return "audit-metric-bad";
                 }
                 // Função para determinar cor de tempo (em segundos)
                 function getTimeColor(timeStr) {
                     const time = parseFloat(timeStr);
-                    if (time <= 2.5) return "text-green-400";
-                    if (time <= 4.0) return "text-yellow-500";
-                    return "text-red-500";
+                    if (!Number.isFinite(time)) return "";
+                    if (time <= 2.5) return "audit-metric-good";
+                    if (time <= 4.0) return "audit-metric-warning";
+                    return "audit-metric-bad";
                 }
                 // Popula métricas reais do Google PageSpeed
                 const realMetrics = technicalAudit.real_metrics || {};
                 // Performance Score
                 const perfScoreEl = document.getElementById('realPerformanceScore');
                 if (perfScoreEl) {
-                    const score = realMetrics.performance_score || '--';
+                    const score = realMetrics.performance_score ?? '--';
                     perfScoreEl.innerText = score;
-                    perfScoreEl.className = `text-4xl font-black ${typeof score === 'number' ? getScoreColor(score) : 'text-white'}`;
+                    perfScoreEl.className = `audit-metric-value ${getScoreColor(score)}`;
                 }
                 // SEO Score
                 const seoScoreEl = document.getElementById('realSeoScore');
                 if (seoScoreEl) {
-                    const score = realMetrics.seo_score || '--';
+                    const score = realMetrics.seo_score ?? '--';
                     seoScoreEl.innerText = score;
-                    seoScoreEl.className = `text-4xl font-black ${typeof score === 'number' ? getScoreColor(score) : 'text-white'}`;
+                    seoScoreEl.className = `audit-metric-value ${getScoreColor(score)}`;
                 }
                 // Accessibility Score
                 const a11yScoreEl = document.getElementById('realA11yScore');
                 if (a11yScoreEl) {
-                    const score = realMetrics.accessibility_score || '--';
+                    const score = realMetrics.accessibility_score ?? '--';
                     a11yScoreEl.innerText = score;
-                    a11yScoreEl.className = `text-4xl font-black ${typeof score === 'number' ? getScoreColor(score) : 'text-white'}`;
+                    a11yScoreEl.className = `audit-metric-value ${getScoreColor(score)}`;
                 }
                 // LCP (Largest Contentful Paint)
                 const lcpEl = document.getElementById('realLcp');
                 if (lcpEl) {
                     const lcp = realMetrics.lcp || '--';
                     lcpEl.innerText = lcp;
-                    lcpEl.className = `text-2xl font-bold ${typeof lcp === 'string' ? getTimeColor(lcp) : 'text-white'}`;
+                    lcpEl.className = `audit-metric-value ${getTimeColor(lcp)}`;
                 }
                 // Load Time
                 const loadTimeEl = document.getElementById('realLoadTime');
                 if (loadTimeEl) {
                     const loadTime = realMetrics.load_time || '--';
                     loadTimeEl.innerText = loadTime;
-                    loadTimeEl.className = `text-2xl font-bold ${typeof loadTime === 'string' ? getTimeColor(loadTime) : 'text-white'}`;
+                    loadTimeEl.className = `audit-metric-value ${getTimeColor(loadTime)}`;
                 }
                 if (mode === 'auto') {
                     renderPillarsDashboard(technicalAudit);
@@ -6781,16 +6784,19 @@ function getCodigoHTML() {
             });
             // Função para determinar cor baseada no score
             function getScoreColor(score) {
-                if (score >= 90) return "text-green-400";
-                if (score >= 50) return "text-yellow-500";
-                return "text-red-500";
+                score = Number(score);
+                if (!Number.isFinite(score)) return "";
+                if (score >= 90) return "audit-metric-good";
+                if (score >= 50) return "audit-metric-warning";
+                return "audit-metric-bad";
             }
             // Função para determinar cor de tempo (em segundos)
             function getTimeColor(timeStr) {
                 const time = parseFloat(timeStr);
-                if (time <= 2.5) return "text-green-400";
-                if (time <= 4.0) return "text-yellow-500";
-                return "text-red-500";
+                if (!Number.isFinite(time)) return "";
+                if (time <= 2.5) return "audit-metric-good";
+                if (time <= 4.0) return "audit-metric-warning";
+                return "audit-metric-bad";
             }
             // Gera métricas reais simuladas para fallback
             const fallbackMetrics = {
@@ -6804,27 +6810,27 @@ function getCodigoHTML() {
             const perfScoreEl = document.getElementById('realPerformanceScore');
             if (perfScoreEl) {
                 perfScoreEl.innerText = fallbackMetrics.performance_score;
-                perfScoreEl.className = `text-4xl font-black ${getScoreColor(fallbackMetrics.performance_score)}`;
+                perfScoreEl.className = `audit-metric-value ${getScoreColor(fallbackMetrics.performance_score)}`;
             }
             const seoScoreEl = document.getElementById('realSeoScore');
             if (seoScoreEl) {
                 seoScoreEl.innerText = fallbackMetrics.seo_score;
-                seoScoreEl.className = `text-4xl font-black ${getScoreColor(fallbackMetrics.seo_score)}`;
+                seoScoreEl.className = `audit-metric-value ${getScoreColor(fallbackMetrics.seo_score)}`;
             }
             const a11yScoreEl = document.getElementById('realA11yScore');
             if (a11yScoreEl) {
                 a11yScoreEl.innerText = fallbackMetrics.accessibility_score;
-                a11yScoreEl.className = `text-4xl font-black ${getScoreColor(fallbackMetrics.accessibility_score)}`;
+                a11yScoreEl.className = `audit-metric-value ${getScoreColor(fallbackMetrics.accessibility_score)}`;
             }
             const lcpEl = document.getElementById('realLcp');
             if (lcpEl) {
                 lcpEl.innerText = fallbackMetrics.lcp;
-                lcpEl.className = `text-2xl font-bold ${getTimeColor(fallbackMetrics.lcp)}`;
+                lcpEl.className = `audit-metric-value ${getTimeColor(fallbackMetrics.lcp)}`;
             }
             const loadTimeEl = document.getElementById('realLoadTime');
             if (loadTimeEl) {
                 loadTimeEl.innerText = fallbackMetrics.load_time;
-                loadTimeEl.className = `text-2xl font-bold ${getTimeColor(fallbackMetrics.load_time)}`;
+                loadTimeEl.className = `audit-metric-value ${getTimeColor(fallbackMetrics.load_time)}`;
             }
             // Imagens placeholder com verificações
             const printMobileEl = document.getElementById('printMobile');

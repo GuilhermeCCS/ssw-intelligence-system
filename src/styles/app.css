@@ -2064,18 +2064,25 @@
         .audit-shot-mobile .audit-shot-img {
             height: 100%;
         }
-        .audit-metrics-grid,
         .audit-pillars-grid,
         .audit-agent-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
         }
+        .audit-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: rgba(8, 15, 28, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+        }
         .audit-agent-grid {
             grid-template-columns: 1fr;
             gap: 18px;
         }
-        .audit-metric-card,
         .audit-pillar-card,
         .audit-risk-card,
         .audit-agent-card,
@@ -2086,11 +2093,20 @@
             border: 1px solid rgba(255, 255, 255, 0.09);
         }
         .audit-metric-card {
-            min-height: 158px;
-            padding: 18px;
+            position: relative;
+            min-height: 164px;
+            padding: 22px 18px;
+            background: transparent;
+            border: 0;
         }
-        .audit-metric-wide {
-            grid-column: span 1;
+        .audit-metric-card + .audit-metric-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 24px;
+            bottom: 24px;
+            width: 1px;
+            background: rgba(148, 163, 184, 0.18);
         }
         .audit-metric-card span,
         .audit-action-card span {
@@ -2108,6 +2124,18 @@
             line-height: 1;
             font-weight: 950;
             letter-spacing: 0;
+        }
+        .audit-metric-card strong.audit-metric-value {
+            color: #ffffff;
+        }
+        .audit-metric-card strong.audit-metric-good {
+            color: #22c55e;
+        }
+        .audit-metric-card strong.audit-metric-warning {
+            color: #facc15;
+        }
+        .audit-metric-card strong.audit-metric-bad {
+            color: #ef4444;
         }
         .audit-metric-card p,
         .audit-pillar-card p,
@@ -3625,6 +3653,23 @@
             .audit-agent-grid,
             .audit-executive-snapshot {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .audit-metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .audit-metric-card {
+                min-height: auto;
+            }
+
+            .audit-metric-card + .audit-metric-card::before {
+                left: 18px;
+                right: 18px;
+                top: 0;
+                bottom: auto;
+                width: auto;
+                height: 1px;
             }
 
             .audit-agent-grid {
