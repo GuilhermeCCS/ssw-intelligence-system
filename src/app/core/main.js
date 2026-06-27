@@ -1196,6 +1196,14 @@
             }) || matches[0] || null;
         }
 
+        function isElementRenderable(element) {
+            if (!element || !element.isConnected) return false;
+            const style = window.getComputedStyle(element);
+            if (style.display === 'none' || style.visibility === 'hidden') return false;
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+        }
+
         function getActiveRegisterForm() {
             return getVisibleElementById('registerForm');
         }
@@ -1289,9 +1297,24 @@
             setRegisterStep('password', { email: emailTemporario });
         }
 
-        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark', size = 'normal' }) {
+        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark', size = 'normal', visibleAttempt = 0 }) {
             const container = getVisibleElementById(containerId);
             if (!container) return;
+
+            if (!isElementRenderable(container)) {
+                if (visibleAttempt < 30) {
+                    setTimeout(() => renderTurnstileWidget({
+                        containerId,
+                        getWidget,
+                        setWidget,
+                        setToken,
+                        theme,
+                        size,
+                        visibleAttempt: visibleAttempt + 1
+                    }), 150);
+                }
+                return;
+            }
 
             const retryButton = `
                 <button type="button" onclick="${containerId === 'turnstile-login' ? 'initTurnstileLogin()' : containerId === 'turnstile-register' ? 'initTurnstileRegister()' : containerId === 'turnstile-compare' ? 'initTurnstileCompare()' : 'initTurnstileAudit()'}" class="px-4 py-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-200 text-sm font-semibold hover:bg-cyan-400/20 transition">
@@ -1300,7 +1323,7 @@
             `;
 
             const resetExistingWidget = () => {
-                if (typeof window.turnstile === 'undefined' || getWidget() === null) return false;
+                if (typeof window.turnstile === 'undefined' || getWidget() == null) return false;
                 if (!container.querySelector('iframe') && !container.querySelector('[name="cf-turnstile-response"]')) {
                     setWidget(null);
                     setToken(null);
@@ -1507,6 +1530,14 @@
 
         function getLoginCaptchaToken() {
             return turnstileLoginToken || document.querySelector('#turnstile-login [name="cf-turnstile-response"]')?.value || '';
+        }
+
+        function getAuditCaptchaToken() {
+            return turnstileAuditToken || document.querySelector('#turnstile-audit [name="cf-turnstile-response"]')?.value || '';
+        }
+
+        function getCompareCaptchaToken() {
+            return turnstileCompareToken || document.querySelector('#turnstile-compare [name="cf-turnstile-response"]')?.value || '';
         }
 
         function resetLoginCaptcha() {
@@ -5618,6 +5649,13 @@ function getCodigoHTML() {
             if (mode === 'manual' && selected[0]) {
                 validateManualPersonaNiche(selected[0]);
             }
+            const cfToken = getAuditCaptchaToken();
+            if (!cfToken) {
+                restoreAuditInputState(mode);
+                Toast.warning("Resolva o captcha primeiro");
+                requestAnimationFrame(() => initTurnstileAudit());
+                return;
+            }
             // Esconde toda a interface anterior e mostra apenas o loading centralizado
             showHomeAnalysisState();
             document.getElementById('heroSection').classList.add('hidden');
@@ -5631,21 +5669,6 @@ function getCodigoHTML() {
             try {
                 let data;
                 try {
-                    // Capturar token do Turnstile do DOM
-                    const cfToken = turnstileAuditToken || document.querySelector('#turnstile-audit [name="cf-turnstile-response"]')?.value || '';
-                    if (!cfToken) {
-                        initTurnstileAudit();
-                        Toast.warning("Resolva o captcha primeiro");
-                        setHomePresentationVisible(true);
-                        document.getElementById('heroSection').classList.remove('hidden');
-                        document.getElementById('emptyStateCards').classList.remove('hidden');
-                        document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
-                        document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
-                        stopAuditLoadingAnimation();
-                        document.getElementById('auditLoading').classList.add('hidden');
-                        return;
-                    }
-
                     const res = await fetch(`${API_URL}/api/auditar`, {
                         method: 'POST', headers: authHeaders({'Content-Type': 'application/json'}),
                         body: JSON.stringify({ url, modo: mode, personas: selected, cf_token: cfToken })
@@ -5984,6 +6007,13 @@ function getCodigoHTML() {
                 if(compareArea) compareArea.classList.remove('hidden');
                 return;
             }
+            const cfToken = getCompareCaptchaToken();
+            if (!cfToken) {
+                restoreAuditInputState('compare');
+                Toast.warning('Resolva o captcha primeiro');
+                requestAnimationFrame(() => initTurnstileCompare());
+                return;
+            }
             // 3. UI Loading
             const loading = document.getElementById('auditLoading');
             const results = document.getElementById('auditResults');
@@ -5994,11 +6024,6 @@ function getCodigoHTML() {
             if(results) results.classList.add('hidden');
             try {
                 // 4. Tenta API Real
-                const cfToken = turnstileCompareToken || document.querySelector('#turnstile-compare [name="cf-turnstile-response"]')?.value || '';
-                if (!cfToken) {
-                    initTurnstileCompare();
-                    throw new Error("Resolva o captcha primeiro");
-                }
                 const res = await fetch(`${API_URL}/api/comparar`, {
                     method: 'POST',
                     headers: authHeaders({'Content-Type': 'application/json'}),
