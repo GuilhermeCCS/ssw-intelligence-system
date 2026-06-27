@@ -3178,9 +3178,26 @@ function getCodigoHTML() {
                 <article class="audit-experience-shell">
                     <section class="audit-hero-panel audit-reveal is-visible">
                         <div class="audit-hero-copy">
-                            <p class="audit-kicker">Análise estratégica concluída</p>
-                            <h1>O que a captura revelou sobre este site.</h1>
+                            <p class="audit-kicker">Diagnóstico de conversão concluído</p>
+                            <h1>Por que este site pode estar perdendo oportunidades.</h1>
                             <p id="resSummary" class="audit-hero-summary">Carregando resumo executivo...</p>
+                            <div class="audit-executive-snapshot" aria-label="Resumo executivo da auditoria">
+                                <article class="audit-executive-card">
+                                    <span>Impacto comercial</span>
+                                    <strong id="auditImpactLabel">Calculando...</strong>
+                                    <p id="auditImpactText">Aguardando leitura do score e dos riscos encontrados.</p>
+                                </article>
+                                <article class="audit-executive-card">
+                                    <span>Maior barreira</span>
+                                    <strong id="auditMainBarrier">Mapeando...</strong>
+                                    <p id="auditMainBarrierText">Vamos destacar o ponto que mais pode reduzir confiança ou contato.</p>
+                                </article>
+                                <article class="audit-executive-card">
+                                    <span>Próximo passo</span>
+                                    <strong id="auditNextStepLabel">Priorizar</strong>
+                                    <p id="auditNextStepText">O plano de ação vai indicar a correção inicial de maior impacto.</p>
+                                </article>
+                            </div>
                             <div class="audit-hero-actions">
                                 <button onclick="gerarPDFOficial()" class="audit-primary-action">
                                     <i data-lucide="file-down" class="w-4 h-4"></i>
@@ -3192,28 +3209,29 @@ function getCodigoHTML() {
                             </div>
                         </div>
                         <aside class="audit-score-board">
-                            <span class="audit-score-label">Score geral</span>
+                            <span class="audit-score-label">Score de conversão</span>
                             <strong id="resScore">--</strong>
+                            <small class="audit-score-caption">quanto menor, maior a fricção detectada</small>
                             <span id="reportUrl" class="audit-score-url">URL analisada</span>
                             <span id="reportDate" class="audit-score-date">${displayDate}</span>
                         </aside>
                     </section>
 
                     <nav class="audit-progress-nav audit-reveal" aria-label="Mapa da auditoria">
-                        <a href="#audit-capturas">Capturas</a>
-                        <a href="#audit-metricas">Diagnóstico</a>
-                        <a href="#audit-pilares">Pilares</a>
-                        <a href="#audit-riscos">Riscos</a>
-                        <a href="#audit-agents">Agents</a>
-                        <a href="#audit-plano">Plano</a>
+                        <a href="#audit-capturas">Evidência visual</a>
+                        <a href="#audit-metricas">Base técnica</a>
+                        <a href="#audit-pilares">Conversão</a>
+                        <a href="#audit-riscos">Barreiras</a>
+                        <a href="#audit-agents">Personas</a>
+                        <a href="#audit-plano">Correção</a>
                     </nav>
 
                     <section id="audit-capturas" class="audit-story-section audit-reveal">
                         <div class="audit-section-heading">
                             <span>01</span>
                             <div>
-                                <h2>A evidência visual da auditoria</h2>
-                                <p>As imagens abaixo são a leitura real feita pelo Playwright. Elas ajudam a conectar a nota técnica com o que o usuário realmente encontra na tela.</p>
+                                <h2>O que o visitante vê primeiro</h2>
+                                <p>As capturas mostram a primeira impressão real do site. Aqui começa a resposta para uma pergunta simples: o visitante entende, confia e sabe o que fazer?</p>
                             </div>
                         </div>
                         <div class="audit-screens-grid">
@@ -3239,8 +3257,8 @@ function getCodigoHTML() {
                         <div class="audit-section-heading">
                             <span>02</span>
                             <div>
-                                <h2>Diagnóstico técnico, sem ruído</h2>
-                                <p>Esta camada mostra se a experiência tem base técnica para carregar rápido, ser encontrada e funcionar bem em dispositivos reais.</p>
+                                <h2>Base técnica que sustenta a conversão</h2>
+                                <p>Velocidade, SEO e acessibilidade entram aqui como fatores de confiança. Se a base falha, a jornada perde força antes mesmo da proposta ser compreendida.</p>
                             </div>
                         </div>
                         <div class="audit-metrics-grid">
@@ -3276,8 +3294,8 @@ function getCodigoHTML() {
                         <div class="audit-section-heading">
                             <span>03</span>
                             <div>
-                                <h2>Os 4 pilares do laudo</h2>
-                                <p>Cada pilar traduz a auditoria em uma dimensão de decisão: onde há confiança, onde há fricção e onde há perda de conversão.</p>
+                                <h2>Onde a conversão ganha ou perde força</h2>
+                                <p>Cada pilar traduz o diagnóstico em uma dimensão de decisão: confiança, clareza, funcionamento e capacidade de conduzir o visitante até o contato.</p>
                             </div>
                         </div>
                         <div id="pillarsDashboard" class="audit-pillars-grid"></div>
@@ -3287,8 +3305,8 @@ function getCodigoHTML() {
                         <div class="audit-section-heading">
                             <span>04</span>
                             <div>
-                                <h2>Riscos que merecem ação</h2>
-                                <p>Em vez de uma tabela fria, cada item abaixo explica qual problema foi encontrado, qual pilar ele afeta e por que ele reduz a qualidade da experiência.</p>
+                                <h2>Barreiras que travam a decisão</h2>
+                                <p>Estes são os pontos que podem fazer o visitante hesitar, abandonar a página ou deixar de chamar. O foco é corrigir o que reduz confiança e avanço.</p>
                             </div>
                         </div>
                         <div id="vulnerabilitiesTableBody" class="audit-risk-list"></div>
@@ -3298,8 +3316,8 @@ function getCodigoHTML() {
                         <div class="audit-section-heading">
                             <span>05</span>
                             <div>
-                                <h2>Como as agents interpretaram a jornada</h2>
-                                <p>As personas não avaliam só a tela: elas ajudam a entender intenção, confiança, fricção e probabilidade de avanço no funil.</p>
+                                <h2>Como personas reais perceberiam a jornada</h2>
+                                <p>As personas simulam objeções, dúvidas e sinais de confiança. É a camada que aproxima o diagnóstico técnico do comportamento humano.</p>
                             </div>
                         </div>
                         <div id="agentsTableBody" class="audit-agent-grid"></div>
@@ -3309,8 +3327,8 @@ function getCodigoHTML() {
                         <div class="audit-section-heading">
                             <span>06</span>
                             <div>
-                                <h2>Plano de ação recomendado</h2>
-                                <p>Uma sequência prática para transformar o diagnóstico em melhoria real, começando pelo que tende a gerar mais impacto.</p>
+                                <h2>Plano de correção por prioridade</h2>
+                                <p>Uma sequência prática para transformar o diagnóstico em melhoria real, começando pelo que tende a destravar mais confiança, clareza e conversão.</p>
                             </div>
                         </div>
                         <div id="actionPlanList" class="audit-action-timeline"></div>
@@ -3321,6 +3339,9 @@ function getCodigoHTML() {
                             </button>
                             <button onclick="showSimplifiedSearch()" class="audit-secondary-action">
                                 Analisar outra URL
+                            </button>
+                            <button onclick="openSitesPage()" class="audit-secondary-action audit-commercial-action">
+                                Solicitar correção com a S.S.W
                             </button>
                         </div>
                     </section>
@@ -3354,6 +3375,105 @@ function getCodigoHTML() {
             if (value >= 80) return 'strong';
             if (value >= 50) return 'attention';
             return 'critical';
+        }
+
+        function getAuditScoreNumber(score) {
+            const value = Number(score);
+            return Number.isFinite(value) ? Math.round(value) : null;
+        }
+
+        function getCommercialImpact(score) {
+            const value = getAuditScoreNumber(score);
+            if (value === null) {
+                return {
+                    label: 'Impacto não calculado',
+                    text: 'A auditoria não retornou score suficiente para estimar a fricção comercial.'
+                };
+            }
+            if (value >= 80) {
+                return {
+                    label: 'Boa base comercial',
+                    text: 'O site tem sinais positivos, mas ainda pode ganhar clareza, velocidade ou persuasão para converter melhor.'
+                };
+            }
+            if (value >= 50) {
+                return {
+                    label: 'Conversão em risco',
+                    text: 'Há barreiras relevantes que podem reduzir confiança, entendimento da oferta ou avanço até o contato.'
+                };
+            }
+            return {
+                label: 'Alta fricção comercial',
+                text: 'A experiência provavelmente cria dúvidas cedo demais e pode estar afastando oportunidades antes da decisão.'
+            };
+        }
+
+        function flattenAuditActionPlan(actionPlan = {}) {
+            if (Array.isArray(actionPlan)) return actionPlan.filter(Boolean).map(step => ({ period: 'Prioridade', step }));
+            if (!actionPlan || typeof actionPlan !== 'object') return [];
+            return Object.keys(actionPlan).flatMap(period => {
+                const items = Array.isArray(actionPlan[period]) ? actionPlan[period] : [];
+                return items.filter(Boolean).map(step => ({ period, step }));
+            });
+        }
+
+        function getTopAuditRisk(vulnerabilities = []) {
+            if (!Array.isArray(vulnerabilities) || !vulnerabilities.length) {
+                return {
+                    title: 'Nenhuma barreira crítica',
+                    text: 'A auditoria não encontrou um risco dominante, então o ganho deve vir de refinamentos progressivos.'
+                };
+            }
+            const weight = value => {
+                const raw = String(value || '').toUpperCase();
+                if (raw.includes('CRÍT') || raw.includes('CRIT') || raw.includes('CRITICAL')) return 4;
+                if (raw.includes('ALTO') || raw.includes('HIGH')) return 3;
+                if (raw.includes('MÉD') || raw.includes('MED')) return 2;
+                return 1;
+            };
+            const sorted = [...vulnerabilities].sort((a, b) => weight(b.severity) - weight(a.severity));
+            const top = sorted[0] || {};
+            return {
+                title: top.title || 'Barreira sem título',
+                text: top.description || 'Existe um ponto de fricção que merece revisão antes de investir em mais tráfego.'
+            };
+        }
+
+        function getPersonaSignal(agents = []) {
+            if (!Array.isArray(agents) || !agents.length) return null;
+            const scored = agents
+                .map(agent => ({ agent, score: Number(agent.score) }))
+                .filter(item => Number.isFinite(item.score))
+                .sort((a, b) => a.score - b.score);
+            const selected = scored[0]?.agent || agents[0];
+            if (!selected) return null;
+            return {
+                name: selected.profile_name || 'Persona SSW',
+                quote: selected.direct_quote || selected.summary || ''
+            };
+        }
+
+        function updateAuditExecutiveSnapshot({ technicalAudit = {}, vulnerabilities = [], actionSteps = [], agents = [] } = {}) {
+            const impact = getCommercialImpact(technicalAudit.score);
+            const risk = getTopAuditRisk(vulnerabilities);
+            const firstAction = actionSteps[0] || null;
+            const persona = getPersonaSignal(agents);
+
+            const impactLabel = document.getElementById('auditImpactLabel');
+            const impactText = document.getElementById('auditImpactText');
+            const barrierLabel = document.getElementById('auditMainBarrier');
+            const barrierText = document.getElementById('auditMainBarrierText');
+            const nextLabel = document.getElementById('auditNextStepLabel');
+            const nextText = document.getElementById('auditNextStepText');
+
+            if (impactLabel) impactLabel.textContent = impact.label;
+            if (impactText) impactText.textContent = impact.text;
+            if (barrierLabel) barrierLabel.textContent = risk.title;
+            if (barrierText) barrierText.textContent = risk.text;
+            if (nextLabel) nextLabel.textContent = firstAction ? humanizeActionPeriod(firstAction.period || 'Prioridade') : (persona ? persona.name : 'Próxima ação');
+            if (nextText) nextText.textContent = firstAction
+                ? String(firstAction.step || firstAction).trim()
+                : (persona?.quote || 'Revise as barreiras destacadas e priorize a primeira correção com maior impacto na confiança do visitante.');
         }
 
         function getSeverityMeta(severity) {
@@ -5591,6 +5711,15 @@ function getCodigoHTML() {
                 if (reportUrlEl) reportUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
                 const resSummaryEl = document.getElementById('resSummary');
                 if (resSummaryEl) resSummaryEl.innerText = technicalAudit.executive_summary;
+                const reportVulnerabilities = technicalAudit.vulnerabilities || [];
+                const reportActionSteps = flattenAuditActionPlan(technicalAudit.action_plan || {});
+                const reportAgents = data.resultado.agents_results || data.resultado.personas_results || [];
+                updateAuditExecutiveSnapshot({
+                    technicalAudit,
+                    vulnerabilities: reportVulnerabilities,
+                    actionSteps: reportActionSteps,
+                    agents: reportAgents
+                });
                 // Função para determinar cor baseada no score
                 function getScoreColor(score) {
                     if (score >= 90) return "text-green-400";
@@ -6463,6 +6592,12 @@ function getCodigoHTML() {
             if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
             const resSummaryEl = document.getElementById('resSummary');
             if (resSummaryEl) resSummaryEl.innerText = "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.";
+            updateAuditExecutiveSnapshot({
+                technicalAudit: { score },
+                vulnerabilities: [],
+                actionSteps: [],
+                agents: []
+            });
             // Função para determinar cor baseada no score
             function getScoreColor(score) {
                 if (score >= 90) return "text-green-400";
