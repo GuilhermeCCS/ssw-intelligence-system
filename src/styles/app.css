@@ -2148,6 +2148,21 @@
             line-height: 1.65;
             font-size: 0.9rem;
         }
+        #auditResults .audit-hero-copy p,
+        #auditResults .audit-executive-card p,
+        #auditResults .audit-section-heading p,
+        #auditResults .audit-metric-card p,
+        #auditResults .audit-pillar-card p,
+        #auditResults .audit-risk-card p,
+        #auditResults .audit-agent-card p,
+        #auditResults .audit-action-card p,
+        #auditResults .audit-empty-block p,
+        #auditResults .audit-agent-insight-panel blockquote {
+            text-align: justify;
+            text-align-last: left;
+            text-justify: inter-word;
+            hyphens: auto;
+        }
         .audit-pillar-card {
             min-height: 180px;
             display: flex;
