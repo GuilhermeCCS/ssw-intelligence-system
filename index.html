@@ -92,7 +92,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260627-history-chat-captcha-v1">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260627-profiles-validation-v1">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -654,10 +654,15 @@
                 <div id="homeFooterSpacer" style="min-height: 100vh;"></div>
             </div>
             <div id="view-agents" class="hidden max-w-6xl mx-auto space-y-8 animate-fade-in-up">
-                <header class="flex justify-between items-center">
+                <header class="flex justify-between items-center gap-4">
                     <div>
-                        <h2 class="text-3xl font-bold text-white">Gestão de Perfis</h2>
-                        <p class="text-slate-400 mt-1">Defina os arquétipos (ICPs) para suas simulações.</p>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <h2 class="text-3xl font-bold text-white">Gestão de Perfis</h2>
+                            <div id="personaLimitTop" class="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-cyan-100">
+                                Plano — perfis
+                            </div>
+                        </div>
+                        <p class="text-slate-400 mt-2">Crie perfis de clientes para simular como pessoas diferentes avaliam seu site.</p>
                     </div>
                     <button onclick="if(!USER||!USER.email){showAuthScreen('login');return;}loadManageAgents()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2 transition-colors">
                         <i data-lucide="refresh-cw" class="w-3 h-3"></i> Atualizar Lista
@@ -670,19 +675,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
                         <div class="md:col-span-3 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
-                            <input type="text" id="newAgentName" placeholder="Ex: Idoso Leigo (70+)" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newAgentDesc').focus();}">
+                            <input type="text" id="newAgentName" maxlength="20" placeholder="Ex: Cliente ocupado" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newAgentDesc').focus();}">
                         </div>
-                        <div class="md:col-span-4 space-y-2">
+                        <div class="md:col-span-5 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
-                            <input type="text" id="newAgentDesc" placeholder="Ex: Baixa visão, desconfiado, usa fontes grandes..." class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
+                            <input type="text" id="newAgentDesc" maxlength="160" placeholder="Ex: desconfiado, apressado, leigo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
+                            <p class="text-[11px] text-slate-500 ml-1">Separe por vírgulas. Até 7 descrições, com 20 caracteres cada.</p>
                         </div>
                         <div class="md:col-span-2 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nicho</label>
-                            <input type="text" id="newAgentNiche" placeholder="Ex: saas_b2b" class="input-pro w-full rounded-xl p-3 text-white text-sm">
-                        </div>
-                        <div class="md:col-span-1 space-y-2">
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Tipo</label>
-                            <input type="text" id="newAgentType" placeholder="ICP" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                            <input type="text" id="newAgentNiche" maxlength="20" placeholder="Ex: restaurante" class="input-pro w-full rounded-xl p-3 text-white text-sm">
                         </div>
                         <div class="md:col-span-2">
                             <button id="createAgentBtn" onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
@@ -1833,7 +1835,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260627-history-chat-captcha-v1"></script>
+            <script src="src/app/core/main.js?v=20260627-profiles-validation-v1"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);">
     <div style="position:fixed;bottom:16px;right:16px;width:calc(100% - 32px);max-width:420px;height:600px;max-height:calc(100vh - 32px);border-radius:28px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#020408 0%,#080d16 100%);">

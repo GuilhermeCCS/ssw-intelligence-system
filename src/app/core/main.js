@@ -2865,21 +2865,26 @@ function getCodigoHTML() {
             const percent = Math.min(100, Math.round((usage.count / Math.max(usage.limit, 1)) * 100));
             const reached = usage.count >= usage.limit;
             return `
-                <div class="md:col-span-2 lg:col-span-3 rounded-2xl border ${reached ? 'border-amber-400/30 bg-amber-400/10' : 'border-cyan-400/20 bg-cyan-400/5'} p-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div>
-                            <p class="text-xs uppercase tracking-[0.18em] ${reached ? 'text-amber-200' : 'text-cyan-200'} font-bold">Limite do plano ${getUserPlanLabel(usage.plan)}</p>
-                            <p class="text-sm text-slate-300 mt-1">${usage.count}/${usage.limit} personas criadas ${reached ? '- limite atingido' : '- disponível para uso'}</p>
-                        </div>
-                        <div class="w-full sm:w-48 h-2 rounded-full bg-slate-900 border border-white/10 overflow-hidden">
-                            <div class="h-full ${reached ? 'bg-amber-300' : 'bg-cyan-300'}" style="width:${percent}%"></div>
-                        </div>
-                    </div>
-                </div>`;
+                <span class="inline-flex items-center gap-2">
+                    <span>Plano ${getUserPlanLabel(usage.plan)} • ${usage.count}/${usage.limit} perfis</span>
+                    <span class="h-1.5 w-16 rounded-full bg-slate-900/80 border border-white/10 overflow-hidden inline-flex">
+                        <span class="h-full ${reached ? 'bg-amber-300' : 'bg-cyan-300'}" style="width:${percent}%"></span>
+                    </span>
+                </span>`;
+        }
+
+        function updatePersonaLimitTopStatus(fallbackCount = 0) {
+            const target = document.getElementById('personaLimitTop');
+            if (!target) return;
+            const usage = getPersonaUsage(fallbackCount);
+            const reached = usage.count >= usage.limit;
+            target.className = `inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] ${reached ? 'border-amber-400/30 bg-amber-400/10 text-amber-100' : 'border-cyan-400/25 bg-cyan-400/10 text-cyan-100'}`;
+            target.innerHTML = renderPersonaLimitStatus(fallbackCount);
         }
 
         function updateCreateAgentButtonByLimit(fallbackCount = 0) {
             const btn = document.getElementById('createAgentBtn');
+            updatePersonaLimitTopStatus(fallbackCount);
             if (!btn) return;
             const usage = getPersonaUsage(fallbackCount);
             const reached = usage.count >= usage.limit;
@@ -2894,14 +2899,14 @@ function getCodigoHTML() {
             div.innerHTML = "<p class='text-slate-500 animate-pulse'>Sincronizando...</p>";
             try {
                 const lista = await fetchBackendPersonas({ includeSystem: false, requireAuth: true });
-                div.innerHTML = renderPersonaLimitStatus(lista.length);
+                updatePersonaLimitTopStatus(lista.length);
+                div.innerHTML = "";
                 updateCreateAgentButtonByLimit(lista.length);
                 if(lista.length === 0) div.innerHTML += "<div class='text-slate-500 col-span-3 text-center border border-dashed border-slate-700 p-8 rounded-xl'>Nenhum perfil criado.</div>";
                 lista.forEach(p => {
                     const safeName = safeAuditText(p.name);
                     const safeDescription = safeAuditText(p.description);
                     const safeNiche = safeAuditText(getPersonaNiche(p));
-                    const safeType = safeAuditText(getPersonaType(p));
                     div.innerHTML += `
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative group">
                             <div class="flex justify-between items-start mb-2">
@@ -2910,7 +2915,6 @@ function getCodigoHTML() {
                             </div>
                             <div class="flex flex-wrap gap-2 mb-3">
                                 <span class="text-[10px] font-bold uppercase tracking-wide rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2 py-1 text-cyan-200">${safeNiche}</span>
-                                <span class="text-[10px] font-bold uppercase tracking-wide rounded-full border border-white/10 bg-white/5 px-2 py-1 text-slate-300">${safeType}</span>
                             </div>
                             <h4 class="font-bold text-white">${safeName}</h4>
                             <p class="text-xs text-slate-400 mt-2 line-clamp-3">${safeDescription}</p>
@@ -2923,14 +2927,27 @@ function getCodigoHTML() {
             }
         }
         async function createAgent() {
-            const nome = document.getElementById('newAgentName').value;
-            const desc = document.getElementById('newAgentDesc').value;
-            const niche = document.getElementById('newAgentNiche')?.value || 'geral';
-            const type = document.getElementById('newAgentType')?.value || 'perfil';
-            if(!nome || !desc) return Toast.warning("Preencha todos os campos");
+            const nomeEl = document.getElementById('newAgentName');
+            const descEl = document.getElementById('newAgentDesc');
+            const nicheEl = document.getElementById('newAgentNiche');
+            const nome = (nomeEl?.value || '').trim();
+            const rawDesc = (descEl?.value || '').trim();
+            const niche = (nicheEl?.value || '').trim() || 'geral';
+            const type = 'perfil';
+            if(!nome || !rawDesc || !niche) return Toast.warning("Preencha nome, descrição e nicho.");
+            if (nome.length > 20) return Toast.warning("O nome do perfil deve ter no máximo 20 caracteres.");
+            if (niche.length > 20) return Toast.warning("O nicho deve ter no máximo 20 caracteres.");
+            if (!rawDesc.includes(',')) return Toast.warning("Separe a descrição por vírgulas. Ex: leigo, apressado, direto.");
+            if (rawDesc.split(',').some(item => !item.trim())) return Toast.warning("Remova vírgulas sem texto entre as descrições.");
+            const descItems = rawDesc.split(',').map(item => item.trim()).filter(Boolean);
+            if (descItems.length === 0) return Toast.warning("Adicione pelo menos uma descrição.");
+            if (descItems.length > 7) return Toast.warning("Use no máximo 7 descrições.");
+            const itemTooLong = descItems.find(item => item.length > 20);
+            if (itemTooLong) return Toast.warning(`Cada descrição deve ter no máximo 20 caracteres. Ajuste: "${itemTooLong}".`);
+            const desc = descItems.join(', ');
             const usage = getPersonaUsage();
             if (usage.count >= usage.limit) {
-                return Toast.warning(`Limite de personas do plano ${getUserPlanLabel(usage.plan)} atingido (${usage.count}/${usage.limit}). Exclua uma persona ou faça upgrade.`);
+                return Toast.warning(`Limite de perfis do plano ${getUserPlanLabel(usage.plan)} atingido (${usage.count}/${usage.limit}). Exclua um perfil ou faça upgrade.`);
             }
             const btn = document.getElementById('createAgentBtn');
             if (btn) { btn.innerText = "..."; btn.disabled = true; }
@@ -2955,7 +2972,6 @@ function getCodigoHTML() {
                 document.getElementById('newAgentName').value = "";
                 document.getElementById('newAgentDesc').value = "";
                 if (document.getElementById('newAgentNiche')) document.getElementById('newAgentNiche').value = "";
-                if (document.getElementById('newAgentType')) document.getElementById('newAgentType').value = "";
                 await loadManageAgents();
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
                 Toast.success("Perfil salvo com sucesso!");
