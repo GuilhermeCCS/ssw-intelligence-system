@@ -3053,7 +3053,7 @@ function getCodigoHTML() {
                         <h2 class="text-xl font-bold text-slate-300 mb-4">Veredito Técnico Geral</h2>
                         <div class="inline-block bg-slate-800 border-2 border-slate-700 rounded-xl p-8 print:break-inside-avoid">
                             <div class="text-6xl font-black text-white mb-2" id="resScore">-</div>
-                            <p class="text-slate-400 text-sm uppercase tracking-wider">Score Técnica</p>
+                            <p class="text-slate-400 text-sm uppercase tracking-wider">Score de conversão</p>
                         </div>
                     </section>
                     <!-- Dashboard Técnico - Cockpit de Performance -->
@@ -3241,7 +3241,13 @@ function getCodigoHTML() {
                         </div>
                         <aside class="audit-score-board">
                             <span class="audit-score-label">Score de conversão</span>
-                            <strong id="resScore">--</strong>
+                            <div class="audit-score-ring" aria-label="Score de conversão">
+                                <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
+                                    <circle class="audit-score-ring-track" cx="60" cy="60" r="48"></circle>
+                                    <circle class="audit-score-ring-progress" cx="60" cy="60" r="48" pathLength="100"></circle>
+                                </svg>
+                                <strong id="resScore">--</strong>
+                            </div>
                             <small class="audit-score-caption">quanto menor, maior a fricção detectada</small>
                             <span id="reportUrl" class="audit-score-url">URL analisada</span>
                             <span id="reportDate" class="audit-score-date">${displayDate}</span>
@@ -3413,6 +3419,27 @@ function getCodigoHTML() {
             return Number.isFinite(value) ? Math.round(value) : null;
         }
 
+        function updateAuditScoreBoard(score) {
+            const board = document.querySelector('.audit-score-board');
+            const scoreEl = document.getElementById('resScore');
+            const value = getAuditScoreNumber(score);
+            if (scoreEl) scoreEl.textContent = value === null ? '--' : String(value);
+            if (!board) return;
+
+            const tone = getAuditScoreTone(score);
+            const progress = value === null ? 0 : Math.max(0, Math.min(100, value));
+            const toneColor = {
+                strong: '#22c55e',
+                attention: '#facc15',
+                critical: '#fb7185',
+                neutral: '#67e8f9'
+            }[tone] || '#67e8f9';
+
+            board.setAttribute('data-score-tone', tone);
+            board.style.setProperty('--audit-score-progress', String(progress));
+            board.style.setProperty('--audit-score-color', toneColor);
+        }
+
         function getCommercialImpact(score) {
             const value = getAuditScoreNumber(score);
             if (value === null) {
@@ -3525,7 +3552,7 @@ function getCodigoHTML() {
             if (impactText) impactText.textContent = impact.text;
             if (barrierLabel) barrierLabel.textContent = risk.title;
             if (barrierText) barrierText.textContent = risk.text;
-            if (nextLabel) nextLabel.textContent = firstAction ? humanizeActionPeriod(firstAction.period || 'Prioridade') : (persona ? persona.name : 'Próxima ação');
+            if (nextLabel) nextLabel.textContent = firstAction ? humanizeActionPeriod(firstAction.period || 'Prioridade', 0) : (persona ? persona.name : 'Próxima ação');
             if (nextText) nextText.textContent = firstAction
                 ? String(firstAction.step || firstAction).trim()
                 : (persona?.quote || 'Revise as barreiras destacadas e priorize a primeira correção com maior impacto na confiança do visitante.');
@@ -3548,11 +3575,20 @@ function getCodigoHTML() {
             return { label: severity || 'Atenção', tone: 'neutral' };
         }
 
-        function humanizeActionPeriod(period) {
+        function getCorrectionStepLabel(index = 0) {
+            const labels = ['PRIMEIRA ETAPA', 'SEGUNDA ETAPA', 'TERCEIRA ETAPA', 'QUARTA ETAPA'];
+            const safeIndex = Math.max(0, Math.min(labels.length - 1, Number(index) || 0));
+            return labels[safeIndex];
+        }
+
+        function humanizeActionPeriod(period, index = null) {
+            if (index !== null && index !== undefined) return getCorrectionStepLabel(index);
             const key = String(period || '').toLowerCase();
-            if (key.includes('week')) return 'Primeira semana';
-            if (key.includes('month')) return 'Primeiro mês';
-            if (key.includes('day')) return 'Hoje';
+            const numericMatch = key.match(/(?:week|month|day|etapa|step|prioridade)[_-]?(\d+)/);
+            if (numericMatch) return getCorrectionStepLabel(Number(numericMatch[1]) - 1);
+            if (key.includes('week') || key.includes('month') || key.includes('day') || key.includes('prioridade')) {
+                return getCorrectionStepLabel(0);
+            }
             return key.replace(/_/g, ' ') || 'Próxima ação';
         }
         function showSimplifiedSearch() {
@@ -5751,9 +5787,7 @@ function getCodigoHTML() {
                 document.getElementById('auditResults').classList.remove('hidden');
                 // Popula Dados com verificações de segurança
                 const technicalAudit = data.resultado.technical_audit || {};
-                const resScoreEl = document.getElementById('resScore');
-                if (resScoreEl) resScoreEl.innerText = technicalAudit.score;
-                document.querySelector('.audit-score-board')?.setAttribute('data-score-tone', getAuditScoreTone(technicalAudit.score));
+                updateAuditScoreBoard(technicalAudit.score);
                 const reportUrlEl = document.getElementById('reportUrl');
                 if (reportUrlEl) reportUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
                 const resSummaryEl = document.getElementById('resSummary');
@@ -5884,7 +5918,7 @@ function getCodigoHTML() {
                             '<article class="audit-action-card">',
                                 '<div class="audit-action-index">' + String(i + 1).padStart(2, '0') + '</div>',
                                 '<div>',
-                                    '<span>' + safeAuditText(humanizeActionPeriod(item.period)) + '</span>',
+                                    '<span>' + safeAuditText(humanizeActionPeriod(item.period, i)) + '</span>',
                                     '<p>' + safeAuditText(item.step) + '</p>',
                                 '</div>',
                             '</article>'
@@ -6636,9 +6670,7 @@ function getCodigoHTML() {
             }
             updateUserMenuCircle();
             // Popula Dados Fallback com verificações de segurança
-            const resScoreEl = document.getElementById('resScore');
-            if (resScoreEl) resScoreEl.innerText = score;
-            document.querySelector('.audit-score-board')?.setAttribute('data-score-tone', getAuditScoreTone(score));
+            updateAuditScoreBoard(score);
             const resUrlEl = document.getElementById('reportUrl');
             if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
             const resSummaryEl = document.getElementById('resSummary');
@@ -6789,7 +6821,7 @@ function getCodigoHTML() {
                 actionPlanList.innerHTML = fallbackSteps.map((stepText, i) => [
                     '<article class="audit-action-card">',
                         '<div class="audit-action-index">' + String(i + 1).padStart(2, '0') + '</div>',
-                        '<div><span>Conting?ncia</span><p>' + safeAuditText(stepText) + '</p></div>',
+                        '<div><span>' + safeAuditText(getCorrectionStepLabel(i)) + '</span><p>' + safeAuditText(stepText) + '</p></div>',
                     '</article>'
                 ].join('')).join('');
             }
