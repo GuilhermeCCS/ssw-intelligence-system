@@ -839,6 +839,12 @@
                 mainContent.style.overflowY = 'hidden';
                 mainContent.style.height = '0px';
                 mainContent.style.minHeight = '0px';
+            } else if (mainContent) {
+                mainContent.classList.remove('overflow-y-hidden');
+                mainContent.classList.add('overflow-y-auto');
+                mainContent.style.overflowY = '';
+                mainContent.style.height = '';
+                mainContent.style.minHeight = '';
             }
         }
 
@@ -4195,12 +4201,12 @@ function getCodigoHTML() {
 
         function getPillarMeta(key) {
             const map = {
-                accessibility_performance: { title: 'Performance', icon: 'zap' },
-                security: { title: 'Segurança', icon: 'shield' },
-                functional_integrity: { title: 'Funcionalidade', icon: 'link' },
-                conversion_ux: { title: 'Conversão', icon: 'trending-up' }
+                accessibility_performance: { title: 'Base técnica', icon: 'gauge' },
+                security: { title: 'Confiança e segurança', icon: 'shield-check' },
+                functional_integrity: { title: 'Fluxo funcional', icon: 'route' },
+                conversion_ux: { title: 'Conversão e UX', icon: 'target' }
             };
-            return map[key] || { title: key, icon: 'activity' };
+            return map[key] || { title: key, icon: 'sparkles' };
         }
 
         function normalizePillarsEvaluation(technicalAudit = {}) {
@@ -4239,14 +4245,16 @@ function getCodigoHTML() {
             const container = document.getElementById('pillarsDashboard');
             if (!container) return;
             const pillars = normalizePillarsEvaluation(technicalAudit);
-            container.innerHTML = Object.entries(pillars).map(([key, value], index) => {
+            container.innerHTML = Object.entries(pillars).map(([key, value]) => {
                 const meta = getPillarMeta(key);
                 const score = Number(value.score);
                 const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
                 const tone = getAuditScoreTone(score);
                 return `
                     <article class="audit-pillar-card audit-pillar-${tone}">
-                        <div class="audit-pillar-index">${String(index + 1).padStart(2, '0')}</div>
+                        <div class="audit-pillar-icon" aria-hidden="true">
+                            <i data-lucide="${safeAuditText(meta.icon)}"></i>
+                        </div>
                         <div class="audit-pillar-body">
                             <div class="audit-pillar-top">
                                 <h3>${safeAuditText(meta.title)}</h3>
