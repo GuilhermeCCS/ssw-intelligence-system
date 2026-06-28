@@ -8822,7 +8822,7 @@ function getCodigoHTML() {
                 const imageFormat = src => src.includes('image/png') ? 'PNG' : 'JPEG';
                 const getLogoDataUri = () => {
                     try {
-                        const logoElement = document.querySelector('img[src*="logos.ico"]');
+                        const logoElement = document.querySelector('img[src*="logo_ofc.png"], img[src*="logos.ico"]');
                         if (!logoElement || !logoElement.complete || !logoElement.naturalWidth) return '';
                         const size = 128;
                         const canvas = document.createElement('canvas');

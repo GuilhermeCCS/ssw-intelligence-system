@@ -334,7 +334,7 @@
                         <div class="ssw-public-footer-grid">
                             <div class="ssw-public-footer-brand">
                                 <a class="ssw-public-footer-brand-mark" href="/home" aria-label="Ir para a S.S.W Intelligence">
-                                    <img class="ssw-public-footer-logo" src="/src/assets/images/logo/logos.ico" alt="">
+                                    <img class="ssw-public-footer-logo" src="/src/assets/images/logo/logo_ofc.png?v=20260627-logo-ofc-v1" alt="">
                                     <span>
                                         <strong>${data.title}</strong>
                                         <span>${data.subtitle}</span>

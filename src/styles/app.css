@@ -3175,7 +3175,8 @@
 /* ---- extracted inline block ---- */
 
 /* Forçar formato circular nas logos */
-        img[src*="logos.ico"] {
+        img[src*="logos.ico"],
+        img[src*="logo_ofc.png"] {
             border-radius: 50% !important;
             aspect-ratio: 1/1 !important;
             object-fit: cover !important;
