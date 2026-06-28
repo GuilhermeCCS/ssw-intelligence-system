@@ -10988,3 +10988,90 @@ body:has(#auditResults:not(.hidden)) #view-home.command-center {
         display: none;
     }
 }
+
+/* Ajustes finais de contraste para o relatório em fundo claro. */
+#auditResults:not(.hidden) .audit-section-heading > span,
+#auditResults:not(.hidden) .audit-action-index,
+#auditResults:not(.hidden) .audit-risk-number {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0f8b8d, #087f7f) !important;
+    border-color: rgba(15, 139, 141, 0.32) !important;
+    box-shadow: 0 10px 24px rgba(15, 139, 141, 0.16) !important;
+}
+
+#auditResults:not(.hidden) .audit-primary-action,
+#auditResults:not(.hidden) .audit-commercial-action {
+    color: #07111f !important;
+    background: linear-gradient(135deg, #35d4e8, #22c7df) !important;
+    border: 1px solid rgba(15, 139, 141, 0.24) !important;
+    box-shadow: 0 14px 30px rgba(34, 199, 223, 0.18) !important;
+}
+
+#auditResults:not(.hidden) .audit-primary-action svg,
+#auditResults:not(.hidden) .audit-commercial-action svg {
+    color: #07111f !important;
+    stroke: #07111f !important;
+}
+
+#auditResults:not(.hidden) .audit-secondary-action:not(.audit-commercial-action) {
+    color: #1f3348 !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd8e3 !important;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08) !important;
+}
+
+#auditResults:not(.hidden) .audit-secondary-action:not(.audit-commercial-action):hover {
+    color: #087f7f !important;
+    border-color: rgba(15, 139, 141, 0.34) !important;
+    background: #f3fbfb !important;
+}
+
+#auditResults:not(.hidden) .audit-agent-score-chip {
+    color: #111827 !important;
+    background: #f0fbfb !important;
+    border: 1px solid rgba(15, 139, 141, 0.2) !important;
+}
+
+#auditResults:not(.hidden) .audit-agent-score-chip small {
+    color: #087f7f !important;
+}
+
+#auditResults:not(.hidden) .audit-agent-score-chip strong {
+    color: #111827 !important;
+}
+
+#auditResults:not(.hidden) .audit-risk-meta,
+#auditResults:not(.hidden) .audit-risk-meta span:not(.audit-severity) {
+    color: #4b5f75 !important;
+}
+
+#auditResults:not(.hidden) .audit-severity {
+    border-radius: 999px !important;
+    font-weight: 900 !important;
+}
+
+#auditResults:not(.hidden) .audit-severity-critical {
+    color: #991b1b !important;
+    background: #fee2e2 !important;
+    border-color: #fecaca !important;
+}
+
+#auditResults:not(.hidden) .audit-severity-high,
+#auditResults:not(.hidden) .audit-severity-attention {
+    color: #9a3412 !important;
+    background: #ffedd5 !important;
+    border-color: #fed7aa !important;
+}
+
+#auditResults:not(.hidden) .audit-severity-medium {
+    color: #854d0e !important;
+    background: #fef3c7 !important;
+    border-color: #fde68a !important;
+}
+
+#auditResults:not(.hidden) .audit-severity-low,
+#auditResults:not(.hidden) .audit-severity-strong {
+    color: #047857 !important;
+    background: #d1fae5 !important;
+    border-color: #a7f3d0 !important;
+}
