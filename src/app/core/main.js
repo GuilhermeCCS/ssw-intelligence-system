@@ -4310,12 +4310,12 @@ function getCodigoHTML() {
 
         function getPillarMeta(key) {
             const map = {
-                accessibility_performance: { title: 'Base técnica', icon: 'gauge' },
-                security: { title: 'Confiança e segurança', icon: 'shield-check' },
-                functional_integrity: { title: 'Fluxo funcional', icon: 'route' },
-                conversion_ux: { title: 'Conversão e UX', icon: 'target' }
+                accessibility_performance: { title: 'Base técnica', icon: 'gauge', tone: 'teal' },
+                security: { title: 'Confiança e segurança', icon: 'shield-check', tone: 'green' },
+                functional_integrity: { title: 'Fluxo funcional', icon: 'link-2', tone: 'red' },
+                conversion_ux: { title: 'Conversão e UX', icon: 'target', tone: 'amber' }
             };
-            return map[key] || { title: key, icon: 'sparkles' };
+            return map[key] || { title: key, icon: 'sparkles', tone: 'teal' };
         }
 
         function normalizePillarsEvaluation(technicalAudit = {}) {
@@ -4354,26 +4354,53 @@ function getCodigoHTML() {
             const container = document.getElementById('pillarsDashboard');
             if (!container) return;
             const pillars = normalizePillarsEvaluation(technicalAudit);
-            container.innerHTML = Object.entries(pillars).map(([key, value]) => {
+            const pillarEntries = Object.entries(pillars);
+            const weakestPillar = pillarEntries
+                .map(([key, value]) => ({ key, score: Number(value.score) }))
+                .filter(item => Number.isFinite(item.score))
+                .sort((a, b) => a.score - b.score)[0];
+            const weakestMeta = weakestPillar ? getPillarMeta(weakestPillar.key) : null;
+            const strategicText = weakestMeta
+                ? `Os pilares trabalham juntos para transformar visitantes em clientes. O ponto que mais pede atenção agora é ${safeAuditText(weakestMeta.title).toLowerCase()}, pois tende a gerar o maior impacto na conversão.`
+                : 'Os pilares trabalham juntos para transformar visitantes em clientes. Corrigir os pontos de atrito e fortalecer a confiança pode gerar o maior impacto na conversão.';
+
+            container.innerHTML = pillarEntries.map(([key, value]) => {
                 const meta = getPillarMeta(key);
                 const score = Number(value.score);
                 const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
+                const progress = Number.isFinite(score) ? Math.max(0, Math.min(100, Math.round(score))) : 0;
                 const tone = getAuditScoreTone(score);
                 return `
-                    <article class="audit-pillar-card audit-pillar-${tone}">
-                        <div class="audit-pillar-icon" aria-hidden="true">
-                            <i data-lucide="${safeAuditText(meta.icon)}"></i>
-                        </div>
-                        <div class="audit-pillar-body">
-                            <div class="audit-pillar-top">
-                                <h3>${safeAuditText(meta.title)}</h3>
-                                <strong class="${getPillarScoreColor(score)}">${scoreLabel}</strong>
+                    <article class="audit-pillar-card audit-pillar-${tone} audit-pillar-tone-${safeAuditText(meta.tone)}" style="--pillar-score:${progress}">
+                        <div class="audit-pillar-heading">
+                            <div class="audit-pillar-icon" aria-hidden="true">
+                                <i data-lucide="${safeAuditText(meta.icon)}"></i>
                             </div>
-                            <p>${safeAuditText(value.brief)}</p>
+                            <h3>${safeAuditText(meta.title)}</h3>
                         </div>
+                        <div class="audit-pillar-score-ring" aria-label="Score ${scoreLabel} de 100">
+                            <div class="audit-pillar-score-core">
+                                <strong class="${getPillarScoreColor(score)}">${scoreLabel}</strong>
+                                <small>/100</small>
+                            </div>
+                        </div>
+                        <p>${safeAuditText(value.brief)}</p>
                     </article>
                 `;
-            }).join('');
+            }).join('') + `
+                <article class="audit-pillar-summary-card">
+                    <div class="audit-pillar-summary-icon" aria-hidden="true">
+                        <i data-lucide="lightbulb"></i>
+                    </div>
+                    <div>
+                        <span>Leitura estratégica</span>
+                        <p>${strategicText}</p>
+                    </div>
+                    <div class="audit-pillar-summary-chart" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                </article>
+            `;
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 

@@ -10262,3 +10262,439 @@ body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-
 body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .flex > button:last-child {
     max-width: 330px;
 }
+
+/* Tema claro da área de análise: mantém a sidebar intacta e aplica o padrão visual do relatório. */
+body.user-authenticated.audit-home-workspace #mainContentWrapper,
+body.audit-home-workspace #mainContentWrapper,
+body.user-authenticated.audit-active #mainContentWrapper,
+body.audit-active #mainContentWrapper,
+body.user-authenticated.audit-home-workspace #view-home.command-center,
+body.audit-home-workspace #view-home.command-center,
+body.user-authenticated.audit-active #view-home.command-center,
+body.audit-active #view-home.command-center {
+    background: #f7fafc !important;
+    color: #111827 !important;
+}
+
+body.user-authenticated.audit-home-workspace #heroSection,
+body.audit-home-workspace #heroSection {
+    background: #f7fafc !important;
+}
+
+body.user-authenticated.audit-home-workspace #heroSection > .absolute.inset-0,
+body.user-authenticated.audit-home-workspace #heroSection > #beams-container,
+body.audit-home-workspace #heroSection > .absolute.inset-0,
+body.audit-home-workspace #heroSection > #beams-container {
+    display: none !important;
+}
+
+body.user-authenticated.audit-home-workspace .search-container,
+body.audit-home-workspace .search-container {
+    color: #111827 !important;
+}
+
+body.user-authenticated.audit-home-workspace .ssw-mode-selector,
+body.audit-home-workspace .ssw-mode-selector,
+body.user-authenticated.audit-home-workspace .search-bar-hero,
+body.audit-home-workspace .search-bar-hero,
+body.user-authenticated.audit-home-workspace #compareArea,
+body.audit-home-workspace #compareArea,
+body.user-authenticated.audit-home-workspace #manualSelectArea.manual-persona-panel,
+body.audit-home-workspace #manualSelectArea.manual-persona-panel {
+    background: #ffffff !important;
+    border-color: #dbe5eb !important;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.user-authenticated.audit-home-workspace .ssw-mode-selector span,
+body.audit-home-workspace .ssw-mode-selector span,
+body.user-authenticated.audit-home-workspace .search-input,
+body.audit-home-workspace .search-input,
+body.user-authenticated.audit-home-workspace .input-pro,
+body.audit-home-workspace .input-pro {
+    color: #111827 !important;
+}
+
+body.user-authenticated.audit-home-workspace .ssw-mode-selector input:checked + span,
+body.audit-home-workspace .ssw-mode-selector input:checked + span {
+    background: rgba(15, 139, 141, 0.1) !important;
+    color: #087f7f !important;
+}
+
+body.user-authenticated.audit-home-workspace .search-input::placeholder,
+body.audit-home-workspace .search-input::placeholder {
+    color: #748094 !important;
+}
+
+body.user-authenticated.audit-home-workspace #auditLoading:not(.hidden),
+body.audit-home-workspace #auditLoading:not(.hidden) {
+    background: #f7fafc !important;
+    color: #111827 !important;
+}
+
+body.audit-active #auditResults,
+body.audit-active #auditResults .audit-experience-shell {
+    color: #111827 !important;
+}
+
+body.audit-active #auditResults .audit-hero-panel,
+body.audit-active #auditResults .audit-score-board,
+body.audit-active #auditResults .audit-progress-nav,
+body.audit-active #auditResults .audit-metric-card,
+body.audit-active #auditResults .audit-metric-summary-card,
+body.audit-active #auditResults .audit-risk-card,
+body.audit-active #auditResults .audit-agent-card,
+body.audit-active #auditResults .audit-action-card,
+body.audit-active #auditResults .audit-empty-block {
+    background: #ffffff !important;
+    border-color: #dbe5eb !important;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.audit-active #auditResults .audit-hero-panel,
+body.audit-active #auditResults .audit-story-section {
+    border-color: #e4ebf1 !important;
+}
+
+body.audit-active #auditResults .audit-section-heading > span {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0f8b8d, #087f7f) !important;
+    border-color: rgba(15, 139, 141, 0.34) !important;
+}
+
+body.audit-active #auditResults .audit-section-heading h2,
+body.audit-active #auditResults .audit-hero-copy h1,
+body.audit-active #auditResults .audit-executive-card strong,
+body.audit-active #auditResults .audit-risk-card h3,
+body.audit-active #auditResults .audit-agent-header h3,
+body.audit-active #auditResults .audit-agent-journey-step strong,
+body.audit-active #auditResults .audit-action-card strong {
+    color: #111827 !important;
+}
+
+body.audit-active #auditResults .audit-section-heading p,
+body.audit-active #auditResults .audit-hero-summary,
+body.audit-active #auditResults .audit-executive-card p,
+body.audit-active #auditResults .audit-risk-card p,
+body.audit-active #auditResults .audit-agent-card p,
+body.audit-active #auditResults .audit-action-card p,
+body.audit-active #auditResults .audit-empty-block p,
+body.audit-active #auditResults .audit-agent-insight-panel blockquote {
+    color: #5f6f85 !important;
+}
+
+body.audit-active #auditResults .audit-kicker,
+body.audit-active #auditResults .audit-executive-card span,
+body.audit-active #auditResults .audit-agent-insight-panel > span,
+body.audit-active #auditResults .audit-agent-journey-title,
+body.audit-active #auditResults .audit-agent-header span,
+body.audit-active #auditResults .audit-metric-card > span,
+body.audit-active #auditResults .audit-metric-summary-score > span,
+body.audit-active #auditResults .audit-action-card span {
+    color: #087f7f !important;
+}
+
+body.audit-active #auditResults .audit-progress-nav {
+    backdrop-filter: blur(14px);
+}
+
+body.audit-active #auditResults .audit-progress-nav button {
+    color: #526173 !important;
+}
+
+body.audit-active #auditResults .audit-progress-nav button:hover {
+    color: #087f7f !important;
+    background: rgba(15, 139, 141, 0.08) !important;
+    border-color: rgba(15, 139, 141, 0.22) !important;
+}
+
+body.audit-active #auditResults .audit-score-board {
+    background: #101827 !important;
+    color: #ffffff !important;
+}
+
+body.audit-active #auditResults .audit-score-label,
+body.audit-active #auditResults .audit-score-date,
+body.audit-active #auditResults .audit-score-caption {
+    color: #c8d3df !important;
+}
+
+body.audit-active #auditResults .audit-score-url {
+    color: #67e8f9 !important;
+}
+
+body.audit-active #auditResults .audit-shot-frame,
+body.audit-active #auditResults .audit-phone-shell {
+    background: #111827 !important;
+    border-color: #dbe5eb !important;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.12) !important;
+}
+
+body.audit-active #auditResults .audit-metric-card {
+    background: #ffffff !important;
+}
+
+body.audit-active #auditResults .audit-metric-card > p,
+body.audit-active #auditResults .audit-metric-summary-card > p,
+body.audit-active #auditResults .audit-metric-summary-score p {
+    color: #5f6f85 !important;
+}
+
+body.audit-active #auditResults .audit-metric-gauge-track {
+    stroke: #e7edf2 !important;
+}
+
+body.audit-active #auditResults .audit-metric-summary-card {
+    background: #ffffff !important;
+}
+
+body.audit-active #auditResults .audit-agent-insight-panel,
+body.audit-active #auditResults .audit-agent-profile-panel {
+    background: #ffffff !important;
+    border-color: #e4ebf1 !important;
+}
+
+body.audit-active #auditResults .audit-agent-journey-line::before {
+    background: #c6d7dd !important;
+}
+
+body.audit-active #auditResults .audit-agent-dot {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 1px rgba(15, 139, 141, 0.26) !important;
+}
+
+/* Seção 03 no estilo de dashboard claro. */
+body.audit-active #auditResults .audit-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+body.audit-active #auditResults .audit-pillar-card {
+    --pillar-color: #0f8b8d;
+    --pillar-soft: #e6f5f3;
+    min-height: 390px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 24px 28px 28px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #dbe5eb;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, 0.08);
+}
+
+body.audit-active #auditResults .audit-pillar-card::before {
+    display: none !important;
+}
+
+body.audit-active #auditResults .audit-pillar-tone-teal {
+    --pillar-color: #0f8b8d;
+    --pillar-soft: #e6f5f3;
+}
+
+body.audit-active #auditResults .audit-pillar-tone-green {
+    --pillar-color: #4caf3f;
+    --pillar-soft: #eaf7e8;
+}
+
+body.audit-active #auditResults .audit-pillar-tone-red {
+    --pillar-color: #ff454d;
+    --pillar-soft: #ffebee;
+}
+
+body.audit-active #auditResults .audit-pillar-tone-amber {
+    --pillar-color: #f6b900;
+    --pillar-soft: #fff5d9;
+}
+
+body.audit-active #auditResults .audit-pillar-heading {
+    width: 100%;
+    min-height: 68px;
+    display: grid;
+    grid-template-columns: 68px minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+}
+
+body.audit-active #auditResults .audit-pillar-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    color: var(--pillar-color);
+    background: var(--pillar-soft);
+    border: 0;
+}
+
+body.audit-active #auditResults .audit-pillar-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.4;
+}
+
+body.audit-active #auditResults .audit-pillar-heading h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 1rem;
+    line-height: 1.22;
+    font-weight: 900;
+}
+
+body.audit-active #auditResults .audit-pillar-score-ring {
+    position: relative;
+    width: 168px;
+    height: 168px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(var(--pillar-color) calc(var(--pillar-score, 0) * 1%), #e8ecef 0);
+}
+
+body.audit-active #auditResults .audit-pillar-score-ring::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border-radius: inherit;
+    background: #ffffff;
+}
+
+body.audit-active #auditResults .audit-pillar-score-core {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+body.audit-active #auditResults .audit-pillar-score-core strong {
+    color: var(--pillar-color) !important;
+    font-size: 3.25rem;
+    line-height: 1;
+    font-weight: 950;
+    letter-spacing: -0.04em;
+}
+
+body.audit-active #auditResults .audit-pillar-score-core small {
+    margin-top: 6px;
+    color: #7b8796;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+body.audit-active #auditResults .audit-pillar-card > p {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid #e4ebf1;
+    color: #5f6f85 !important;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    text-align: center !important;
+    text-align-last: center !important;
+}
+
+body.audit-active #auditResults .audit-pillar-summary-card {
+    grid-column: 1 / -1;
+    min-height: 92px;
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) 180px;
+    align-items: center;
+    gap: 22px;
+    padding: 20px 28px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #f0fbfb, #ffffff);
+    border: 1px solid rgba(15, 139, 141, 0.2);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.07);
+    overflow: hidden;
+}
+
+body.audit-active #auditResults .audit-pillar-summary-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0f8b8d, #087f7f);
+}
+
+body.audit-active #auditResults .audit-pillar-summary-icon svg {
+    width: 25px;
+    height: 25px;
+}
+
+body.audit-active #auditResults .audit-pillar-summary-card span {
+    display: block;
+    margin-bottom: 8px;
+    color: #087f7f;
+    font-size: 0.92rem;
+    font-weight: 950;
+}
+
+body.audit-active #auditResults .audit-pillar-summary-card p {
+    margin: 0;
+    color: #374151 !important;
+    line-height: 1.65;
+    text-align: left !important;
+    text-align-last: left !important;
+}
+
+body.audit-active #auditResults .audit-pillar-summary-chart {
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    align-items: end;
+    justify-content: flex-end;
+    gap: 9px;
+    padding-top: 10px;
+    opacity: 0.5;
+}
+
+body.audit-active #auditResults .audit-pillar-summary-chart::before {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 82px;
+    border-top: 2px solid rgba(15, 139, 141, 0.42);
+    border-right: 2px solid rgba(15, 139, 141, 0.42);
+    border-radius: 0 70px 0 0;
+    transform: translate(5px, -8px) rotate(-8deg);
+}
+
+body.audit-active #auditResults .audit-pillar-summary-chart i {
+    width: 24px;
+    border-radius: 6px 6px 0 0;
+    background: rgba(15, 139, 141, 0.22);
+}
+
+body.audit-active #auditResults .audit-pillar-summary-chart i:nth-child(1) { height: 18px; }
+body.audit-active #auditResults .audit-pillar-summary-chart i:nth-child(2) { height: 30px; }
+body.audit-active #auditResults .audit-pillar-summary-chart i:nth-child(3) { height: 44px; }
+body.audit-active #auditResults .audit-pillar-summary-chart i:nth-child(4) { height: 60px; }
+body.audit-active #auditResults .audit-pillar-summary-chart i:nth-child(5) { height: 78px; }
+
+@media (max-width: 1180px) {
+    body.audit-active #auditResults .audit-pillars-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    body.audit-active #auditResults .audit-pillars-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.audit-active #auditResults .audit-pillar-summary-card {
+        grid-template-columns: 1fr;
+    }
+
+    body.audit-active #auditResults .audit-pillar-summary-chart {
+        display: none;
+    }
+}
