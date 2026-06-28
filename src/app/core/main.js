@@ -7488,12 +7488,13 @@ function getCodigoHTML() {
             const base = label.dataset.baseLabel || label.innerText || 'Perfil analitico';
             const estimated = usage?.estimated_input_tokens ?? estimateChatTokensFromHistory(currentChatHistory);
             const limit = usage?.input_token_limit || currentChatTokenLimit;
-            const plan = normalizeUserPlan(usage?.plan || usage?.plan_limits?.plan || getUserPlan());
-            const planLabel = getUserPlanLabel(plan);
             currentChatTokenLimit = limit;
+            const usagePercent = limit > 0
+                ? Math.min(100, Math.max(0, Math.round((estimated / limit) * 100)))
+                : 0;
             label.dataset.baseLabel = base;
-            label.innerText = `${base} | ${planLabel} | ${estimated}/${limit} tokens`;
-            if (estimated >= limit * 0.85) {
+            label.innerText = `${base} | ${usagePercent}% da conversa`;
+            if (usagePercent >= 85) {
                 label.style.color = '#fbbf24';
             } else {
                 label.style.color = '#3d4f63';
@@ -7577,11 +7578,11 @@ function getCodigoHTML() {
             welcomeDiv.className = 'chat-msg-enter';
             const now = new Date();
             const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-            const shortName = agent.profile_name.split(' ')[0];
+            const personaName = agent.profile_name || 'Persona SSW';
             welcomeDiv.innerHTML = `
                 ${renderChatAvatarMarkup(agent)}
                 <div style="display:flex;flex-direction:column;max-width:75%;">
-                    <div class="chat-bubble-assistant">Olá! Sou <strong>${shortName}</strong> e analisei seu site com foco no meu perfil. O que gostaria de saber? 👋</div>
+                    <div class="chat-bubble-assistant">Olá! Sou <strong>${safeAuditText(personaName)}</strong> e analisei seu site com foco no meu perfil. O que gostaria de saber? 👋</div>
                     <span class="chat-timestamp">${timeStr}</span>
                 </div>
             `;
@@ -7647,7 +7648,7 @@ function getCodigoHTML() {
             currentChatHistory.push({ role: "user", content: msg });
             const estimatedBeforeSend = estimateChatTokensFromHistory(currentChatHistory);
             if (estimatedBeforeSend > currentChatTokenLimit) {
-                appendMsg('ai', `Esta conversa chegou ao limite de ${currentChatTokenLimit} tokens. Limpe a conversa para continuar com esta persona.`);
+                appendMsg('ai', 'Esta conversa chegou ao limite de uso disponível. Limpe a conversa para continuar com esta persona.');
                 currentChatHistory.pop();
                 input.disabled = false;
                 if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
