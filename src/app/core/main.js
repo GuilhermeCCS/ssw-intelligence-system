@@ -4802,6 +4802,10 @@ function getCodigoHTML() {
                 return;
             }
 
+            if (note) {
+                const visibleLimit = Math.min((meta.limit || getFrontendPlanLimits(meta.plan).historyLimit || 20), 20);
+                note.innerHTML = `Per&iacute;odo: <strong>&Uacute;ltimas ${visibleLimit} an&aacute;lises</strong>`;
+            }
             if (!items.length) {
                 list.innerHTML = [
                     '<div class="history-empty-state">',
@@ -4953,11 +4957,15 @@ function getCodigoHTML() {
         window.testAuthorizedDomainAudit = testAuthorizedDomainAudit;
 
         let auditHistoryFilter = 'all';
+        let auditHistoryItemsCache = [];
+        let auditHistoryMetaCache = {};
+        let auditHistoryPage = 1;
+        const AUDIT_HISTORY_PAGE_SIZE = 4;
 
         function getAuditHistoryTypeMeta(type) {
             const normalized = String(type || 'auto').toLowerCase();
             const map = {
-                auto: { label: 'Automatica', tone: 'auto' },
+                auto: { label: 'Automática', tone: 'auto' },
                 manual: { label: 'Manual', tone: 'manual' },
                 compare: { label: 'Comparativa', tone: 'compare' }
             };
@@ -4991,16 +4999,28 @@ function getCodigoHTML() {
 
         function setAuditHistoryFilter(type = 'all') {
             auditHistoryFilter = type;
+            auditHistoryPage = 1;
             document.querySelectorAll('[data-history-filter]').forEach(button => {
                 button.classList.toggle('active', button.dataset.historyFilter === type);
             });
             loadAuditHistory(true);
         }
 
+        function setAuditHistoryPage(page = 1) {
+            const totalPages = Math.max(1, Math.ceil((auditHistoryItemsCache.length || 0) / AUDIT_HISTORY_PAGE_SIZE));
+            auditHistoryPage = Math.min(Math.max(Number(page) || 1, 1), totalPages);
+            renderAuditHistoryList(auditHistoryItemsCache, auditHistoryMetaCache);
+        }
+
         async function loadAuditHistory(showToast = false) {
             const list = document.getElementById('auditHistoryList');
             const detail = document.getElementById('auditHistoryDetail');
             if (!list) return;
+            const pagination = document.getElementById('auditHistoryPagination');
+            if (pagination) {
+                pagination.classList.add('hidden');
+                pagination.innerHTML = '';
+            }
 
             if (!USER || !USER.token) {
                 list.innerHTML = '<div class="history-empty-state"><strong>Login necessário</strong><p>Entre na sua conta para visualizar o histórico privado das suas análises.</p><button onclick="showAuthScreen(\'login\')">Fazer login</button></div>';
@@ -5013,7 +5033,7 @@ function getCodigoHTML() {
             if (detail) detail.classList.add('hidden');
 
             try {
-                const params = new URLSearchParams({ tipo: auditHistoryFilter, limit: '60' });
+                const params = new URLSearchParams({ tipo: auditHistoryFilter, limit: '20' });
                 const res = await fetch(`${API_URL}/api/audits/history?${params.toString()}`, {
                     headers: authHeaders()
                 });
@@ -5032,6 +5052,8 @@ function getCodigoHTML() {
         function renderAuditHistoryList(items, meta = {}) {
             const list = document.getElementById('auditHistoryList');
             if (!list) return;
+            auditHistoryItemsCache = Array.isArray(items) ? items : [];
+            auditHistoryMetaCache = meta || {};
             const note = document.querySelector('.history-toolbar-note span');
             if (note) {
                 const plan = getUserPlanLabel(meta.plan || getUserPlan());
@@ -5040,7 +5062,17 @@ function getCodigoHTML() {
                 note.textContent = `${plan}: até ${limit} análises salvas por ${retention} dias.`;
             }
 
+            if (note) {
+                const visibleLimit = Math.min((meta.limit || getFrontendPlanLimits(meta.plan).historyLimit || 20), 20);
+                note.innerHTML = `Per&iacute;odo: <strong>&Uacute;ltimas ${visibleLimit} an&aacute;lises</strong>`;
+            }
+            const pagination = document.getElementById('auditHistoryPagination');
+
             if (!items.length) {
+                if (pagination) {
+                    pagination.classList.add('hidden');
+                    pagination.innerHTML = '';
+                }
                 list.innerHTML = [
                     '<div class="history-empty-state">',
                         '<i data-lucide="archive" class="w-6 h-6"></i>',
@@ -5052,7 +5084,12 @@ function getCodigoHTML() {
                 return;
             }
 
-            list.innerHTML = items.map(item => {
+            const totalPages = Math.max(1, Math.ceil(items.length / AUDIT_HISTORY_PAGE_SIZE));
+            auditHistoryPage = Math.min(Math.max(auditHistoryPage, 1), totalPages);
+            const pageStart = (auditHistoryPage - 1) * AUDIT_HISTORY_PAGE_SIZE;
+            const pageItems = items.slice(pageStart, pageStart + AUDIT_HISTORY_PAGE_SIZE);
+
+            list.innerHTML = pageItems.map(item => {
                 const meta = getAuditHistoryTypeMeta(item.audit_type);
                 const score = Number(item.score);
                 const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
@@ -5077,13 +5114,32 @@ function getCodigoHTML() {
                             `<div class="history-score history-score-${scoreTone}"><strong>${scoreLabel}</strong><span>score</span></div>`,
                         '</div>',
                         '<div class="history-card-actions">',
-                            `<button onclick="openAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Ver detalhes</button>`,
-                            item.url && item.audit_type !== 'compare' ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))">Analisar novamente</button>` : '',
-                            `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))">Excluir</button>`,
+                            `<button onclick="openAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))"><i data-lucide="eye"></i> Ver detalhes</button>`,
+                            item.url && item.audit_type !== 'compare' ? `<button onclick="rerunAuditFromHistory(decodeURIComponent('${toHistoryInlineArg(item.url)}'), decodeURIComponent('${toHistoryInlineArg(item.audit_type || 'auto')}'))"><i data-lucide="refresh-cw"></i> Analisar novamente</button>` : '',
+                            `<button class="history-delete-btn" onclick="deleteAuditHistoryItem(decodeURIComponent('${toHistoryInlineArg(item.id)}'))"><i data-lucide="trash-2"></i> Excluir</button>`,
                         '</div>',
                     '</article>'
                 ].join('');
             }).join('');
+            renderAuditHistoryPagination(totalPages);
+        }
+
+        function renderAuditHistoryPagination(totalPages = 1) {
+            const pagination = document.getElementById('auditHistoryPagination');
+            if (!pagination) return;
+            if (totalPages <= 1) {
+                pagination.classList.add('hidden');
+                pagination.innerHTML = '';
+                return;
+            }
+            pagination.classList.remove('hidden');
+            const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+            pagination.innerHTML = [
+                `<button type="button" class="history-page-arrow" ${auditHistoryPage <= 1 ? 'disabled' : ''} onclick="setAuditHistoryPage(${auditHistoryPage - 1})" aria-label="PÃ¡gina anterior"><i data-lucide="chevron-left"></i></button>`,
+                ...pages.map(page => `<button type="button" class="history-page-btn${page === auditHistoryPage ? ' active' : ''}" onclick="setAuditHistoryPage(${page})" aria-label="PÃ¡gina ${page}">${page}</button>`),
+                `<button type="button" class="history-page-arrow" ${auditHistoryPage >= totalPages ? 'disabled' : ''} onclick="setAuditHistoryPage(${auditHistoryPage + 1})" aria-label="PrÃ³xima pÃ¡gina"><i data-lucide="chevron-right"></i></button>`
+            ].join('');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         async function deleteAuditHistoryItem(historyId) {

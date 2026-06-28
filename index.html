@@ -96,7 +96,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260628-report-persona-cards-v1">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260628-history-redesign-v1">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -746,8 +746,11 @@
                     </div>
                 </section>
             </div>
-            <div id="view-history" class="hidden max-w-6xl mx-auto space-y-7 animate-fade-in-up">
+            <div id="view-history" class="hidden max-w-none mx-auto animate-fade-in-up">
                 <header class="history-hero">
+                    <div class="history-hero-icon" aria-hidden="true">
+                        <i data-lucide="history"></i>
+                    </div>
                     <div class="history-hero-copy">
                         <span>Workspace privado</span>
                         <h2>Histórico de análises</h2>
@@ -762,13 +765,14 @@
                 <section class="history-toolbar" aria-label="Filtros do histórico">
                     <div class="history-filter-group" id="auditHistoryFilters">
                         <button type="button" class="history-filter-btn active" data-history-filter="all" onclick="setAuditHistoryFilter('all')">Todas</button>
-                        <button type="button" class="history-filter-btn" data-history-filter="auto" onclick="setAuditHistoryFilter('auto')">Automáticas</button>
-                        <button type="button" class="history-filter-btn" data-history-filter="manual" onclick="setAuditHistoryFilter('manual')">Manuais</button>
-                        <button type="button" class="history-filter-btn" data-history-filter="compare" onclick="setAuditHistoryFilter('compare')">Comparativas</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="auto" onclick="setAuditHistoryFilter('auto')"><i data-lucide="zap"></i> Automáticas</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="manual" onclick="setAuditHistoryFilter('manual')"><i data-lucide="hand"></i> Manuais</button>
+                        <button type="button" class="history-filter-btn" data-history-filter="compare" onclick="setAuditHistoryFilter('compare')"><i data-lucide="chart-no-axes-combined"></i> Comparativas</button>
                     </div>
                     <div class="history-toolbar-note">
-                        <i data-lucide="lock" class="w-4 h-4"></i>
-                        <span>Somente análises finalizadas com sucesso são salvas.</span>
+                        <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                        <span>Período: <strong>Últimas 20 análises</strong></span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
                     </div>
                 </section>
 
@@ -778,6 +782,7 @@
                         Carregando histórico...
                     </div>
                 </section>
+                <nav id="auditHistoryPagination" class="history-pagination hidden" aria-label="Paginação do histórico"></nav>
 
                 <section id="auditHistoryDetail" class="history-detail hidden" aria-live="polite"></section>
             </div>
@@ -1839,7 +1844,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260628-report-persona-cards-v1"></script>
+            <script src="src/app/core/main.js?v=20260628-history-redesign-v1"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
     <div id="chatWidgetPanel" style="position:fixed;bottom:18px;right:18px;width:calc(100% - 36px);max-width:390px;height:540px;max-height:calc(100vh - 36px);border-radius:24px;border:1px solid rgba(255,255,255,0.14);box-shadow:0 22px 70px rgba(0,0,0,0.46),0 0 0 1px rgba(255,255,255,0.03);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#050a12 0%,#080d16 100%);pointer-events:auto;">
