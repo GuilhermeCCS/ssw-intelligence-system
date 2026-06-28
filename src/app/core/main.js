@@ -1077,6 +1077,24 @@
             } else if (view !== 'home') {
                 hideAuditChatSurfaces();
             }
+            const isHistoryView = view === 'history';
+            [document.documentElement, document.body].forEach(element => {
+                element.classList.toggle('history-view-active', isHistoryView);
+                if (isHistoryView) {
+                    element.classList.remove('audit-home-workspace', 'audit-workspace-locked', 'audit-manual-open');
+                }
+            });
+            if (isHistoryView) {
+                const mainContent = document.getElementById('mainContent');
+                if (mainContent) {
+                    mainContent.classList.remove('overflow-y-hidden');
+                    mainContent.classList.add('overflow-y-auto');
+                    mainContent.style.overflowY = '';
+                    mainContent.style.height = '';
+                    mainContent.style.minHeight = '';
+                    mainContent.style.maxHeight = '';
+                }
+            }
             if (view !== 'history') hideHistorySurfaces();
             // Esconde o authScreen se estiver visível
             if (typeof hideAuthScreen === 'function') {
