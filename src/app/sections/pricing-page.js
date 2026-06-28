@@ -3,7 +3,7 @@ async function loadStandalonePricingPage() {
     if (!container) return;
 
     try {
-        const response = await fetch('/src/components/pricing/pricing-component.fragment?v=20260628-pricing-cards-v3', { redirect: 'error', cache: 'no-store' });
+        const response = await fetch('/src/components/pricing/pricing-component.fragment?v=20260628-pricing-trust-v5', { redirect: 'error', cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`Falha ao carregar preços: ${response.status}`);
         }

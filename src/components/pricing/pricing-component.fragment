@@ -221,7 +221,12 @@
                 <article><i data-lucide="building-2"></i><strong>+87</strong><span>agências usando</span></article>
                 <article><i data-lucide="star"></i><strong>4,9/5</strong><span>avaliação dos usuários</span></article>
             </div>
-            <p>“A SSW mudou completamente a forma como entregamos projetos e mostramos valor para nossos clientes.”</p>
+            <div class="ssw-trust-testimonial">
+                <div class="ssw-trust-avatars" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <p>“A SSW mudou completamente a forma como entregamos projetos e mostramos valor para nossos clientes.”<br><strong>— Agência WebPro</strong></p>
+            </div>
         </div>
     </section>
 
