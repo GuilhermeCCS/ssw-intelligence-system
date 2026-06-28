@@ -3347,31 +3347,53 @@ function getCodigoHTML() {
                             </div>
                         </div>
                         <div class="audit-metrics-grid" aria-label="Resumo técnico da auditoria">
-                            <div class="audit-metric-card">
+                            <div class="audit-metric-card" data-metric-kind="score" data-metric-tone="regular" style="--metric-progress:0">
                                 <span>Performance</span>
-                                <strong id="realPerformanceScore">--</strong>
+                                <div class="audit-metric-value-line"><strong id="realPerformanceScore">--</strong><small>/100</small></div>
+                                <div class="audit-metric-gauge" aria-hidden="true"><svg viewBox="0 0 200 132"><path class="audit-metric-gauge-track" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path><path class="audit-metric-gauge-progress" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path></svg><i data-lucide="gauge"></i></div>
                                 <p>Velocidade percebida e estabilidade durante o carregamento.</p>
+                                <b id="realPerformanceStatus" class="audit-metric-status">--</b>
                             </div>
-                            <div class="audit-metric-card">
+                            <div class="audit-metric-card" data-metric-kind="score" data-metric-tone="regular" style="--metric-progress:0">
                                 <span>SEO</span>
-                                <strong id="realSeoScore">--</strong>
+                                <div class="audit-metric-value-line"><strong id="realSeoScore">--</strong><small>/100</small></div>
+                                <div class="audit-metric-gauge" aria-hidden="true"><svg viewBox="0 0 200 132"><path class="audit-metric-gauge-track" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path><path class="audit-metric-gauge-progress" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path></svg><i data-lucide="search"></i></div>
                                 <p>Estrutura de descoberta, semântica e leitura por buscadores.</p>
+                                <b id="realSeoStatus" class="audit-metric-status">--</b>
                             </div>
-                            <div class="audit-metric-card">
+                            <div class="audit-metric-card" data-metric-kind="score" data-metric-tone="regular" style="--metric-progress:0">
                                 <span>Acessibilidade</span>
-                                <strong id="realA11yScore">--</strong>
+                                <div class="audit-metric-value-line"><strong id="realA11yScore">--</strong><small>/100</small></div>
+                                <div class="audit-metric-gauge" aria-hidden="true"><svg viewBox="0 0 200 132"><path class="audit-metric-gauge-track" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path><path class="audit-metric-gauge-progress" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path></svg><i data-lucide="accessibility"></i></div>
+                                <b id="realA11yStatus" class="audit-metric-status">--</b>
                                 <p>Base para uso claro, legível e inclusivo.</p>
                             </div>
                             <div class="audit-metric-card">
                                 <span>Primeira impressão visual</span>
-                                <strong id="realLcp">--</strong>
+                                <div class="audit-metric-value-line"><strong id="realLcp">--</strong></div>
+                                <div class="audit-metric-gauge" aria-hidden="true"><svg viewBox="0 0 200 132"><path class="audit-metric-gauge-track" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path><path class="audit-metric-gauge-progress" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path></svg><i data-lucide="eye"></i></div>
+                                <b id="realLcpStatus" class="audit-metric-status">--</b>
                                 <p>Tempo até o principal conteúdo aparecer para o usuário.</p>
                             </div>
                             <div class="audit-metric-card">
                                 <span>Carregamento total</span>
-                                <strong id="realLoadTime">--</strong>
+                                <div class="audit-metric-value-line"><strong id="realLoadTime">--</strong></div>
+                                <div class="audit-metric-gauge" aria-hidden="true"><svg viewBox="0 0 200 132"><path class="audit-metric-gauge-track" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path><path class="audit-metric-gauge-progress" pathLength="100" d="M24 112 A76 76 0 0 1 176 112"></path></svg><i data-lucide="clock-3"></i></div>
+                                <b id="realLoadTimeStatus" class="audit-metric-status">--</b>
                                 <p>Quanto tempo a página leva para entregar uma experiência utilizável.</p>
                             </div>
+                        </div>
+                        <div class="audit-metric-summary-card">
+                            <div class="audit-metric-summary-icon" aria-hidden="true">
+                                <i data-lucide="chart-no-axes-combined"></i>
+                            </div>
+                            <div class="audit-metric-summary-score">
+                                <span>Resumo geral</span>
+                                <p>Score técnico global</p>
+                                <strong><span id="realTechnicalScore">--</span><small>/100</small></strong>
+                                <div class="audit-metric-summary-bar"><span id="realTechnicalProgress"></span></div>
+                            </div>
+                            <p id="realTechnicalSummary">A base técnica será consolidada assim que a auditoria terminar.</p>
                         </div>
                     </section>
 
@@ -3486,6 +3508,82 @@ function getCodigoHTML() {
             board.setAttribute('data-score-tone', tone);
             board.style.setProperty('--audit-score-progress', String(progress));
             board.style.setProperty('--audit-score-color', toneColor);
+        }
+
+        function parseAuditMetricNumber(value) {
+            if (value === null || value === undefined) return null;
+            const normalized = String(value).replace(',', '.').match(/-?\d+(\.\d+)?/);
+            if (!normalized) return null;
+            const number = Number(normalized[0]);
+            return Number.isFinite(number) ? number : null;
+        }
+
+        function getAuditScoreMetricMeta(score) {
+            const value = parseAuditMetricNumber(score);
+            if (value === null) {
+                return { tone: 'regular', status: '--', progress: 0, quality: null };
+            }
+            const progress = Math.max(0, Math.min(100, Math.round(value)));
+            if (value >= 90) return { tone: 'good', status: 'EXCELENTE', progress, quality: progress };
+            if (value >= 75) return { tone: 'warning', status: 'ÓTIMO', progress, quality: progress };
+            if (value >= 50) return { tone: 'regular', status: 'REGULAR', progress, quality: progress };
+            return { tone: 'bad', status: 'BAIXO', progress, quality: progress };
+        }
+
+        function getAuditTimeMetricMeta(value, maxTime = 12) {
+            const seconds = parseAuditMetricNumber(value);
+            if (seconds === null) {
+                return { tone: 'regular', status: '--', progress: 0, quality: null };
+            }
+            const progress = Math.max(8, Math.min(100, Math.round((seconds / maxTime) * 100)));
+            if (seconds <= 2.5) return { tone: 'good', status: 'EXCELENTE', progress, quality: 95 };
+            if (seconds <= 4) return { tone: 'warning', status: 'ÓTIMO', progress, quality: 82 };
+            if (seconds <= 8) return { tone: 'regular', status: 'REGULAR', progress, quality: 62 };
+            return { tone: 'slow', status: 'LENTO', progress, quality: 35 };
+        }
+
+        function updateAuditMetricCard(valueId, rawValue, options = {}) {
+            const valueEl = document.getElementById(valueId);
+            if (!valueEl) return null;
+            const valueText = rawValue === null || rawValue === undefined || rawValue === '' ? '--' : String(rawValue);
+            const meta = options.type === 'time'
+                ? getAuditTimeMetricMeta(valueText, options.maxTime || 12)
+                : getAuditScoreMetricMeta(valueText);
+            const card = valueEl.closest('.audit-metric-card');
+            valueEl.textContent = valueText;
+            valueEl.className = `audit-metric-value audit-metric-${meta.tone}`;
+            if (card) {
+                card.dataset.metricTone = meta.tone;
+                card.style.setProperty('--metric-progress', String(meta.progress));
+                card.style.setProperty('--metric-offset', String(100 - meta.progress));
+            }
+            if (options.statusId) {
+                const statusEl = document.getElementById(options.statusId);
+                if (statusEl) statusEl.textContent = meta.status;
+            }
+            return meta.quality;
+        }
+
+        function updateAuditTechnicalSummary(metricQualities = []) {
+            const values = metricQualities.filter(value => Number.isFinite(value));
+            const score = values.length
+                ? Math.round(values.reduce((total, value) => total + value, 0) / values.length)
+                : null;
+            const scoreEl = document.getElementById('realTechnicalScore');
+            const progressEl = document.getElementById('realTechnicalProgress');
+            const summaryEl = document.getElementById('realTechnicalSummary');
+            if (scoreEl) scoreEl.textContent = score === null ? '--' : String(score);
+            if (progressEl) progressEl.style.setProperty('--technical-progress', `${score === null ? 0 : Math.max(0, Math.min(100, score))}%`);
+            if (!summaryEl) return;
+            if (score === null) {
+                summaryEl.textContent = 'A base técnica será consolidada assim que a auditoria terminar.';
+            } else if (score >= 85) {
+                summaryEl.textContent = 'A base técnica está forte e sustenta bem a experiência. O foco agora é refinar detalhes que aumentam confiança e conversão.';
+            } else if (score >= 65) {
+                summaryEl.textContent = 'A base técnica está parcialmente sólida. Há pontos fortes importantes, mas gargalos de velocidade ou experiência podem afetar a conversão.';
+            } else {
+                summaryEl.textContent = 'A base técnica ainda cria atritos relevantes. Priorize velocidade, estabilidade e clareza para reduzir perda de oportunidades.';
+            }
         }
 
         function getCommercialImpact(score) {
@@ -5953,6 +6051,13 @@ function getCodigoHTML() {
                     loadTimeEl.innerText = loadTime;
                     loadTimeEl.className = `audit-metric-value ${getTimeColor(loadTime)}`;
                 }
+                updateAuditTechnicalSummary([
+                    updateAuditMetricCard('realPerformanceScore', realMetrics.performance_score ?? '--', { statusId: 'realPerformanceStatus' }),
+                    updateAuditMetricCard('realSeoScore', realMetrics.seo_score ?? '--', { statusId: 'realSeoStatus' }),
+                    updateAuditMetricCard('realA11yScore', realMetrics.accessibility_score ?? '--', { statusId: 'realA11yStatus' }),
+                    updateAuditMetricCard('realLcp', realMetrics.lcp || '--', { type: 'time', statusId: 'realLcpStatus', maxTime: 10 }),
+                    updateAuditMetricCard('realLoadTime', realMetrics.load_time || '--', { type: 'time', statusId: 'realLoadTimeStatus', maxTime: 14 })
+                ]);
                 if (mode === 'auto') {
                     renderPillarsDashboard(technicalAudit);
                 }
@@ -6852,6 +6957,13 @@ function getCodigoHTML() {
                 loadTimeEl.className = `audit-metric-value ${getTimeColor(fallbackMetrics.load_time)}`;
             }
             // Imagens placeholder com verificações
+            updateAuditTechnicalSummary([
+                updateAuditMetricCard('realPerformanceScore', fallbackMetrics.performance_score, { statusId: 'realPerformanceStatus' }),
+                updateAuditMetricCard('realSeoScore', fallbackMetrics.seo_score, { statusId: 'realSeoStatus' }),
+                updateAuditMetricCard('realA11yScore', fallbackMetrics.accessibility_score, { statusId: 'realA11yStatus' }),
+                updateAuditMetricCard('realLcp', fallbackMetrics.lcp, { type: 'time', statusId: 'realLcpStatus', maxTime: 10 }),
+                updateAuditMetricCard('realLoadTime', fallbackMetrics.load_time, { type: 'time', statusId: 'realLoadTimeStatus', maxTime: 14 })
+            ]);
             const printMobileEl = document.getElementById('printMobile');
             if (printMobileEl) {
                 printMobileEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";

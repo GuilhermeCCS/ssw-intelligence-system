@@ -2076,11 +2076,11 @@
         .audit-metrics-grid {
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            background: rgba(8, 15, 28, 0.78);
-            border: 1px solid rgba(255, 255, 255, 0.09);
+            gap: 14px;
+            overflow: visible;
+            border-radius: 0;
+            background: transparent;
+            border: 0;
         }
         .audit-agent-grid {
             grid-template-columns: 1fr;
@@ -2095,20 +2095,52 @@
             border: 1px solid rgba(255, 255, 255, 0.09);
         }
         .audit-metric-card {
+            --metric-color: #38bdf8;
+            --metric-progress: 0;
             position: relative;
-            min-height: 164px;
-            padding: 22px 18px;
-            background: transparent;
-            border: 0;
+            min-height: 330px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            isolation: isolate;
+            overflow: hidden;
+            border-radius: 10px;
+            background:
+                radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--metric-color) 16%, transparent), transparent 42%),
+                linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(3, 9, 18, 0.96));
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+                0 18px 50px rgba(0, 0, 0, 0.2);
         }
-        .audit-metric-card + .audit-metric-card::before {
+        .audit-metric-card::after {
             content: "";
             position: absolute;
-            left: 0;
-            top: 24px;
-            bottom: 24px;
-            width: 1px;
-            background: rgba(148, 163, 184, 0.18);
+            inset: 0;
+            z-index: -1;
+            opacity: 0.4;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05), transparent 36%, color-mix(in srgb, var(--metric-color) 10%, transparent));
+            pointer-events: none;
+        }
+        .audit-metric-card + .audit-metric-card::before {
+            display: none;
+        }
+        .audit-metric-card[data-metric-tone="bad"] {
+            --metric-color: #ff454d;
+        }
+        .audit-metric-card[data-metric-tone="warning"] {
+            --metric-color: #facc15;
+        }
+        .audit-metric-card[data-metric-tone="regular"] {
+            --metric-color: #3ba4ff;
+        }
+        .audit-metric-card[data-metric-tone="good"] {
+            --metric-color: #22c55e;
+        }
+        .audit-metric-card[data-metric-tone="slow"] {
+            --metric-color: #a855f7;
         }
         .audit-metric-card span,
         .audit-action-card span {
@@ -2118,17 +2150,69 @@
             text-transform: uppercase;
             letter-spacing: 0.06em;
         }
-        .audit-metric-card strong {
+        .audit-metric-value-line {
+            order: 2;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            margin: 18px 0 8px;
+        }
+        .audit-metric-value-line strong {
             display: block;
-            margin: 12px 0 8px;
-            color: #ffffff;
-            font-size: 2.25rem;
+            margin: 0;
+            color: var(--metric-color);
+            font-size: clamp(2.55rem, 3.3vw, 3.85rem);
             line-height: 1;
             font-weight: 950;
-            letter-spacing: 0;
+            letter-spacing: -0.04em;
+            text-shadow: 0 0 22px color-mix(in srgb, var(--metric-color) 48%, transparent);
+        }
+        .audit-metric-value-line small {
+            color: rgba(148, 163, 184, 0.78);
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+        .audit-metric-gauge {
+            order: 3;
+            position: relative;
+            width: min(100%, 185px);
+            height: 124px;
+            margin: 2px auto 18px;
+            display: grid;
+            place-items: center;
+        }
+        .audit-metric-gauge svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        .audit-metric-gauge path {
+            fill: none;
+            stroke-width: 18;
+        }
+        .audit-metric-gauge-track {
+            stroke: rgba(148, 163, 184, 0.18);
+            stroke-linecap: round;
+        }
+        .audit-metric-gauge-progress {
+            stroke: var(--metric-color);
+            stroke-linecap: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: var(--metric-offset, 100);
+            filter: drop-shadow(0 0 12px color-mix(in srgb, var(--metric-color) 62%, transparent));
+            transition: stroke-dashoffset 0.55s ease, stroke 0.25s ease;
+        }
+        .audit-metric-gauge i {
+            width: 44px;
+            height: 44px;
+            color: var(--metric-color);
+            filter: drop-shadow(0 0 12px color-mix(in srgb, var(--metric-color) 45%, transparent));
         }
         .audit-metric-card strong.audit-metric-value {
-            color: #ffffff;
+            color: var(--metric-color);
         }
         .audit-metric-card strong.audit-metric-good {
             color: #22c55e;
@@ -2138,6 +2222,29 @@
         }
         .audit-metric-card strong.audit-metric-bad {
             color: #ef4444;
+        }
+        .audit-metric-card strong.audit-metric-regular {
+            color: #3ba4ff;
+        }
+        .audit-metric-card strong.audit-metric-slow {
+            color: #a855f7;
+        }
+        .audit-metric-status {
+            order: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 126px;
+            margin-top: auto;
+            padding: 8px 18px;
+            border-radius: 999px;
+            color: var(--metric-color);
+            background: color-mix(in srgb, var(--metric-color) 16%, transparent);
+            border: 1px solid color-mix(in srgb, var(--metric-color) 26%, transparent);
+            font-size: 0.8rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
         .audit-metric-card p,
         .audit-pillar-card p,
@@ -2149,6 +2256,105 @@
             color: #9bb8cb;
             line-height: 1.65;
             font-size: 0.9rem;
+        }
+        .audit-metric-card > span {
+            order: 1;
+        }
+        .audit-metric-card > p {
+            order: 4;
+            max-width: 240px;
+            min-height: 72px;
+            margin: 0 auto 16px;
+            color: #c1d4e2;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            text-align: center;
+            text-align-last: center;
+        }
+        .audit-metric-summary-card {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: auto minmax(320px, 1fr) minmax(320px, 0.95fr);
+            align-items: center;
+            gap: 28px;
+            padding: 30px 34px;
+            border-radius: 10px;
+            background:
+                radial-gradient(circle at 12% 10%, rgba(34, 211, 238, 0.13), transparent 34%),
+                linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(3, 9, 18, 0.96));
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+                0 18px 50px rgba(0, 0, 0, 0.18);
+        }
+        .audit-metric-summary-icon {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: #67e8f9;
+            border: 2px solid rgba(103, 232, 249, 0.85);
+            box-shadow: 0 0 24px rgba(34, 211, 238, 0.18);
+        }
+        .audit-metric-summary-icon i {
+            width: 34px;
+            height: 34px;
+        }
+        .audit-metric-summary-score > span {
+            display: block;
+            color: #67e8f9;
+            font-size: 0.78rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+        .audit-metric-summary-score p {
+            margin: 0 0 10px;
+            color: #c1d4e2;
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .audit-metric-summary-score strong {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            color: #3ba4ff;
+            font-size: 2.55rem;
+            line-height: 1;
+            font-weight: 950;
+            letter-spacing: -0.04em;
+            margin-bottom: 12px;
+        }
+        .audit-metric-summary-score strong small {
+            color: rgba(148, 163, 184, 0.78);
+            font-size: 1rem;
+        }
+        .audit-metric-summary-bar {
+            width: min(100%, 430px);
+            height: 10px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.22);
+        }
+        .audit-metric-summary-bar span {
+            display: block;
+            width: var(--technical-progress, 0%);
+            height: 100%;
+            margin: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #38bdf8, #2563eb);
+            transition: width 0.55s ease;
+        }
+        .audit-metric-summary-card > p {
+            margin: 0;
+            padding-left: 30px;
+            border-left: 1px solid rgba(148, 163, 184, 0.22);
+            color: #c1d4e2;
+            font-size: 1rem;
+            line-height: 1.65;
         }
         #auditResults .audit-hero-copy p,
         #auditResults .audit-executive-card p,
@@ -2164,6 +2370,14 @@
             text-align-last: left;
             text-justify: inter-word;
             hyphens: auto;
+        }
+        #auditResults .audit-metric-card > p {
+            text-align: center;
+            text-align-last: center;
+        }
+        #auditResults .audit-metric-summary-card > p {
+            text-align: left;
+            text-align-last: left;
         }
         .audit-pillar-card {
             position: relative;
@@ -3905,7 +4119,6 @@
                 min-height: auto;
             }
 
-            .audit-metrics-grid,
             .audit-pillars-grid,
             .audit-agent-grid,
             .audit-executive-snapshot {
@@ -3913,7 +4126,20 @@
             }
 
             .audit-metrics-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .audit-metric-summary-card {
                 grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: left;
+            }
+
+            .audit-metric-summary-card > p {
+                padding-left: 0;
+                padding-top: 20px;
+                border-left: 0;
+                border-top: 1px solid rgba(148, 163, 184, 0.22);
             }
 
             .audit-pillars-grid {
@@ -3921,10 +4147,9 @@
             }
 
             .audit-metric-card {
-                min-height: auto;
+                min-height: 310px;
             }
 
-            .audit-metric-card + .audit-metric-card::before,
             .audit-pillar-card + .audit-pillar-card::before {
                 left: 18px;
                 right: 18px;
@@ -3978,6 +4203,14 @@
             .audit-agent-grid,
             .audit-executive-snapshot {
                 grid-template-columns: 1fr;
+            }
+
+            .audit-metric-card {
+                min-height: 300px;
+            }
+
+            .audit-metric-summary-card {
+                padding: 24px 20px;
             }
 
             .audit-risk-card,
