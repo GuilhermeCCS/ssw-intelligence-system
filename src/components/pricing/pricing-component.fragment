@@ -1,304 +1,272 @@
 <div id="view-precos" class="hidden w-full animate-fade-in-up">
 
-    <!-- ══ HERO ══ -->
     <section class="ssw-pricing-hero">
-        <div class="ssw-hero-glow"></div>
         <div class="ssw-hero-inner">
+            <p class="ssw-hero-eyebrow">Planos e preços</p>
             <h1 class="ssw-hero-title">
-                Adquira um plano para o seu uso pessoal ou empresarial
+                Seu site pode estar <span>perdendo vendas</span> agora.
             </h1>
             <p class="ssw-hero-sub">
-                Compre créditos, audite sites com IA e feche contratos maiores entregando relatórios irrefutáveis.
+                Descubra em minutos os problemas técnicos, comerciais e de experiência que afastam clientes com auditorias inteligentes e relatórios prontos para ação.
             </p>
+
+            <div class="ssw-value-strip" aria-label="Diferenciais da SSW Intelligence">
+                <article>
+                    <i data-lucide="user-round-search"></i>
+                    <div>
+                        <strong>IA + visão humana</strong>
+                        <span>Simulação de usuários reais em diferentes perfis</span>
+                    </div>
+                </article>
+                <article>
+                    <i data-lucide="file-check-2"></i>
+                    <div>
+                        <strong>Relatórios prontos</strong>
+                        <span>PDFs executivos com insights e recomendações</span>
+                    </div>
+                </article>
+                <article>
+                    <i data-lucide="git-compare-arrows"></i>
+                    <div>
+                        <strong>Benchmark competitivo</strong>
+                        <span>Compare seu site com concorrentes diretos</span>
+                    </div>
+                </article>
+                <article>
+                    <i data-lucide="badge-check"></i>
+                    <div>
+                        <strong>Ação que gera resultado</strong>
+                        <span>Descubra o que corrigir para aumentar confiança</span>
+                    </div>
+                </article>
+            </div>
         </div>
     </section>
 
-    <!-- ══ CARDS DE PLANOS ══ -->
     <section class="ssw-plans-section">
         <div class="ssw-plans-grid">
 
-            <!-- INICIAL -->
-            <div class="ssw-plan-card">
-                <div class="ssw-card-top-shine"></div>
-                <div class="ssw-plan-name">Inicial</div>
-                <div class="ssw-plan-desc">Para freelancers validando o mercado de otimização web.</div>
+            <article class="ssw-plan-card">
+                <div class="ssw-plan-icon"><i data-lucide="user-round"></i></div>
+                <div class="ssw-plan-name">Freelancer</div>
+                <div class="ssw-plan-desc">Para devs e designers que querem auditar sites e fechar mais projetos.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-row">
                         <span class="ssw-currency">R$</span>
                         <span class="ssw-amount">99</span>
                         <span class="ssw-cents">,99</span>
+                        <span class="ssw-period">/mês</span>
                     </div>
-                    <div class="ssw-price-note">Pagamento único · R$ 9,99/crédito</div>
+                    <div class="ssw-credit-note">10 créditos de auditoria</div>
+                    <span class="ssw-price-chip">R$ 9,99 / crédito</span>
                 </div>
-                <button onclick="comprarPlano('basico')" class="ssw-btn ssw-btn-default">
-                    Começar com Inicial
-                </button>
-                <hr class="ssw-divider">
+                <button onclick="comprarPlano('basico')" class="ssw-btn ssw-btn-default">Começar agora</button>
                 <p class="ssw-features-label">Incluído no plano</p>
                 <ul class="ssw-feature-list">
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span><strong>10 Créditos</strong> de auditoria</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Análise de Performance e SEO</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>3 Agents simultâneas por análise</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Histórico por 30 dias</span>
-                    </li>
+                    <li><i data-lucide="check"></i><span>Relatórios em PDF</span></li>
+                    <li><i data-lucide="check"></i><span>Análise de Performance e SEO</span></li>
+                    <li><i data-lucide="check"></i><span>3 agents simuladores por análise</span></li>
+                    <li><i data-lucide="check"></i><span>Histórico por 30 dias</span></li>
+                    <li><i data-lucide="check"></i><span>Suporte por e-mail</span></li>
                 </ul>
-            </div>
+            </article>
 
-            <!-- PLUS -->
-            <div class="ssw-plan-card ssw-plan-featured">
-                <span class="ssw-plan-badge">
-                    <i data-lucide="star" class="ssw-star-icon"></i>
-                    Mais escolhido
-                </span>
-                <div class="ssw-plan-name ssw-name-accent">Plus</div>
-                <div class="ssw-plan-desc">Arsenal completo para agências de marketing e devs seniores.</div>
+            <article class="ssw-plan-card ssw-plan-featured">
+                <span class="ssw-plan-badge"><i data-lucide="sparkles"></i> Mais escolhido</span>
+                <div class="ssw-plan-icon"><i data-lucide="building-2"></i></div>
+                <div class="ssw-plan-name">Agência</div>
+                <div class="ssw-plan-desc">Ideal para agências que precisam escalar auditorias e gerar valor.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-row">
-                        <span class="ssw-currency ssw-currency-accent">R$</span>
+                        <span class="ssw-currency">R$</span>
                         <span class="ssw-amount">149</span>
-                        <span class="ssw-cents ssw-cents-accent">,99</span>
+                        <span class="ssw-cents">,99</span>
+                        <span class="ssw-period">/mês</span>
                     </div>
-                    <div class="ssw-price-note">Pagamento único</div>
-                    <span class="ssw-price-tag">R$ 3,75 por crédito — melhor custo</span>
+                    <div class="ssw-credit-note">40 créditos de auditoria</div>
+                    <span class="ssw-price-chip">R$ 3,75 / crédito <b>62% mais barato</b></span>
                 </div>
-                <button onclick="comprarPlano('recomendado')" class="ssw-btn ssw-btn-primary">
-                    Assinar Pacote Plus
-                </button>
-                <hr class="ssw-divider">
-                <p class="ssw-features-label ssw-features-label-bright">Tudo do Inicial, mais:</p>
+                <button onclick="comprarPlano('recomendado')" class="ssw-btn ssw-btn-primary">Quero escalar auditorias</button>
+                <p class="ssw-features-label">Tudo do Freelancer, mais:</p>
                 <ul class="ssw-feature-list">
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-accent"></i>
-                        <span><strong>40 Créditos</strong> de auditoria</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-accent"></i>
-                        <span>Exportação em <strong>PDF Premium</strong></span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-accent"></i>
-                        <span>Benchmarking competitivo</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-accent"></i>
-                        <span>Histórico estendido — <strong>1 ano</strong></span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-accent"></i>
-                        <span>Veredito Executivo IA</span>
-                    </li>
+                    <li><i data-lucide="check"></i><span>Exportação em PDF Premium</span></li>
+                    <li><i data-lucide="check"></i><span>Benchmarking competitivo</span></li>
+                    <li><i data-lucide="check"></i><span>Histórico estendido (1 ano)</span></li>
+                    <li><i data-lucide="check"></i><span>White-label (sua marca no PDF)</span></li>
+                    <li><i data-lucide="check"></i><span>Suporte prioritário</span></li>
                 </ul>
-            </div>
+            </article>
 
-            <!-- EMPRESARIAL -->
-            <div class="ssw-plan-card">
-                <div class="ssw-card-top-shine"></div>
-                <div class="ssw-plan-name">Empresarial</div>
-                <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios white-label com sua marca.</div>
+            <article class="ssw-plan-card">
+                <div class="ssw-plan-icon"><i data-lucide="crown"></i></div>
+                <div class="ssw-plan-name">Enterprise</div>
+                <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios white-label.</div>
                 <div class="ssw-price-block">
-                    <div class="ssw-price-consult-wrap">
-                        <span class="ssw-price-consult">Sob consulta</span>
-                    </div>
-                    <div class="ssw-price-note">Volume agentlizado</div>
+                    <div class="ssw-price-consult">Sob consulta</div>
+                    <div class="ssw-credit-note">Volume personalizado</div>
                 </div>
-                <button onclick="falarComVendas()" class="ssw-btn ssw-btn-outline">
-                    Falar com Vendas
-                </button>
-                <hr class="ssw-divider">
-                <p class="ssw-features-label">Soluções exclusivas</p>
+                <button onclick="falarComVendas()" class="ssw-btn ssw-btn-outline">Falar com especialista</button>
+                <p class="ssw-features-label">Tudo da Agência, mais:</p>
                 <ul class="ssw-feature-list">
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span><strong>150+ Créditos</strong> por demanda</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Relatórios White-label (sua logo)</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Acesso à API REST</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Histórico personalizado</span>
-                    </li>
-                    <li class="ssw-feature-item">
-                        <i data-lucide="check" class="ssw-check-dim"></i>
-                        <span>Agents ilimitadas por análise</span>
-                    </li>
+                    <li><i data-lucide="check"></i><span>150+ créditos por demanda</span></li>
+                    <li><i data-lucide="check"></i><span>Relatórios White-label (sua logo)</span></li>
+                    <li><i data-lucide="check"></i><span>Acesso à API REST</span></li>
+                    <li><i data-lucide="check"></i><span>Histórico personalizado</span></li>
+                    <li><i data-lucide="check"></i><span>Account Manager dedicado</span></li>
+                    <li><i data-lucide="check"></i><span>SLA e suporte dedicado</span></li>
                 </ul>
-            </div>
+            </article>
 
         </div>
     </section>
 
-    <!-- ══ TABELA COMPARATIVA (desktop only) ══ -->
+    <section class="ssw-fit-section">
+        <div class="ssw-fit-card">
+            <h2>Qual plano é ideal para você?</h2>
+            <div class="ssw-fit-grid">
+                <article>
+                    <i data-lucide="laptop"></i>
+                    <div>
+                        <strong>Freelancers</strong>
+                        <span>Validam sites antes de fechar projetos e entregam mais valor para seus clientes.</span>
+                    </div>
+                </article>
+                <article>
+                    <i data-lucide="users-round"></i>
+                    <div>
+                        <strong>Agências</strong>
+                        <span>Transformam auditorias em funil de vendas e aumentam o ticket médio dos projetos.</span>
+                    </div>
+                </article>
+                <article>
+                    <i data-lucide="shield-check"></i>
+                    <div>
+                        <strong>Empresas</strong>
+                        <span>Auditoria contínua, white-label e integração para escala e governança.</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <section class="ssw-table-section">
         <div class="ssw-table-header">
-            <p class="ssw-section-label">Detalhes</p>
             <h2 class="ssw-section-title">Comparação completa de recursos</h2>
-            <p class="ssw-section-sub">Veja exatamente o que cada plano oferece para a sua operação.</p>
         </div>
         <div class="ssw-table-wrap">
             <table class="ssw-table">
                 <thead>
                     <tr>
-                        <th class="ssw-th-feature">Funcionalidade</th>
-                        <th>Inicial</th>
-                        <th class="ssw-th-featured">Plus</th>
-                        <th>Empresarial</th>
+                        <th>Funcionalidade</th>
+                        <th>Freelancer</th>
+                        <th>Agência</th>
+                        <th>Enterprise</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="ssw-group-row"><td colspan="4">Capacidade de Auditoria</td></tr>
-                    <tr>
-                        <td class="ssw-td-feature">Créditos de Análise</td>
-                        <td>10</td>
-                        <td class="ssw-td-featured">40</td>
-                        <td>Personalizado</td>
-                    </tr>
-                    <tr>
-                        <td class="ssw-td-feature">Armazenamento de Histórico</td>
-                        <td>30 dias</td>
-                        <td class="ssw-td-featured">1 Ano</td>
-                        <td>Personalizado</td>
-                    </tr>
-                    <tr class="ssw-group-row"><td colspan="4">Inteligência Artificial & Agents</td></tr>
-                    <tr>
-                        <td class="ssw-td-feature">Agents Simultâneas</td>
-                        <td>3</td>
-                        <td class="ssw-td-featured">3</td>
-                        <td>Personalizado</td>
-                    </tr>
-                    <tr>
-                        <td class="ssw-td-feature">Veredito Executivo IA</td>
-                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                        <td class="ssw-td-featured"><span class="ssw-tcheck"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                    </tr>
-                    <tr>
-                        <td class="ssw-td-feature">Análise Comparativa (Benchmarking)</td>
-                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
-                        <td class="ssw-td-featured"><span class="ssw-tcheck"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                    </tr>
-                    <tr class="ssw-group-row"><td colspan="4">Relatórios e Integrações</td></tr>
-                    <tr>
-                        <td class="ssw-td-feature">Exportação em PDF</td>
-                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
-                        <td class="ssw-td-featured"><span class="ssw-tcheck"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                    </tr>
-                    <tr>
-                        <td class="ssw-td-feature">White-label (Sua Marca no PDF)</td>
-                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
-                        <td class="ssw-td-featured"><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
-                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                    </tr>
-                    <tr>
-                        <td class="ssw-td-feature">Acesso à API REST</td>
-                        <td><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
-                        <td class="ssw-td-featured"><span class="ssw-tminus"><i data-lucide="minus" class="ssw-ti"></i></span></td>
-                        <td><span class="ssw-tcheck-dim"><i data-lucide="check" class="ssw-ti"></i></span></td>
-                    </tr>
+                    <tr class="ssw-group-row"><td colspan="4">Capacidade de auditoria</td></tr>
+                    <tr><td>Créditos de auditoria</td><td>10</td><td>40</td><td>Personalizado</td></tr>
+                    <tr><td>Armazenamento de histórico</td><td>30 dias</td><td>1 ano</td><td>Personalizado</td></tr>
+                    <tr class="ssw-group-row"><td colspan="4">Inteligência artificial & agents</td></tr>
+                    <tr><td>Agents simuladores</td><td>3</td><td>3</td><td>Personalizado</td></tr>
+                    <tr><td>Veredito executivo IA</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Análise comparativa (Benchmarking)</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr class="ssw-group-row"><td colspan="4">Relatórios e integrações</td></tr>
+                    <tr><td>Exportação em PDF</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>White-label (sua marca no PDF)</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Acesso à API REST</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
                 </tbody>
             </table>
         </div>
     </section>
 
-    <!-- ══ FAQ ══ -->
+    <section class="ssw-report-proof">
+        <div class="ssw-report-copy">
+            <h2>Relatórios que geram ação</h2>
+            <p>Relatórios executivos completos com diagnóstico técnico, análise comercial, experiência do usuário e recomendações priorizadas para aumentar seus resultados.</p>
+            <ul>
+                <li><i data-lucide="check-circle-2"></i>Mais de 50 verificações técnicas</li>
+                <li><i data-lucide="check-circle-2"></i>Simulação de usuários reais (IA)</li>
+                <li><i data-lucide="check-circle-2"></i>Análise de SEO, performance e UX</li>
+                <li><i data-lucide="check-circle-2"></i>Insights de conversão e clareza comercial</li>
+            </ul>
+        </div>
+        <div class="ssw-report-preview" aria-label="Exemplo visual de relatório">
+            <article class="ssw-report-cover">
+                <span>Relatório de Auditoria</span>
+                <strong>87</strong>
+                <small>/100</small>
+            </article>
+            <article class="ssw-report-page">
+                <strong>Resumo Executivo</strong>
+                <span></span><span></span><span></span>
+            </article>
+            <article class="ssw-report-page">
+                <strong>Performance e SEO</strong>
+                <span></span><span></span><span></span>
+            </article>
+            <article class="ssw-report-page">
+                <strong>Experiência do Usuário</strong>
+                <span></span><span></span><span></span>
+            </article>
+        </div>
+        <p class="ssw-report-caption">Exemplo de relatório real gerado pela plataforma</p>
+    </section>
+
+    <section class="ssw-trust-section">
+        <div class="ssw-trust-card">
+            <h2>Quem já confia na SSW Intelligence</h2>
+            <div class="ssw-trust-grid">
+                <article><i data-lucide="users"></i><strong>+1.200</strong><span>auditorias realizadas</span></article>
+                <article><i data-lucide="panel-top"></i><strong>+300</strong><span>sites analisados</span></article>
+                <article><i data-lucide="building-2"></i><strong>+87</strong><span>agências usando</span></article>
+                <article><i data-lucide="star"></i><strong>4,9/5</strong><span>avaliação dos usuários</span></article>
+            </div>
+            <p>“A SSW mudou completamente a forma como entregamos projetos e mostramos valor para nossos clientes.”</p>
+        </div>
+    </section>
+
     <section class="ssw-faq-section">
         <div class="ssw-faq-inner">
-            <p class="ssw-section-label">Dúvidas frequentes</p>
-            <h2 class="ssw-section-title" style="margin-bottom:40px">Tudo sobre créditos e planos</h2>
-
-            <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
-                    <span class="ssw-faq-question">Os créditos têm prazo de validade?</span>
-                    <i data-lucide="plus" class="ssw-faq-icon"></i>
-                </button>
-                <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">Não. Utilizamos o modelo transparente <strong>Pay-as-you-go</strong>. Seus créditos ficam atrelados à conta permanentemente e não expiram no final do mês. Você só consome um crédito ao auditar ativamente uma URL.</p>
+            <h2 class="ssw-section-title">Dúvidas frequentes</h2>
+            <div class="ssw-faq-grid">
+                <div class="ssw-faq-item">
+                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos têm prazo de validade?</span><i data-lucide="plus"></i></button>
+                    <div class="ssw-faq-body"><p>Não. Seus créditos ficam atrelados à conta e são consumidos somente ao executar auditorias.</p></div>
                 </div>
-            </div>
-
-            <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
-                    <span class="ssw-faq-question">A plataforma serve para agências enviarem relatórios a clientes?</span>
-                    <i data-lucide="plus" class="ssw-faq-icon"></i>
-                </button>
-                <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">Absolutamente. O <strong>Pacote Plus</strong> foi desenhado para prospecção e fechamento B2B. Com a Exportação em PDF, você gera uma análise estratégica elegante que pode ser enviada ao prospecto, provando matematicamente as falhas do site antes da reunião de vendas.</p>
+                <div class="ssw-faq-item">
+                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos acumulam de um mês para outro?</span><i data-lucide="plus"></i></button>
+                    <div class="ssw-faq-body"><p>Sim. O saldo permanece disponível na conta enquanto o acesso estiver ativo.</p></div>
                 </div>
-            </div>
-
-            <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
-                    <span class="ssw-faq-question">Como funciona o Benchmarking (Modo Comparativo)?</span>
-                    <i data-lucide="plus" class="ssw-faq-icon"></i>
-                </button>
-                <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">Disponível no Plus e Empresarial. Coloca o site do cliente lado a lado com o maior concorrente dele. A IA simula a jornada nos dois sites simultaneamente, extrai os gaps e gera um plano de ataque para superar o adversário em conversão e SEO.</p>
+                <div class="ssw-faq-item">
+                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Posso usar para captar e vender projetos?</span><i data-lucide="plus"></i></button>
+                    <div class="ssw-faq-body"><p>Sim. A plataforma foi pensada para transformar diagnóstico em oportunidade comercial clara.</p></div>
                 </div>
-            </div>
-
-            <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
-                    <span class="ssw-faq-question">O que são as "Agents" na auditoria?</span>
-                    <i data-lucide="plus" class="ssw-faq-icon"></i>
-                </button>
-                <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">As personas são perfis criados e salvos no backend da sua conta. Você define nicho, tipo e comportamento, e a IA usa somente essas personas para simular como diferentes públicos perceberiam o site.</p>
+                <div class="ssw-faq-item">
+                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Vocês analisam sites em qualquer tecnologia?</span><i data-lucide="plus"></i></button>
+                    <div class="ssw-faq-body"><p>Sim. A auditoria analisa a experiência entregue no navegador, independente da stack usada por trás.</p></div>
                 </div>
-            </div>
-
-            <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
-                    <span class="ssw-faq-question">Quais métodos de pagamento são aceitos e o acesso é imediato?</span>
-                    <i data-lucide="plus" class="ssw-faq-icon"></i>
-                </button>
-                <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">Sim. Liberação via <strong>PIX</strong> e <strong>Cartão de Crédito</strong> é instantânea, integrada com a segurança do Mercado Pago. Boleto bancário pode levar até 48h úteis para compensação e liberação dos créditos.</p>
+                <div class="ssw-faq-item">
+                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os relatórios são white-label?</span><i data-lucide="plus"></i></button>
+                    <div class="ssw-faq-body"><p>White-label está disponível nos planos Agência e Enterprise, conforme o nível de personalização.</p></div>
                 </div>
-            </div>
-
-            <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false">
-                    <span class="ssw-faq-question">Oferecem API ou relatórios White-label sem a marca SSW?</span>
-                    <i data-lucide="plus" class="ssw-faq-icon"></i>
-                </button>
-                <div class="ssw-faq-body">
-                    <p class="ssw-faq-answer">São funcionalidades exclusivas do <strong>Empresarial</strong>, feitas para SaaS e grandes agências que querem embutir nossa tecnologia dentro do próprio software usando sua logotipo. Entre em contato com nossa equipe de vendas para cotação.</p>
+                <div class="ssw-faq-item">
+                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Como funciona o cancelamento?</span><i data-lucide="plus"></i></button>
+                    <div class="ssw-faq-body"><p>Você pode cancelar quando quiser. O acesso e o saldo seguem as regras do plano contratado.</p></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ══ CTA FINAL ══ -->
     <section class="ssw-cta-section">
         <div class="ssw-cta-card">
-            <div class="ssw-cta-grid"></div>
-            <div class="ssw-cta-glow"></div>
-            <div class="ssw-cta-content">
-                <h2 class="ssw-cta-title">Pare de adivinhar onde o site perde dinheiro.</h2>
-                <p class="ssw-cta-sub">Adquira o Pacote Plus hoje, reduza seu CAC e venda projetos web com alto valor agregado — baseado em auditorias reais com IA.</p>
-                <button onclick="comprarPlano('recomendado')" class="ssw-btn-cta">
-                    <i data-lucide="arrow-right" class="ssw-cta-icon"></i>
-                    Assinar Plus Agora — R$ 149,99
-                </button>
-                <p class="ssw-cta-note">Acesso imediato · Créditos não expiram · Cancele quando quiser</p>
+            <div>
+                <h2>Pare de adivinhar.<br><span>Comece a tomar decisões com dados.</span></h2>
+                <p>A auditoria inteligente revela o que realmente importa para seu site vender mais, ranquear melhor e converter com mais confiança.</p>
+            </div>
+            <div>
+                <button onclick="comprarPlano('recomendado')" class="ssw-btn-cta">Fazer minha primeira auditoria <i data-lucide="arrow-right"></i></button>
+                <span>Acesso imediato · Sem compromisso · Cancele quando quiser</span>
             </div>
         </div>
     </section>

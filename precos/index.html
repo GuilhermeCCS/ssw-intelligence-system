@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="dark">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="env-mp-public-key" content="APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac">
@@ -39,16 +39,16 @@
     <link rel="stylesheet" href="/src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
     <script src="/src/app/ui/toast.js"></script>
     <script src="/src/app/ui/cookie-consent.js?v=20260616-cookie-consent-4" defer></script>
-    <script src="/src/components/pricing/pricing-component.js?v=20260615-pricing-page-6" defer></script>
-    <script src="/src/app/sections/pricing-page.js?v=20260615-pricing-page-1" defer></script>
+    <script src="/src/components/pricing/pricing-component.js?v=20260628-pricing-2026-v1" defer></script>
+    <script src="/src/app/sections/pricing-page.js?v=20260628-pricing-2026-v1" defer></script>
     <script src="/src/app/sections/public-footer.js?v=20260623-public-footer-invertase" defer></script>
     <style>
         html,
         body {
             min-height: 100%;
             margin: 0;
-            background: #020408;
-            color: #f0f4ff;
+            background: #f8fafc;
+            color: #0f172a;
             font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
@@ -60,15 +60,16 @@
             position: sticky;
             top: 0;
             z-index: 30;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(2, 4, 8, 0.86);
+            border-bottom: 1px solid #e5eaf0;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(18px);
         }
 
         .terms-topbar-inner {
-            width: min(1180px, calc(100% - 32px));
+            width: min(1240px, calc(100% - 32px));
             min-height: 68px;
-            display: flex;
+            display: grid;
+            grid-template-columns: minmax(190px, 1fr) auto minmax(190px, 1fr);
             align-items: center;
             justify-content: space-between;
             gap: 18px;
@@ -79,7 +80,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            color: #ffffff;
+            color: #0f172a;
             font-size: 14px;
             font-weight: 900;
             letter-spacing: 0.04em;
@@ -87,40 +88,78 @@
         }
 
         .terms-brand img {
-            width: 40px;
-            height: 40px;
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+        }
+
+        .terms-center-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .terms-center-nav a {
+            position: relative;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 750;
+            text-decoration: none;
+            transition: color .18s ease;
+        }
+
+        .terms-center-nav a:hover,
+        .terms-center-nav a.is-active {
+            color: #2563eb;
+        }
+
+        .terms-center-nav a.is-active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -17px;
+            height: 2px;
+            border-radius: 999px;
+            background: #2563eb;
         }
 
         .terms-top-actions {
             display: flex;
             align-items: center;
+            justify-content: flex-end;
             gap: 10px;
         }
 
         .terms-top-actions a {
-            min-height: 38px;
+            min-height: 42px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 0 13px;
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: 8px;
-            color: #dbeafe;
+            padding: 0 18px;
+            border: 1px solid #d8e1ec;
+            border-radius: 9px;
+            color: #111827;
             font-size: 13px;
-            font-weight: 750;
+            font-weight: 850;
             text-decoration: none;
-            background: rgba(255, 255, 255, 0.035);
+            background: #ffffff;
         }
 
-        .terms-top-actions a:first-child {
-            background: #f4f7fb;
-            color: #020408;
+        .terms-top-actions a:last-child {
+            background: #111827;
+            color: #ffffff;
+            border-color: #111827;
+            box-shadow: 0 14px 28px rgba(17, 24, 39, 0.14);
         }
 
         .pricing-page-shell {
             min-height: 100vh;
-            background: #020408;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08), transparent 32%),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 52%, #ffffff 100%);
         }
 
         .pricing-page-loading,
@@ -152,7 +191,7 @@
         }
 
         .pricing-page-error h1 {
-            color: #ffffff;
+            color: #0f172a;
             font-size: 28px;
             margin: 0;
         }
@@ -168,18 +207,30 @@
             to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 620px) {
+        @media (max-width: 860px) {
             .terms-topbar-inner {
                 width: min(100% - 24px, 1180px);
                 min-height: auto;
-                flex-direction: column;
-                align-items: stretch;
+                grid-template-columns: 1fr;
                 padding: 12px 0;
+            }
+
+            .terms-center-nav {
+                order: 3;
+                gap: 18px;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .terms-center-nav a.is-active::after {
+                bottom: -7px;
             }
 
             .terms-top-actions {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
+                justify-content: stretch;
             }
         }
     </style>
@@ -190,11 +241,18 @@
         <div class="terms-topbar-inner">
             <a class="terms-brand" href="/home" aria-label="Voltar para a SSW Intelligence">
                 <img src="/src/assets/images/logo/logo_ofc.png?v=20260627-logo-ofc-v2" alt="">
-                <span>SSWINTELLIGENCE</span>
+                <span>SSW INTELLIGENCE</span>
             </a>
+            <nav class="terms-center-nav" aria-label="Navegação principal">
+                <a href="/home">Plataforma</a>
+                <a href="/home#recursos">Recursos</a>
+                <a href="/precos/" class="is-active" aria-current="page">Preços</a>
+                <a href="/home#sobre">Sobre</a>
+                <a href="/home#contato">Contato</a>
+            </nav>
             <nav class="terms-top-actions" aria-label="Ações principais">
-                <a href="/home"><i data-lucide="arrow-left"></i> Plataforma</a>
-                <a href="/termos/"><i data-lucide="file-text"></i> Termos</a>
+                <a href="/home">Entrar</a>
+                <a href="/home">Começar agora</a>
             </nav>
         </div>
     </header>
