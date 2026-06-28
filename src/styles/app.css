@@ -2107,22 +2107,14 @@
             isolation: isolate;
             overflow: hidden;
             border-radius: 10px;
-            background:
-                radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--metric-color) 16%, transparent), transparent 42%),
-                linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(3, 9, 18, 0.96));
+            background: linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(3, 9, 18, 0.96));
             border: 1px solid rgba(148, 163, 184, 0.24);
             box-shadow:
                 inset 0 0 0 1px rgba(255, 255, 255, 0.025),
                 0 18px 50px rgba(0, 0, 0, 0.2);
         }
         .audit-metric-card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            opacity: 0.4;
-            background: linear-gradient(180deg, rgba(255,255,255,0.05), transparent 36%, color-mix(in srgb, var(--metric-color) 10%, transparent));
-            pointer-events: none;
+            display: none;
         }
         .audit-metric-card + .audit-metric-card::before {
             display: none;
@@ -2166,7 +2158,7 @@
             line-height: 1;
             font-weight: 950;
             letter-spacing: -0.04em;
-            text-shadow: 0 0 22px color-mix(in srgb, var(--metric-color) 48%, transparent);
+            text-shadow: none;
         }
         .audit-metric-value-line small {
             color: rgba(148, 163, 184, 0.78);
@@ -2202,7 +2194,7 @@
             stroke-linecap: round;
             stroke-dasharray: 100;
             stroke-dashoffset: var(--metric-offset, 100);
-            filter: drop-shadow(0 0 12px color-mix(in srgb, var(--metric-color) 62%, transparent));
+            filter: none;
             transition: stroke-dashoffset 0.55s ease, stroke 0.25s ease;
         }
         .audit-metric-gauge i,
@@ -2217,7 +2209,7 @@
             fill: none;
             stroke-width: 2.2;
             overflow: visible;
-            filter: drop-shadow(0 0 12px color-mix(in srgb, var(--metric-color) 45%, transparent));
+            filter: none;
         }
         .audit-metric-gauge > svg:not(:first-child) * {
             stroke-width: 2.2;
@@ -2290,9 +2282,7 @@
             gap: 28px;
             padding: 30px 34px;
             border-radius: 10px;
-            background:
-                radial-gradient(circle at 12% 10%, rgba(34, 211, 238, 0.13), transparent 34%),
-                linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(3, 9, 18, 0.96));
+            background: linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(3, 9, 18, 0.96));
             border: 1px solid rgba(148, 163, 184, 0.24);
             box-shadow:
                 inset 0 0 0 1px rgba(255, 255, 255, 0.025),
@@ -2306,7 +2296,7 @@
             border-radius: 50%;
             color: #67e8f9;
             border: 2px solid rgba(103, 232, 249, 0.85);
-            box-shadow: 0 0 24px rgba(34, 211, 238, 0.18);
+            box-shadow: none;
         }
         .audit-metric-summary-icon i {
             width: 34px;
