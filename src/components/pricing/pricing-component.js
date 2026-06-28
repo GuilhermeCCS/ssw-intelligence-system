@@ -2200,9 +2200,17 @@ body.pricing-view-active .terms-top-actions a:last-child {
     width: 44px !important;
     height: 44px !important;
     padding: 10px !important;
-    color: #3367d6 !important;
+    color: #2563eb !important;
     background: #eef4ff !important;
     border-radius: 999px !important;
+    stroke: #2563eb !important;
+    stroke-width: 2.25 !important;
+}
+
+#view-precos .ssw-trust-grid svg,
+#view-precos .ssw-trust-grid i svg {
+    color: #2563eb !important;
+    stroke: #2563eb !important;
 }
 
 #view-precos .ssw-trust-grid strong {
