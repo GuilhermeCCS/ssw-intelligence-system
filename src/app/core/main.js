@@ -3694,6 +3694,79 @@ function getCodigoHTML() {
             };
         }
 
+        function clampPersonaMetricScore(value) {
+            if (value === null || value === undefined || value === '') return null;
+            const match = String(value).replace(',', '.').match(/-?\d+(\.\d+)?/);
+            if (!match) return null;
+            const number = Number(match[0]);
+            if (!Number.isFinite(number)) return null;
+            return Math.max(1, Math.min(10, Math.round(number)));
+        }
+
+        function readPersonaMetric(agent, keys = []) {
+            const sources = [
+                agent,
+                agent?.metrics,
+                agent?.scores,
+                agent?.evaluation,
+                agent?.analysis,
+                agent?.persona_metrics,
+                agent?.behavioral_metrics
+            ].filter(Boolean);
+
+            for (const source of sources) {
+                for (const key of keys) {
+                    if (source[key] !== undefined && source[key] !== null && source[key] !== '') {
+                        return source[key];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function getPersonaTextPenalty(agent) {
+            const text = [
+                agent?.direct_quote,
+                agent?.feedback,
+                agent?.summary,
+                agent?.description,
+                ...(Array.isArray(agent?.journey_log) ? agent.journey_log.flatMap(item => [item?.action, item?.status]) : [])
+            ].map(value => String(value || '').toLowerCase()).join(' ');
+
+            const hardFriction = ['não encontrei', 'nao encontrei', 'não consegui', 'nao consegui', 'confuso', 'confusa', 'quebrado', 'quebrada', 'links mortos', 'frustr', 'travou', 'hesit'];
+            const mildFriction = ['dúvida', 'duvida', 'demora', 'lento', 'incerto', 'inseguro', 'falta'];
+            if (hardFriction.some(term => text.includes(term))) return 2;
+            if (mildFriction.some(term => text.includes(term))) return 1;
+            return 0;
+        }
+
+        function getPersonaInsightMetrics(agent = {}, fallbackScore = null) {
+            const baseScore = clampPersonaMetricScore(fallbackScore ?? agent.score) || 6;
+            const penalty = getPersonaTextPenalty(agent);
+            const confidence = clampPersonaMetricScore(readPersonaMetric(agent, [
+                'confidence_score', 'confidence', 'trust_score', 'trust', 'confianca', 'confiança'
+            ])) || baseScore;
+            const clarity = clampPersonaMetricScore(readPersonaMetric(agent, [
+                'clarity_score', 'clarity', 'clareza_score', 'clareza', 'understanding_score'
+            ])) || Math.max(1, baseScore - penalty);
+            const intention = clampPersonaMetricScore(readPersonaMetric(agent, [
+                'intent_score', 'intention_score', 'purchase_intent_score', 'conversion_intent_score',
+                'intent', 'intention', 'intencao', 'intenção'
+            ])) || Math.max(1, baseScore - penalty - (penalty ? 1 : 0));
+
+            const intentLabelRaw = readPersonaMetric(agent, [
+                'intent_label', 'intention_label', 'purchase_intent_label', 'conversion_intent_label'
+            ]);
+            const intentLabel = String(intentLabelRaw || 'Comprar').trim();
+
+            return {
+                confidence,
+                clarity,
+                intention,
+                intentLabel: intentLabel || 'Comprar'
+            };
+        }
+
         function updateAuditExecutiveSnapshot({ technicalAudit = {}, vulnerabilities = [], actionSteps = [], agents = [] } = {}) {
             const impact = getCommercialImpact(technicalAudit.score);
             const risk = getTopAuditRisk(vulnerabilities);
@@ -6178,11 +6251,14 @@ function getCodigoHTML() {
                     if (!agentsResults.length) {
                         pGrid.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>A auditoria seguiu somente pela an?lise t?cnica. Para uma leitura comportamental, selecione uma persona compat?vel no modo manual.</p></div>';
                     } else {
-                        pGrid.innerHTML = agentsResults.map(p => {
-                            const score = Number(p.score);
+                        pGrid.innerHTML = agentsResults.map((p, personaIndex) => {
+                            const persona = enrichChatPersona(p, personaIndex);
+                            const score = Number(persona.score);
                             const tone = score >= 8 ? 'strong' : score <= 4 ? 'critical' : 'attention';
-                            const personaName = p.profile_name || 'Persona SSW';
-                            const logs = Array.isArray(p.journey_log) ? p.journey_log.slice(0, 5) : [];
+                            const personaName = persona.profile_name || 'Persona SSW';
+                            const personaAvatar = getChatPersonaAvatar(persona, personaIndex);
+                            const personaMetrics = getPersonaInsightMetrics(persona, score);
+                            const logs = Array.isArray(persona.journey_log) ? persona.journey_log.slice(0, 5) : [];
                             const journeyItems = logs.length ? logs : [
                                 { action: 'Primeira impressão', status: 'A persona não retornou etapas detalhadas para esta jornada.' },
                                 { action: 'Percepção da oferta', status: 'Use a fala principal como sinal de leitura comportamental.' },
@@ -6201,11 +6277,28 @@ function getCodigoHTML() {
                             return [
                                 '<article class="audit-agent-card audit-agent-' + tone + '">',
                                     '<div class="audit-agent-insight-panel">',
-                                        '<span>Leitura da persona</span>',
-                                        '<blockquote>"' + safeAuditText(p.direct_quote || 'A persona não retornou uma citação direta.') + '"</blockquote>',
-                                        '<div class="audit-agent-score-chip">',
-                                            '<small>sensibilidade</small>',
-                                            '<strong>' + (Number.isFinite(score) ? score : '--') + '/10</strong>',
+                                        '<div class="audit-agent-reader-head">',
+                                            '<img class="audit-agent-reader-avatar" src="' + safeAuditText(personaAvatar) + '" alt="' + safeAuditText(personaName) + '" loading="lazy">',
+                                            '<div>',
+                                                '<span>Leitura da persona</span>',
+                                                '<strong>' + safeAuditText(personaName) + '</strong>',
+                                            '</div>',
+                                        '</div>',
+                                        '<blockquote>"' + safeAuditText(persona.direct_quote || 'A persona não retornou uma citação direta.') + '"</blockquote>',
+                                        '<div class="audit-agent-score-grid" aria-label="Indicadores da leitura da persona">',
+                                            '<div class="audit-agent-score-chip audit-agent-score-confidence">',
+                                                '<small>Confiança</small>',
+                                                '<strong>' + safeAuditText(String(personaMetrics.confidence)) + '/10</strong>',
+                                            '</div>',
+                                            '<div class="audit-agent-score-chip audit-agent-score-clarity">',
+                                                '<small>Clareza</small>',
+                                                '<strong>' + safeAuditText(String(personaMetrics.clarity)) + '/10</strong>',
+                                            '</div>',
+                                            '<div class="audit-agent-score-chip audit-agent-score-intention">',
+                                                '<small>Intenção</small>',
+                                                '<strong>' + safeAuditText(personaMetrics.intentLabel) + '</strong>',
+                                                '<em>' + safeAuditText(String(personaMetrics.intention)) + '/10</em>',
+                                            '</div>',
                                         '</div>',
                                     '</div>',
                                     '<div class="audit-agent-profile-panel">',
@@ -7074,14 +7167,38 @@ function getCodigoHTML() {
                         const agentScore = Math.floor(Math.random() * 4) + 6;
                         const tone = agentScore >= 8 ? 'strong' : agentScore <= 6 ? 'critical' : 'attention';
                         const quote = quotes[index % quotes.length];
+                        const fallbackAgent = enrichChatPersona({
+                            id: fallbackPersona?.id || agentName,
+                            profile_name: agentName,
+                            score: agentScore,
+                            direct_quote: quote
+                        }, index);
+                        const fallbackMetrics = getPersonaInsightMetrics(fallbackAgent, agentScore);
                         return [
                             '<article class="audit-agent-card audit-agent-' + tone + '">',
                                 '<div class="audit-agent-insight-panel">',
-                                    '<span>Leitura da persona</span>',
+                                    '<div class="audit-agent-reader-head">',
+                                        '<img class="audit-agent-reader-avatar" src="' + safeAuditText(fallbackAgent.avatar_url) + '" alt="' + safeAuditText(agentName) + '" loading="lazy">',
+                                        '<div>',
+                                            '<span>Leitura da persona</span>',
+                                            '<strong>' + safeAuditText(agentName) + '</strong>',
+                                        '</div>',
+                                    '</div>',
                                     '<blockquote>"' + safeAuditText(quote) + '"</blockquote>',
-                                    '<div class="audit-agent-score-chip">',
-                                        '<small>sensibilidade</small>',
-                                        '<strong>' + agentScore + '/10</strong>',
+                                    '<div class="audit-agent-score-grid" aria-label="Indicadores da leitura da persona">',
+                                        '<div class="audit-agent-score-chip audit-agent-score-confidence">',
+                                            '<small>Confiança</small>',
+                                            '<strong>' + fallbackMetrics.confidence + '/10</strong>',
+                                        '</div>',
+                                        '<div class="audit-agent-score-chip audit-agent-score-clarity">',
+                                            '<small>Clareza</small>',
+                                            '<strong>' + fallbackMetrics.clarity + '/10</strong>',
+                                        '</div>',
+                                        '<div class="audit-agent-score-chip audit-agent-score-intention">',
+                                            '<small>Intenção</small>',
+                                            '<strong>' + safeAuditText(fallbackMetrics.intentLabel) + '</strong>',
+                                            '<em>' + fallbackMetrics.intention + '/10</em>',
+                                        '</div>',
                                     '</div>',
                                 '</div>',
                                 '<div class="audit-agent-profile-panel">',
