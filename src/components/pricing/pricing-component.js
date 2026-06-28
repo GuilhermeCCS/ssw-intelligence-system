@@ -132,13 +132,13 @@ function initPricingSection() {
 
         // Cards de planos com delay sequencial
         document.querySelectorAll('.ssw-plan-card').forEach((el, index) => {
-            el.style.transitionDelay = `${index * 0.15}s`;
+            el.style.transitionDelay = `${index * 0.38}s`;
             observer.observe(el);
         });
 
         // FAQ com delay
         document.querySelectorAll('.ssw-faq-section').forEach(el => {
-            el.style.transitionDelay = '0.3s';
+            el.style.transitionDelay = '0.45s';
             observer.observe(el);
         });
 
@@ -1894,6 +1894,266 @@ body.pricing-view-active .terms-top-actions a:last-child {
 
 #view-precos .ssw-faq-item {
     align-self: start !important;
+}
+
+/* Refinamento v4 — leitura maior, cards menos esticados e rolagem com presença */
+#view-precos .ssw-plans-section {
+    min-height: clamp(860px, 132svh, 1180px) !important;
+    padding-top: clamp(86px, 9vw, 126px) !important;
+    padding-bottom: clamp(120px, 14vw, 190px) !important;
+}
+
+#view-precos .ssw-plans-grid {
+    position: sticky !important;
+    top: clamp(82px, 10vh, 118px) !important;
+    align-items: stretch !important;
+}
+
+#view-precos .ssw-plan-card {
+    min-height: 540px !important;
+    padding: clamp(34px, 3.2vw, 44px) !important;
+}
+
+#view-precos .ssw-plan-icon {
+    width: 70px !important;
+    height: 70px !important;
+    margin-bottom: 22px !important;
+}
+
+#view-precos .ssw-plan-icon i {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+#view-precos .ssw-plan-name {
+    font-size: clamp(1.55rem, 1.8vw, 1.85rem) !important;
+}
+
+#view-precos .ssw-plan-desc {
+    min-height: 50px !important;
+    font-size: 0.98rem !important;
+}
+
+#view-precos .ssw-price-block {
+    margin: 26px 0 22px !important;
+}
+
+#view-precos .ssw-amount {
+    font-size: clamp(3.45rem, 4.2vw, 4.55rem) !important;
+}
+
+#view-precos .ssw-price-consult {
+    min-height: 82px !important;
+    font-size: clamp(2.15rem, 3vw, 2.8rem) !important;
+}
+
+#view-precos .ssw-features-label {
+    margin-top: 26px !important;
+}
+
+#view-precos .ssw-feature-list {
+    gap: 13px !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card {
+    transition:
+        opacity 1.35s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1.35s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow .28s ease,
+        border-color .28s ease !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card:not(.ssw-visible) {
+    transform: translate3d(-92px, 0, 0) scale(0.965) !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card:nth-child(2):not(.ssw-visible) {
+    transform: translate3d(-72px, 0, 0) scale(0.965) !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card:nth-child(3):not(.ssw-visible) {
+    transform: translate3d(-52px, 0, 0) scale(0.965) !important;
+}
+
+#view-precos .ssw-fit-section {
+    padding-top: clamp(110px, 11vw, 164px) !important;
+    padding-bottom: clamp(110px, 11vw, 164px) !important;
+}
+
+#view-precos .ssw-fit-card {
+    padding: clamp(54px, 5vw, 78px) clamp(58px, 6vw, 92px) !important;
+    border-radius: 24px !important;
+}
+
+#view-precos .ssw-fit-card h2 {
+    font-size: clamp(2.25rem, 3.2vw, 3.3rem) !important;
+    margin-bottom: 8px !important;
+}
+
+#view-precos .ssw-fit-grid {
+    margin-top: clamp(48px, 5vw, 72px) !important;
+    gap: clamp(42px, 5vw, 74px) !important;
+}
+
+#view-precos .ssw-fit-grid article {
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+    gap: 28px !important;
+    padding: 0 clamp(24px, 3vw, 42px) !important;
+}
+
+#view-precos .ssw-fit-grid i {
+    width: 78px !important;
+    height: 78px !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+    background: #eef4ff !important;
+}
+
+#view-precos .ssw-fit-grid strong {
+    font-size: 1.22rem !important;
+}
+
+#view-precos .ssw-fit-grid span {
+    font-size: 0.98rem !important;
+    line-height: 1.68 !important;
+}
+
+#view-precos .ssw-table-section {
+    width: min(1280px, calc(100% - 40px)) !important;
+    padding-top: clamp(110px, 11vw, 164px) !important;
+    padding-bottom: clamp(110px, 11vw, 164px) !important;
+}
+
+#view-precos .ssw-table-header {
+    margin-bottom: 42px !important;
+}
+
+#view-precos .ssw-table-section .ssw-section-title {
+    font-size: clamp(2.45rem, 3.6vw, 3.7rem) !important;
+}
+
+#view-precos .ssw-table-wrap {
+    border-radius: 20px !important;
+}
+
+#view-precos .ssw-table {
+    font-size: 1rem !important;
+}
+
+#view-precos .ssw-table th,
+#view-precos .ssw-table td {
+    padding: 24px 28px !important;
+}
+
+#view-precos .ssw-group-row td {
+    font-size: 0.86rem !important;
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+}
+
+#view-precos .ssw-table i {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 2.2 !important;
+}
+
+#view-precos .ssw-report-proof {
+    width: min(1280px, calc(100% - 40px)) !important;
+    grid-template-columns: minmax(340px, 0.82fr) minmax(640px, 1.18fr) !important;
+    gap: clamp(70px, 8vw, 112px) !important;
+    padding-top: clamp(120px, 12vw, 176px) !important;
+    padding-bottom: clamp(120px, 12vw, 176px) !important;
+}
+
+#view-precos .ssw-report-copy h2 {
+    font-size: clamp(2.65rem, 4vw, 4.1rem) !important;
+}
+
+#view-precos .ssw-report-copy p {
+    font-size: 1.14rem !important;
+    line-height: 1.82 !important;
+}
+
+#view-precos .ssw-report-copy li {
+    font-size: 1.05rem !important;
+}
+
+#view-precos .ssw-report-copy i {
+    width: 26px !important;
+    height: 26px !important;
+}
+
+#view-precos .ssw-report-preview {
+    gap: 24px !important;
+}
+
+#view-precos .ssw-report-cover,
+#view-precos .ssw-report-page {
+    min-height: 330px !important;
+    border-radius: 16px !important;
+}
+
+#view-precos .ssw-report-page {
+    padding: 30px !important;
+}
+
+#view-precos .ssw-report-page strong {
+    font-size: 1.02rem !important;
+    line-height: 1.4 !important;
+}
+
+#view-precos .ssw-report-page span {
+    height: 15px !important;
+    margin-bottom: 16px !important;
+}
+
+#view-precos .ssw-report-cover strong {
+    width: 126px !important;
+    height: 126px !important;
+    font-size: 2.55rem !important;
+}
+
+#view-precos .ssw-report-caption {
+    margin-top: 16px !important;
+    font-size: 0.95rem !important;
+}
+
+#view-precos .ssw-faq-section {
+    width: min(1320px, calc(100% - 40px)) !important;
+    padding-top: clamp(130px, 13vw, 194px) !important;
+    padding-bottom: clamp(130px, 13vw, 194px) !important;
+}
+
+#view-precos .ssw-faq-section .ssw-section-title {
+    font-size: clamp(3rem, 4.8vw, 5rem) !important;
+    margin-bottom: clamp(54px, 6vw, 88px) !important;
+}
+
+#view-precos .ssw-faq-grid {
+    gap: 28px 38px !important;
+    margin-top: 0 !important;
+}
+
+#view-precos .ssw-faq-item {
+    border-radius: 18px !important;
+    box-shadow: 0 18px 46px rgba(15, 23, 42, 0.055) !important;
+}
+
+#view-precos .ssw-faq-trigger {
+    min-height: 92px !important;
+    padding: 0 34px !important;
+    font-size: 1.08rem !important;
+}
+
+#view-precos .ssw-faq-trigger i {
+    width: 24px !important;
+    height: 24px !important;
+}
+
+#view-precos .ssw-faq-body p {
+    padding: 0 34px 34px !important;
+    font-size: 1rem !important;
+    line-height: 1.78 !important;
 }
 
 @media (max-width: 980px) {
