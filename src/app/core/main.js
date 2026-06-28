@@ -3261,18 +3261,21 @@ function getCodigoHTML() {
                             <h1>Por que este site pode estar perdendo oportunidades.</h1>
                             <p id="resSummary" class="audit-hero-summary">Carregando resumo executivo...</p>
                             <div class="audit-executive-snapshot" aria-label="Resumo executivo da auditoria">
-                                <article class="audit-executive-card">
-                                    <span>Impacto comercial</span>
+                                <article class="audit-executive-card audit-executive-impact">
+                                    <div class="audit-executive-icon" aria-hidden="true"><i data-lucide="triangle-alert"></i></div>
+                                    <span class="audit-executive-label">Impacto comercial</span>
                                     <strong id="auditImpactLabel">Calculando...</strong>
                                     <p id="auditImpactText">Aguardando leitura do score e dos riscos encontrados.</p>
                                 </article>
-                                <article class="audit-executive-card">
-                                    <span>Maior barreira</span>
+                                <article class="audit-executive-card audit-executive-barrier">
+                                    <div class="audit-executive-icon" aria-hidden="true"><i data-lucide="link-2"></i></div>
+                                    <span class="audit-executive-label">Maior barreira</span>
                                     <strong id="auditMainBarrier">Mapeando...</strong>
                                     <p id="auditMainBarrierText">Vamos destacar o ponto que mais pode reduzir confiança ou contato.</p>
                                 </article>
-                                <article class="audit-executive-card">
-                                    <span>Próximo passo</span>
+                                <article class="audit-executive-card audit-executive-next">
+                                    <div class="audit-executive-icon" aria-hidden="true"><i data-lucide="rocket"></i></div>
+                                    <span class="audit-executive-label">Próximo passo</span>
                                     <strong id="auditNextStepLabel">Priorizar</strong>
                                     <p id="auditNextStepText">O plano de ação vai indicar a correção inicial de maior impacto.</p>
                                 </article>
@@ -3294,21 +3297,31 @@ function getCodigoHTML() {
                                     <circle class="audit-score-ring-track" cx="60" cy="60" r="48"></circle>
                                     <circle class="audit-score-ring-progress" cx="60" cy="60" r="48" pathLength="100"></circle>
                                 </svg>
-                                <strong id="resScore">--</strong>
+                                <div class="audit-score-value">
+                                    <strong id="resScore">--</strong>
+                                    <span>/100</span>
+                                </div>
                             </div>
-                            <small class="audit-score-caption">quanto menor, maior a fricção detectada</small>
-                            <span id="reportUrl" class="audit-score-url">URL analisada</span>
-                            <span id="reportDate" class="audit-score-date">${displayDate}</span>
+                            <div class="audit-score-caption-card">
+                                <small class="audit-score-caption">Quanto menor, maior a fricção detectada.</small>
+                            </div>
+                            <div class="audit-score-url-card">
+                                <div class="audit-score-url-icon" aria-hidden="true"><i data-lucide="globe-2"></i></div>
+                                <div>
+                                    <span id="reportUrl" class="audit-score-url">URL analisada</span>
+                                    <span id="reportDate" class="audit-score-date">${displayDate}</span>
+                                </div>
+                            </div>
                         </aside>
                     </section>
 
                     <nav class="audit-progress-nav audit-reveal" aria-label="Mapa da auditoria">
-                        <button type="button" data-audit-target="audit-capturas" onclick="scrollAuditReportTo('audit-capturas')">Evidência visual</button>
-                        <button type="button" data-audit-target="audit-metricas" onclick="scrollAuditReportTo('audit-metricas')">Base técnica</button>
-                        <button type="button" data-audit-target="audit-pilares" onclick="scrollAuditReportTo('audit-pilares')">Conversão</button>
-                        <button type="button" data-audit-target="audit-riscos" onclick="scrollAuditReportTo('audit-riscos')">Barreiras</button>
-                        <button type="button" data-audit-target="audit-agents" onclick="scrollAuditReportTo('audit-agents')">Personas</button>
-                        <button type="button" data-audit-target="audit-plano" onclick="scrollAuditReportTo('audit-plano')">Correção</button>
+                        <button type="button" data-audit-target="audit-capturas" onclick="scrollAuditReportTo('audit-capturas')"><i data-lucide="eye"></i>Evidência visual</button>
+                        <button type="button" data-audit-target="audit-metricas" onclick="scrollAuditReportTo('audit-metricas')"><i data-lucide="code-2"></i>Base técnica</button>
+                        <button type="button" data-audit-target="audit-pilares" onclick="scrollAuditReportTo('audit-pilares')"><i data-lucide="chart-no-axes-combined"></i>Conversão</button>
+                        <button type="button" data-audit-target="audit-riscos" onclick="scrollAuditReportTo('audit-riscos')"><i data-lucide="lock-keyhole"></i>Barreiras</button>
+                        <button type="button" data-audit-target="audit-agents" onclick="scrollAuditReportTo('audit-agents')"><i data-lucide="users-round"></i>Personas</button>
+                        <button type="button" data-audit-target="audit-plano" onclick="scrollAuditReportTo('audit-plano')"><i data-lucide="wrench"></i>Correção</button>
                     </nav>
 
                     <section id="audit-capturas" class="audit-story-section audit-reveal">
