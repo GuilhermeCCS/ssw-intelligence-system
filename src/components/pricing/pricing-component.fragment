@@ -72,7 +72,6 @@
             </article>
 
             <article class="ssw-plan-card ssw-plan-featured">
-                <span class="ssw-plan-badge"><i data-lucide="sparkles"></i> Mais escolhido</span>
                 <div class="ssw-plan-icon"><i data-lucide="building-2"></i></div>
                 <div class="ssw-plan-name">Agência</div>
                 <div class="ssw-plan-desc">Ideal para agências que precisam escalar auditorias e gerar valor.</div>

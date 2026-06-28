@@ -1,7 +1,7 @@
 // Carrega a seção de preços dinamicamente
 async function loadPricingSection() {
     try {
-        const response = await fetch('src/components/pricing/pricing-component.fragment?v=20260628-pricing-2026-v1', { redirect: 'error', cache: 'no-store' });
+        const response = await fetch('src/components/pricing/pricing-component.fragment?v=20260628-pricing-cards-v3', { redirect: 'error', cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`Falha ao carregar preços: ${response.status}`);
         }

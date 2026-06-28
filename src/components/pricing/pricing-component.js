@@ -82,16 +82,17 @@ function falarComVendas() {
 // --- FAQ ACCORDION (escopo ssw para não conflitar) ---
 function sswToggleFAQ(trigger) {
     const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-    // Fecha todos
-    document.querySelectorAll('.ssw-faq-trigger').forEach(t => {
+    const root = trigger.closest('#view-precos') || document;
+    // Fecha todos dentro da seção de preços
+    root.querySelectorAll('.ssw-faq-trigger').forEach(t => {
         t.setAttribute('aria-expanded', 'false');
-        t.nextElementSibling.style.maxHeight = '0';
+        if (t.nextElementSibling) t.nextElementSibling.style.maxHeight = '0';
     });
     // Abre o clicado (se estava fechado)
     if (!isOpen) {
         trigger.setAttribute('aria-expanded', 'true');
         const body = trigger.nextElementSibling;
-        body.style.maxHeight = body.scrollHeight + 'px';
+        if (body) body.style.maxHeight = body.scrollHeight + 'px';
     }
     // Recriar ícones Lucide após mudança de estado
     if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -122,7 +123,7 @@ function initPricingSection() {
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.08 });
+        }, { threshold: 0.16, rootMargin: '0px 0px -14% 0px' });
 
         // Hero e CTA sem delay
         document.querySelectorAll('.ssw-hero-inner, .ssw-cta-card, .ssw-fit-card, .ssw-table-section, .ssw-report-proof, .ssw-trust-card').forEach(el => {
@@ -142,7 +143,7 @@ function initPricingSection() {
         });
 
         setTimeout(() => {
-            document.querySelectorAll(animatedPricingElements).forEach(el => {
+            document.querySelectorAll('.ssw-hero-inner').forEach(el => {
                 el.classList.add('ssw-visible');
             });
         }, 900);
@@ -1733,6 +1734,14 @@ body.pricing-view-active .terms-top-actions a:last-child {
     padding: 0 24px !important;
 }
 
+#view-precos .ssw-faq-trigger:focus {
+    outline: none !important;
+}
+
+#view-precos .ssw-faq-trigger:focus-visible {
+    box-shadow: inset 0 0 0 2px rgba(37, 99, 235, 0.22) !important;
+}
+
 #view-precos .ssw-faq-body p {
     padding: 0 24px 24px !important;
 }
@@ -1743,6 +1752,148 @@ body.pricing-view-active .terms-top-actions a:last-child {
 
 #view-precos .ssw-cta-card p {
     margin-top: 22px !important;
+}
+
+/* Dobra inicial mais limpa + elementos maiores */
+#view-precos .ssw-pricing-hero {
+    min-height: calc(100svh - 68px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#view-precos .ssw-hero-inner {
+    transform-origin: center !important;
+}
+
+#view-precos .ssw-hero-title {
+    max-width: 880px !important;
+    font-size: clamp(3.05rem, 6vw, 5.35rem) !important;
+    line-height: 0.98 !important;
+}
+
+#view-precos .ssw-hero-sub {
+    max-width: 760px !important;
+    font-size: clamp(1.06rem, 1.35vw, 1.2rem) !important;
+}
+
+#view-precos .ssw-value-strip {
+    max-width: 1120px !important;
+    border-radius: 18px !important;
+}
+
+#view-precos .ssw-value-strip i {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 11px !important;
+}
+
+#view-precos .ssw-value-strip strong {
+    font-size: 0.92rem !important;
+}
+
+#view-precos .ssw-value-strip span {
+    font-size: 0.78rem !important;
+    line-height: 1.45 !important;
+}
+
+#view-precos .ssw-plans-section {
+    padding-top: clamp(92px, 10vw, 148px) !important;
+}
+
+#view-precos .ssw-plans-grid {
+    gap: clamp(34px, 4vw, 56px) !important;
+}
+
+#view-precos .ssw-plan-card {
+    min-height: 660px !important;
+    border-radius: 22px !important;
+    padding: clamp(40px, 4vw, 56px) !important;
+}
+
+#view-precos .ssw-plan-icon {
+    width: 78px !important;
+    height: 78px !important;
+    margin-bottom: 28px !important;
+}
+
+#view-precos .ssw-plan-icon i {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+#view-precos .ssw-plan-name {
+    font-size: 1.62rem !important;
+}
+
+#view-precos .ssw-plan-desc {
+    min-height: 58px !important;
+    font-size: 1rem !important;
+}
+
+#view-precos .ssw-amount {
+    font-size: clamp(4rem, 5vw, 5.3rem) !important;
+}
+
+#view-precos .ssw-price-consult {
+    min-height: 106px !important;
+    font-size: clamp(2.35rem, 3.5vw, 3.05rem) !important;
+}
+
+#view-precos .ssw-btn,
+#view-precos .ssw-btn-cta {
+    min-height: 56px !important;
+    border-radius: 11px !important;
+    font-size: 1rem !important;
+}
+
+#view-precos .ssw-feature-list li,
+#view-precos .ssw-feature-item {
+    font-size: 0.94rem !important;
+}
+
+#view-precos .ssw-plan-badge {
+    display: none !important;
+}
+
+/* Entrada suave dos cards, da esquerda para a direita */
+#view-precos.ssw-observe .ssw-plan-card {
+    will-change: transform, opacity !important;
+    transition:
+        opacity .82s cubic-bezier(0.22, 1, 0.36, 1),
+        transform .82s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow .22s ease,
+        border-color .22s ease !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card:not(.ssw-visible) {
+    opacity: 0 !important;
+    transform: translate3d(-64px, 0, 0) scale(0.98) !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card:nth-child(2):not(.ssw-visible) {
+    transform: translate3d(-48px, 0, 0) scale(0.98) !important;
+}
+
+#view-precos.ssw-observe .ssw-plan-card:nth-child(3):not(.ssw-visible) {
+    transform: translate3d(-32px, 0, 0) scale(0.98) !important;
+}
+
+#view-precos .ssw-plan-card.ssw-visible {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+}
+
+#view-precos .ssw-plan-card.ssw-visible:hover {
+    transform: translate3d(0, -4px, 0) scale(1) !important;
+}
+
+#view-precos .ssw-faq-grid {
+    align-items: start !important;
+}
+
+#view-precos .ssw-faq-item {
+    align-self: start !important;
 }
 
 @media (max-width: 980px) {
