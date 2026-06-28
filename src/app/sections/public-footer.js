@@ -59,8 +59,8 @@
         }
 
         .ssw-public-footer-logo {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             border-radius: 999px;
             object-fit: cover;
             box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.24);
@@ -334,7 +334,7 @@
                         <div class="ssw-public-footer-grid">
                             <div class="ssw-public-footer-brand">
                                 <a class="ssw-public-footer-brand-mark" href="/home" aria-label="Ir para a S.S.W Intelligence">
-                                    <img class="ssw-public-footer-logo" src="/src/assets/images/logo/logo_ofc.png?v=20260627-logo-ofc-v1" alt="">
+                                    <img class="ssw-public-footer-logo" src="/src/assets/images/logo/logo_ofc.png?v=20260627-logo-ofc-v2" alt="">
                                     <span>
                                         <strong>${data.title}</strong>
                                         <span>${data.subtitle}</span>

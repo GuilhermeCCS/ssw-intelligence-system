@@ -4736,9 +4736,9 @@ body.auth-page-active #mobileTopbar {
     }
 
     .mobile-brand-link img {
-        width: 42px;
-        height: 42px;
-        flex-basis: 42px;
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
     }
 
     .mobile-brand-link span {
@@ -4961,9 +4961,9 @@ body.auth-page-active #mobileTopbar {
 }
 
 .app-brand-link img {
-    width: 44px;
-    height: 44px;
-    flex: 0 0 44px;
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
     border-radius: 999px;
     object-fit: cover;
     box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.34), 0 12px 28px rgba(0, 0, 0, 0.28);
@@ -5472,9 +5472,9 @@ body.auth-page-active #appTopbar {
     }
 
     .app-brand-link img {
-        width: 42px;
-        height: 42px;
-        flex-basis: 42px;
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
     }
 
     .app-brand-link span {
@@ -5596,9 +5596,9 @@ body.auth-page-active #appTopbar {
     }
 
     .app-brand-link img {
-        width: 38px;
-        height: 38px;
-        flex-basis: 38px;
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
     }
 
     .app-brand-link span {
@@ -7054,7 +7054,7 @@ body.auth-page-active #appTopbar {
 }
 
 .sidebar-brand {
-    min-height: 30px;
+    min-height: 46px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -7067,9 +7067,9 @@ body.auth-page-active #appTopbar {
 }
 
 .sidebar-brand-link img {
-    width: 18px !important;
-    height: 18px !important;
-    flex-basis: 18px !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex-basis: 34px !important;
     border-radius: 999px !important;
     box-shadow: none !important;
 }
