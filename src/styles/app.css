@@ -2182,14 +2182,14 @@
             display: grid;
             place-items: center;
         }
-        .audit-metric-gauge svg {
+        .audit-metric-gauge > svg:first-child {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             overflow: visible;
         }
-        .audit-metric-gauge path {
+        .audit-metric-gauge > svg:first-child path {
             fill: none;
             stroke-width: 18;
         }
@@ -2205,11 +2205,22 @@
             filter: drop-shadow(0 0 12px color-mix(in srgb, var(--metric-color) 62%, transparent));
             transition: stroke-dashoffset 0.55s ease, stroke 0.25s ease;
         }
-        .audit-metric-gauge i {
+        .audit-metric-gauge i,
+        .audit-metric-gauge > svg:not(:first-child) {
+            position: relative;
+            inset: auto;
+            z-index: 1;
             width: 44px;
             height: 44px;
             color: var(--metric-color);
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            overflow: visible;
             filter: drop-shadow(0 0 12px color-mix(in srgb, var(--metric-color) 45%, transparent));
+        }
+        .audit-metric-gauge > svg:not(:first-child) * {
+            stroke-width: 2.2;
         }
         .audit-metric-card strong.audit-metric-value {
             color: var(--metric-color);
