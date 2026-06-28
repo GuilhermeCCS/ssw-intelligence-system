@@ -1581,6 +1581,170 @@ body.pricing-view-active .terms-top-actions a:last-child {
     text-align: center !important;
 }
 
+/* Refinamento de espaçamento — inspirado na landing de Sites */
+#view-precos .ssw-pricing-hero,
+#view-precos .ssw-plans-section,
+#view-precos .ssw-fit-section,
+#view-precos .ssw-table-section,
+#view-precos .ssw-report-proof,
+#view-precos .ssw-trust-section,
+#view-precos .ssw-faq-section,
+#view-precos .ssw-cta-section {
+    width: min(1180px, calc(100% - 40px)) !important;
+}
+
+#view-precos .ssw-pricing-hero {
+    padding-top: clamp(66px, 7vw, 112px) !important;
+    padding-bottom: clamp(38px, 5vw, 72px) !important;
+}
+
+#view-precos .ssw-hero-eyebrow {
+    margin-bottom: 20px !important;
+}
+
+#view-precos .ssw-hero-sub {
+    margin-top: 24px !important;
+}
+
+#view-precos .ssw-value-strip {
+    max-width: 1010px !important;
+    margin-top: 46px !important;
+    padding: 18px 20px !important;
+}
+
+#view-precos .ssw-value-strip article {
+    gap: 16px !important;
+    padding: 12px 18px !important;
+}
+
+#view-precos .ssw-plans-section {
+    padding-top: clamp(34px, 5vw, 70px) !important;
+    padding-bottom: clamp(72px, 8vw, 112px) !important;
+}
+
+#view-precos .ssw-plans-grid {
+    gap: clamp(28px, 3.2vw, 42px) !important;
+}
+
+#view-precos .ssw-plan-card {
+    min-height: 560px !important;
+    padding: clamp(32px, 3.2vw, 42px) !important;
+}
+
+#view-precos .ssw-plan-icon {
+    margin-bottom: 20px !important;
+}
+
+#view-precos .ssw-plan-desc {
+    margin-top: 12px !important;
+    line-height: 1.62 !important;
+}
+
+#view-precos .ssw-price-block {
+    margin: 34px 0 26px !important;
+}
+
+#view-precos .ssw-features-label {
+    margin-top: 34px !important;
+    margin-bottom: 18px !important;
+}
+
+#view-precos .ssw-feature-list {
+    gap: 15px !important;
+}
+
+#view-precos .ssw-feature-list li,
+#view-precos .ssw-feature-item {
+    gap: 11px !important;
+    line-height: 1.55 !important;
+}
+
+#view-precos .ssw-fit-section,
+#view-precos .ssw-table-section,
+#view-precos .ssw-report-proof,
+#view-precos .ssw-trust-section,
+#view-precos .ssw-faq-section,
+#view-precos .ssw-cta-section {
+    padding-top: clamp(66px, 7vw, 104px) !important;
+    padding-bottom: clamp(66px, 7vw, 104px) !important;
+}
+
+#view-precos .ssw-fit-card,
+#view-precos .ssw-trust-card,
+#view-precos .ssw-cta-card {
+    padding: clamp(36px, 4vw, 56px) !important;
+}
+
+#view-precos .ssw-fit-grid {
+    gap: clamp(32px, 4vw, 52px) !important;
+    margin-top: 38px !important;
+}
+
+#view-precos .ssw-fit-grid article {
+    gap: 22px !important;
+    padding: 0 26px !important;
+}
+
+#view-precos .ssw-table-header {
+    margin-bottom: 28px !important;
+}
+
+#view-precos .ssw-table th,
+#view-precos .ssw-table td {
+    padding: 18px 22px !important;
+}
+
+#view-precos .ssw-report-proof {
+    gap: clamp(48px, 6vw, 76px) !important;
+}
+
+#view-precos .ssw-report-copy h2 {
+    margin-bottom: 22px !important;
+}
+
+#view-precos .ssw-report-copy p {
+    margin-bottom: 30px !important;
+}
+
+#view-precos .ssw-report-copy ul {
+    gap: 14px !important;
+}
+
+#view-precos .ssw-report-preview {
+    gap: 18px !important;
+}
+
+#view-precos .ssw-report-caption {
+    margin-top: 6px !important;
+}
+
+#view-precos .ssw-trust-grid {
+    gap: clamp(26px, 4vw, 44px) !important;
+    margin-top: 38px !important;
+}
+
+#view-precos .ssw-faq-grid {
+    gap: 20px 30px !important;
+    margin-top: 36px !important;
+}
+
+#view-precos .ssw-faq-trigger {
+    min-height: 72px !important;
+    padding: 0 24px !important;
+}
+
+#view-precos .ssw-faq-body p {
+    padding: 0 24px 24px !important;
+}
+
+#view-precos .ssw-cta-card {
+    gap: clamp(34px, 5vw, 72px) !important;
+}
+
+#view-precos .ssw-cta-card p {
+    margin-top: 22px !important;
+}
+
 @media (max-width: 980px) {
     #view-precos .ssw-value-strip,
     #view-precos .ssw-plans-grid,
