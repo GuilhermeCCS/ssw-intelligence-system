@@ -4,7 +4,7 @@
         margin: 0 auto;
         padding: 38px clamp(18px, 2.5vw, 36px) 40px;
         color: #f8fbff;
-        background: #020711;
+        background: transparent !important;
     }
 
     #view-ranking #rankingList {
@@ -23,10 +23,7 @@
         position: fixed;
         inset: 0;
         z-index: -2;
-        background:
-            radial-gradient(circle at 75% 10%, rgba(12, 229, 236, 0.14), transparent 30%),
-            radial-gradient(circle at 12% 22%, rgba(31, 104, 255, 0.08), transparent 28%),
-            #020711;
+        background: #020408;
         pointer-events: none;
     }
 
@@ -34,7 +31,7 @@
     body:has(#view-ranking:not(.hidden)) #mainContent,
     body:has(#view-ranking:not(.hidden)) .main-content,
     body:has(#view-ranking:not(.hidden)) .content-area {
-        background: #020711 !important;
+        background: #020408 !important;
     }
 
     .ranking-hero {
@@ -57,10 +54,16 @@
         width: min(58vw, 650px);
         height: min(34vw, 380px);
         z-index: -1;
-        background: url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-4") right top / contain no-repeat;
+        background: url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-5") right top / contain no-repeat;
         opacity: 1;
-        -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.72) 18%, #000 36%, #000 100%);
-        mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.72) 18%, #000 36%, #000 100%);
+        -webkit-mask-image:
+            linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.72) 18%, #000 34%, #000 100%),
+            linear-gradient(180deg, transparent 0%, #000 13%, #000 86%, transparent 100%);
+        -webkit-mask-composite: source-in;
+        mask-image:
+            linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.72) 18%, #000 34%, #000 100%),
+            linear-gradient(180deg, transparent 0%, #000 13%, #000 86%, transparent 100%);
+        mask-composite: intersect;
         pointer-events: none;
     }
 
