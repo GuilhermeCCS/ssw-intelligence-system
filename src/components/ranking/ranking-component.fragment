@@ -1,184 +1,1019 @@
-<div id="view-ranking" class="hidden mx-auto max-w-6xl animate-fade-in-up pb-20">
-    <header class="mb-7">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div class="max-w-3xl">
-                <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">Vitrine premium de performance</p>
-                <h2 class="text-3xl font-black tracking-tight text-white md:text-4xl">O ranking que transforma score em autoridade</h2>
-                <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-400">
-                    Estar no topo mostra que seu site entrega mais confiança, experiência e potencial de conversão do que a média do mercado.
-                </p>
-            </div>
+<style>
+    #view-ranking {
+        width: min(100%, 1120px);
+        margin: 0 auto;
+        padding: 34px 0 36px;
+        color: #f8fbff;
+    }
 
-            <div class="flex flex-wrap items-center gap-3 text-sm text-slate-400">
-                <span class="inline-flex items-center gap-2 rounded-xl border border-white/[0.07] bg-[#0c1220] px-3 py-2">
-                    <i data-lucide="users" class="h-4 w-4 text-slate-500"></i>
-                    <strong id="rankingTotalCount" class="font-black text-white">0</strong>
-                    sites
+    .ranking-shell {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+    }
+
+    .ranking-shell::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background:
+            radial-gradient(circle at 75% 10%, rgba(12, 229, 236, 0.14), transparent 30%),
+            radial-gradient(circle at 12% 22%, rgba(31, 104, 255, 0.08), transparent 28%),
+            #020711;
+        pointer-events: none;
+    }
+
+    .ranking-hero {
+        position: relative;
+        min-height: 292px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 42px;
+        align-items: start;
+        margin-bottom: 22px;
+        padding: 16px 0 18px;
+        isolation: isolate;
+    }
+
+    .ranking-hero::after {
+        content: "";
+        position: absolute;
+        inset: -60px -22px -42px 42%;
+        z-index: -1;
+        background:
+            linear-gradient(90deg, #020711 0%, rgba(2, 7, 17, 0.72) 24%, rgba(2, 7, 17, 0.14) 58%, rgba(2, 7, 17, 0) 100%),
+            url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-1") right center / contain no-repeat;
+        opacity: 0.95;
+        pointer-events: none;
+    }
+
+    .ranking-eyebrow {
+        margin: 0 0 14px;
+        color: #22f4ff;
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+
+    .ranking-hero h2 {
+        max-width: 650px;
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(2.8rem, 5vw, 4.2rem);
+        font-weight: 950;
+        letter-spacing: -0.065em;
+        line-height: 0.97;
+    }
+
+    #view-ranking .ranking-hero h2 {
+        font-size: clamp(2.8rem, 5vw, 4.2rem) !important;
+        line-height: 0.97 !important;
+    }
+
+    .ranking-hero p {
+        max-width: 650px;
+        margin: 20px 0 0;
+        color: #a9b8ca;
+        font-size: 1.04rem;
+        line-height: 1.65;
+    }
+
+    .ranking-live-note {
+        width: max-content;
+        max-width: 100%;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 18px;
+        padding: 9px 14px;
+        border: 1px solid rgba(34, 244, 255, 0.22);
+        border-radius: 999px;
+        background: rgba(2, 7, 17, 0.68);
+        color: #f8fbff;
+        font-size: 0.84rem;
+        font-weight: 740;
+        box-shadow: 0 0 34px rgba(34, 244, 255, 0.08);
+    }
+
+    .ranking-live-note svg {
+        width: 17px;
+        height: 17px;
+        color: #22f4ff;
+    }
+
+    .ranking-hero-side {
+        justify-self: end;
+        display: grid;
+        gap: 12px;
+        min-width: 170px;
+    }
+
+    .ranking-mini-stat,
+    .ranking-mini-select {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 14px;
+        border: 1px solid rgba(138, 160, 184, 0.22);
+        border-radius: 10px;
+        background: rgba(7, 14, 26, 0.76);
+        color: #f8fbff;
+        font-size: 0.88rem;
+        font-weight: 800;
+        backdrop-filter: blur(14px);
+    }
+
+    .ranking-mini-stat svg,
+    .ranking-mini-select svg {
+        width: 18px;
+        height: 18px;
+        color: #22f4ff;
+    }
+
+    .ranking-filter-panel,
+    .ranking-card,
+    .ranking-table-shell,
+    .ranking-info-card,
+    .ranking-cta {
+        border: 1px solid rgba(34, 244, 255, 0.16);
+        background: linear-gradient(180deg, rgba(8, 17, 31, 0.88), rgba(6, 13, 24, 0.9));
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 24px 80px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(18px);
+    }
+
+    .ranking-filter-panel {
+        display: grid;
+        grid-template-columns: 170px 170px 170px minmax(260px, 1fr);
+        gap: 18px;
+        align-items: end;
+        margin-bottom: 18px;
+        padding: 22px;
+        border-radius: 14px;
+    }
+
+    .ranking-field {
+        min-width: 0;
+    }
+
+    .ranking-field label {
+        display: block;
+        margin-bottom: 7px;
+        color: #b9c7d8;
+        font-size: 0.86rem;
+        font-weight: 720;
+    }
+
+    .ranking-select,
+    .ranking-search-input {
+        width: 100%;
+        height: 45px;
+        border: 1px solid rgba(138, 160, 184, 0.2);
+        border-radius: 9px;
+        background: rgba(1, 6, 14, 0.78);
+        color: #f8fbff;
+        font: inherit;
+        font-size: 0.9rem;
+        outline: 0;
+        transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .ranking-select {
+        padding: 0 12px;
+    }
+
+    .ranking-search-wrap {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 108px;
+        gap: 10px;
+    }
+
+    .ranking-search-wrap > svg {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        width: 19px;
+        height: 19px;
+        color: #6c7f96;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .ranking-search-input {
+        padding: 0 14px 0 44px;
+    }
+
+    .ranking-select:focus,
+    .ranking-search-input:focus {
+        border-color: rgba(34, 244, 255, 0.58);
+        box-shadow: 0 0 0 3px rgba(34, 244, 255, 0.08);
+    }
+
+    .ranking-search-button,
+    .ranking-cta-button {
+        height: 45px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 9px;
+        background: #17dcea;
+        color: #001018;
+        font-size: 0.9rem;
+        font-weight: 950;
+        cursor: pointer;
+        transition: transform 160ms ease, background-color 160ms ease;
+    }
+
+    .ranking-search-button:hover,
+    .ranking-cta-button:hover {
+        background: #5bf4ff;
+        transform: translateY(-1px);
+    }
+
+    .ranking-search-button svg,
+    .ranking-cta-button svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .ranking-suggestions {
+        position: absolute;
+        right: 118px;
+        left: 0;
+        top: calc(100% + 8px);
+        z-index: 40;
+        overflow: hidden;
+        border: 1px solid rgba(34, 244, 255, 0.16);
+        border-radius: 12px;
+        background: #08111f;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+
+    .ranking-suggestions ul {
+        max-height: 280px;
+        overflow-y: auto;
+    }
+
+    .ranking-top-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .ranking-podium-card {
+        position: relative;
+        min-height: 312px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        overflow: hidden;
+        padding: 28px 24px 22px;
+        border-radius: 14px;
+        text-align: center;
+    }
+
+    .ranking-podium-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 0%, rgba(34, 244, 255, 0.12), transparent 54%);
+        pointer-events: none;
+    }
+
+    .ranking-podium-card.is-leader {
+        border-color: rgba(255, 214, 64, 0.42);
+        background: linear-gradient(180deg, rgba(31, 25, 10, 0.94), rgba(7, 12, 22, 0.92));
+        transform: translateY(-8px);
+    }
+
+    .ranking-position-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: #8da0ba;
+        color: #08111f;
+        font-size: 0.85rem;
+        font-weight: 950;
+    }
+
+    .ranking-podium-card.is-leader .ranking-position-badge {
+        background: #ffd640;
+    }
+
+    .ranking-podium-card.is-third .ranking-position-badge {
+        background: #c17a50;
+    }
+
+    .ranking-site-logo {
+        width: 74px;
+        height: 74px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        background: #f8fbff;
+        color: #071225;
+        font-size: 1.9rem;
+        font-weight: 950;
+        box-shadow: 0 18px 38px rgba(0,0,0,0.26);
+    }
+
+    .ranking-site-logo img {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: cover;
+    }
+
+    .ranking-site-name {
+        margin: 0;
+        color: #ffffff;
+        font-size: 1.2rem;
+        font-weight: 920;
+        letter-spacing: -0.03em;
+    }
+
+    .ranking-site-domain {
+        margin: 2px 0 0;
+        color: #8fa0b7;
+        font-size: 0.86rem;
+    }
+
+    .ranking-score-big {
+        margin-top: 14px;
+        color: #ffffff;
+        font-size: 2.35rem;
+        font-weight: 950;
+        letter-spacing: -0.04em;
+        line-height: 1;
+    }
+
+    .ranking-score-bar {
+        width: 78%;
+        height: 5px;
+        margin: 15px auto 14px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(138, 160, 184, 0.18);
+    }
+
+    .ranking-score-bar span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: #22f4ff;
+    }
+
+    .ranking-podium-card.is-leader .ranking-score-bar span {
+        background: #ffd640;
+    }
+
+    .ranking-metric-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: auto;
+    }
+
+    .ranking-mini-metric {
+        min-height: 54px;
+        padding: 7px 4px;
+        border: 1px solid rgba(138, 160, 184, 0.12);
+        border-radius: 7px;
+        background: rgba(2, 7, 17, 0.42);
+    }
+
+    .ranking-mini-metric span {
+        display: block;
+        color: #8fa0b7;
+        font-size: 0.62rem;
+        line-height: 1.1;
+    }
+
+    .ranking-mini-metric strong {
+        display: block;
+        margin-top: 4px;
+        color: #ffffff;
+        font-size: 0.94rem;
+    }
+
+    .ranking-table-shell {
+        overflow: hidden;
+        margin-bottom: 20px;
+        border-radius: 14px;
+    }
+
+    .ranking-table-head,
+    .ranking-row {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1.2fr) minmax(130px, .7fr) minmax(160px, .7fr) 100px;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .ranking-table-head {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(138, 160, 184, 0.12);
+        color: #7f90aa;
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .ranking-row {
+        min-height: 62px;
+        padding: 14px 24px;
+        border-bottom: 1px solid rgba(138, 160, 184, 0.1);
+        transition: background-color 160ms ease;
+    }
+
+    .ranking-row:hover {
+        background: rgba(255,255,255,0.025);
+    }
+
+    .ranking-row:last-child {
+        border-bottom: 0;
+    }
+
+    .ranking-row-site {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .ranking-row-logo {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 38px;
+        border-radius: 9px;
+        background: #f8fbff;
+        color: #071225;
+        font-weight: 950;
+    }
+
+    .ranking-row-logo img {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: cover;
+    }
+
+    .ranking-row-title {
+        min-width: 0;
+    }
+
+    .ranking-row-title strong,
+    .ranking-row-title span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ranking-row-title strong {
+        color: #ffffff;
+        font-size: 0.95rem;
+    }
+
+    .ranking-row-title span,
+    .ranking-row-category {
+        color: #8fa0b7;
+        font-size: 0.85rem;
+    }
+
+    .ranking-row-score {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #ffffff;
+        font-weight: 920;
+    }
+
+    .ranking-row-score .ranking-score-bar {
+        width: 118px;
+        margin: 0;
+    }
+
+    .ranking-evolution {
+        font-weight: 900;
+        text-align: right;
+    }
+
+    .ranking-evolution.up { color: #22e889; }
+    .ranking-evolution.down { color: #ff4f6d; }
+    .ranking-evolution.same { color: #a6b4c7; }
+
+    .ranking-full-link {
+        width: 100%;
+        padding: 14px;
+        border: 0;
+        border-top: 1px solid rgba(138, 160, 184, 0.1);
+        background: transparent;
+        color: #22f4ff;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .ranking-info-grid {
+        display: grid;
+        grid-template-columns: 1.4fr .9fr;
+        gap: 0;
+        margin-bottom: 20px;
+    }
+
+    .ranking-info-card {
+        padding: 28px;
+    }
+
+    .ranking-info-card:first-child {
+        border-radius: 14px 0 0 14px;
+    }
+
+    .ranking-info-card:last-child {
+        border-left: 0;
+        border-radius: 0 14px 14px 0;
+    }
+
+    .ranking-info-card h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 1.28rem;
+        font-weight: 920;
+        letter-spacing: -0.03em;
+    }
+
+    .ranking-info-card p {
+        margin: 8px 0 20px;
+        color: #9aabc0;
+        font-size: 0.92rem;
+        line-height: 1.55;
+    }
+
+    .ranking-weight-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 28px;
+    }
+
+    .ranking-weight {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr) 44px;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .ranking-weight-icon,
+    .ranking-method-icon,
+    .ranking-cta-icon {
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(34, 244, 255, 0.14);
+        background: rgba(34, 244, 255, 0.06);
+        color: #22f4ff;
+    }
+
+    .ranking-weight-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+    }
+
+    .ranking-weight-label {
+        color: #f8fbff;
+        font-size: 0.9rem;
+        font-weight: 850;
+    }
+
+    .ranking-weight-track {
+        height: 5px;
+        margin-top: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(138, 160, 184, 0.15);
+    }
+
+    .ranking-weight-track span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: #22f4ff;
+    }
+
+    .ranking-weight-percent {
+        color: #ffffff;
+        font-weight: 900;
+        text-align: right;
+    }
+
+    .ranking-method-list {
+        display: grid;
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .ranking-method-list li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #f8fbff;
+        font-size: 0.92rem;
+    }
+
+    .ranking-method-icon {
+        width: 31px;
+        height: 31px;
+        border-radius: 999px;
+        flex: 0 0 31px;
+    }
+
+    .ranking-cta {
+        position: relative;
+        display: grid;
+        grid-template-columns: 82px minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: center;
+        overflow: hidden;
+        padding: 30px;
+        border-radius: 14px;
+        background:
+            radial-gradient(circle at 95% 100%, rgba(34, 244, 255, 0.26), transparent 26%),
+            linear-gradient(90deg, rgba(7, 28, 42, 0.95), rgba(6, 13, 24, 0.92));
+    }
+
+    .ranking-cta-icon {
+        width: 82px;
+        height: 82px;
+        border-radius: 12px;
+        background: rgba(2, 7, 17, 0.5);
+    }
+
+    .ranking-cta-icon svg {
+        width: 42px;
+        height: 42px;
+    }
+
+    .ranking-cta h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(1.6rem, 3vw, 2rem);
+        font-weight: 930;
+        letter-spacing: -0.045em;
+    }
+
+    .ranking-cta p {
+        margin: 6px 0 0;
+        color: #a9b8ca;
+    }
+
+    .ranking-cta-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 14px;
+        color: #9fb0c5;
+        font-size: 0.86rem;
+    }
+
+    .ranking-cta-checks span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .ranking-cta-checks svg {
+        width: 15px;
+        height: 15px;
+        color: #22f4ff;
+    }
+
+    .ranking-footer-note {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 24px;
+        color: #8fa0b7;
+        font-size: 0.88rem;
+    }
+
+    .ranking-search-result {
+        grid-column: 1 / -1;
+        margin-top: 14px;
+    }
+
+    @media (max-width: 1100px) {
+        #view-ranking {
+            width: min(100%, calc(100vw - 48px));
+        }
+
+        .ranking-filter-panel {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .ranking-field-search {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 860px) {
+        .ranking-hero,
+        .ranking-info-grid,
+        .ranking-cta {
+            grid-template-columns: 1fr;
+        }
+
+        .ranking-hero::after {
+            inset: 16% -55% 0 15%;
+            opacity: 0.34;
+        }
+
+        .ranking-hero-side {
+            justify-self: start;
+        }
+
+        .ranking-filter-panel,
+        .ranking-top-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ranking-podium-card.is-leader {
+            transform: none;
+        }
+
+        .ranking-table-head {
+            display: none;
+        }
+
+        .ranking-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .ranking-row-score {
+            justify-content: space-between;
+        }
+
+        .ranking-row-score .ranking-score-bar {
+            flex: 1;
+            width: auto;
+        }
+
+        .ranking-evolution {
+            text-align: left;
+        }
+
+        .ranking-info-card:first-child,
+        .ranking-info-card:last-child {
+            border-radius: 14px;
+        }
+
+        .ranking-info-card:last-child {
+            border-left: 1px solid rgba(34, 244, 255, 0.16);
+            border-top: 0;
+        }
+
+        .ranking-weight-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 560px) {
+        #view-ranking {
+            width: min(100%, calc(100vw - 28px));
+            padding-top: 24px;
+        }
+
+        .ranking-hero h2 {
+            font-size: 2.55rem !important;
+        }
+
+        .ranking-search-wrap {
+            grid-template-columns: 1fr;
+        }
+
+        .ranking-search-button {
+            width: 100%;
+        }
+
+        .ranking-suggestions {
+            right: 0;
+        }
+
+        .ranking-cta {
+            padding: 22px;
+        }
+
+        .ranking-footer-note {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div id="view-ranking" class="hidden animate-fade-in-up">
+    <div class="ranking-shell">
+        <header class="ranking-hero">
+            <div>
+                <p class="ranking-eyebrow">Ranking S.S.W</p>
+                <h2>Os melhores sites em performance digital.</h2>
+                <p>O ranking S.S.W reúne os sites com melhor desempenho em SEO, performance, acessibilidade, segurança e experiência do usuário.</p>
+                <span class="ranking-live-note">
+                    <i data-lucide="info"></i>
+                    Os dados são atualizados com base em auditorias reais.
                 </span>
-                <span class="inline-flex items-center gap-2 rounded-xl border border-white/[0.07] bg-[#0c1220] px-3 py-2">
-                    <i data-lucide="filter" class="h-4 w-4 text-slate-500"></i>
-                    <strong id="rankingActiveFilter" class="font-black text-white">Todos</strong>
+            </div>
+
+            <aside class="ranking-hero-side" aria-label="Resumo do ranking">
+                <span class="ranking-mini-stat">
+                    <span><i data-lucide="network"></i></span>
+                    <span><strong id="rankingTotalCount">0</strong> sites avaliados</span>
                 </span>
+                <span class="ranking-mini-select">
+                    <span id="rankingActiveFilter">Todos os sites</span>
+                    <i data-lucide="chevron-down"></i>
+                </span>
+            </aside>
+        </header>
+
+        <section class="ranking-filter-panel" aria-label="Filtros do ranking">
+            <div class="ranking-field">
+                <label for="rankingTypeSelect">Tipo de site</label>
+                <select id="rankingTypeSelect" class="ranking-select" onchange="setRankingType(this.value)">
+                    <option value="all">Todos</option>
+                    <option value="landing">Landing pages</option>
+                    <option value="complex">Sites completos</option>
+                </select>
             </div>
-        </div>
-    </header>
 
-    <section class="overflow-hidden rounded-2xl border border-white/[0.07] bg-[#080d16] shadow-2xl">
-        <div class="border-b border-white/[0.07] bg-[#0c1220] p-4 md:p-5">
-            <div class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-                <div class="relative">
-                    <i data-lucide="search" class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500"></i>
-                    <input type="text" id="searchRankingInput" placeholder="Buscar site no ranking..." class="h-12 w-full rounded-xl border border-white/[0.07] bg-[#020408] pl-12 pr-28 text-white placeholder-slate-500 transition focus:border-cyan-300/60 focus:outline-none focus:ring-2 focus:ring-cyan-300/10" autocomplete="off">
-                    <button onclick="searchRankingSite()" class="absolute right-1.5 top-1.5 inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-cyan-300 px-3 text-sm font-black text-[#020408] transition hover:bg-cyan-200">
-                        <i data-lucide="arrow-right" class="h-4 w-4"></i>
-                        <span class="hidden sm:inline">Buscar</span>
+            <div class="ranking-field" id="rankingFilter">
+                <label for="rankingCategorySelect">Categoria</label>
+                <select id="rankingCategorySelect" class="ranking-select" onchange="filterRankingData(this.value)">
+                    <option value="todos">Todas</option>
+                    <option value="comercio">Comércio e varejo</option>
+                    <option value="servicos">Serviços e saúde</option>
+                    <option value="digital">Digital e tech</option>
+                    <option value="financas">Finanças e B2B</option>
+                    <option value="educacao">Educação e cursos</option>
+                    <option value="imoveis">Imóveis</option>
+                </select>
+                <span id="rankingFilterButtonLabel" hidden>Todos</span>
+                <div id="rankingFilterMenu" class="hidden"></div>
+            </div>
+
+            <div class="ranking-field">
+                <label for="rankingMinimumScore">Score mínimo</label>
+                <select id="rankingMinimumScore" class="ranking-select" onchange="setRankingMinimumScore(this.value)">
+                    <option value="0">Todos</option>
+                    <option value="60">60+</option>
+                    <option value="70">70+</option>
+                    <option value="80">80+</option>
+                    <option value="90">90+</option>
+                </select>
+            </div>
+
+            <div class="ranking-field ranking-field-search">
+                <label for="searchRankingInput">Buscar</label>
+                <div class="ranking-search-wrap">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="searchRankingInput" class="ranking-search-input" placeholder="Buscar site no ranking..." autocomplete="off">
+                    <button type="button" class="ranking-search-button" onclick="searchRankingSite()">
+                        <i data-lucide="arrow-right"></i>
+                        Buscar
                     </button>
-
-                    <div id="searchSuggestionsDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden overflow-hidden rounded-xl border border-white/[0.07] bg-[#0c1220] shadow-2xl lg:max-w-2xl">
-                        <ul id="suggestionsList" class="max-h-72 overflow-y-auto chat-scrollbar"></ul>
-                    </div>
-                </div>
-
-                <div id="rankingFilter" class="relative lg:justify-self-end">
-                    <button type="button" onclick="toggleRankingFilterMenu()" class="inline-flex h-12 w-full items-center justify-between gap-4 rounded-xl border border-white/[0.07] bg-[#020408] px-4 text-sm font-black text-white transition hover:border-white/20 lg:w-64">
-                        <span class="inline-flex items-center gap-2">
-                            <i data-lucide="sliders-horizontal" class="h-4 w-4 text-cyan-300"></i>
-                            Filtro
-                        </span>
-                        <span class="inline-flex items-center gap-2 text-slate-300">
-                            <span id="rankingFilterButtonLabel">Todos</span>
-                            <i data-lucide="chevron-down" class="h-4 w-4"></i>
-                        </span>
-                    </button>
-
-                    <div id="rankingFilterMenu" class="absolute right-0 top-full z-50 mt-2 hidden w-full min-w-72 overflow-hidden rounded-xl border border-white/[0.07] bg-[#0c1220] p-1 shadow-2xl">
-                        <button type="button" data-filter="todos" onclick="filterRankingData('todos', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg bg-cyan-300/[0.12] px-3 py-2.5 text-left text-sm font-black text-white transition hover:bg-cyan-300/[0.16]">
-                            Todos
-                            <i data-lucide="check" class="ranking-filter-check h-4 w-4 text-cyan-300"></i>
-                        </button>
-                        <button type="button" data-filter="comercio" onclick="filterRankingData('comercio', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white">
-                            Comercio e varejo
-                            <i data-lucide="check" class="ranking-filter-check hidden h-4 w-4 text-cyan-300"></i>
-                        </button>
-                        <button type="button" data-filter="servicos" onclick="filterRankingData('servicos', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white">
-                            Servicos e saude
-                            <i data-lucide="check" class="ranking-filter-check hidden h-4 w-4 text-cyan-300"></i>
-                        </button>
-                        <button type="button" data-filter="digital" onclick="filterRankingData('digital', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white">
-                            Digital e tech
-                            <i data-lucide="check" class="ranking-filter-check hidden h-4 w-4 text-cyan-300"></i>
-                        </button>
-                        <button type="button" data-filter="financas" onclick="filterRankingData('financas', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white">
-                            Financas e B2B
-                            <i data-lucide="check" class="ranking-filter-check hidden h-4 w-4 text-cyan-300"></i>
-                        </button>
-                        <button type="button" data-filter="educacao" onclick="filterRankingData('educacao', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white">
-                            Educação e cursos
-                            <i data-lucide="check" class="ranking-filter-check hidden h-4 w-4 text-cyan-300"></i>
-                        </button>
-                        <button type="button" data-filter="imoveis" onclick="filterRankingData('imoveis', this)" class="ranking-filter-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/[0.04] hover:text-white">
-                            Imoveis
-                            <i data-lucide="check" class="ranking-filter-check hidden h-4 w-4 text-cyan-300"></i>
-                        </button>
+                    <div id="searchSuggestionsDropdown" class="ranking-suggestions hidden">
+                        <ul id="suggestionsList"></ul>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-4 flex justify-center">
-                <div class="inline-flex w-full rounded-xl border border-white/[0.07] bg-[#020408] p-1 sm:w-auto">
-                    <button id="toggleLanding" type="button" onclick="setRankingType('landing')" class="flex-1 rounded-lg bg-cyan-300 px-4 py-2.5 text-sm font-black text-[#020408] shadow-[0_0_20px_rgba(34,211,238,0.20)] transition sm:flex-none">
-                        Landing Pages
-                        <span class="ml-1 text-xs font-bold opacity-70">(1-4 paginas)</span>
-                    </button>
-                    <button id="toggleComplex" type="button" onclick="setRankingType('complex')" class="flex-1 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-400 transition hover:bg-white/[0.04] hover:text-white sm:flex-none">
-                        Sites Complexos
-                        <span class="ml-1 text-xs font-bold opacity-70">(5+ paginas)</span>
-                    </button>
-                </div>
+            <div id="searchResultContainer" class="ranking-search-result hidden"></div>
+        </section>
+
+        <section id="topThreeList" class="ranking-top-grid" aria-label="Três primeiros colocados"></section>
+
+        <section class="ranking-table-shell" aria-label="Classificação geral">
+            <div class="ranking-table-head">
+                <span>Posição</span>
+                <span>Site</span>
+                <span>Categoria</span>
+                <span>Score geral</span>
+                <span>Evolução</span>
             </div>
+            <div id="rankingList"></div>
+            <button type="button" class="ranking-full-link" onclick="document.getElementById('rankingList')?.scrollIntoView({ behavior: 'smooth', block: 'start' })">
+                Ver ranking completo
+                <i data-lucide="arrow-right" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i>
+            </button>
+        </section>
 
-            <div id="searchResultContainer" class="mt-4 hidden"></div>
-        </div>
+        <section class="ranking-info-grid" aria-label="Metodologia do ranking">
+            <article class="ranking-info-card">
+                <h3>Como calculamos o score</h3>
+                <p>Nosso algoritmo analisa pilares essenciais para avaliar a qualidade digital de um site.</p>
 
-        <div class="space-y-5 p-4 md:p-5">
-            <section class="relative overflow-hidden rounded-2xl border border-cyan-300/20 bg-gradient-to-br from-[#0d1825] to-[#0c1220] p-4 md:p-5">
-                <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.025),transparent_60%)]"></div>
-                <div class="relative">
-                <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-                    <div class="max-w-3xl">
-                        <p class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-cyan-300">Por que disputar o topo?</p>
-                        <h3 class="text-2xl font-black tracking-tight text-white">O ranking funciona como prova publica de qualidade.</h3>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">
-                            Clientes comparam antes de decidir. Um site bem posicionado transmite autoridade, reduz desconfiança e cria um motivo claro para escolher sua marca.
-                        </p>
-                    </div>
-
-                    <div class="grid gap-2 sm:grid-cols-3 lg:w-[520px]">
-                        <div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-3">
-                            <i data-lucide="badge-check" class="mb-3 h-5 w-5 text-cyan-300"></i>
-                            <p class="text-sm font-black text-white">Mais confiança</p>
-                            <p class="mt-1 text-xs leading-relaxed text-slate-500">Seu site vira referencia visivel no mercado.</p>
-                        </div>
-                        <div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-3">
-                            <i data-lucide="trending-up" class="mb-3 h-5 w-5 text-cyan-300"></i>
-                            <p class="text-sm font-black text-white">Mais conversão</p>
-                            <p class="mt-1 text-xs leading-relaxed text-slate-500">Performance forte melhora a decisao do cliente.</p>
-                        </div>
-                        <div class="rounded-xl border border-white/[0.07] bg-[#080d16] p-3">
-                            <i data-lucide="target" class="mb-3 h-5 w-5 text-cyan-300"></i>
-                            <p class="text-sm font-black text-white">Meta clara</p>
-                            <p class="mt-1 text-xs leading-relaxed text-slate-500">Veja onde superar os lideres do seu nicho.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-5 flex flex-col gap-3 border-t border-white/[0.07] pt-4 sm:flex-row sm:items-center sm:justify-between">
-                    <p class="text-sm text-slate-400">
-                        Quer ver sua marca entre os primeiros? Comece medindo o score atual e descubra o que falta para subir.
-                    </p>
-                    <button type="button" onclick="nav('home')" class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-cyan-300 px-4 text-sm font-black text-[#020408] shadow-[0_0_20px_rgba(34,211,238,0.28)] transition hover:bg-cyan-200 sm:w-auto">
-                        Auditar meu site
-                        <i data-lucide="arrow-right" class="h-4 w-4"></i>
-                    </button>
-                </div>
-                </div>
-            </section>
-
-            <div class="grid gap-5 lg:grid-cols-[340px_minmax(0,1fr)]">
-                <aside class="rounded-2xl border border-white/[0.07] bg-[#0c1220] p-4">
-                    <div class="mb-4 flex items-center justify-between">
+                <div class="ranking-weight-grid">
+                    <div class="ranking-weight">
+                        <span class="ranking-weight-icon"><i data-lucide="search"></i></span>
                         <div>
-                            <h3 class="text-lg font-black text-white">Top 3</h3>
-                            <p class="mt-1 text-sm text-slate-500">As marcas com maior autoridade técnica.</p>
+                            <span class="ranking-weight-label">SEO</span>
+                            <div class="ranking-weight-track"><span style="width:25%"></span></div>
                         </div>
-                        <i data-lucide="trophy" class="h-5 w-5 text-cyan-300"></i>
+                        <strong class="ranking-weight-percent">25%</strong>
                     </div>
-
-                    <div id="topThreeList" class="space-y-2"></div>
-                </aside>
-
-                <section class="overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0c1220]">
-                    <div class="flex flex-col gap-2 border-b border-white/[0.07] p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="ranking-weight">
+                        <span class="ranking-weight-icon"><i data-lucide="zap"></i></span>
                         <div>
-                            <h3 class="text-lg font-black text-white">Classificação</h3>
-                            <p class="mt-1 text-sm text-slate-500">Os 10 primeiros ficam visiveis; role para ver o restante.</p>
+                            <span class="ranking-weight-label">Performance</span>
+                            <div class="ranking-weight-track"><span style="width:20%"></span></div>
                         </div>
-                        <span class="inline-flex w-max items-center gap-2 rounded-lg border border-white/[0.07] bg-[#080d16] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-slate-400">
-                            <i data-lucide="arrow-down-wide-narrow" class="h-4 w-4"></i>
-                            Score
-                        </span>
+                        <strong class="ranking-weight-percent">20%</strong>
                     </div>
-
-                    <div class="hidden grid-cols-[76px_minmax(0,1fr)_150px_96px] gap-4 border-b border-white/[0.07] px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em] text-slate-500 lg:grid">
-                        <span>Rank</span>
-                        <span>Site</span>
-                        <span>Nicho</span>
-                        <span class="text-right">Score</span>
+                    <div class="ranking-weight">
+                        <span class="ranking-weight-icon"><i data-lucide="accessibility"></i></span>
+                        <div>
+                            <span class="ranking-weight-label">Acessibilidade</span>
+                            <div class="ranking-weight-track"><span style="width:20%"></span></div>
+                        </div>
+                        <strong class="ranking-weight-percent">20%</strong>
                     </div>
+                    <div class="ranking-weight">
+                        <span class="ranking-weight-icon"><i data-lucide="shield-check"></i></span>
+                        <div>
+                            <span class="ranking-weight-label">Segurança</span>
+                            <div class="ranking-weight-track"><span style="width:15%"></span></div>
+                        </div>
+                        <strong class="ranking-weight-percent">15%</strong>
+                    </div>
+                    <div class="ranking-weight">
+                        <span class="ranking-weight-icon"><i data-lucide="smile"></i></span>
+                        <div>
+                            <span class="ranking-weight-label">Experiência do usuário</span>
+                            <div class="ranking-weight-track"><span style="width:15%"></span></div>
+                        </div>
+                        <strong class="ranking-weight-percent">15%</strong>
+                    </div>
+                    <div class="ranking-weight">
+                        <span class="ranking-weight-icon"><i data-lucide="target"></i></span>
+                        <div>
+                            <span class="ranking-weight-label">Clareza comercial</span>
+                            <div class="ranking-weight-track"><span style="width:5%"></span></div>
+                        </div>
+                        <strong class="ranking-weight-percent">5%</strong>
+                    </div>
+                </div>
+            </article>
 
-                    <div id="rankingList" class="max-h-[37.5rem] divide-y divide-white/[0.07] overflow-y-auto chat-scrollbar"></div>
-                </section>
+            <article class="ranking-info-card">
+                <h3>Metodologia transparente</h3>
+                <p>Utilizamos dados reais e testes automatizados baseados em padrões do mercado.</p>
+                <ul class="ranking-method-list">
+                    <li><span class="ranking-method-icon"><i data-lucide="calendar-check"></i></span>Auditorias automatizadas recorrentes</li>
+                    <li><span class="ranking-method-icon"><i data-lucide="clock"></i></span>Dados objetivos e verificáveis</li>
+                    <li><span class="ranking-method-icon"><i data-lucide="badge-check"></i></span>Sem possibilidade de manipulação manual</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="ranking-cta">
+            <div class="ranking-cta-icon" aria-hidden="true">
+                <i data-lucide="crown"></i>
             </div>
-        </div>
-    </section>
+            <div>
+                <h3>Descubra sua posição no ranking</h3>
+                <p>Audite seu site agora e veja quanto falta para entrar no Top 10.</p>
+                <div class="ranking-cta-checks">
+                    <span><i data-lucide="check"></i>Relatório completo</span>
+                    <span><i data-lucide="check"></i>Comparação com líderes</span>
+                    <span><i data-lucide="check"></i>Plano de melhorias</span>
+                </div>
+            </div>
+            <button type="button" class="ranking-cta-button" onclick="nav('home')">
+                Auditar meu site agora
+                <i data-lucide="arrow-right"></i>
+            </button>
+        </section>
+
+        <footer class="ranking-footer-note">
+            <span><i data-lucide="lock" style="width:15px;height:15px;display:inline-block;vertical-align:-2px;color:#22f4ff;"></i> Ranking público e imparcial da S.S.W Intelligence</span>
+            <span id="rankingLastUpdate">Última atualização: agora</span>
+        </footer>
+    </div>
 </div>
