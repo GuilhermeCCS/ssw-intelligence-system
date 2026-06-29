@@ -14,8 +14,9 @@
 
     .ranking-shell {
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         border-radius: 0;
+        padding-top: 4px;
     }
 
     .ranking-shell::before {
@@ -38,11 +39,11 @@
         position: relative;
         min-height: 330px;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 300px;
+        grid-template-columns: minmax(0, 1fr);
         gap: 42px;
         align-items: start;
         margin-bottom: 28px;
-        padding: 22px 0 24px;
+        padding: 50px 0 24px;
         isolation: isolate;
     }
 
@@ -123,10 +124,13 @@
     }
 
     .ranking-hero-side {
-        justify-self: end;
-        display: grid;
-        gap: 12px;
-        min-width: 170px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 4;
+        display: flex;
+        justify-content: flex-end;
+        min-width: 0;
     }
 
     .ranking-mini-stat,
@@ -144,6 +148,10 @@
         font-size: 0.88rem;
         font-weight: 800;
         backdrop-filter: blur(14px);
+    }
+
+    .ranking-mini-stat {
+        min-width: 178px;
     }
 
     .ranking-mini-stat svg,
@@ -555,6 +563,11 @@
         cursor: pointer;
     }
 
+    .ranking-full-link:disabled {
+        color: #8fa0b7;
+        cursor: default;
+    }
+
     .ranking-info-grid {
         display: grid;
         grid-template-columns: 1.4fr .9fr;
@@ -774,7 +787,11 @@
         }
 
         .ranking-hero-side {
-            justify-self: start;
+            position: relative;
+            top: auto;
+            right: auto;
+            justify-content: flex-start;
+            margin-bottom: 12px;
         }
 
         .ranking-filter-panel,
@@ -941,9 +958,9 @@
                 <span>Evolução</span>
             </div>
             <div id="rankingList"></div>
-            <button type="button" class="ranking-full-link" onclick="document.getElementById('rankingList')?.scrollIntoView({ behavior: 'smooth', block: 'start' })">
+            <button type="button" id="rankingMoreButton" class="ranking-full-link" onclick="showMoreRankingRows()">
                 Ver ranking completo
-                <i data-lucide="arrow-right" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i>
+                <i data-lucide="arrow-down" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i>
             </button>
         </section>
 

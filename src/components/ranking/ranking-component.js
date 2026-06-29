@@ -6,6 +6,11 @@ let activeRankingFilter = 'todos';
 let currentRankingType = 'all';
 let rankingMinimumScore = 0;
 let rankingInteractionsReady = false;
+let rankingVisibleLimit = 10;
+let currentRankingFilteredData = [];
+
+const RANKING_INITIAL_LIMIT = 10;
+const RANKING_LOAD_STEP = 20;
 
 const rankingFilterLabels = {
     todos: 'Todos os sites',
@@ -298,6 +303,7 @@ function updateRankingSummary(dataToRender) {
 }
 
 function renderRankingView(dataToRender) {
+    currentRankingFilteredData = dataToRender;
     updateRankingSummary(dataToRender);
     renderTopThree(dataToRender.slice(0, 3));
     renderRankingRows(dataToRender);
@@ -396,7 +402,9 @@ function renderRankingRows(dataToRender) {
         return;
     }
 
-    const rows = dataToRender.slice(3, 10);
+    const visibleLimit = Math.max(RANKING_INITIAL_LIMIT, rankingVisibleLimit);
+    const rows = dataToRender.slice(3, visibleLimit);
+    updateRankingMoreButton(dataToRender.length, visibleLimit);
     if (!rows.length) {
         rankingList.innerHTML = `
             <div style="padding:24px;text-align:center;color:#9aabc0;">Apenas os destaques do pódio estão disponíveis neste filtro.</div>
@@ -432,6 +440,30 @@ function renderRankingRows(dataToRender) {
     refreshRankingIcons();
 }
 
+function updateRankingMoreButton(totalItems, visibleLimit = rankingVisibleLimit) {
+    const button = document.getElementById('rankingMoreButton');
+    if (!button) return;
+
+    const hasMore = totalItems > visibleLimit;
+    const remaining = Math.max(0, totalItems - visibleLimit);
+
+    button.hidden = totalItems <= RANKING_INITIAL_LIMIT;
+    button.disabled = !hasMore;
+    button.innerHTML = hasMore
+        ? `Ver mais ${Math.min(RANKING_LOAD_STEP, remaining)} sites <i data-lucide="arrow-down" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i>`
+        : `Ranking completo exibido <i data-lucide="check" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i>`;
+}
+
+function showMoreRankingRows() {
+    rankingVisibleLimit += RANKING_LOAD_STEP;
+    renderRankingRows(currentRankingFilteredData);
+
+    const button = document.getElementById('rankingMoreButton');
+    if (button) {
+        button.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
 function syncRankingControls() {
     const typeSelect = document.getElementById('rankingTypeSelect');
     const categorySelect = document.getElementById('rankingCategorySelect');
@@ -457,6 +489,7 @@ function toggleRankingFilterMenu(forceOpen) {
 
 function setRankingType(type) {
     currentRankingType = ['all', 'landing', 'complex'].includes(type) ? type : 'all';
+    rankingVisibleLimit = RANKING_INITIAL_LIMIT;
     syncRankingControls();
     applyRankingFilters();
 }
@@ -468,12 +501,14 @@ function setRankingTypeButtonState() {
 function setRankingMinimumScore(value) {
     const parsed = Number(value);
     rankingMinimumScore = Number.isFinite(parsed) ? parsed : 0;
+    rankingVisibleLimit = RANKING_INITIAL_LIMIT;
     syncRankingControls();
     applyRankingFilters();
 }
 
 function filterRankingData(category, btnElement) {
     activeRankingFilter = category || 'todos';
+    rankingVisibleLimit = RANKING_INITIAL_LIMIT;
     setActiveRankingFilterOption(btnElement);
     toggleRankingFilterMenu(false);
     applyRankingFilters();
