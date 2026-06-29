@@ -320,7 +320,7 @@ function renderRankingRows(dataToRender) {
         return;
     }
 
-    const rows = dataToRender.slice(3);
+    const rows = dataToRender.slice(3, 10);
     if (!rows.length) {
         rankingList.innerHTML = `
             <div style="padding:24px;text-align:center;color:#9aabc0;">Apenas os destaques do pódio estão disponíveis neste filtro.</div>

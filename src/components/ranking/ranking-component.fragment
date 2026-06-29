@@ -1,9 +1,15 @@
 <style>
     #view-ranking {
-        width: min(100%, 1120px);
+        width: min(100%, 1440px);
         margin: 0 auto;
-        padding: 34px 0 36px;
+        padding: 38px clamp(18px, 2.5vw, 36px) 40px;
         color: #f8fbff;
+        background: #020711;
+    }
+
+    #view-ranking #rankingList {
+        max-height: none !important;
+        overflow: visible !important;
     }
 
     .ranking-shell {
@@ -24,27 +30,34 @@
         pointer-events: none;
     }
 
+    body:has(#view-ranking:not(.hidden)) #mainContentWrapper,
+    body:has(#view-ranking:not(.hidden)) #mainContent,
+    body:has(#view-ranking:not(.hidden)) .main-content,
+    body:has(#view-ranking:not(.hidden)) .content-area {
+        background: #020711 !important;
+    }
+
     .ranking-hero {
         position: relative;
-        min-height: 292px;
+        min-height: 330px;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
+        grid-template-columns: minmax(0, 1fr) 300px;
         gap: 42px;
         align-items: start;
-        margin-bottom: 22px;
-        padding: 16px 0 18px;
+        margin-bottom: 28px;
+        padding: 22px 0 24px;
         isolation: isolate;
     }
 
     .ranking-hero::after {
         content: "";
         position: absolute;
-        inset: -60px -22px -42px 42%;
+        inset: -84px -42px -68px 37%;
         z-index: -1;
-        background:
-            linear-gradient(90deg, #020711 0%, rgba(2, 7, 17, 0.72) 24%, rgba(2, 7, 17, 0.14) 58%, rgba(2, 7, 17, 0) 100%),
-            url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-1") right center / contain no-repeat;
-        opacity: 0.95;
+        background: url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-2") right center / contain no-repeat;
+        opacity: 0.96;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.22) 11%, #000 30%, #000 100%);
+        mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.22) 11%, #000 30%, #000 100%);
         pointer-events: none;
     }
 
@@ -722,7 +735,8 @@
 
     @media (max-width: 1100px) {
         #view-ranking {
-            width: min(100%, calc(100vw - 48px));
+            width: min(100%, calc(100vw - 28px));
+            padding: 30px 14px 34px !important;
         }
 
         .ranking-filter-panel {
@@ -799,7 +813,7 @@
     @media (max-width: 560px) {
         #view-ranking {
             width: min(100%, calc(100vw - 28px));
-            padding-top: 24px;
+            padding: 24px 0 32px !important;
         }
 
         .ranking-hero h2 {
