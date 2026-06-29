@@ -104,6 +104,27 @@ function siteInitial(site) {
     return (name.match(/[a-z0-9]/i)?.[0] || 'S').toUpperCase();
 }
 
+function siteIconUrl(site) {
+    const explicitIcon = rankingText(
+        site?.favicon_url ||
+        site?.favicon ||
+        site?.icon_url ||
+        site?.site_icon ||
+        site?.logo_url ||
+        site?.logo,
+        ''
+    );
+
+    if (explicitIcon && /^https?:\/\//i.test(explicitIcon)) {
+        return explicitIcon;
+    }
+
+    const domain = siteDomain(site);
+    if (!domain || domain === 'Sem nome') return '';
+
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+}
+
 function trendValue(site) {
     const possible = [
         site?.score_delta,
@@ -246,7 +267,25 @@ function renderRankingView(dataToRender) {
 }
 
 function logoMarkup(site, className = 'ranking-site-logo') {
-    return `<div class="${className}" aria-hidden="true">${escapeHtml(siteInitial(site))}</div>`;
+    const initial = escapeHtml(siteInitial(site));
+    const iconUrl = siteIconUrl(site);
+
+    if (!iconUrl) {
+        return `<div class="${className}" aria-hidden="true">${initial}</div>`;
+    }
+
+    return `
+        <div class="${className}" aria-hidden="true">
+            <img
+                src="${escapeHtml(iconUrl)}"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+                onerror="this.parentElement.textContent='${initial}'"
+            >
+        </div>
+    `;
 }
 
 function podiumMetric(label, value) {

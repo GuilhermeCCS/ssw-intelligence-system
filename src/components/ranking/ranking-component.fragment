@@ -354,7 +354,9 @@
         width: 100%;
         height: 100%;
         border-radius: inherit;
-        object-fit: cover;
+        object-fit: contain;
+        padding: 12px;
+        box-sizing: border-box;
     }
 
     .ranking-site-name {
@@ -492,7 +494,9 @@
         width: 100%;
         height: 100%;
         border-radius: inherit;
-        object-fit: cover;
+        object-fit: contain;
+        padding: 7px;
+        box-sizing: border-box;
     }
 
     .ranking-row-title {
