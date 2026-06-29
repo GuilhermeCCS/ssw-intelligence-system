@@ -28,6 +28,62 @@ const rankingTypeLabels = {
     complex: 'Sites completos'
 };
 
+const rankingKnownDomains = {
+    google: 'google.com',
+    supabase: 'supabase.com',
+    en: 'en.wikipedia.org',
+    pt: 'pt.wix.com',
+    riotgames: 'riotgames.com',
+    sswintelligence: 'sswintelligence.com.br',
+    twitch: 'twitch.tv',
+    isadorabalem: 'isadorabalem.com.br',
+    vgoncalvesadv: 'vgoncalvesadv.com.br',
+    direcaoconcursos: 'direcaoconcursos.com.br',
+    kabum: 'kabum.com.br',
+    critterpods: 'critterpods.com',
+    nuuvem: 'nuuvem.com',
+    jessicamarques: 'jessicamarques.adv.br',
+    qconcursos: 'qconcursos.com',
+    pichau: 'pichau.com.br',
+    talent: 'talent.com',
+    napista: 'napista.com.br',
+    podiumengenharia: 'podiumengenharia.com.br',
+    gutembergamorim: 'gutembergamorim.com.br',
+    ilovepdf: 'ilovepdf.com',
+    apple: 'apple.com',
+    tfgadvocacia: 'tfgadvocacia.com.br',
+    cidadeoferta: 'cidadeoferta.com.br',
+    crunchyroll: 'crunchyroll.com',
+    ideologic: 'ideologic.com.br',
+    ingresso: 'ingresso.com',
+    llamenina: 'llamenina.com.br',
+    zampieriimoveis: 'zampieriimoveis.com.br',
+    carlosadvogadocriminal: 'carlosadvogadocriminal.com.br',
+    amazon: 'amazon.com.br',
+    havan: 'havan.com.br',
+    intel: 'intel.com',
+    tnh1: 'tnh1.com.br',
+    direitodovigilante: 'direitodovigilante.com.br',
+    gov: 'gov.br',
+    rayanearaujoadvocacia: 'rayanearaujoadvocacia.com.br',
+    dell: 'dell.com',
+    hyundai: 'hyundai.com.br',
+    renault: 'renault.com.br',
+    betocarrero: 'betocarrero.com.br',
+    g1: 'g1.globo.com',
+    mpxadvogados: 'mpxadvogados.com.br',
+    slzadvogados: 'slzadvogados.com.br',
+    dwinfo: 'dwinfo.com.br',
+    trivago: 'trivago.com.br',
+    ofertas: 'ofertas.com.br',
+    sites: 'sswintelligence.com.br/sites',
+    centauro: 'centauro.com.br',
+    dropshot: 'dropshot.com.br',
+    chevrolet: 'chevrolet.com.br',
+    honda: 'honda.com.br',
+    magazineluiza: 'magazineluiza.com.br'
+};
+
 function rankingText(value, fallback = '') {
     return value === undefined || value === null || value === '' ? fallback : String(value);
 }
@@ -43,6 +99,49 @@ function escapeHtml(value) {
 
 function normalizeRankingText(value) {
     return rankingText(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function rankingDomainKey(value) {
+    return normalizeRankingText(value).replace(/[^a-z0-9]/g, '');
+}
+
+function rankingCleanHost(value) {
+    const raw = rankingText(value, '').trim();
+    if (!raw) return '';
+
+    try {
+        const normalized = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+        const parsed = new URL(normalized);
+        return parsed.hostname.replace(/^www\./i, '').toLowerCase();
+    } catch (_) {
+        return raw
+            .replace(/^https?:\/\//i, '')
+            .replace(/^www\./i, '')
+            .split('/')[0]
+            .trim()
+            .toLowerCase();
+    }
+}
+
+function knownRankingDomain(site) {
+    const candidates = [
+        site?.site_name,
+        site?.name,
+        site?.title,
+        site?.domain,
+        site?.url,
+        site?.site_url,
+        site?.analyzed_url,
+        site?.website,
+        site?.site
+    ];
+
+    for (const candidate of candidates) {
+        const key = rankingDomainKey(candidate);
+        if (key && rankingKnownDomains[key]) return rankingKnownDomains[key];
+    }
+
+    return '';
 }
 
 function scoreValue(site) {
@@ -87,17 +186,13 @@ function siteUrl(site) {
 
 function siteDomain(site) {
     const raw = siteUrl(site) || siteName(site);
-    try {
-        const normalized = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
-        const parsed = new URL(normalized);
-        return parsed.hostname.replace(/^www\./i, '');
-    } catch (_) {
-        return raw
-            .replace(/^https?:\/\//i, '')
-            .replace(/^www\./i, '')
-            .split('/')[0]
-            .trim();
-    }
+    const host = rankingCleanHost(raw);
+    if (host.includes('.') && !host.includes(' ')) return host;
+
+    const mappedHost = rankingCleanHost(knownRankingDomain(site));
+    if (mappedHost.includes('.') && !mappedHost.includes(' ')) return mappedHost;
+
+    return host || raw;
 }
 
 function siteCategory(site) {
@@ -110,6 +205,9 @@ function siteInitial(site) {
 }
 
 function faviconDomain(site) {
+    const knownDomain = rankingCleanHost(knownRankingDomain(site));
+    if (knownDomain.includes('.') && !knownDomain.includes(' ')) return knownDomain;
+
     const candidates = [
         site?.favicon_domain,
         site?.domain,
@@ -123,24 +221,8 @@ function faviconDomain(site) {
     ];
 
     for (const candidate of candidates) {
-        const raw = rankingText(candidate, '').trim();
-        if (!raw) continue;
-
-        try {
-            const normalized = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
-            const parsed = new URL(normalized);
-            const host = parsed.hostname.replace(/^www\./i, '').toLowerCase();
-            if (host.includes('.') && !host.includes(' ')) return host;
-        } catch (_) {
-            const host = raw
-                .replace(/^https?:\/\//i, '')
-                .replace(/^www\./i, '')
-                .split('/')[0]
-                .trim()
-                .toLowerCase();
-
-            if (host.includes('.') && !host.includes(' ')) return host;
-        }
+        const host = rankingCleanHost(candidate);
+        if (host.includes('.') && !host.includes(' ')) return host;
     }
 
     return '';
