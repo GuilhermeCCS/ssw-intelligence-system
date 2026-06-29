@@ -43,17 +43,17 @@
         gap: 42px;
         align-items: start;
         margin-bottom: 28px;
-        padding: 50px 0 24px;
+        padding: 76px 0 24px;
         isolation: isolate;
     }
 
     .ranking-hero::after {
         content: "";
         position: absolute;
-        top: -26px;
+        top: 52px;
         right: 0;
-        width: min(58vw, 650px);
-        height: min(34vw, 380px);
+        width: min(52vw, 560px);
+        height: min(29vw, 315px);
         z-index: -1;
         background: url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-5") right top / contain no-repeat;
         opacity: 1;
@@ -127,7 +127,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        z-index: 4;
+        z-index: 8;
         display: flex;
         justify-content: flex-end;
         min-width: 0;

@@ -2,7 +2,7 @@
 async function loadRankingSection() {
     console.log('🚀 loadRankingSection iniciado');
     try {
-        const response = await fetch('/src/components/ranking/ranking-component.fragment?v=20260629-ranking-redesign-v9', { redirect: 'error' });
+        const response = await fetch('/src/components/ranking/ranking-component.fragment?v=20260629-ranking-redesign-v10', { redirect: 'error' });
         if (!response.ok) {
             throw new Error(`Falha ao carregar ranking: ${response.status}`);
         }
@@ -18,7 +18,7 @@ async function loadRankingSection() {
         }
         // Carrega o script JavaScript do ranking
         const script = document.createElement('script');
-        script.src = '/src/components/ranking/ranking-component.js?v=20260629-ranking-redesign-v9';
+        script.src = '/src/components/ranking/ranking-component.js?v=20260629-ranking-redesign-v10';
         script.onload = () => {
             console.log('✅ Script do ranking carregado');
             console.log('🔍 Verificando se loadRanking existe:', typeof loadRanking);
