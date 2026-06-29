@@ -4048,30 +4048,38 @@ function getCodigoHTML() {
             container.style.background = '#f5f5f5';
             container.style.borderRadius = '0';
 
+            var displayUrl = safeAuditText(String(url || '').length > 74 ? String(url || '').substring(0, 71) + '...' : String(url || ''));
+
             container.innerHTML = [
                 '<style>',
                     '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;width:min(100%,620px);display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}',
-                    '.audit-monitor-stage{width:100%;display:grid;place-items:center;gap:24px;opacity:var(--loader-opacity);transform:translateY(var(--loader-shift));transition:opacity .45s ease,transform .45s ease;}',
+                    '.audit-monitor-stage{width:100%;display:grid;place-items:center;gap:18px;opacity:var(--loader-opacity);transform:translateY(var(--loader-shift));transition:opacity .45s ease,transform .45s ease;}',
+                    '.audit-monitor-url{max-width:min(100%,520px);text-align:center;color:#52525b;font-size:clamp(.82rem,1.5vw,.96rem);font-weight:650;letter-spacing:-.01em;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+                    '.audit-monitor-url strong{color:#111827;font-weight:820;}',
                     '.audit-monitor-wrap{position:relative;width:min(100%,520px);aspect-ratio:420/280;}',
                     '.audit-monitor-svg{width:100%;height:100%;display:block;overflow:visible;}',
                     '.audit-monitor-line{fill:none;stroke:#111827;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;vector-effect:non-scaling-stroke;filter:none;}',
                     '.audit-monitor-outer{stroke-dashoffset:var(--outer-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
                     '.audit-monitor-base{stroke-dashoffset:var(--base-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
                     '.audit-monitor-inner{stroke:#3f3f46;stroke-width:5;stroke-dashoffset:var(--inner-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);opacity:.82;}',
-                    '.audit-monitor-message{position:absolute;inset:34% 12% auto;min-height:48px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.32rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .28s ease,transform .28s ease;}',
+                    '.audit-monitor-percent{position:absolute;inset:34% 12% auto;min-height:58px;display:grid;place-items:center;text-align:center;color:#111827;font-size:clamp(2.25rem,5vw,4.1rem);font-weight:860;letter-spacing:-.08em;line-height:1;}',
+                    '.audit-monitor-percent small{font-size:.36em;font-weight:760;letter-spacing:-.04em;color:#52525b;margin-left:5px;}',
+                    '.audit-monitor-message{min-height:34px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.28rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .28s ease,transform .28s ease;}',
                     '.audit-monitor-message.is-changing{opacity:0;transform:translateY(4px);}',
                     '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}}',
                 '</style>',
                 '<section id="auditMonitorLoader" aria-live="polite" aria-label="Auditoria em andamento">',
                     '<div class="audit-monitor-stage">',
+                        '<div class="audit-monitor-url"><strong>Analisando URL:</strong> ' + displayUrl + '</div>',
                         '<div id="auditMonitorWrap" class="audit-monitor-wrap">',
                             '<svg class="audit-monitor-svg" viewBox="0 0 420 280" role="img" aria-hidden="true">',
                                 '<path class="audit-monitor-line audit-monitor-outer" pathLength="100" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
                                 '<path class="audit-monitor-line audit-monitor-base" pathLength="100" d="M210 214V244M160 244H260"></path>',
                                 '<path class="audit-monitor-line audit-monitor-inner" pathLength="100" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
                             '</svg>',
-                            '<div id="auditLoadingMessage" class="audit-monitor-message">Iniciando análise...</div>',
+                            '<div class="audit-monitor-percent"><span id="auditLoadingPercentValue">0</span><small>%</small></div>',
                         '</div>',
+                        '<div id="auditLoadingMessage" class="audit-monitor-message">Iniciando análise...</div>',
                     '</div>',
                 '</section>'
             ].join('');
@@ -4102,6 +4110,9 @@ function getCodigoHTML() {
                     loader.style.setProperty('--loader-opacity', String(opacity));
                     loader.style.setProperty('--loader-shift', String((1 - opacity) * 10) + 'px');
                 }
+
+                var percentEl = document.getElementById('auditLoadingPercentValue');
+                if (percentEl) percentEl.textContent = String(Math.floor(progress));
 
                 var message = getStageText(progress);
                 if (message !== lastMessage) {
