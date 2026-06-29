@@ -104,6 +104,43 @@ function siteInitial(site) {
     return (name.match(/[a-z0-9]/i)?.[0] || 'S').toUpperCase();
 }
 
+function faviconDomain(site) {
+    const candidates = [
+        site?.favicon_domain,
+        site?.domain,
+        site?.hostname,
+        site?.host,
+        site?.url,
+        site?.site_url,
+        site?.analyzed_url,
+        site?.website,
+        site?.site
+    ];
+
+    for (const candidate of candidates) {
+        const raw = rankingText(candidate, '').trim();
+        if (!raw) continue;
+
+        try {
+            const normalized = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+            const parsed = new URL(normalized);
+            const host = parsed.hostname.replace(/^www\./i, '').toLowerCase();
+            if (host.includes('.') && !host.includes(' ')) return host;
+        } catch (_) {
+            const host = raw
+                .replace(/^https?:\/\//i, '')
+                .replace(/^www\./i, '')
+                .split('/')[0]
+                .trim()
+                .toLowerCase();
+
+            if (host.includes('.') && !host.includes(' ')) return host;
+        }
+    }
+
+    return '';
+}
+
 function siteIconUrl(site) {
     const explicitIcon = rankingText(
         site?.favicon_url ||
@@ -119,10 +156,10 @@ function siteIconUrl(site) {
         return explicitIcon;
     }
 
-    const domain = siteDomain(site);
-    if (!domain || domain === 'Sem nome') return '';
+    const domain = faviconDomain(site);
+    if (!domain) return '';
 
-    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+    return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(`https://${domain}`)}&sz=128`;
 }
 
 function trendValue(site) {
