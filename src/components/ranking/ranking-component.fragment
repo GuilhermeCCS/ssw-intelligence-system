@@ -52,12 +52,12 @@
     .ranking-hero::after {
         content: "";
         position: absolute;
-        inset: -84px -42px -68px 37%;
+        inset: -58px -36px -46px -36px;
         z-index: -1;
-        background: url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-2") right center / contain no-repeat;
-        opacity: 0.96;
-        -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.22) 11%, #000 30%, #000 100%);
-        mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.22) 11%, #000 30%, #000 100%);
+        background:
+            linear-gradient(90deg, #020711 0%, rgba(2, 7, 17, 0.96) 33%, rgba(2, 7, 17, 0.64) 58%, rgba(2, 7, 17, 0.16) 100%),
+            url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-3") right center / cover no-repeat;
+        opacity: 1;
         pointer-events: none;
     }
 
@@ -859,10 +859,6 @@
                 <span class="ranking-mini-stat">
                     <span><i data-lucide="network"></i></span>
                     <span><strong id="rankingTotalCount">0</strong> sites avaliados</span>
-                </span>
-                <span class="ranking-mini-select">
-                    <span id="rankingActiveFilter">Todos os sites</span>
-                    <i data-lucide="chevron-down"></i>
                 </span>
             </aside>
         </header>
