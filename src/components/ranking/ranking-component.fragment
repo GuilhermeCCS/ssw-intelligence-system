@@ -52,12 +52,15 @@
     .ranking-hero::after {
         content: "";
         position: absolute;
-        inset: -58px -36px -46px -36px;
+        top: -26px;
+        right: 0;
+        width: min(58vw, 650px);
+        height: min(34vw, 380px);
         z-index: -1;
-        background:
-            linear-gradient(90deg, #020711 0%, rgba(2, 7, 17, 0.96) 33%, rgba(2, 7, 17, 0.64) 58%, rgba(2, 7, 17, 0.16) 100%),
-            url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-3") right center / cover no-repeat;
+        background: url("/src/assets/images/ranking/ranking-hero-neon.png?v=20260629-4") right top / contain no-repeat;
         opacity: 1;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.72) 18%, #000 36%, #000 100%);
+        mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.72) 18%, #000 36%, #000 100%);
         pointer-events: none;
     }
 
@@ -756,8 +759,11 @@
         }
 
         .ranking-hero::after {
-            inset: 16% -55% 0 15%;
-            opacity: 0.34;
+            top: 20px;
+            right: -28%;
+            width: 92vw;
+            height: 52vw;
+            opacity: 0.26;
         }
 
         .ranking-hero-side {
