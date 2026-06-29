@@ -4030,6 +4030,104 @@ function getCodigoHTML() {
             if (!container) return;
             stopAuditLoadingAnimation();
 
+            var stages = [
+                { limit: 20, text: 'Iniciando análise...' },
+                { limit: 40, text: 'Mapeando estrutura...' },
+                { limit: 60, text: 'Validando performance...' },
+                { limit: 80, text: 'Analisando confiança...' },
+                { limit: 95, text: 'Detectando barreiras de conversão...' },
+                { limit: 100, text: 'Gerando inteligência...' }
+            ];
+
+            container.style.width = '100%';
+            container.style.minHeight = 'min(720px, calc(100vh - 130px))';
+            container.style.padding = '40px 20px';
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'center';
+            container.style.background = '#f5f5f5';
+            container.style.borderRadius = '0';
+
+            container.innerHTML = [
+                '<style>',
+                    '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;width:min(100%,620px);display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}',
+                    '.audit-monitor-stage{width:100%;display:grid;place-items:center;gap:24px;opacity:var(--loader-opacity);transform:translateY(var(--loader-shift));transition:opacity .45s ease,transform .45s ease;}',
+                    '.audit-monitor-wrap{position:relative;width:min(100%,520px);aspect-ratio:420/280;}',
+                    '.audit-monitor-svg{width:100%;height:100%;display:block;overflow:visible;}',
+                    '.audit-monitor-line{fill:none;stroke:#111827;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;vector-effect:non-scaling-stroke;filter:none;}',
+                    '.audit-monitor-outer{stroke-dashoffset:var(--outer-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
+                    '.audit-monitor-base{stroke-dashoffset:var(--base-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
+                    '.audit-monitor-inner{stroke:#3f3f46;stroke-width:5;stroke-dashoffset:var(--inner-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);opacity:.82;}',
+                    '.audit-monitor-message{position:absolute;inset:34% 12% auto;min-height:48px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.32rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .28s ease,transform .28s ease;}',
+                    '.audit-monitor-message.is-changing{opacity:0;transform:translateY(4px);}',
+                    '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}}',
+                '</style>',
+                '<section id="auditMonitorLoader" aria-live="polite" aria-label="Auditoria em andamento">',
+                    '<div class="audit-monitor-stage">',
+                        '<div id="auditMonitorWrap" class="audit-monitor-wrap">',
+                            '<svg class="audit-monitor-svg" viewBox="0 0 420 280" role="img" aria-hidden="true">',
+                                '<path class="audit-monitor-line audit-monitor-outer" pathLength="100" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
+                                '<path class="audit-monitor-line audit-monitor-base" pathLength="100" d="M210 214V244M160 244H260"></path>',
+                                '<path class="audit-monitor-line audit-monitor-inner" pathLength="100" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
+                            '</svg>',
+                            '<div id="auditLoadingMessage" class="audit-monitor-message">Iniciando análise...</div>',
+                        '</div>',
+                    '</div>',
+                '</section>'
+            ].join('');
+
+            var progress = 0;
+            var lastMessage = stages[0].text;
+
+            function getStageText(value) {
+                for (var i = 0; i < stages.length; i++) {
+                    if (value <= stages[i].limit) return stages[i].text;
+                }
+                return stages[stages.length - 1].text;
+            }
+
+            function setMonitorProgress(value) {
+                progress = Math.max(0, Math.min(98, value));
+
+                var loader = document.getElementById('auditMonitorLoader');
+                if (loader) {
+                    var outerDraw = Math.min(100, progress / 0.45);
+                    var baseDraw = Math.min(100, Math.max(0, (progress - 45) / 0.22));
+                    var innerDraw = Math.min(100, Math.max(0, (progress - 67) / 0.31));
+                    var opacity = Math.min(1, progress / 10);
+
+                    loader.style.setProperty('--outer-offset', String(100 - outerDraw));
+                    loader.style.setProperty('--base-offset', String(100 - baseDraw));
+                    loader.style.setProperty('--inner-offset', String(100 - innerDraw));
+                    loader.style.setProperty('--loader-opacity', String(opacity));
+                    loader.style.setProperty('--loader-shift', String((1 - opacity) * 10) + 'px');
+                }
+
+                var message = getStageText(progress);
+                if (message !== lastMessage) {
+                    lastMessage = message;
+                    var messageEl = document.getElementById('auditLoadingMessage');
+                    if (messageEl) {
+                        messageEl.classList.add('is-changing');
+                        setTimeout(function() {
+                            var currentMessageEl = document.getElementById('auditLoadingMessage');
+                            if (!currentMessageEl) return;
+                            currentMessageEl.textContent = message;
+                            currentMessageEl.classList.remove('is-changing');
+                        }, 220);
+                    }
+                }
+            }
+
+            setMonitorProgress(0);
+
+            _auditProgressInterval = setInterval(function() {
+                var increment = progress < 20 ? 1.15 : progress < 60 ? 0.78 : progress < 86 ? 0.46 : 0.18;
+                setMonitorProgress(progress + increment);
+            }, 130);
+
+            return;
+
             var isCompare = mode === 'compare' || mode === 'comparativo';
             var modeColor = isCompare ? '#818cf8' : mode === 'manual' ? '#67e8f9' : '#22d3ee';
 
