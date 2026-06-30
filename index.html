@@ -96,7 +96,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260628-history-bg-v2">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260630-demo-audit-v4">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -266,6 +266,30 @@
             <span>Começar grátis</span>
         </button>
     </div>
+    <header id="demoAuditTopbar" class="demo-audit-topbar hidden" aria-label="Navegação da análise gratuita">
+        <div class="demo-audit-topbar-inner">
+            <a class="demo-audit-brand" href="/home" onclick="event.preventDefault(); nav('home');" aria-label="Voltar para a SSW Intelligence">
+                <img src="src/assets/images/logo/logo_ofc.png?v=20260627-logo-ofc-v2" alt="">
+                <span>SSW INTELLIGENCE</span>
+            </a>
+            <nav class="demo-audit-center-nav" aria-label="Navegação principal">
+                <a href="/home" onclick="event.preventDefault(); nav('home');">Plataforma</a>
+                <a href="/ranking" onclick="event.preventDefault(); nav('ranking');">Ranking</a>
+                <a href="/precos/" target="_blank" rel="noopener noreferrer">Preços</a>
+                <a href="/sites/" target="_blank" rel="noopener noreferrer">Sites</a>
+            </nav>
+            <nav class="demo-audit-top-actions" aria-label="Ações principais">
+                <button type="button" onclick="showAuthScreen('login')">
+                    <i data-lucide="log-in" class="w-4 h-4"></i>
+                    <span>Entrar</span>
+                </button>
+                <button type="button" onclick="showAuthScreen('register')">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                    <span>Criar conta</span>
+                </button>
+            </nav>
+        </div>
+    </header>
     <aside id="appSidebar" class="app-sidebar-shell">
         <div id="mobileMenuDropdown" class="sidebar-surface hidden md:flex" aria-label="Menu principal">
             <div class="sidebar-brand">
@@ -522,7 +546,7 @@
 
                         <!-- Botões -->
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style="animation-delay: 0.3s">
-                            <button type="button" onclick="showSimplifiedSearch()" class="group relative px-8 py-4 bg-gradient-to-r from-[#00D4FF] to-[#3b82f6] text-white font-semibold rounded-full hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all duration-300 hover:scale-105">
+                            <button type="button" onclick="openDemoAuditPage()" class="group relative px-8 py-4 bg-gradient-to-r from-[#00D4FF] to-[#3b82f6] text-white font-semibold rounded-full hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all duration-300 hover:scale-105">
                                 <span class="relative z-10 flex items-center gap-2">
                                     Diagnosticar meu site
                                 </span>
@@ -557,9 +581,9 @@
                             <div id="normalSearchBar" class="search-bar-hero">
                                 <div class="search-input-wrapper">
                                     <i data-lucide="globe-2" class="w-5 h-5 search-icon"></i>
-                                    <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runAudit();}">
+                                    <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();handleAuditSubmit();}">
                                 </div>
-                                <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runAudit()" class="search-button">
+                                <button onclick="handleAuditSubmit()" class="search-button">
                                     <i data-lucide="activity" class="w-4 h-4"></i>
                                     <span>Analisar</span>
                                 </button>
@@ -1844,7 +1868,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260628-history-bg-v2"></script>
+            <script src="src/app/core/main.js?v=20260630-demo-audit-v2"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
     <div id="chatWidgetPanel" style="position:fixed;bottom:18px;right:18px;width:calc(100% - 36px);max-width:390px;height:540px;max-height:calc(100vh - 36px);border-radius:24px;border:1px solid rgba(255,255,255,0.14);box-shadow:0 22px 70px rgba(0,0,0,0.46),0 0 0 1px rgba(255,255,255,0.03);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#050a12 0%,#080d16 100%);pointer-events:auto;">
@@ -1927,7 +1951,7 @@
     // Script para mostrar área de análise quando usuário está logado
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
-            if (typeof USER !== 'undefined' && USER && USER.email) {
+            if (window.location.pathname !== '/analise-gratis' && typeof USER !== 'undefined' && USER && USER.email) {
                 // Usuário está logado, mostra área de análise
                 if (typeof showSimplifiedSearch === 'function') {
                     showSimplifiedSearch();
@@ -1943,7 +1967,7 @@
             window.loginSuccess = function() {
                 originalLoginSuccess.apply(this, arguments);
                 setTimeout(() => {
-                    if (typeof showSimplifiedSearch === 'function') {
+                    if (window.location.pathname !== '/analise-gratis' && typeof showSimplifiedSearch === 'function') {
                         showSimplifiedSearch();
                     }
                 }, 100);

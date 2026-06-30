@@ -55,6 +55,9 @@
                     showAuthScreen('login', false);
                 } else if (pathname === 'cadastro') {
                     showAuthScreen('register', false);
+                } else if (pathname === 'analise-gratis') {
+                    hideAuthScreen();
+                    showDemoAuditScreen(false);
                 } else if (pathname && ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'].includes(pathname)) {
                     hideAuthScreen();
                     nav(pathname);
@@ -1036,6 +1039,7 @@
             });
             const home = document.getElementById('view-home');
             if (home) home.classList.remove('hidden');
+            setDemoAuditMode(false);
             window.currentView = 'home';
         }
 
@@ -1059,6 +1063,10 @@
         }
 
         function nav(view) {
+            if (view === 'analise-gratis' || view === 'demo-audit') {
+                showDemoAuditScreen(true);
+                return;
+            }
             if (view === 'precos') {
                 openPricingPage();
                 return;
@@ -1077,6 +1085,7 @@
             } else if (view !== 'home') {
                 hideAuditChatSurfaces();
             }
+            setDemoAuditMode(false);
             const isHistoryView = view === 'history';
             [document.documentElement, document.body].forEach(element => {
                 element.classList.toggle('history-view-active', isHistoryView);
@@ -3841,7 +3850,287 @@ function getCodigoHTML() {
             }
             return key.replace(/_/g, ' ') || 'Próxima ação';
         }
+        const DEMO_AUDIT_USED_KEY = 'ssw_demo_audit_used_v1';
+        const DEMO_AUDIT_TOKEN_KEY = 'ssw_demo_audit_client_token_v1';
+
+        function setDemoAuditMode(isActive) {
+            document.body.classList.toggle('demo-audit-public', Boolean(isActive));
+            document.documentElement.classList.toggle('demo-audit-public', Boolean(isActive));
+            const topbar = document.getElementById('demoAuditTopbar');
+            if (topbar) topbar.classList.toggle('hidden', !isActive);
+            const mainWrapper = document.getElementById('mainContentWrapper');
+            const viewHome = document.getElementById('view-home');
+            const heroSection = document.getElementById('heroSection');
+            const heroPrimaryContent = document.getElementById('heroPrimaryContent');
+            const affectedNodes = [mainWrapper, viewHome, heroSection, heroPrimaryContent].filter(Boolean);
+            affectedNodes.forEach(node => node.classList.toggle('demo-audit-layout', Boolean(isActive)));
+            if (mainWrapper) mainWrapper.classList.toggle('demo-audit-page-shell', Boolean(isActive));
+            if (viewHome) viewHome.classList.toggle('demo-audit-page-view', Boolean(isActive));
+            if (heroSection) heroSection.classList.toggle('demo-audit-page-hero', Boolean(isActive));
+            if (heroPrimaryContent) heroPrimaryContent.classList.toggle('demo-audit-page-content', Boolean(isActive));
+        }
+
+        function getDemoAuditClientToken() {
+            let token = localStorage.getItem(DEMO_AUDIT_TOKEN_KEY);
+            if (!token) {
+                token = (window.crypto && typeof window.crypto.randomUUID === 'function')
+                    ? window.crypto.randomUUID()
+                    : 'demo-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+                localStorage.setItem(DEMO_AUDIT_TOKEN_KEY, token);
+            }
+            return token;
+        }
+
+        function hasUsedDemoAudit() {
+            return localStorage.getItem(DEMO_AUDIT_USED_KEY) === '1'
+                || /(?:^|;\s*)ssw_demo_audit_used=1(?:;|$)/.test(document.cookie || '');
+        }
+
+        function markDemoAuditUsed() {
+            localStorage.setItem(DEMO_AUDIT_USED_KEY, '1');
+            document.cookie = 'ssw_demo_audit_used=1; Max-Age=15552000; Path=/; SameSite=Lax';
+        }
+
+        function openDemoAuditPage() {
+            showDemoAuditScreen(true);
+        }
+
+        function showDemoAuditScreen(pushState = true) {
+            setDemoAuditMode(true);
+            window.currentView = 'analise-gratis';
+            hideHistorySurfaces();
+            hideAuditChatSurfaces();
+            document.body.classList.remove('pricing-view-active', 'audit-active');
+            document.body.classList.add('audit-home-workspace');
+            if (pushState && window.location.pathname !== '/analise-gratis') {
+                window.history.pushState({}, '', '/analise-gratis');
+            }
+
+            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.style.opacity = '';
+                    el.style.transform = '';
+                    el.style.transition = '';
+                }
+            });
+
+            const viewHome = document.getElementById('view-home');
+            if (viewHome) viewHome.classList.remove('hidden');
+            setHomePresentationVisible(false);
+            const heroSection = document.getElementById('heroSection');
+            if (heroSection) heroSection.classList.remove('hidden');
+            setAnalysisFocusState(true);
+
+            ['manualSelectArea', 'compareArea', 'auditResults', 'auditLoading', 'emptyStateCards'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            hideAuditLoading();
+
+            const searchContainer = document.querySelector('.search-container');
+            if (searchContainer) searchContainer.classList.remove('hidden');
+            const normalSearchBar = document.getElementById('normalSearchBar');
+            const compareSearchBar = document.getElementById('compareSearchBar');
+            if (normalSearchBar) normalSearchBar.classList.remove('hidden');
+            if (compareSearchBar) compareSearchBar.classList.add('hidden');
+            const auditMode = document.getElementById('auditMode');
+            if (auditMode) auditMode.value = 'auto';
+            const autoRadio = document.querySelector('input[name="auditMode"][value="auto"]');
+            if (autoRadio) autoRadio.checked = true;
+
+            setAnalysisModeState('auto');
+            positionLocalAuditHelp('auto');
+            setModeOnlyCardsVisibility('auto');
+            setActiveNavButton('');
+            adjustFooterPosition(false);
+
+            requestAnimationFrame(() => {
+                syncAuditWorkspaceLayout(false);
+                initTurnstileAudit();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+
+            if (hasUsedDemoAudit()) {
+                setTimeout(() => renderDemoAlreadyUsed(), 80);
+                return;
+            }
+
+            const auditUrl = document.getElementById('auditUrl');
+            if (auditUrl) {
+                auditUrl.value = '';
+                setTimeout(() => auditUrl.focus(), 100);
+            }
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'auto' });
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+
+        function handleAuditSubmit() {
+            if (document.body.classList.contains('demo-audit-public') || window.currentView === 'analise-gratis') {
+                runDemoAudit();
+                return;
+            }
+            if (!USER || !USER.email) {
+                showAuthScreen('login');
+                return;
+            }
+            runAudit();
+        }
+
+        function getDemoMetricValue(metrics, key, fallback = '--') {
+            const value = metrics && metrics[key] !== undefined && metrics[key] !== null && metrics[key] !== ''
+                ? metrics[key]
+                : fallback;
+            return safeAuditText(String(value));
+        }
+
+        function renderDemoAuditResults(data, url) {
+            const results = document.getElementById('auditResults');
+            if (!results) return;
+            const result = data?.resultado || {};
+            const technical = result.technical_audit || {};
+            const metrics = technical.real_metrics || {};
+            const summary = result.demo_summary || {};
+            const host = summary.host || String(url || '').replace(/^https?:\/\//, '').split('/')[0];
+            const score = Number(summary.score ?? technical.score ?? 0);
+            const safeScore = Number.isFinite(score) ? Math.round(score) : 0;
+            const images = data.images || {};
+            const locks = summary.locked_sections || [
+                'simulação completa de personas',
+                'PDF executivo',
+                'histórico permanente',
+                'plano completo de correção'
+            ];
+            const hasImages = Boolean(images.desktop || images.mobile);
+            results.innerHTML = [
+                '<section class="demo-report-shell">',
+                    '<div class="demo-report-card">',
+                        '<div class="demo-report-grid">',
+                            '<div>',
+                                '<span class="demo-report-kicker">Demonstração automática concluída</span>',
+                                '<h1 class="demo-report-title">Primeira leitura de conversão gerada.</h1>',
+                                '<p class="demo-report-summary">' + safeAuditText(summary.executive_summary || technical.executive_summary || 'A demonstração identificou sinais iniciais de clareza, confiança e performance nesta URL. Crie sua conta para liberar o relatório completo com personas, PDF e plano de correção.') + '</p>',
+                            '</div>',
+                            '<aside class="demo-report-score">',
+                                '<span>Score demonstrativo</span>',
+                                '<strong>' + safeScore + '</strong>',
+                                '<small>/100 · ' + safeAuditText(host) + '</small>',
+                            '</aside>',
+                        '</div>',
+                        '<div class="demo-report-metrics">',
+                            '<article class="demo-report-metric"><strong>Performance</strong><span>' + getDemoMetricValue(metrics, 'performance_score') + '</span><small>Velocidade percebida e estabilidade inicial.</small></article>',
+                            '<article class="demo-report-metric"><strong>SEO</strong><span>' + getDemoMetricValue(metrics, 'seo_score') + '</span><small>Base de descoberta e leitura por buscadores.</small></article>',
+                            '<article class="demo-report-metric"><strong>Acessibilidade</strong><span>' + getDemoMetricValue(metrics, 'accessibility_score') + '</span><small>Uso claro, legível e inclusivo.</small></article>',
+                        '</div>',
+                        hasImages ? [
+                            '<div class="demo-report-captures">',
+                                images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="data:image/jpeg;base64,' + images.desktop + '" alt="Captura desktop da URL analisada"></figure>' : '',
+                                images.mobile ? '<figure class="demo-report-capture"><strong>Mobile</strong><img src="data:image/jpeg;base64,' + images.mobile + '" alt="Captura mobile da URL analisada"></figure>' : '',
+                            '</div>'
+                        ].join('') : '',
+                        '<div class="demo-report-locks">',
+                            locks.map(item => '<article class="demo-report-lock"><strong>Bloqueado na demo</strong><p>' + safeAuditText(item) + '</p></article>').join(''),
+                        '</div>',
+                        '<div class="demo-report-actions">',
+                            '<button type="button" class="primary" onclick="showAuthScreen(\'register\')">Criar conta e ver relatório completo</button>',
+                            '<button type="button" class="secondary" onclick="openDemoAuditPage()">Voltar para análise grátis</button>',
+                        '</div>',
+                    '</div>',
+                '</section>'
+            ].join('');
+            document.getElementById('heroSection')?.classList.add('hidden');
+            results.classList.remove('hidden');
+            adjustFooterPosition(true);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function renderDemoAlreadyUsed() {
+            const results = document.getElementById('auditResults');
+            if (!results) return;
+            document.getElementById('heroSection')?.classList.add('hidden');
+            results.innerHTML = [
+                '<section class="demo-used-notice">',
+                    '<h2>Você já usou sua análise gratuita.</h2>',
+                    '<p>Para evitar uso repetido da demonstração, liberamos apenas 1 análise pública por pessoa/rede. Crie uma conta para continuar analisando com relatório completo.</p>',
+                    '<div class="demo-report-actions" style="justify-content:center;">',
+                        '<button type="button" class="primary" onclick="showAuthScreen(\'register\')">Criar conta gratuita</button>',
+                        '<button type="button" class="secondary" onclick="showAuthScreen(\'login\')">Fazer login</button>',
+                    '</div>',
+                '</section>'
+            ].join('');
+            results.classList.remove('hidden');
+            hideAuditLoading();
+        }
+
+        async function runDemoAudit() {
+            const urlInput = document.getElementById('auditUrl');
+            const url = sanitizeUrlInputValue(urlInput);
+            if (bloquearUrlLocalSeNecessario(url)) return;
+            if (!url) return Toast.warning('Digite uma URL para analisar');
+            if (hasUsedDemoAudit()) {
+                renderDemoAlreadyUsed();
+                return;
+            }
+            const cfToken = getAuditCaptchaToken();
+            if (!cfToken) {
+                Toast.warning('Resolva o captcha primeiro');
+                requestAnimationFrame(() => initTurnstileAudit());
+                return;
+            }
+
+            showHomeAnalysisState();
+            document.getElementById('heroSection')?.classList.add('hidden');
+            document.getElementById('emptyStateCards')?.classList.add('hidden');
+            document.getElementById('manualSelectArea')?.classList.add('hidden');
+            document.getElementById('compareArea')?.classList.add('hidden');
+            document.getElementById('auditResults')?.classList.add('hidden');
+            const loading = document.getElementById('auditLoading');
+            if (loading) {
+                loading.classList.remove('hidden');
+                loading.style.display = 'flex';
+            }
+            startAuditLoadingAnimation(url, 'auto');
+            adjustFooterPosition(false);
+
+            try {
+                const res = await fetch(`${API_URL}/api/auditar-demo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        url,
+                        cf_token: cfToken,
+                        client_token: getDemoAuditClientToken()
+                    })
+                });
+                const payload = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    resetAuditCaptcha();
+                    if (res.status === 429) {
+                        markDemoAuditUsed();
+                        renderDemoAlreadyUsed();
+                        return;
+                    }
+                    throw new Error(formatAuditApiError(payload.detail || payload.error || payload, res.status));
+                }
+                markDemoAuditUsed();
+                completeAuditLoadingBeforeHide(() => renderDemoAuditResults(payload, url));
+                resetAuditCaptcha();
+            } catch (error) {
+                console.error('Erro na auditoria demonstrativa:', error);
+                cancelAuditDueToApiError({
+                    mode: 'auto',
+                    reason: error.message || 'Falha na demonstração.',
+                    displayMessage: error.message || 'Não foi possível concluir a demonstração agora.',
+                    resetCaptcha: true
+                });
+            }
+        }
+
         function showSimplifiedSearch() {
+            setDemoAuditMode(false);
             // Primeiro, navega para home se não estiver lá
             if (!USER || !USER.email) {
                 showAuthScreen();
