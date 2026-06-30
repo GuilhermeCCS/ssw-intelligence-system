@@ -868,7 +868,7 @@
         }
 
         function showHomeLandingState({ focusInput = false } = {}) {
-            stopAuditLoadingAnimation();
+            hideAuditLoading();
             setAnalysisFocusState(false);
             setHomePresentationVisible(true);
             document.getElementById('auditCancelNotice')?.remove();
@@ -4024,11 +4024,16 @@ function getCodigoHTML() {
         var _auditLoadingInterval = null;
         var _auditProgressInterval = null;
         var _auditTipsInterval = null;
+        var _auditFinishInterval = null;
+        var _auditVisualProgress = 0;
+        var _auditLoadingStartedAt = 0;
+        var AUDIT_MIN_LOADING_MS = 9000;
 
         function startAuditLoadingAnimation(url, mode) {
             var container = document.getElementById('auditLoading');
             if (!container) return;
             stopAuditLoadingAnimation();
+            _auditLoadingStartedAt = Date.now();
 
             var stages = [
                 { limit: 20, text: 'Iniciando análise...' },
@@ -4095,7 +4100,8 @@ function getCodigoHTML() {
             }
 
             function setMonitorProgress(value) {
-                progress = Math.max(0, Math.min(98, value));
+                progress = Math.max(0, Math.min(94, value));
+                _auditVisualProgress = progress;
 
                 var loader = document.getElementById('auditMonitorLoader');
                 if (loader) {
@@ -4133,9 +4139,9 @@ function getCodigoHTML() {
             setMonitorProgress(0);
 
             _auditProgressInterval = setInterval(function() {
-                var increment = progress < 20 ? 1.15 : progress < 60 ? 0.78 : progress < 86 ? 0.46 : 0.18;
+                var increment = progress < 18 ? 0.42 : progress < 42 ? 0.28 : progress < 68 ? 0.2 : progress < 88 ? 0.12 : 0.035;
                 setMonitorProgress(progress + increment);
-            }, 130);
+            }, 170);
 
             return;
 
@@ -4290,6 +4296,72 @@ function getCodigoHTML() {
             if (_auditLoadingInterval) { clearInterval(_auditLoadingInterval); _auditLoadingInterval = null; }
             if (_auditProgressInterval) { clearInterval(_auditProgressInterval); _auditProgressInterval = null; }
             if (_auditTipsInterval) { clearInterval(_auditTipsInterval); _auditTipsInterval = null; }
+            if (_auditFinishInterval) { clearInterval(_auditFinishInterval); _auditFinishInterval = null; }
+        }
+
+        function hideAuditLoading() {
+            stopAuditLoadingAnimation();
+            const loading = document.getElementById('auditLoading');
+            if (!loading) return;
+            loading.classList.add('hidden');
+            loading.style.display = 'none';
+            loading.style.background = '';
+            loading.innerHTML = '';
+            _auditVisualProgress = 0;
+            _auditLoadingStartedAt = 0;
+        }
+
+        function completeAuditLoadingBeforeHide(callback) {
+            const loading = document.getElementById('auditLoading');
+            const loader = document.getElementById('auditMonitorLoader');
+            const percentEl = document.getElementById('auditLoadingPercentValue');
+            const messageEl = document.getElementById('auditLoadingMessage');
+
+            if (!loading || !loader || !percentEl) {
+                hideAuditLoading();
+                if (typeof callback === 'function') callback();
+                return;
+            }
+
+            const elapsed = _auditLoadingStartedAt ? Date.now() - _auditLoadingStartedAt : AUDIT_MIN_LOADING_MS;
+            const waitBeforeFinish = Math.max(0, AUDIT_MIN_LOADING_MS - elapsed);
+
+            setTimeout(function() {
+                if (!document.getElementById('auditLoading') || loading.style.display === 'none') {
+                    hideAuditLoading();
+                    if (typeof callback === 'function') callback();
+                    return;
+                }
+
+                loading.classList.remove('hidden');
+                loading.style.display = 'flex';
+                stopAuditLoadingAnimation();
+                let progress = Math.max(0, Math.min(99, Math.floor(_auditVisualProgress || 0)));
+                if (messageEl) messageEl.textContent = 'Gerando inteligência...';
+
+                _auditFinishInterval = setInterval(function() {
+                    const remaining = 100 - progress;
+                    progress += Math.max(1, Math.ceil(remaining / 10));
+                    const outerDraw = 100;
+                    const baseDraw = 100;
+                    const innerDraw = 100;
+                    loader.style.setProperty('--outer-offset', String(100 - outerDraw));
+                    loader.style.setProperty('--base-offset', String(100 - baseDraw));
+                    loader.style.setProperty('--inner-offset', String(100 - innerDraw));
+                    loader.style.setProperty('--loader-opacity', '1');
+                    loader.style.setProperty('--loader-shift', '0px');
+                    percentEl.textContent = String(Math.min(100, progress));
+
+                    if (progress >= 100) {
+                        clearInterval(_auditFinishInterval);
+                        _auditFinishInterval = null;
+                        setTimeout(function() {
+                            hideAuditLoading();
+                            if (typeof callback === 'function') callback();
+                        }, 280);
+                    }
+                }, 90);
+            }, waitBeforeFinish);
         }
         // === FIM LOADING ANIMATION ===
 
@@ -5991,9 +6063,8 @@ function getCodigoHTML() {
         }
 
         function restoreAuditInputState(mode = 'auto') {
-            stopAuditLoadingAnimation();
+            hideAuditLoading();
             setHomePresentationVisible(true);
-            document.getElementById('auditLoading')?.classList.add('hidden');
             document.getElementById('auditResults')?.classList.add('hidden');
             document.getElementById('heroSection')?.classList.remove('hidden');
             setAnalysisFocusState(true);
@@ -6211,8 +6282,7 @@ function getCodigoHTML() {
                         document.getElementById('emptyStateCards').classList.remove('hidden');
                         document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
                         document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
-                        stopAuditLoadingAnimation();
-                        document.getElementById('auditLoading').classList.add('hidden');
+                        hideAuditLoading();
                         showCreditsEndedModal();
                         return;
                     } else {
@@ -6244,8 +6314,7 @@ function getCodigoHTML() {
                     });
                     return;
                 }
-                stopAuditLoadingAnimation();
-                document.getElementById('auditLoading').classList.add('hidden');
+                completeAuditLoadingBeforeHide();
                 if (data.success_only || data.high_score) {
                     USER.credits = data.novo_saldo;
                     if (typeof secureStorage !== 'undefined') {
@@ -6625,7 +6694,7 @@ function getCodigoHTML() {
                 if(!data || (!data.executive_verdict && (!data.site_a || !data.site_b))) {
                     throw new Error("Dados da API incompletos ou formato inválido");
                 }
-                stopAuditLoadingAnimation();
+                completeAuditLoadingBeforeHide();
                 displayCompareResults(data);
             } catch (e) {
                 if (String(e.message || '').toLowerCase().includes('captcha')) {
@@ -6643,7 +6712,7 @@ function getCodigoHTML() {
                 return;
                 resetCompareCaptcha();
                 console.warn("⚠️ Ativando MODO SIMULAÇÃO (Fallback). Motivo:", e.message);
-                stopAuditLoadingAnimation();
+                hideAuditLoading();
                 // 5. MODO SIMULAÇÃO - Novo Formato Enriquecido
                 setTimeout(() => {
                     const scoreA = Math.floor(Math.random() * 20) + 70;
@@ -7174,8 +7243,7 @@ function getCodigoHTML() {
         }
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
         async function generateFallbackAudit(url, mode, selected) {
-            stopAuditLoadingAnimation();
-            document.getElementById('auditLoading').classList.add('hidden');
+            completeAuditLoadingBeforeHide();
             // Criar estrutura HTML inicial para todas as seções
             showHomeAnalysisState();
             createAuditResultsStructureModern();
