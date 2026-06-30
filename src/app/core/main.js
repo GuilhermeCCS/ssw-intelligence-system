@@ -4027,7 +4027,6 @@ function getCodigoHTML() {
         var _auditFinishInterval = null;
         var _auditVisualProgress = 0;
         var _auditLoadingStartedAt = 0;
-        var AUDIT_MIN_LOADING_MS = 9000;
 
         function startAuditLoadingAnimation(url, mode) {
             var container = document.getElementById('auditLoading');
@@ -4035,13 +4034,33 @@ function getCodigoHTML() {
             stopAuditLoadingAnimation();
             _auditLoadingStartedAt = Date.now();
 
-            var stages = [
-                { limit: 20, text: 'Iniciando análise...' },
-                { limit: 40, text: 'Mapeando estrutura...' },
-                { limit: 60, text: 'Validando performance...' },
-                { limit: 80, text: 'Analisando confiança...' },
-                { limit: 95, text: 'Detectando barreiras de conversão...' },
-                { limit: 100, text: 'Gerando inteligência...' }
+            var loadingMessages = [
+                'Iniciando análise...',
+                'Mapeando estrutura...',
+                'Validando performance...',
+                'Analisando confiança...',
+                'Detectando barreiras de conversão...',
+                'Lendo a primeira dobra...',
+                'Verificando clareza da proposta...',
+                'Rastreando links importantes...',
+                'Validando experiência mobile...',
+                'Analisando CTAs principais...',
+                'Comparando sinais de confiança...',
+                'Buscando fricções invisíveis...',
+                'Organizando evidências visuais...',
+                'Interpretando comportamento do visitante...',
+                'Cruzando performance com conversão...',
+                'Avaliando navegação crítica...',
+                'Checando consistência da oferta...',
+                'Medindo estabilidade visual...',
+                'Priorizando barreiras comerciais...',
+                'Construindo resumo executivo...',
+                'Separando ajustes urgentes...',
+                'Conferindo dados técnicos...',
+                'Simulando leitura de personas...',
+                'Transformando achados em ação...',
+                'Revisando sinais de autoridade...',
+                'Gerando inteligência...'
             ];
 
             container.style.width = '100%';
@@ -4057,8 +4076,11 @@ function getCodigoHTML() {
 
             container.innerHTML = [
                 '<style>',
-                    '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;width:min(100%,620px);display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}',
-                    '.audit-monitor-stage{width:100%;display:grid;place-items:center;gap:18px;opacity:var(--loader-opacity);transform:translateY(var(--loader-shift));transition:opacity .45s ease,transform .45s ease;}',
+                    '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;position:relative;width:min(100%,720px);min-height:min(560px,calc(100vh - 210px));display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;border-radius:28px;}',
+                    '.audit-loading-lens{position:absolute;left:18%;top:22%;z-index:0;width:58px;height:58px;border:4px solid #111827;border-radius:999px;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.72) rotate(-8deg);transition:opacity .42s ease,transform .42s ease,left .75s cubic-bezier(.2,.8,.2,1),top .75s cubic-bezier(.2,.8,.2,1);}',
+                    '.audit-loading-lens:after{content:"";position:absolute;width:24px;height:4px;right:-17px;bottom:3px;background:#111827;border-radius:999px;transform:rotate(45deg);transform-origin:left center;}',
+                    '.audit-loading-lens.is-visible{opacity:.14;transform:translate(-50%,-50%) scale(1) rotate(-8deg);}',
+                    '.audit-monitor-stage{position:relative;z-index:1;width:100%;display:grid;place-items:center;gap:18px;opacity:var(--loader-opacity);transform:translateY(var(--loader-shift));transition:opacity .45s ease,transform .45s ease;}',
                     '.audit-monitor-url{max-width:min(100%,520px);text-align:center;color:#52525b;font-size:clamp(.82rem,1.5vw,.96rem);font-weight:650;letter-spacing:-.01em;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
                     '.audit-monitor-url strong{color:#111827;font-weight:820;}',
                     '.audit-monitor-wrap{position:relative;width:min(100%,520px);aspect-ratio:420/280;}',
@@ -4069,11 +4091,12 @@ function getCodigoHTML() {
                     '.audit-monitor-inner{stroke:#3f3f46;stroke-width:5;stroke-dashoffset:var(--inner-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);opacity:.82;}',
                     '.audit-monitor-percent{position:absolute;inset:34% 12% auto;min-height:58px;display:grid;place-items:center;text-align:center;color:#111827;font-size:clamp(2.25rem,5vw,4.1rem);font-weight:860;letter-spacing:-.08em;line-height:1;}',
                     '.audit-monitor-percent small{font-size:.36em;font-weight:760;letter-spacing:-.04em;color:#52525b;margin-left:5px;}',
-                    '.audit-monitor-message{min-height:34px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.28rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .28s ease,transform .28s ease;}',
+                    '.audit-monitor-message{min-height:34px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.28rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .22s ease,transform .22s ease;}',
                     '.audit-monitor-message.is-changing{opacity:0;transform:translateY(4px);}',
                     '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}}',
                 '</style>',
                 '<section id="auditMonitorLoader" aria-live="polite" aria-label="Auditoria em andamento">',
+                    '<span id="auditLoadingLens" class="audit-loading-lens" aria-hidden="true"></span>',
                     '<div class="audit-monitor-stage">',
                         '<div class="audit-monitor-url"><strong>Analisando URL:</strong> ' + displayUrl + '</div>',
                         '<div id="auditMonitorWrap" class="audit-monitor-wrap">',
@@ -4090,13 +4113,52 @@ function getCodigoHTML() {
             ].join('');
 
             var progress = 0;
-            var lastMessage = stages[0].text;
+            var messageIndex = 0;
+            var lastLensIndex = -1;
+            var lensPositions = [
+                { left: '14%', top: '18%' },
+                { left: '86%', top: '18%' },
+                { left: '18%', top: '76%' },
+                { left: '82%', top: '78%' },
+                { left: '50%', top: '14%' },
+                { left: '50%', top: '84%' },
+                { left: '30%', top: '42%' },
+                { left: '70%', top: '44%' }
+            ];
 
-            function getStageText(value) {
-                for (var i = 0; i < stages.length; i++) {
-                    if (value <= stages[i].limit) return stages[i].text;
+            function showLoadingMessage(message) {
+                var messageEl = document.getElementById('auditLoadingMessage');
+                if (!messageEl || !message) return;
+                messageEl.classList.add('is-changing');
+                setTimeout(function() {
+                    var currentMessageEl = document.getElementById('auditLoadingMessage');
+                    if (!currentMessageEl) return;
+                    currentMessageEl.textContent = message;
+                    currentMessageEl.classList.remove('is-changing');
+                }, 220);
+            }
+
+            function pulseLoadingLens() {
+                var lens = document.getElementById('auditLoadingLens');
+                if (!lens) return;
+                var index = Math.floor(Math.random() * lensPositions.length);
+                if (lensPositions.length > 1 && index === lastLensIndex) {
+                    index = (index + 1) % lensPositions.length;
                 }
-                return stages[stages.length - 1].text;
+                lastLensIndex = index;
+                var pos = lensPositions[index];
+                lens.classList.remove('is-visible');
+                setTimeout(function() {
+                    var currentLens = document.getElementById('auditLoadingLens');
+                    if (!currentLens) return;
+                    currentLens.style.left = pos.left;
+                    currentLens.style.top = pos.top;
+                    currentLens.classList.add('is-visible');
+                    setTimeout(function() {
+                        var visibleLens = document.getElementById('auditLoadingLens');
+                        if (visibleLens) visibleLens.classList.remove('is-visible');
+                    }, 1250);
+                }, 360);
             }
 
             function setMonitorProgress(value) {
@@ -4120,23 +4182,18 @@ function getCodigoHTML() {
                 var percentEl = document.getElementById('auditLoadingPercentValue');
                 if (percentEl) percentEl.textContent = String(Math.floor(progress));
 
-                var message = getStageText(progress);
-                if (message !== lastMessage) {
-                    lastMessage = message;
-                    var messageEl = document.getElementById('auditLoadingMessage');
-                    if (messageEl) {
-                        messageEl.classList.add('is-changing');
-                        setTimeout(function() {
-                            var currentMessageEl = document.getElementById('auditLoadingMessage');
-                            if (!currentMessageEl) return;
-                            currentMessageEl.textContent = message;
-                            currentMessageEl.classList.remove('is-changing');
-                        }, 220);
-                    }
-                }
             }
 
             setMonitorProgress(0);
+            showLoadingMessage(loadingMessages[0]);
+
+            _auditLoadingInterval = setInterval(function() {
+                messageIndex = (messageIndex + 1) % loadingMessages.length;
+                showLoadingMessage(loadingMessages[messageIndex]);
+            }, 5000);
+
+            pulseLoadingLens();
+            _auditTipsInterval = setInterval(pulseLoadingLens, 2600);
 
             _auditProgressInterval = setInterval(function() {
                 var increment = progress < 18 ? 0.42 : progress < 42 ? 0.28 : progress < 68 ? 0.2 : progress < 88 ? 0.12 : 0.035;
@@ -4312,56 +4369,8 @@ function getCodigoHTML() {
         }
 
         function completeAuditLoadingBeforeHide(callback) {
-            const loading = document.getElementById('auditLoading');
-            const loader = document.getElementById('auditMonitorLoader');
-            const percentEl = document.getElementById('auditLoadingPercentValue');
-            const messageEl = document.getElementById('auditLoadingMessage');
-
-            if (!loading || !loader || !percentEl) {
-                hideAuditLoading();
-                if (typeof callback === 'function') callback();
-                return;
-            }
-
-            const elapsed = _auditLoadingStartedAt ? Date.now() - _auditLoadingStartedAt : AUDIT_MIN_LOADING_MS;
-            const waitBeforeFinish = Math.max(0, AUDIT_MIN_LOADING_MS - elapsed);
-
-            setTimeout(function() {
-                if (!document.getElementById('auditLoading') || loading.style.display === 'none') {
-                    hideAuditLoading();
-                    if (typeof callback === 'function') callback();
-                    return;
-                }
-
-                loading.classList.remove('hidden');
-                loading.style.display = 'flex';
-                stopAuditLoadingAnimation();
-                let progress = Math.max(0, Math.min(99, Math.floor(_auditVisualProgress || 0)));
-                if (messageEl) messageEl.textContent = 'Gerando inteligência...';
-
-                _auditFinishInterval = setInterval(function() {
-                    const remaining = 100 - progress;
-                    progress += Math.max(1, Math.ceil(remaining / 10));
-                    const outerDraw = 100;
-                    const baseDraw = 100;
-                    const innerDraw = 100;
-                    loader.style.setProperty('--outer-offset', String(100 - outerDraw));
-                    loader.style.setProperty('--base-offset', String(100 - baseDraw));
-                    loader.style.setProperty('--inner-offset', String(100 - innerDraw));
-                    loader.style.setProperty('--loader-opacity', '1');
-                    loader.style.setProperty('--loader-shift', '0px');
-                    percentEl.textContent = String(Math.min(100, progress));
-
-                    if (progress >= 100) {
-                        clearInterval(_auditFinishInterval);
-                        _auditFinishInterval = null;
-                        setTimeout(function() {
-                            hideAuditLoading();
-                            if (typeof callback === 'function') callback();
-                        }, 280);
-                    }
-                }, 90);
-            }, waitBeforeFinish);
+            hideAuditLoading();
+            if (typeof callback === 'function') callback();
         }
         // === FIM LOADING ANIMATION ===
 
@@ -6314,7 +6323,6 @@ function getCodigoHTML() {
                     });
                     return;
                 }
-                completeAuditLoadingBeforeHide();
                 if (data.success_only || data.high_score) {
                     USER.credits = data.novo_saldo;
                     if (typeof secureStorage !== 'undefined') {
@@ -6325,6 +6333,7 @@ function getCodigoHTML() {
                     updateUserMenuCircle();
                     showOnlyAuditHomeView();
                     renderHighScorePraise(data, url);
+                    hideAuditLoading();
                     resetAuditCaptcha();
                     return;
                 }
@@ -6569,6 +6578,7 @@ function getCodigoHTML() {
                     }
                 }
                 initAuditResultReveal();
+                hideAuditLoading();
 
                 // Recria ícones Lucide para os novos botões de chat
                 lucide.createIcons();
@@ -6694,8 +6704,8 @@ function getCodigoHTML() {
                 if(!data || (!data.executive_verdict && (!data.site_a || !data.site_b))) {
                     throw new Error("Dados da API incompletos ou formato inválido");
                 }
-                completeAuditLoadingBeforeHide();
                 displayCompareResults(data);
+                hideAuditLoading();
             } catch (e) {
                 if (String(e.message || '').toLowerCase().includes('captcha')) {
                     restoreAuditInputState('compare');
@@ -7243,7 +7253,6 @@ function getCodigoHTML() {
         }
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
         async function generateFallbackAudit(url, mode, selected) {
-            completeAuditLoadingBeforeHide();
             // Criar estrutura HTML inicial para todas as seções
             showHomeAnalysisState();
             createAuditResultsStructureModern();
@@ -7495,6 +7504,7 @@ function getCodigoHTML() {
             }
             hasUnsavedAuditSession = true;
             adjustFooterPosition(true);
+            hideAuditLoading();
         }
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
         function adjustFooterPosition(hasAuditResults = false) {
