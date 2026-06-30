@@ -4071,13 +4071,15 @@ function getCodigoHTML() {
             container.style.justifyContent = 'center';
             container.style.background = '#f5f5f5';
             container.style.borderRadius = '0';
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
 
             var displayUrl = safeAuditText(String(url || '').length > 74 ? String(url || '').substring(0, 71) + '...' : String(url || ''));
 
             container.innerHTML = [
                 '<style>',
-                    '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;position:relative;width:min(100%,720px);min-height:min(560px,calc(100vh - 210px));display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;border-radius:28px;}',
-                    '.audit-loading-lens{position:absolute;left:18%;top:22%;z-index:0;width:58px;height:58px;border:4px solid #111827;border-radius:999px;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.72) rotate(-8deg);transition:opacity .42s ease,transform .42s ease,left .75s cubic-bezier(.2,.8,.2,1),top .75s cubic-bezier(.2,.8,.2,1);}',
+                    '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;position:relative;z-index:1;width:min(100%,720px);min-height:min(560px,calc(100vh - 210px));display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;border-radius:28px;}',
+                    '.audit-loading-lens{position:absolute;left:18%;top:22%;z-index:0;width:64px;height:64px;border:4px solid #111827;border-radius:999px;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.72) rotate(-8deg);transition:opacity .42s ease,transform .42s ease,left .75s cubic-bezier(.2,.8,.2,1),top .75s cubic-bezier(.2,.8,.2,1);}',
                     '.audit-loading-lens:after{content:"";position:absolute;width:24px;height:4px;right:-17px;bottom:3px;background:#111827;border-radius:999px;transform:rotate(45deg);transform-origin:left center;}',
                     '.audit-loading-lens.is-visible{opacity:.14;transform:translate(-50%,-50%) scale(1) rotate(-8deg);}',
                     '.audit-monitor-stage{position:relative;z-index:1;width:100%;display:grid;place-items:center;gap:18px;opacity:var(--loader-opacity);transform:translateY(var(--loader-shift));transition:opacity .45s ease,transform .45s ease;}',
@@ -4095,8 +4097,8 @@ function getCodigoHTML() {
                     '.audit-monitor-message.is-changing{opacity:0;transform:translateY(4px);}',
                     '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}}',
                 '</style>',
+                '<span id="auditLoadingLens" class="audit-loading-lens" aria-hidden="true"></span>',
                 '<section id="auditMonitorLoader" aria-live="polite" aria-label="Auditoria em andamento">',
-                    '<span id="auditLoadingLens" class="audit-loading-lens" aria-hidden="true"></span>',
                     '<div class="audit-monitor-stage">',
                         '<div class="audit-monitor-url"><strong>Analisando URL:</strong> ' + displayUrl + '</div>',
                         '<div id="auditMonitorWrap" class="audit-monitor-wrap">',
@@ -4116,14 +4118,20 @@ function getCodigoHTML() {
             var messageIndex = 0;
             var lastLensIndex = -1;
             var lensPositions = [
-                { left: '14%', top: '18%' },
-                { left: '86%', top: '18%' },
-                { left: '18%', top: '76%' },
-                { left: '82%', top: '78%' },
-                { left: '50%', top: '14%' },
-                { left: '50%', top: '84%' },
-                { left: '30%', top: '42%' },
-                { left: '70%', top: '44%' }
+                { left: '7%', top: '10%' },
+                { left: '18%', top: '20%' },
+                { left: '39%', top: '12%' },
+                { left: '62%', top: '16%' },
+                { left: '91%', top: '12%' },
+                { left: '9%', top: '38%' },
+                { left: '26%', top: '48%' },
+                { left: '74%', top: '38%' },
+                { left: '93%', top: '48%' },
+                { left: '10%', top: '72%' },
+                { left: '30%', top: '84%' },
+                { left: '50%', top: '76%' },
+                { left: '72%', top: '84%' },
+                { left: '91%', top: '72%' }
             ];
 
             function showLoadingMessage(message) {
@@ -4363,6 +4371,8 @@ function getCodigoHTML() {
             loading.classList.add('hidden');
             loading.style.display = 'none';
             loading.style.background = '';
+            loading.style.position = '';
+            loading.style.overflow = '';
             loading.innerHTML = '';
             _auditVisualProgress = 0;
             _auditLoadingStartedAt = 0;
