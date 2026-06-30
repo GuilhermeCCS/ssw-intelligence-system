@@ -5655,6 +5655,86 @@ function getCodigoHTML() {
             }
         }
 
+        function normalizeHistoryCaptureSrc(value) {
+            const raw = String(value || '').trim();
+            if (!raw) return '';
+            if (/^data:image\//i.test(raw)) return raw;
+            if (/^https?:\/\//i.test(raw)) return raw;
+            const compact = raw.replace(/\s+/g, '');
+            if (!/^[A-Za-z0-9+/=]+$/.test(compact) || compact.length < 80) return '';
+            return `data:image/jpeg;base64,${compact}`;
+        }
+
+        function getHistoryCaptureImages(item, payload) {
+            const sources = [
+                item?.images,
+                payload?.images,
+                payload?.captures,
+                payload?.screenshots
+            ].filter(source => source && typeof source === 'object');
+
+            const pick = (...keys) => {
+                for (const source of sources) {
+                    for (const key of keys) {
+                        const src = normalizeHistoryCaptureSrc(source[key]);
+                        if (src) return src;
+                    }
+                }
+                return '';
+            };
+
+            return {
+                desktop: pick('desktop', 'desktop_screenshot', 'print_desktop', 'screenshot_desktop'),
+                mobile: pick('mobile', 'mobile_screenshot', 'print_mobile', 'screenshot_mobile')
+            };
+        }
+
+        function renderHistoryCaptureFigure(kind, label, src) {
+            if (!src) {
+                return [
+                    `<figure class="history-capture-frame history-capture-${kind} history-capture-missing">`,
+                        `<div class="history-capture-label">${safeAuditText(label)}</div>`,
+                        '<div class="history-capture-placeholder">',
+                            '<i data-lucide="image-off"></i>',
+                            '<span>Captura indisponível</span>',
+                        '</div>',
+                    '</figure>'
+                ].join('');
+            }
+            return [
+                `<figure class="history-capture-frame history-capture-${kind}">`,
+                    `<div class="history-capture-label">${safeAuditText(label)}</div>`,
+                    `<img src="${safeAuditText(src)}" alt="Captura ${safeAuditText(label.toLowerCase())} salva no histórico">`,
+                '</figure>'
+            ].join('');
+        }
+
+        function renderHistoryVisualEvidence(item, payload) {
+            const images = getHistoryCaptureImages(item, payload);
+            const hasImages = Boolean(images.desktop || images.mobile);
+            return [
+                `<section class="history-detail-block history-visual-evidence${hasImages ? '' : ' history-visual-evidence-empty'}">`,
+                    '<div class="history-visual-head">',
+                        '<div>',
+                            '<span>Capturas salvas</span>',
+                            '<h4>Evidência visual da análise</h4>',
+                        '</div>',
+                        hasImages
+                            ? '<small>Desktop e mobile retornados pela auditoria.</small>'
+                            : '<small>Este histórico não possui captura salva.</small>',
+                    '</div>',
+                    hasImages
+                        ? [
+                            '<div class="history-captures-grid">',
+                                renderHistoryCaptureFigure('desktop', 'Desktop', images.desktop),
+                                renderHistoryCaptureFigure('mobile', 'Mobile', images.mobile),
+                            '</div>'
+                        ].join('')
+                        : '<p class="history-detail-muted">Análises antigas podem não ter imagens porque as capturas ainda não eram gravadas no payload do histórico. Ao rodar uma nova auditoria, elas passam a aparecer aqui.</p>',
+                '</section>'
+            ].join('');
+        }
+
         function renderAuditHistoryDetail(item) {
             const detail = document.getElementById('auditHistoryDetail');
             if (!detail) return;
@@ -5689,6 +5769,7 @@ function getCodigoHTML() {
                         `<div class="history-score history-score-${getHistoryScoreTone(score)}"><strong>${scoreLabel}</strong><span>score</span></div>`,
                     '</div>',
                     `<div class="history-detail-summary">${safeAuditText(item.summary || technical.executive_summary || 'Resumo executivo não informado.')}</div>`,
+                    renderHistoryVisualEvidence(item, payload),
                     '<div class="history-detail-grid history-detail-grid-with-plan">',
                         '<div class="history-detail-left-stack">',
                             renderHistoryVulnerabilitiesDetailed(vulnerabilities),
