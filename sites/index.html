@@ -773,10 +773,13 @@
             position: relative;
             overflow: hidden;
             padding: clamp(86px, 9vw, 132px) 0 56px;
-            background:
-                radial-gradient(circle at 18% 12%, rgba(18, 105, 242, 0.08), transparent 30%),
-                radial-gradient(circle at 84% 70%, rgba(10, 141, 255, 0.08), transparent 34%),
-                linear-gradient(180deg, #05080d 0%, #080c12 100%);
+            background-color: #05080d;
+            background-image:
+                linear-gradient(90deg, rgba(3, 6, 12, 0.94) 0%, rgba(3, 8, 18, 0.84) 45%, rgba(3, 6, 12, 0.92) 100%),
+                url("/src/assets/images/footer/ssw-footer-network-bg.png?v=20260630-1");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
             color: #f8fafc;
         }
 
@@ -784,11 +787,10 @@
             content: "";
             position: absolute;
             inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-            background-size: 58px 58px;
-            mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+            background:
+                radial-gradient(circle at 10% 72%, rgba(37, 99, 235, 0.14), transparent 27%),
+                radial-gradient(circle at 88% 34%, rgba(59, 130, 246, 0.12), transparent 30%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 24%, rgba(0, 0, 0, 0.2));
             pointer-events: none;
         }
 
