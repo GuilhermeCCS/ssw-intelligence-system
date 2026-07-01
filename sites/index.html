@@ -505,13 +505,39 @@
         .comparison-head .section-title { margin-inline: auto; }
         .comparison-head .section-intro { margin-inline: auto; }
 
-        .comparison-wrap {
+        .comparison-stage {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) clamp(240px, 18vw, 310px);
+            align-items: center;
+            gap: clamp(50px, 4vw, 66px);
             margin-top: 58px;
+        }
+
+        .comparison-wrap {
+            margin-top: 0;
             overflow-x: auto;
             border: 1px solid rgba(15, 35, 65, 0.14);
             border-radius: 14px;
             background: #ffffff;
             box-shadow: 0 30px 90px rgba(37, 99, 235, 0.08);
+        }
+
+        .comparison-character {
+            align-self: center;
+            justify-self: start;
+            width: clamp(240px, 18vw, 310px);
+            margin: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .comparison-character img {
+            display: block;
+            width: 100%;
+            height: clamp(350px, 27vw, 430px);
+            object-fit: contain;
+            object-position: center;
+            filter: drop-shadow(0 28px 46px rgba(18, 105, 242, 0.18));
         }
 
         .comparison-table {
@@ -760,6 +786,8 @@
             .process-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .process-step:nth-child(3) { border-left: 0; border-top: 1px solid var(--line-dark); }
             .process-step:nth-child(4) { border-top: 1px solid var(--line-dark); }
+            .comparison-stage { display: block; }
+            .comparison-character { display: none; }
         }
 
         @media (max-width: 880px) {
@@ -813,6 +841,7 @@
             .process-number { margin-bottom: 26px; }
             .process-icon { margin-bottom: 26px; }
             .process-step h3 { min-height: 0; }
+            .comparison-stage { margin-top: 46px; }
             .comparison-wrap { margin-right: -16px; margin-left: -16px; border-radius: 0; }
             .final-cta { margin-right: -4px; margin-left: -4px; padding: 34px 24px; }
             .final-cta-icon { width: 72px; height: 72px; border-radius: 18px; }
@@ -972,7 +1001,7 @@
                     <h2 class="section-title reveal">Site comum <span aria-hidden="true">×</span> site criado pela S.S.W</h2>
                     <p class="section-intro reveal">A diferença não está em adicionar mais elementos. Está em fazer cada decisão cumprir uma função na jornada do cliente.</p>
                 </div>
-
+                <div class="comparison-stage">
                 <div class="comparison-wrap reveal" tabindex="0" aria-label="Tabela comparativa; deslize horizontalmente em telas pequenas">
                     <table class="comparison-table">
                         <thead>
@@ -1015,6 +1044,10 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <figure class="comparison-character reveal" aria-hidden="true">
+                    <img src="/src/assets/images/sites/sites-comparison-character-cutout.png?v=20260630-1" alt="" loading="lazy">
+                </figure>
                 </div>
             </div>
         </section>
