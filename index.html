@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="env-mp-public-key" content="APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac">
     <meta name="env-api-url" content="https://ssw-intelligence-api.onrender.com">
-    <meta name="env-google-client-id" content="364411998724-tsm44qcrauagi6s4ke58rbqe6p21b2st.apps.googleusercontent.com">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="env-google-client-id" content="364411998724-tsm44qcrauagi6s4ke58rbqe6p21b2st.apps.googleusercontent.com">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="Wtn9x9dusWTgSMWvKVd0PHfETwOBypsuv1SV9j84uns" />
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://sdk.mercadopago.com https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://js.cloudflare.com https://accounts.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://accounts.google.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://ssw-intelligence-api.onrender.com https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://unpkg.com https://accounts.google.com https://static.cloudflareinsights.com https://cloudflareinsights.com; media-src 'self' blob:; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://challenges.cloudflare.com https://accounts.google.com; worker-src 'self' blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://sdk.mercadopago.com https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://js.cloudflare.com https://accounts.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://accounts.google.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' http://localhost:8080 http://127.0.0.1:8080 https://ssw-intelligence-api.onrender.com https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://unpkg.com https://accounts.google.com https://static.cloudflareinsights.com https://cloudflareinsights.com; media-src 'self' blob:; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://challenges.cloudflare.com https://accounts.google.com; worker-src 'self' blob:;">
     <!-- Console cleaner: use localStorage.SSW_DEBUG = "1" or ?debug to re-enable logs -->
     <script src="src/app/ui/console-cleaner.js"></script>
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Environment Variables Injector (carrega primeiro) -->
-    <script src="src/utils/env-injector.js"></script>
+    <script src="src/utils/env-injector.js?v=20260703-local-api-1"></script>
     <!-- DOMPurify para sanitização de inputs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <!-- Sanitizer Util -->
@@ -96,7 +95,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260630-demo-audit-v4">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260704-auth-split-3">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -132,21 +131,25 @@
     <script src="src/app/ui/toast.js"></script>
     <script src="src/app/ui/cookie-consent.js?v=20260616-cookie-consent-4"></script>
     <script src="src/app/auth/auth-shell.js?v=20260615-logout-flow-1"></script>
-    <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden hidden">
-        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div class="absolute top-0 -right-4 w-72 h-72 bg-emerald-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-0"></div>
-        <div class="glass-panel p-10 rounded-3xl w-full max-w-md border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in-up">
-            <button type="button" class="auth-modal-close" onclick="closeAuthScreenToHome()" aria-label="Fechar autenticação">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <div class="space-y-6" id="loginForm">
+    <div id="authScreen" class="fixed inset-0 z-50 hidden auth-split-screen">
+        <div class="auth-split-shell" role="dialog" aria-modal="true" aria-label="Autenticação S.S.W Intelligence">
+            <section class="auth-split-form-panel">
+                <button type="button" class="auth-modal-close auth-split-close" onclick="closeAuthScreenToHome()" aria-label="Fechar autenticação">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <a href="/" class="auth-split-brand" onclick="event.preventDefault(); closeAuthScreenToHome();" aria-label="Voltar para a página inicial">
+                    <span class="auth-split-brand-mark">
+                        <img src="src/assets/images/logo/logo_ofc.png" alt="" loading="lazy">
+                    </span>
+                    <span>S.S.W Intelligence</span>
+                </a>
+                <div class="auth-split-form-wrap">
+                    <div class="space-y-6" id="loginForm">
                 <div id="loginContent">
                     <!-- Conteúdo será renderizado dinamicamente -->
                 </div>
-            </div>
-            <div class="auth-login-card auth-register-card hidden" id="registerForm">
+                    </div>
+                    <div class="auth-login-card auth-register-card hidden" id="registerForm">
                 <div class="auth-login-heading">
                     <h2 id="registerTitle">Criar uma conta</h2>
                     <p id="registerSubtitle">Informe seu e-mail para receber o código de confirmação</p>
@@ -205,7 +208,13 @@
                         <button type="button" onclick="showAuthScreen('login')">Entrar</button>
                     </p>
                 </div>
-            </div>
+                    </div>
+                </div>
+            </section>
+            <aside class="auth-split-visual-panel" aria-hidden="true">
+                <img class="auth-split-visual-img" src="src/assets/images/auth-split-hero-v2.png" alt="" loading="eager">
+                <div class="auth-split-visual-overlay"></div>
+            </aside>
         </div>
     </div>
     <div id="logoutConfirmModal" class="logout-confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle">
@@ -1868,7 +1877,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260630-demo-audit-v2"></script>
+            <script src="src/app/core/main.js?v=20260703-demo-loading-layout-3"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
     <div id="chatWidgetPanel" style="position:fixed;bottom:18px;right:18px;width:calc(100% - 36px);max-width:390px;height:540px;max-height:calc(100vh - 36px);border-radius:24px;border:1px solid rgba(255,255,255,0.14);box-shadow:0 22px 70px rgba(0,0,0,0.46),0 0 0 1px rgba(255,255,255,0.03);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#050a12 0%,#080d16 100%);pointer-events:auto;">

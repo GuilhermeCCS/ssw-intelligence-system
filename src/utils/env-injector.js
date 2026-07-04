@@ -23,6 +23,15 @@ if (apiUrlMetaEnv) {
   window.ENV.API_URL = apiUrlMetaEnv.getAttribute('content');
 }
 
+// Em desenvolvimento local o build pode ter injetado a API de produção.
+// Para testar sem Turnstile/captcha, o front local precisa falar com a API local.
+const isLocalFrontend = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(String(window.location.hostname || '').toLowerCase());
+const forceRemoteApi = new URLSearchParams(window.location.search || '').get('remoteApi') === '1';
+if (isLocalFrontend && !forceRemoteApi) {
+  window.ENV.API_URL = localStorage.getItem('ssw_local_api_url') || 'http://localhost:8080';
+  console.info('SSW local: usando API local em', window.ENV.API_URL);
+}
+
 const googleClientMetaEnv = document.querySelector('meta[name="env-google-client-id"]');
 if (googleClientMetaEnv) {
   const googleClientId = googleClientMetaEnv.getAttribute('content');
