@@ -13250,7 +13250,15 @@ body.auth-page-active #authScreen.auth-split-screen .auth-login-card {
 }
 
 #authScreen.auth-split-screen .auth-login-captcha {
-    min-height: 70px !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: auto !important;
+    width: 300px !important;
+    min-height: 65px !important;
+    height: 65px !important;
+    margin: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
     justify-content: flex-start !important;
 }
 

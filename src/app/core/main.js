@@ -1378,7 +1378,7 @@
             return isLocalTestMode() ? LOCAL_TEST_CAPTCHA_TOKEN : '';
         }
 
-        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark', size = 'normal', visibleAttempt = 0 }) {
+        function renderTurnstileWidget({ containerId, getWidget, setWidget, setToken, theme = 'dark', size = 'normal', appearance = 'always', visibleAttempt = 0 }) {
             const container = getVisibleElementById(containerId);
             if (!container) return;
 
@@ -1399,6 +1399,7 @@
                         setToken,
                         theme,
                         size,
+                        appearance,
                         visibleAttempt: visibleAttempt + 1
                     }), 150);
                 }
@@ -1457,6 +1458,7 @@
                         sitekey: TURNSTILE_SITE_KEY,
                         theme,
                         size,
+                        appearance,
                         callback: function(token) {
                             setToken(token);
                         },
@@ -1490,7 +1492,8 @@
                 getWidget: () => turnstileLoginWidget,
                 setWidget: widget => { turnstileLoginWidget = widget; },
                 setToken: token => { turnstileLoginToken = token; },
-                size: 'flexible'
+                size: 'flexible',
+                appearance: 'interaction-only'
             });
             return;
             if (turnstileLoginWidget !== null) {
@@ -1555,7 +1558,8 @@
                 getWidget: () => turnstileRegisterWidget,
                 setWidget: widget => { turnstileRegisterWidget = widget; },
                 setToken: token => { turnstileRegisterToken = token; },
-                size: 'flexible'
+                size: 'flexible',
+                appearance: 'interaction-only'
             });
             return;
             if (turnstileRegisterWidget !== null) {
@@ -3882,6 +3886,7 @@ function getCodigoHTML() {
         }
         const DEMO_AUDIT_USED_KEY = 'ssw_demo_audit_used_v1';
         const DEMO_AUDIT_TOKEN_KEY = 'ssw_demo_audit_client_token_v1';
+        const DEMO_AUDIT_REMOTE_API_URL = 'https://ssw-intelligence-api.onrender.com';
 
         function isDemoAuditLocalTest() {
             return isLocalTestMode();
@@ -3927,6 +3932,54 @@ function getCodigoHTML() {
                 localStorage.setItem(DEMO_AUDIT_TOKEN_KEY, token);
             }
             return token;
+        }
+
+        function normalizeApiBaseUrl(value) {
+            return String(value || '').trim().replace(/\/+$/, '');
+        }
+
+        function isLocalApiBaseUrl(value) {
+            try {
+                const parsed = new URL(normalizeApiBaseUrl(value));
+                const host = String(parsed.hostname || '').toLowerCase();
+                return host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]';
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function getDemoAuditApiCandidates() {
+            const configuredApi = normalizeApiBaseUrl(
+                (typeof API_URL !== 'undefined' && API_URL) || window.ENV?.API_URL || DEMO_AUDIT_REMOTE_API_URL
+            );
+            const candidates = configuredApi ? [configuredApi] : [];
+            const remoteApi = normalizeApiBaseUrl(DEMO_AUDIT_REMOTE_API_URL);
+            if (isDemoAuditLocalTest() && isLocalApiBaseUrl(configuredApi) && remoteApi && !candidates.includes(remoteApi)) {
+                candidates.push(remoteApi);
+            }
+            return candidates.length ? candidates : [remoteApi];
+        }
+
+        async function postDemoAuditWithFallback(requestBody) {
+            const candidates = getDemoAuditApiCandidates();
+            let lastError = null;
+
+            for (const baseUrl of candidates) {
+                try {
+                    const res = await fetch(`${baseUrl}/api/auditar-demo`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    });
+                    return { res, baseUrl };
+                } catch (error) {
+                    lastError = error;
+                    console.warn('Falha ao chamar API da demonstração em', baseUrl, error);
+                    if (!isDemoAuditLocalTest() || !isLocalApiBaseUrl(baseUrl)) break;
+                }
+            }
+
+            throw lastError || new Error('Não foi possível conectar à API da demonstração.');
         }
 
         function hasUsedDemoAudit() {
@@ -4157,14 +4210,10 @@ function getCodigoHTML() {
             adjustFooterPosition(false);
 
             try {
-                const res = await fetch(`${API_URL}/api/auditar-demo`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        url,
-                        cf_token: cfToken || 'demo-test-mode',
-                        client_token: getDemoAuditClientToken()
-                    })
+                const { res } = await postDemoAuditWithFallback({
+                    url,
+                    cf_token: cfToken || 'demo-test-mode',
+                    client_token: getDemoAuditClientToken()
                 });
                 const payload = await res.json().catch(() => ({}));
                 if (!res.ok) {
