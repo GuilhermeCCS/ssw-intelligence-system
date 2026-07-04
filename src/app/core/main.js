@@ -2326,8 +2326,8 @@ function getLoginHTML() {
     return `
         <div class="auth-login-card">
             <div class="auth-login-heading">
-                <h2>Entrar na sua conta</h2>
-                <p>Informe seu e-mail abaixo para acessar sua conta</p>
+                <h2>Acesse o seu painel de inteligência</h2>
+                <p>Informe as suas credenciais abaixo para continuar auditando e otimizando as suas conversões</p>
             </div>
             <div class="auth-login-form">
                 <div class="auth-login-field">
