@@ -1310,11 +1310,11 @@
 
             if (emailStep) emailStep.classList.toggle('hidden', isPasswordStep);
             if (passwordStep) passwordStep.classList.toggle('hidden', !isPasswordStep);
-            if (title) title.textContent = isPasswordStep ? 'Crie sua senha' : 'Criar uma conta';
+            if (title) title.textContent = isPasswordStep ? 'Crie sua senha de acesso' : 'Crie seu painel de inteligência';
             if (subtitle) {
                 subtitle.textContent = isPasswordStep
                     ? 'Seu e-mail foi confirmado. Agora defina uma senha segura para acessar a SSW.'
-                    : 'Informe seu e-mail para receber o código de confirmação';
+                    : 'Comece a transformar diagnósticos em decisões claras para vender melhor.';
             }
             if (verifiedEmail) verifiedEmail.textContent = emailTemporario || options.email || 'seu e-mail';
 
@@ -1732,17 +1732,13 @@
                     googleAuthInitializedClientId = clientId;
                 }
 
-                const width = Math.min(360, Math.max(240, container.clientWidth || 320));
                 container.innerHTML = '';
                 window.google.accounts.id.renderButton(container, {
-                    type: 'standard',
-                    theme: 'filled_black',
+                    type: 'icon',
+                    theme: 'outline',
                     size: 'large',
-                    shape: 'rectangular',
-                    text: containerId.toLowerCase().includes('register') ? 'signup_with' : 'signin_with',
-                    logo_alignment: 'left',
-                    locale: 'pt_BR',
-                    width
+                    shape: 'circle',
+                    locale: 'pt_BR'
                 });
                 if (hint) {
                     hint.textContent = '';
@@ -2326,8 +2322,8 @@ function getLoginHTML() {
     return `
         <div class="auth-login-card">
             <div class="auth-login-heading">
-                <h2>Acesse o seu painel de inteligência</h2>
-                <p>Informe as suas credenciais abaixo para continuar auditando e otimizando as suas conversões</p>
+                <h2>Acesse seu painel de inteligência</h2>
+                <p>Entre para acompanhar diagnósticos, oportunidades de melhoria e sinais reais de conversão.</p>
             </div>
             <div class="auth-login-form">
                 <div class="auth-login-field">
@@ -2354,6 +2350,11 @@ function getLoginHTML() {
                 <button id="loginSubmitBtn" onclick="fazerLogin()" class="btn-primary auth-login-submit">
                     Entrar
                 </button>
+                <div class="auth-login-divider" aria-hidden="true">
+                    <span></span>
+                    <em>ou</em>
+                    <span></span>
+                </div>
                 <div class="auth-login-google">
                     <div id="googleSignInLogin" class="google-auth-slot"></div>
                     <p id="googleSignInLoginHint" class="google-auth-hint hidden"></p>
@@ -2361,6 +2362,9 @@ function getLoginHTML() {
                 <p class="auth-login-register">
                     Ainda não tem uma conta?
                     <button type="button" onclick="showAuthScreen('register')">Cadastre-se</button>
+                </p>
+                <p class="auth-login-legal">
+                    Ao continuar, você aceita os <a href="/termos/" target="_blank" rel="noopener noreferrer">Termos de uso</a> e as diretrizes de privacidade da S.S.W Intelligence.
                 </p>
             </div>
         </div>

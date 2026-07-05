@@ -13006,6 +13006,7 @@ body.auth-page-active #authScreen.auth-split-screen.hidden {
     min-height: 100dvh;
     background: #ffffff;
     color: #111827;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .auth-split-form-panel {
@@ -13028,11 +13029,11 @@ body.auth-page-active #authScreen.auth-split-screen.hidden {
 
 .auth-split-brand {
     position: absolute;
-    top: clamp(24px, 4vw, 42px);
-    left: clamp(28px, 5vw, 58px);
+    top: clamp(22px, 3vw, 32px);
+    left: clamp(22px, 3vw, 34px);
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     color: #111827;
     font-size: 13px;
     font-weight: 900;
@@ -13044,19 +13045,19 @@ body.auth-page-active #authScreen.auth-split-screen.hidden {
 .auth-split-brand-mark {
     display: inline-flex;
     width: 34px;
-    height: 34px;
+    height: 42px;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #f3f4f6;
-    border: 1px solid #e5e7eb;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+    border: 0;
 }
 
 .auth-split-brand-mark img {
-    width: 138%;
-    height: 138%;
-    object-fit: cover;
+    width: 38px;
+    height: 42px;
+    object-fit: contain;
     object-position: center;
 }
 
@@ -13128,25 +13129,25 @@ body.auth-page-active #authScreen.auth-split-screen .auth-login-card {
 
 #authScreen.auth-split-screen .auth-login-heading h2 {
     color: #0f172a !important;
-    font-size: clamp(34px, 4vw, 46px) !important;
-    line-height: 0.98 !important;
+    font-size: clamp(38px, 4.6vw, 54px) !important;
+    line-height: 0.94 !important;
     font-weight: 900 !important;
-    letter-spacing: -0.055em !important;
+    letter-spacing: -0.065em !important;
 }
 
 #authScreen.auth-split-screen .auth-login-heading p {
-    max-width: 380px;
-    margin-top: 14px !important;
+    max-width: 410px;
+    margin-top: 16px !important;
     color: #64748b !important;
-    font-size: 15px !important;
-    line-height: 1.55 !important;
-    font-weight: 650 !important;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    font-weight: 620 !important;
 }
 
 #authScreen.auth-split-screen .auth-login-form,
 #authScreen.auth-split-screen .auth-register-form,
 #authScreen.auth-split-screen .auth-register-step {
-    gap: 18px !important;
+    gap: 16px !important;
 }
 
 #authScreen.auth-split-screen .auth-login-label,
@@ -13210,8 +13211,57 @@ body.auth-page-active #authScreen.auth-split-screen .auth-login-card {
     box-shadow: 0 24px 50px rgba(15, 23, 42, 0.25) !important;
 }
 
+#authScreen.auth-split-screen .auth-login-divider {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 14px;
+    margin: 2px 0 -2px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+}
+
+#authScreen.auth-split-screen .auth-login-divider span {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #dbe3ee);
+}
+
+#authScreen.auth-split-screen .auth-login-divider span:last-child {
+    background: linear-gradient(90deg, #dbe3ee, transparent);
+}
+
+#authScreen.auth-split-screen .auth-login-divider em {
+    font-style: normal;
+}
+
+#authScreen.auth-split-screen .auth-login-google {
+    display: flex;
+    justify-content: center;
+    min-height: 46px;
+}
+
+#authScreen.auth-split-screen .auth-login-google .google-auth-slot {
+    width: auto;
+    min-width: 46px;
+    min-height: 46px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#authScreen.auth-split-screen .auth-login-google .google-auth-slot > div,
+#authScreen.auth-split-screen .auth-login-google .google-auth-slot iframe {
+    max-width: 52px !important;
+}
+
 #authScreen.auth-split-screen .auth-login-google .google-auth-disabled {
-    min-height: 52px !important;
+    width: auto !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    padding: 0 14px !important;
     border-color: #d7dee9 !important;
     background: #ffffff !important;
     color: #64748b !important;
@@ -13225,6 +13275,26 @@ body.auth-page-active #authScreen.auth-split-screen .auth-login-card {
 #authScreen.auth-split-screen .auth-login-register button {
     color: #0f172a !important;
     font-weight: 850 !important;
+}
+
+#authScreen.auth-split-screen .auth-login-legal {
+    max-width: 390px;
+    margin: -4px auto 0;
+    color: #94a3b8;
+    font-size: 12px;
+    line-height: 1.55;
+    text-align: center;
+}
+
+#authScreen.auth-split-screen .auth-login-legal a {
+    color: #0f172a;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+#authScreen.auth-split-screen .auth-login-legal a:hover {
+    color: #0891b2;
 }
 
 #authScreen.auth-split-screen .auth-register-email-summary {
