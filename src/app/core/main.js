@@ -341,7 +341,13 @@
             }
         }
         function scrollAuditReportTo(elementId) {
-            const target = document.getElementById(elementId);
+            const historyDetail = document.getElementById('auditHistoryDetail');
+            const historyTarget = historyDetail
+                && !historyDetail.classList.contains('hidden')
+                && historyDetail.classList.contains('history-report-modern')
+                ? historyDetail.querySelector(`#${elementId}`)
+                : null;
+            const target = historyTarget || document.getElementById(elementId);
             if (!target) return;
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -3308,9 +3314,10 @@ function getCodigoHTML() {
             `;
         }
 
-        function createAuditResultsStructureModern() {
-            const resultsContainer = document.getElementById('auditResults');
+        function createAuditResultsStructureModern(target = 'auditResults', options = {}) {
+            const resultsContainer = typeof target === 'string' ? document.getElementById(target) : target;
             if (!resultsContainer) return;
+            const isHistoryRender = Boolean(options.historyMode);
             const displayDate = new Date().toLocaleDateString('pt-BR', {
                 day: '2-digit',
                 month: 'long',
@@ -3319,7 +3326,7 @@ function getCodigoHTML() {
             const blankPixel = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
             resultsContainer.innerHTML = `
-                <article class="audit-experience-shell">
+                <article class="audit-experience-shell${isHistoryRender ? ' audit-experience-history' : ''}">
                     <section class="audit-hero-panel audit-reveal is-visible">
                         <div class="audit-hero-copy">
                             <p class="audit-kicker">Diagnóstico de conversão concluído</p>
@@ -3516,7 +3523,7 @@ function getCodigoHTML() {
                                 <p>Uma sequência prática para transformar o diagnóstico em melhoria real, começando pelo que tende a destravar mais confiança, clareza e conversão.</p>
                             </div>
                         </div>
-                        <div id="actionPlanList" class="audit-action-timeline"></div>
+                        <div id="actionPlanList" class="audit-action-timeline${isHistoryRender ? ' audit-history-action-timeline' : ''}"></div>
                         <div class="audit-final-actions">
                             <button onclick="gerarPDFOficial()" class="audit-primary-action">
                                 <i data-lucide="file-down" class="w-4 h-4"></i>
@@ -3533,11 +3540,12 @@ function getCodigoHTML() {
                 </article>
             `;
             if (typeof lucide !== 'undefined') lucide.createIcons();
-            initAuditResultReveal();
+            initAuditResultReveal(resultsContainer);
         }
 
-        function initAuditResultReveal() {
-            const elements = document.querySelectorAll('#auditResults .audit-reveal');
+        function initAuditResultReveal(root = document) {
+            const scope = root && root.querySelectorAll ? root : document;
+            const elements = scope.querySelectorAll('.audit-reveal');
             if (!elements.length) return;
             if (!('IntersectionObserver' in window)) {
                 elements.forEach(el => el.classList.add('is-visible'));
@@ -5059,8 +5067,8 @@ function getCodigoHTML() {
             }, {});
         }
 
-        function renderPillarsDashboard(technicalAudit = {}) {
-            const container = document.getElementById('pillarsDashboard');
+        function renderPillarsDashboard(technicalAudit = {}, root = document) {
+            const container = root && root.querySelector ? root.querySelector('#pillarsDashboard') : document.getElementById('pillarsDashboard');
             if (!container) return;
             const pillars = normalizePillarsEvaluation(technicalAudit);
             const pillarEntries = Object.entries(pillars);
@@ -5929,8 +5937,8 @@ function getCodigoHTML() {
                             '<p>Marque as ações que você já corrigiu para a IA validar novamente a URL.</p>',
                         '</div>',
                         '<div class="history-action-tools">',
-                            '<button type="button" onclick="setHistoryActionChecks(true)">Marcar todas</button>',
-                            '<button type="button" onclick="setHistoryActionChecks(false)">Limpar</button>',
+                            '<button type="button" onclick="setHistoryActionChecks(true, this)">Marcar todas</button>',
+                            '<button type="button" onclick="setHistoryActionChecks(false, this)">Limpar</button>',
                         '</div>',
                     '</div>',
                     `<div class="history-action-list">${rows}</div>`,
@@ -5964,8 +5972,11 @@ function getCodigoHTML() {
             syncHistoryActionCheckVisual(input);
         }
 
-        function setHistoryActionChecks(checked) {
-            document.querySelectorAll('[data-history-action-checkbox]').forEach(input => {
+        function setHistoryActionChecks(checked, trigger = null) {
+            const scope = trigger?.closest?.('.history-action-checklist')
+                || document.querySelector('#auditHistoryDetail.history-report-modern .history-action-checklist')
+                || document;
+            scope.querySelectorAll('[data-history-action-checkbox]').forEach(input => {
                 input.checked = Boolean(checked);
                 syncHistoryActionCheckVisual(input);
             });
@@ -5993,9 +6004,12 @@ function getCodigoHTML() {
             }
         }
 
-        async function verifyHistoryActions(historyId) {
-            const btn = document.getElementById('historyVerifyActionsBtn');
-            const selected = Array.from(document.querySelectorAll('[data-history-action-checkbox]'))
+        async function verifyHistoryActions(historyId, trigger = null) {
+            const scope = trigger?.closest?.('.history-action-checklist')
+                || document.querySelector('#auditHistoryDetail.history-report-modern .history-action-checklist')
+                || document;
+            const btn = trigger || scope.querySelector('#historyVerifyActionsBtn') || document.getElementById('historyVerifyActionsBtn');
+            const selected = Array.from(scope.querySelectorAll('[data-history-action-checkbox]'))
                 .filter(input => input.checked || input.closest('.history-action-check')?.classList.contains('is-checked'))
                 .map(input => {
                     input.checked = true;
@@ -6042,6 +6056,7 @@ function getCodigoHTML() {
             const detail = document.getElementById('auditHistoryDetail');
             if (!detail) return;
             detail.classList.remove('hidden');
+            detail.classList.remove('history-report-modern');
             detail.innerHTML = '<div class="history-detail-loading"><span class="history-loading-dot"></span>Carregando detalhes...</div>';
             detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -6140,6 +6155,325 @@ function getCodigoHTML() {
             ].join('');
         }
 
+        function getAuditScopedElement(root, id) {
+            if (root && root.querySelector) return root.querySelector(`#${id}`);
+            return document.getElementById(id);
+        }
+
+        function updateAuditScoreBoardScoped(root, score) {
+            const board = root?.querySelector?.('.audit-score-board');
+            const scoreEl = getAuditScopedElement(root, 'resScore');
+            const value = getAuditScoreNumber(score);
+            if (scoreEl) scoreEl.textContent = value === null ? '--' : String(value);
+            if (!board) return;
+
+            const tone = getAuditScoreTone(score);
+            const progress = value === null ? 0 : Math.max(0, Math.min(100, value));
+            const toneColor = {
+                strong: '#22c55e',
+                attention: '#facc15',
+                critical: '#fb7185',
+                neutral: '#67e8f9'
+            }[tone] || '#67e8f9';
+
+            board.setAttribute('data-score-tone', tone);
+            board.style.setProperty('--audit-score-progress', String(progress));
+            board.style.setProperty('--audit-score-color', toneColor);
+        }
+
+        function updateAuditMetricCardScoped(root, valueId, rawValue, options = {}) {
+            const valueEl = getAuditScopedElement(root, valueId);
+            if (!valueEl) return null;
+            const valueText = rawValue === null || rawValue === undefined || rawValue === '' ? '--' : String(rawValue);
+            const meta = options.type === 'time'
+                ? getAuditTimeMetricMeta(valueText, options.maxTime || 12)
+                : getAuditScoreMetricMeta(valueText);
+            const card = valueEl.closest('.audit-metric-card');
+            valueEl.textContent = valueText;
+            valueEl.className = `audit-metric-value audit-metric-${meta.tone}`;
+            if (card) {
+                card.dataset.metricTone = meta.tone;
+                card.style.setProperty('--metric-progress', String(meta.progress));
+                card.style.setProperty('--metric-offset', String(100 - meta.progress));
+            }
+            if (options.statusId) {
+                const statusEl = getAuditScopedElement(root, options.statusId);
+                if (statusEl) statusEl.textContent = meta.status;
+            }
+            return meta.quality;
+        }
+
+        function updateAuditTechnicalSummaryScoped(root, metricQualities = []) {
+            const values = metricQualities.filter(value => Number.isFinite(value));
+            const score = values.length
+                ? Math.round(values.reduce((total, value) => total + value, 0) / values.length)
+                : null;
+            const scoreEl = getAuditScopedElement(root, 'realTechnicalScore');
+            const progressEl = getAuditScopedElement(root, 'realTechnicalProgress');
+            const summaryEl = getAuditScopedElement(root, 'realTechnicalSummary');
+            if (scoreEl) scoreEl.textContent = score === null ? '--' : String(score);
+            if (progressEl) progressEl.style.setProperty('--technical-progress', `${score === null ? 0 : Math.max(0, Math.min(100, score))}%`);
+            if (!summaryEl) return;
+            if (score === null) {
+                summaryEl.textContent = 'A base técnica será consolidada assim que a auditoria terminar.';
+            } else if (score >= 85) {
+                summaryEl.textContent = 'A base técnica está forte e sustenta bem a experiência. O foco agora é refinar detalhes que aumentam confiança e conversão.';
+            } else if (score >= 65) {
+                summaryEl.textContent = 'A base técnica está parcialmente sólida. Há pontos fortes importantes, mas gargalos de velocidade ou experiência podem afetar a conversão.';
+            } else {
+                summaryEl.textContent = 'A base técnica ainda cria atritos relevantes. Priorize velocidade, estabilidade e clareza para reduzir perda de oportunidades.';
+            }
+        }
+
+        function updateAuditExecutiveSnapshotScoped(root, { technicalAudit = {}, vulnerabilities = [], actionSteps = [], agents = [] } = {}) {
+            const impact = getCommercialImpact(technicalAudit.score);
+            const risk = getTopAuditRisk(vulnerabilities);
+            const firstAction = actionSteps[0] || null;
+            const persona = getPersonaSignal(agents);
+
+            const impactLabel = getAuditScopedElement(root, 'auditImpactLabel');
+            const impactText = getAuditScopedElement(root, 'auditImpactText');
+            const barrierLabel = getAuditScopedElement(root, 'auditMainBarrier');
+            const barrierText = getAuditScopedElement(root, 'auditMainBarrierText');
+            const nextLabel = getAuditScopedElement(root, 'auditNextStepLabel');
+            const nextText = getAuditScopedElement(root, 'auditNextStepText');
+
+            if (impactLabel) impactLabel.textContent = impact.label;
+            if (impactText) impactText.textContent = impact.text;
+            if (barrierLabel) barrierLabel.textContent = risk.title;
+            if (barrierText) barrierText.textContent = risk.text;
+            if (nextLabel) nextLabel.textContent = firstAction ? humanizeActionPeriod(firstAction.period || 'Prioridade', 0) : (persona ? persona.name : 'Próxima ação');
+            if (nextText) nextText.textContent = firstAction
+                ? String(firstAction.step || firstAction).trim()
+                : (persona?.quote || 'Revise as barreiras destacadas e priorize a primeira correção com maior impacto na confiança do visitante.');
+        }
+
+        function setAuditPillarsVisibilityScoped(root, show) {
+            const section = getAuditScopedElement(root, 'audit-pilares');
+            const navLink = root?.querySelector?.('.audit-progress-nav [data-audit-target="audit-pilares"], .audit-progress-nav a[href="#audit-pilares"]');
+            if (section) section.classList.toggle('hidden', !show);
+            if (navLink) navLink.classList.toggle('hidden', !show);
+        }
+
+        function isAutomaticAuditMode(mode) {
+            const raw = String(mode || '').toLowerCase();
+            return raw === 'auto' || raw.includes('automatic') || raw.includes('automatica') || raw.includes('automático');
+        }
+
+        function getStoredAuditPayloadParts(item = {}) {
+            const payload = item.payload || item.raw_payload || {};
+            const result = payload.resultado || payload.result || payload.audit || item.resultado || item.result || item.audit || payload || {};
+            const technicalAudit = result.technical_audit || result.technical || {};
+            const images = item.images || payload.images || result.images || payload.captures || payload.screenshots || {};
+            return { payload, result, technicalAudit, images };
+        }
+
+        function getAuditDisplayUrl(item, result) {
+            return item?.url || result?.url || result?.target_url || result?.site_url || 'URL não informada';
+        }
+
+        function setAuditCaptureImageScoped(root, id, value) {
+            const img = getAuditScopedElement(root, id);
+            if (!img) return;
+            const src = normalizeHistoryCaptureSrc(value);
+            if (!src) return;
+            img.src = src;
+            img.closest('.audit-shot-frame, .audit-phone-shell')?.classList.add('has-capture');
+        }
+
+        function renderAuditVulnerabilitiesScoped(root, technicalAudit = {}) {
+            const vDiv = getAuditScopedElement(root, 'vulnerabilitiesTableBody');
+            if (!vDiv) return;
+            const vulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
+            if (!vulnerabilities.length) {
+                vDiv.innerHTML = '<div class="audit-empty-block"><strong>Nenhum risco crítico foi retornado.</strong><p>A auditoria não encontrou problemas relevantes o suficiente para compor uma matriz de vulnerabilidades.</p></div>';
+                return;
+            }
+
+            vDiv.innerHTML = vulnerabilities.map((v, index) => {
+                const severity = getSeverityMeta(v.severity);
+                const pillarLabel = getVulnerabilityPillarLabel(v.pillar) || 'Pilar não informado';
+                return [
+                    `<article class="audit-risk-card audit-risk-${safeAuditText(severity.tone)}">`,
+                        `<div class="audit-risk-number">${String(index + 1).padStart(2, '0')}</div>`,
+                        '<div class="audit-risk-content">',
+                            '<div class="audit-risk-meta">',
+                                `<span class="audit-severity audit-severity-${safeAuditText(severity.tone)}">${safeAuditText(severity.label)}</span>`,
+                                `<span>${safeAuditText(pillarLabel)}</span>`,
+                            '</div>',
+                            `<h3>${safeAuditText(v.title || 'Problema sem título')}</h3>`,
+                            `<p>${safeAuditText(v.description || 'A API não retornou uma descrição técnica para este item.')}</p>`,
+                        '</div>',
+                    '</article>'
+                ].join('');
+            }).join('');
+        }
+
+        function getAuditActionStepsForReport(technicalAudit = {}) {
+            const vulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
+            const maxCorrectionSteps = Math.min(4, vulnerabilities.length || 4);
+            return flattenAuditActionPlan(technicalAudit.action_plan || {}).slice(0, maxCorrectionSteps);
+        }
+
+        function renderAuditActionPlanScoped(root, technicalAudit = {}, options = {}) {
+            const actionPlanList = getAuditScopedElement(root, 'actionPlanList');
+            if (!actionPlanList) return;
+            const realSteps = getAuditActionStepsForReport(technicalAudit);
+            if (options.historyItem) {
+                actionPlanList.innerHTML = renderHistoryActionChecklist(
+                    options.historyItem,
+                    realSteps,
+                    options.verification || null
+                );
+                return;
+            }
+
+            if (!realSteps.length) {
+                actionPlanList.innerHTML = '<div class="audit-empty-block"><strong>Plano não retornado.</strong><p>A auditoria não trouxe ações específicas, mas você ainda pode baixar o PDF e revisar os pilares do diagnóstico.</p></div>';
+                return;
+            }
+
+            actionPlanList.innerHTML = realSteps.map((item, i) => [
+                '<article class="audit-action-card">',
+                    `<div class="audit-action-index">${String(i + 1).padStart(2, '0')}</div>`,
+                    '<div>',
+                        `<span>${safeAuditText(humanizeActionPeriod(item.period, i))}</span>`,
+                        `<p>${safeAuditText(item.step)}</p>`,
+                    '</div>',
+                '</article>'
+            ].join('')).join('');
+        }
+
+        function renderAuditAgentsScoped(root, result = {}) {
+            const pGrid = getAuditScopedElement(root, 'agentsTableBody');
+            if (!pGrid) return;
+            const agentsResults = result.agents_results || result.personas_results || [];
+            if (!agentsResults.length) {
+                pGrid.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>A auditoria seguiu somente pela análise técnica. Para uma leitura comportamental, selecione uma persona compatível no modo manual.</p></div>';
+                return;
+            }
+
+            pGrid.innerHTML = agentsResults.map((p, personaIndex) => {
+                const persona = enrichChatPersona(p, personaIndex);
+                const score = Number(persona.score);
+                const tone = score >= 8 ? 'strong' : score <= 4 ? 'critical' : 'attention';
+                const personaName = persona.profile_name || 'Persona SSW';
+                const personaAvatar = getChatPersonaAvatar(persona, personaIndex);
+                const personaMetrics = getPersonaInsightMetrics(persona, score);
+                const logs = Array.isArray(persona.journey_log) ? persona.journey_log.slice(0, 5) : [];
+                const journeyItems = logs.length ? logs : [
+                    { action: 'Primeira impressão', status: 'A persona não retornou etapas detalhadas para esta jornada.' },
+                    { action: 'Percepção da oferta', status: 'Use a fala principal como sinal de leitura comportamental.' },
+                    { action: 'Próximo passo', status: 'Revise a clareza do caminho até o contato.' }
+                ];
+                const journeyHtml = '<div class="audit-agent-journey-flow">' +
+                    '<div class="audit-agent-journey-title">Jornada simulada</div>' +
+                    '<div class="audit-agent-journey-line">' + journeyItems.map((log, index) => [
+                        '<div class="audit-agent-journey-step">',
+                            `<span class="audit-agent-dot">${String(index + 1).padStart(2, '0')}</span>`,
+                            `<strong>${safeAuditText(log.action || 'Ação observada')}</strong>`,
+                            `<p>${safeAuditText(log.status || 'Sem status detalhado.')}</p>`,
+                        '</div>'
+                    ].join('')).join('') + '</div>' +
+                '</div>';
+                return [
+                    `<article class="audit-agent-card audit-agent-${tone}">`,
+                        '<div class="audit-agent-insight-panel">',
+                            '<div class="audit-agent-reader-head">',
+                                `<img class="audit-agent-reader-avatar" src="${safeAuditText(personaAvatar)}" alt="${safeAuditText(personaName)}" loading="lazy">`,
+                                '<div>',
+                                    '<span>Leitura da persona</span>',
+                                    `<strong>${safeAuditText(personaName)}</strong>`,
+                                '</div>',
+                            '</div>',
+                            `<blockquote>"${safeAuditText(persona.direct_quote || 'A persona não retornou uma citação direta.')}"</blockquote>`,
+                            '<div class="audit-agent-score-grid" aria-label="Indicadores da leitura da persona">',
+                                '<div class="audit-agent-score-chip audit-agent-score-confidence">',
+                                    '<small>Confiança</small>',
+                                    `<strong>${safeAuditText(String(personaMetrics.confidence))}/10</strong>`,
+                                '</div>',
+                                '<div class="audit-agent-score-chip audit-agent-score-clarity">',
+                                    '<small>Clareza</small>',
+                                    `<strong>${safeAuditText(String(personaMetrics.clarity))}/10</strong>`,
+                                '</div>',
+                                '<div class="audit-agent-score-chip audit-agent-score-intention">',
+                                    '<small>Intenção</small>',
+                                    `<strong>${safeAuditText(personaMetrics.intentLabel)}</strong>`,
+                                    `<em>${safeAuditText(String(personaMetrics.intention))}/10</em>`,
+                                '</div>',
+                            '</div>',
+                        '</div>',
+                        '<div class="audit-agent-profile-panel">',
+                            '<div class="audit-agent-header">',
+                                '<div>',
+                                    '<span>Persona simulada</span>',
+                                    `<h3>${safeAuditText(personaName)}</h3>`,
+                                    '<p>A leitura abaixo mostra como esse perfil tende a perceber clareza, confiança e caminho até o contato.</p>',
+                                '</div>',
+                            '</div>',
+                            journeyHtml,
+                        '</div>',
+                    '</article>'
+                ].join('');
+            }).join('');
+        }
+
+        function populateAuditResultsStructureScoped(root, item = {}, options = {}) {
+            if (!root) return;
+            const { payload, result, technicalAudit, images } = getStoredAuditPayloadParts(item);
+            const mode = options.mode || item.audit_mode || item.audit_type || result.audit_mode || 'auto';
+            const reportUrl = options.url || getAuditDisplayUrl(item, result);
+            const displayHost = String(reportUrl || '').replace(/https?:\/\//, '').split('/')[0] || 'URL analisada';
+            const displayDate = item.created_at
+                ? new Date(item.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+                : new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+            const vulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
+            const actionSteps = getAuditActionStepsForReport(technicalAudit);
+            const agents = result.agents_results || result.personas_results || [];
+
+            updateAuditScoreBoardScoped(root, item.score ?? technicalAudit.score);
+            const reportUrlEl = getAuditScopedElement(root, 'reportUrl');
+            if (reportUrlEl) reportUrlEl.textContent = displayHost;
+            const reportDateEl = getAuditScopedElement(root, 'reportDate');
+            if (reportDateEl) reportDateEl.textContent = displayDate;
+            const resSummaryEl = getAuditScopedElement(root, 'resSummary');
+            if (resSummaryEl) resSummaryEl.textContent = item.summary || technicalAudit.executive_summary || 'Resumo executivo não informado.';
+
+            updateAuditExecutiveSnapshotScoped(root, {
+                technicalAudit,
+                vulnerabilities,
+                actionSteps,
+                agents
+            });
+
+            const realMetrics = technicalAudit.real_metrics || {};
+            updateAuditTechnicalSummaryScoped(root, [
+                updateAuditMetricCardScoped(root, 'realPerformanceScore', realMetrics.performance_score ?? '--', { statusId: 'realPerformanceStatus' }),
+                updateAuditMetricCardScoped(root, 'realSeoScore', realMetrics.seo_score ?? '--', { statusId: 'realSeoStatus' }),
+                updateAuditMetricCardScoped(root, 'realA11yScore', realMetrics.accessibility_score ?? '--', { statusId: 'realA11yStatus' }),
+                updateAuditMetricCardScoped(root, 'realLcp', realMetrics.lcp || '--', { type: 'time', statusId: 'realLcpStatus', maxTime: 10 }),
+                updateAuditMetricCardScoped(root, 'realLoadTime', realMetrics.load_time || '--', { type: 'time', statusId: 'realLoadTimeStatus', maxTime: 14 })
+            ]);
+
+            setAuditPillarsVisibilityScoped(root, isAutomaticAuditMode(mode));
+            if (isAutomaticAuditMode(mode)) {
+                renderPillarsDashboard(technicalAudit, root);
+            }
+
+            setAuditCaptureImageScoped(root, 'printDesktop', images.desktop || images.desktop_screenshot || images.print_desktop || images.screenshot_desktop);
+            setAuditCaptureImageScoped(root, 'printMobile', images.mobile || images.mobile_screenshot || images.print_mobile || images.screenshot_mobile);
+
+            renderAuditVulnerabilitiesScoped(root, technicalAudit);
+            renderAuditAgentsScoped(root, result);
+            renderAuditActionPlanScoped(root, technicalAudit, {
+                historyItem: options.historyItem || null,
+                verification: options.verification || payload.action_verification || null
+            });
+
+            initAuditResultReveal(root);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
         function renderAuditHistoryDetail(item) {
             const detail = document.getElementById('auditHistoryDetail');
             if (!detail) return;
@@ -6151,17 +6485,25 @@ function getCodigoHTML() {
                 return;
             }
 
-            const result = payload.resultado || payload.result || payload.audit || payload;
-            const technical = result.technical_audit || {};
-            const vulnerabilities = normalizeHistoryArray(technical.vulnerabilities);
+            const { result, images } = getStoredAuditPayloadParts(item);
             const chatAgents = normalizeHistoryArray(result.agents_results || result.personas_results).map(normalizeChatPersona).filter(agent => agent.profile_name);
-            const agents = chatAgents.slice(0, 4);
-            const actions = normalizeHistoryArray(technical.action_plan);
-            const verification = payload.action_verification || null;
-            const score = Number(item.score ?? technical.score);
-            const scoreLabel = Number.isFinite(score) ? Math.round(score) : '--';
             window.currentHistoryChatItem = item;
             window.currentHistoryChatAgents = chatAgents;
+
+            auditData = result || {};
+            auditData.images = images || auditData.images || {};
+            auditData.audit_mode = item.audit_mode || item.audit_type || auditData.audit_mode || 'auto';
+            currentAuditUrl = item.url || currentAuditUrl;
+
+            detail.classList.add('history-report-modern');
+            createAuditResultsStructureModern(detail, { historyMode: true });
+            populateAuditResultsStructureScoped(detail, item, {
+                historyItem: item,
+                verification: payload.action_verification || null,
+                mode: item.audit_mode || item.audit_type || auditData.audit_mode || 'auto',
+                url: item.url || ''
+            });
+            return;
 
             detail.innerHTML = [
                 '<article class="history-detail-panel">',
@@ -6192,6 +6534,7 @@ function getCodigoHTML() {
 
         function renderCompareHistoryDetail(item, payload, meta) {
             const detail = document.getElementById('auditHistoryDetail');
+            detail?.classList?.remove('history-report-modern');
             const battle = payload.battle_data || payload.comparativo || payload;
             const verdict = battle.executive_verdict || {};
             const agents = normalizeHistoryArray(battle.agent_battleground).slice(0, 5);

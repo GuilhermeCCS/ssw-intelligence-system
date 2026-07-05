@@ -10391,6 +10391,260 @@ body:has(#auditResults:not(.hidden)) #view-home.command-center {
 }
 
 /* Seção 03 no formato da referência. */
+#view-history #auditHistoryDetail.history-report-modern {
+    margin-top: 34px !important;
+    color: #111827 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-experience-shell {
+    color: #111827 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-hero-panel,
+#view-history #auditHistoryDetail.history-report-modern .audit-progress-nav,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-card,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-summary-card,
+#view-history #auditHistoryDetail.history-report-modern .audit-risk-card,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-card,
+#view-history #auditHistoryDetail.history-report-modern .audit-action-card,
+#view-history #auditHistoryDetail.history-report-modern .audit-empty-block,
+#view-history #auditHistoryDetail.history-report-modern .history-action-checklist {
+    background: #ffffff !important;
+    border-color: #dbe5eb !important;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, 0.08) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-story-section {
+    border-top-color: #e4ebf1 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-section-heading > span {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0f8b8d, #087f7f) !important;
+    border-color: rgba(15, 139, 141, 0.28) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-section-heading h2,
+#view-history #auditHistoryDetail.history-report-modern .audit-hero-copy h1,
+#view-history #auditHistoryDetail.history-report-modern .audit-executive-card strong,
+#view-history #auditHistoryDetail.history-report-modern .audit-risk-card h3,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-header h3,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-journey-step strong,
+#view-history #auditHistoryDetail.history-report-modern .audit-action-card strong,
+#view-history #auditHistoryDetail.history-report-modern .history-action-check strong {
+    color: #111827 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-section-heading p,
+#view-history #auditHistoryDetail.history-report-modern .audit-hero-summary,
+#view-history #auditHistoryDetail.history-report-modern .audit-executive-card p,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-card > p,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-summary-card > p,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-summary-score p,
+#view-history #auditHistoryDetail.history-report-modern .audit-risk-card p,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-card p,
+#view-history #auditHistoryDetail.history-report-modern .audit-action-card p,
+#view-history #auditHistoryDetail.history-report-modern .audit-empty-block p,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-insight-panel blockquote,
+#view-history #auditHistoryDetail.history-report-modern .history-action-head p,
+#view-history #auditHistoryDetail.history-report-modern .history-action-footer span {
+    color: #5f6f85 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-kicker,
+#view-history #auditHistoryDetail.history-report-modern .audit-executive-card span,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-insight-panel > span,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-journey-title,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-header span,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-card > span,
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-summary-score > span,
+#view-history #auditHistoryDetail.history-report-modern .audit-action-card span,
+#view-history #auditHistoryDetail.history-report-modern .history-action-check em,
+#view-history #auditHistoryDetail.history-report-modern .history-action-head h4 {
+    color: #087f7f !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-progress-nav button {
+    color: #526173 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-progress-nav button:hover {
+    color: #087f7f !important;
+    background: rgba(15, 139, 141, 0.08) !important;
+    border-color: rgba(15, 139, 141, 0.22) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-board {
+    background: #101827 !important;
+    color: #ffffff !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-label,
+#view-history #auditHistoryDetail.history-report-modern .audit-score-date,
+#view-history #auditHistoryDetail.history-report-modern .audit-score-caption {
+    color: #c8d3df !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-url {
+    color: #67e8f9 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-shot-frame,
+#view-history #auditHistoryDetail.history-report-modern .audit-phone-shell {
+    background: #111827 !important;
+    border-color: #dbe5eb !important;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.12) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-gauge-track {
+    stroke: #e7edf2 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-insight-panel,
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-profile-panel {
+    background: #ffffff !important;
+    border-color: #e4ebf1 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-journey-line::before {
+    background: #c6d7dd !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-dot {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 1px rgba(15, 139, 141, 0.26) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-checklist {
+    position: static !important;
+    padding: 22px !important;
+    border-radius: 14px !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-list {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-check {
+    background: #f8fbff !important;
+    border-color: #dbe5eb !important;
+    box-shadow: none !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-check:hover,
+#view-history #auditHistoryDetail.history-report-modern .history-action-check.is-checked {
+    background: #f0fdfa !important;
+    border-color: rgba(15, 139, 141, 0.32) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-check input {
+    accent-color: #0f8b8d !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-tools button,
+#view-history #auditHistoryDetail.history-report-modern .history-action-footer button {
+    border-color: rgba(15, 139, 141, 0.24) !important;
+    background: #ffffff !important;
+    color: #087f7f !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .history-action-footer button {
+    background: linear-gradient(135deg, #0f8b8d, #087f7f) !important;
+    color: #ffffff !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillars-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 24px !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-card {
+    --pillar-color: #0f8b8d;
+    --pillar-soft: #e6f5f3;
+    min-height: 390px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 22px !important;
+    padding: 24px 28px 28px !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    border: 1px solid #dbe5eb !important;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, 0.08) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-card::before {
+    display: none !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-tone-teal { --pillar-color: #0f8b8d; --pillar-soft: #e6f5f3; }
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-tone-green { --pillar-color: #4caf3f; --pillar-soft: #eaf7e8; }
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-tone-red { --pillar-color: #ff454d; --pillar-soft: #ffebee; }
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-tone-amber { --pillar-color: #f6b900; --pillar-soft: #fff5d9; }
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-heading {
+    width: 100% !important;
+    min-height: 68px !important;
+    display: grid !important;
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 18px !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-icon {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 16px !important;
+    color: var(--pillar-color) !important;
+    background: var(--pillar-soft) !important;
+    border: 0 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-heading h3 {
+    margin: 0 !important;
+    color: #111827 !important;
+    font-size: 1rem !important;
+    line-height: 1.22 !important;
+    font-weight: 900 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-score-ring {
+    width: 168px !important;
+    height: 168px !important;
+    background: conic-gradient(var(--pillar-color) calc(var(--pillar-score, 0) * 1%), #e8ecef 0) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-score-ring::before {
+    background: #ffffff !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-score-core strong {
+    color: var(--pillar-color) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-card > p {
+    width: 100% !important;
+    margin-top: auto !important;
+    padding-top: 24px !important;
+    border-top: 1px solid #e4ebf1 !important;
+    color: #5f6f85 !important;
+    text-align: center !important;
+    text-align-last: center !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-summary-card {
+    grid-column: 1 / -1 !important;
+    background: linear-gradient(90deg, #f0fbfb, #ffffff) !important;
+    border: 1px solid rgba(15, 139, 141, 0.2) !important;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.07) !important;
+}
+
 #auditResults:not(.hidden) .audit-pillars-grid {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
