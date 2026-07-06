@@ -6305,6 +6305,16 @@ function getCodigoHTML() {
             return { payload, result, technicalAudit, images };
         }
 
+        function getAuditAgentsFromResult(result = {}) {
+            return normalizeHistoryArray(
+                result.agents_results
+                || result.personas_results
+                || result.behavioral_analysis
+                || result.agents
+                || []
+            );
+        }
+
         function getAuditDisplayUrl(item, result) {
             return item?.url || result?.url || result?.target_url || result?.site_url || 'URL não informada';
         }
@@ -6384,7 +6394,7 @@ function getCodigoHTML() {
         function renderAuditAgentsScoped(root, result = {}) {
             const pGrid = getAuditScopedElement(root, 'agentsTableBody');
             if (!pGrid) return;
-            const agentsResults = result.agents_results || result.personas_results || [];
+            const agentsResults = getAuditAgentsFromResult(result);
             if (!agentsResults.length) {
                 pGrid.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>A auditoria seguiu somente pela análise técnica. Para uma leitura comportamental, selecione uma persona compatível no modo manual.</p></div>';
                 return;
@@ -6466,7 +6476,7 @@ function getCodigoHTML() {
                 : new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
             const vulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
             const actionSteps = getAuditActionStepsForReport(technicalAudit);
-            const agents = result.agents_results || result.personas_results || [];
+            const agents = getAuditAgentsFromResult(result);
 
             updateAuditScoreBoardScoped(root, item.score ?? technicalAudit.score);
             const reportUrlEl = getAuditScopedElement(root, 'reportUrl');
@@ -6502,6 +6512,15 @@ function getCodigoHTML() {
 
             renderAuditVulnerabilitiesScoped(root, technicalAudit);
             renderAuditAgentsScoped(root, result);
+            if (options.historyItem && Array.isArray(agents) && agents.length) {
+                const historyChatAgents = agents.map((agent, index) => enrichChatPersona(agent, index)).filter(agent => agent.profile_name);
+                window.currentHistoryChatItem = options.historyItem;
+                window.currentHistoryChatAgents = historyChatAgents;
+                const agentsGrid = getAuditScopedElement(root, 'agentsTableBody');
+                if (agentsGrid && historyChatAgents.length) {
+                    agentsGrid.insertAdjacentHTML('beforeend', renderHistoryChatAgentsInline(historyChatAgents));
+                }
+            }
             renderAuditActionPlanScoped(root, technicalAudit, {
                 historyItem: options.historyItem || null,
                 verification: options.verification || payload.action_verification || null
@@ -6523,7 +6542,7 @@ function getCodigoHTML() {
             }
 
             const { result, images } = getStoredAuditPayloadParts(item);
-            const chatAgents = normalizeHistoryArray(result.agents_results || result.personas_results).map(normalizeChatPersona).filter(agent => agent.profile_name);
+            const chatAgents = getAuditAgentsFromResult(result).map(normalizeChatPersona).filter(agent => agent.profile_name);
             window.currentHistoryChatItem = item;
             window.currentHistoryChatAgents = chatAgents;
 
@@ -7245,7 +7264,7 @@ function getCodigoHTML() {
                 if (resSummaryEl) resSummaryEl.innerText = technicalAudit.executive_summary;
                 const reportVulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
                 const reportActionSteps = flattenAuditActionPlan(technicalAudit.action_plan || {}).slice(0, reportVulnerabilities.length);
-                const reportAgents = data.resultado.agents_results || data.resultado.personas_results || [];
+                const reportAgents = getAuditAgentsFromResult(data.resultado || {});
                 updateAuditExecutiveSnapshot({
                     technicalAudit,
                     vulnerabilities: reportVulnerabilities,
@@ -7387,7 +7406,7 @@ function getCodigoHTML() {
                     }
                 }
                 const pGrid = document.getElementById('agentsTableBody');
-                const agentsResults = data.resultado.agents_results || data.resultado.personas_results || [];
+                const agentsResults = getAuditAgentsFromResult(data.resultado || {});
                 if (pGrid) {
                     if (!agentsResults.length) {
                         pGrid.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>A auditoria seguiu somente pela an?lise t?cnica. Para uma leitura comportamental, selecione uma persona compat?vel no modo manual.</p></div>';
@@ -8892,18 +8911,43 @@ function getCodigoHTML() {
             });
             return Math.ceil(text.length / 4);
         }
+        function getCompactChatPersona(agent = {}) {
+            return {
+                id: agent?.id || '',
+                profile_name: agent?.profile_name || agent?.name || agent?.agent || '',
+                score: agent?.score ?? null,
+                description: String(agent?.description || agent?.profile_description || '').slice(0, 500),
+                direct_quote: String(agent?.direct_quote || agent?.feedback || '').slice(0, 500)
+            };
+        }
+        function estimateChatMessageTokens(history) {
+            const text = JSON.stringify({
+                persona: getCompactChatPersona(currentAgent),
+                historico: history || []
+            });
+            return Math.ceil(text.length / 4);
+        }
         function updateChatTokenStatus(usage) {
             const label = document.getElementById('chatAgentScore');
             if (!label) return;
             const base = label.dataset.baseLabel || label.innerText || 'Perfil analitico';
-            const estimated = usage?.estimated_input_tokens ?? estimateChatTokensFromHistory(currentChatHistory);
-            const limit = usage?.input_token_limit || currentChatTokenLimit;
-            currentChatTokenLimit = limit;
-            const usagePercent = limit > 0
-                ? Math.min(100, Math.max(0, Math.round((estimated / limit) * 100)))
-                : 0;
+            const dailyUsed = Number(usage?.daily_tokens_used);
+            const dailyLimit = Number(usage?.daily_token_limit);
+            let usagePercent = 0;
+            let suffix = 'da conversa';
+            if (Number.isFinite(dailyUsed) && Number.isFinite(dailyLimit) && dailyLimit > 0) {
+                usagePercent = Math.min(100, Math.max(0, Math.round((dailyUsed / dailyLimit) * 100)));
+                suffix = 'do uso diário';
+            } else {
+                const estimated = estimateChatMessageTokens(currentChatHistory);
+                const limit = usage?.input_token_limit || currentChatTokenLimit;
+                currentChatTokenLimit = limit;
+                usagePercent = limit > 0
+                    ? Math.min(100, Math.max(0, Math.round((estimated / limit) * 100)))
+                    : 0;
+            }
             label.dataset.baseLabel = base;
-            label.innerText = `${base} | ${usagePercent}% da conversa`;
+            label.innerText = `${base} | ${usagePercent}% ${suffix}`;
             if (usagePercent >= 85) {
                 label.style.color = '#fbbf24';
             } else {
@@ -9056,7 +9100,7 @@ function getCodigoHTML() {
             if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.45'; }
             // 3. Prepara histórico para API
             currentChatHistory.push({ role: "user", content: msg });
-            const estimatedBeforeSend = estimateChatTokensFromHistory(currentChatHistory);
+            const estimatedBeforeSend = estimateChatMessageTokens(currentChatHistory);
             if (estimatedBeforeSend > currentChatTokenLimit) {
                 appendMsg('ai', 'Esta conversa chegou ao limite de uso disponível. Limpe a conversa para continuar com esta persona.');
                 currentChatHistory.pop();
