@@ -95,7 +95,7 @@
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
-    <link rel="stylesheet" href="src/styles/app.css?v=20260705-history-report-2">
+    <link rel="stylesheet" href="src/styles/app.css?v=20260706-auth-terms-2">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -212,9 +212,12 @@
                         Já tem uma conta?
                         <button type="button" onclick="showAuthScreen('login')">Entrar</button>
                     </p>
-                    <p class="auth-login-legal">
-                        Ao continuar, você aceita os <a href="/termos/" target="_blank" rel="noopener noreferrer">Termos de uso</a> e as diretrizes de privacidade da S.S.W Intelligence.
-                    </p>
+                    <div class="auth-terms-consent">
+                        <label for="registerTermsAccepted">
+                            <input type="checkbox" id="registerTermsAccepted" onchange="updateRegisterTermsState()">
+                            <span>Ao continuar, você aceita os <a href="/termos/" target="_blank" rel="noopener noreferrer">Termos de uso</a> e as diretrizes de privacidade da S.S.W Intelligence.</span>
+                        </label>
+                    </div>
                 </div>
                     </div>
                 </div>
@@ -1885,7 +1888,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260705-history-report-2"></script>
+            <script src="src/app/core/main.js?v=20260706-auth-terms-2"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
     <div id="chatWidgetPanel" style="position:fixed;bottom:18px;right:18px;width:calc(100% - 36px);max-width:390px;height:540px;max-height:calc(100vh - 36px);border-radius:24px;border:1px solid rgba(255,255,255,0.14);box-shadow:0 22px 70px rgba(0,0,0,0.46),0 0 0 1px rgba(255,255,255,0.03);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#050a12 0%,#080d16 100%);pointer-events:auto;">

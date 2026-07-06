@@ -1323,6 +1323,7 @@
                     : 'Comece a transformar diagnósticos em decisões claras para vender melhor.';
             }
             if (verifiedEmail) verifiedEmail.textContent = emailTemporario || options.email || 'seu e-mail';
+            updateRegisterTermsState();
 
             setTimeout(() => {
                 const focusTarget = isPasswordStep ? getRegisterFormField('regPass') : getRegisterFormField('regEmail');
@@ -1767,6 +1768,10 @@
                 return;
             }
 
+            const registerForm = document.getElementById('registerForm');
+            const isRegisterFlow = registerForm && !registerForm.classList.contains('hidden') && isElementRenderable(registerForm);
+            if (isRegisterFlow && !isRegisterTermsAccepted(true)) return;
+
             try {
                 setGoogleAuthBusy(true);
                 const res = await fetch(`${API_URL}/api/login/google`, {
@@ -1857,6 +1862,32 @@
             }
         }
 
+        function isRegisterTermsAccepted(showWarning = false) {
+            const checkbox = getRegisterFormField('registerTermsAccepted') || document.getElementById('registerTermsAccepted');
+            const consent = checkbox?.closest?.('.auth-terms-consent') || document.querySelector('.auth-terms-consent');
+            const accepted = Boolean(checkbox?.checked);
+            if (!accepted && showWarning) {
+                if (consent) {
+                    consent.classList.remove('is-invalid');
+                    void consent.offsetWidth;
+                    consent.classList.add('is-invalid');
+                    setTimeout(() => consent.classList.remove('is-invalid'), 900);
+                }
+                checkbox?.focus?.({ preventScroll: true });
+                Toast.warning('Aceite os Termos de uso para concluir o cadastro.');
+            }
+            return accepted;
+        }
+
+        function updateRegisterTermsState() {
+            const accepted = isRegisterTermsAccepted(false);
+            const consent = document.querySelector('.auth-terms-consent');
+            if (consent) {
+                consent.classList.toggle('is-accepted', accepted);
+                if (accepted) consent.classList.remove('is-invalid');
+            }
+        }
+
         function setRegisterSubmitLoading(isLoading) {
             const emailBtn = document.getElementById('registerSubmitBtn');
             const passwordBtn = document.getElementById('registerPasswordSubmitBtn');
@@ -1867,12 +1898,16 @@
                 emailBtn.textContent = isLoading && !isPasswordStep ? 'Enviando código...' : 'Enviar código';
                 emailBtn.classList.toggle('opacity-70', isLoading);
                 emailBtn.classList.toggle('cursor-not-allowed', isLoading);
+                emailBtn.classList.remove('auth-submit-disabled');
+                emailBtn.setAttribute('aria-disabled', isLoading ? 'true' : 'false');
             }
             if (passwordBtn) {
                 passwordBtn.disabled = isLoading;
                 passwordBtn.textContent = isLoading && isPasswordStep ? 'Salvando senha...' : 'Definir senha';
                 passwordBtn.classList.toggle('opacity-70', isLoading);
                 passwordBtn.classList.toggle('cursor-not-allowed', isLoading);
+                passwordBtn.classList.remove('auth-submit-disabled');
+                passwordBtn.setAttribute('aria-disabled', isLoading ? 'true' : 'false');
             }
         }
 
@@ -2085,6 +2120,7 @@
             const emailInput = registerForm?.querySelector('#regEmail') || getRegisterFormField('regEmail');
             const email = String(emailInput?.value || '').trim().toLowerCase();
 
+            if (!isRegisterTermsAccepted(true)) return;
             if(!email) return Toast.warning("Informe seu e-mail para continuar.");
             if(!isValidEmailAddress(email)) return Toast.warning("Informe um e-mail válido.");
 
@@ -2145,6 +2181,7 @@
             const pass = passInput?.value || '';
             const confirmPass = confirmInput?.value || '';
 
+            if (!isRegisterTermsAccepted(true)) return;
             if (!emailTemporario || !codigoCadastroVerificado) {
                 Toast.warning("Confirme seu e-mail antes de criar a senha.");
                 resetCadastroFluxo({ keepEmail: Boolean(emailTemporario) });
@@ -6677,6 +6714,7 @@ function getCodigoHTML() {
         window.openAuditHistoryItem = openAuditHistoryItem;
         window.deleteAuditHistoryItem = deleteAuditHistoryItem;
         window.rerunAuditFromHistory = rerunAuditFromHistory;
+        window.updateRegisterTermsState = updateRegisterTermsState;
         window.setHistoryActionChecks = setHistoryActionChecks;
         window.syncHistoryActionCheckVisual = syncHistoryActionCheckVisual;
         window.toggleHistoryActionCheck = toggleHistoryActionCheck;
