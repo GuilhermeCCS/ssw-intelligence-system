@@ -13699,3 +13699,239 @@ body.auth-page-active #authScreen.auth-split-screen .auth-login-card {
         font-size: 34px !important;
     }
 }
+
+/* Correção de contraste para detalhes abertos a partir do histórico.
+   O histórico usa fundo claro; estes overrides evitam textos e botões herdarem
+   o tema escuro antigo do relatório. */
+#view-history #auditHistoryDetail {
+    color: #111827 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-primary-action,
+#view-history #auditHistoryDetail.history-report-modern .audit-commercial-action {
+    color: #07111f !important;
+    background: linear-gradient(135deg, #35d4e8, #22c7df) !important;
+    border: 1px solid rgba(15, 139, 141, 0.24) !important;
+    box-shadow: 0 14px 30px rgba(34, 199, 223, 0.18) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-primary-action svg,
+#view-history #auditHistoryDetail.history-report-modern .audit-commercial-action svg {
+    color: #07111f !important;
+    stroke: #07111f !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-hero-actions .audit-primary-action {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0f8b8d, #03989e) !important;
+    border-color: rgba(15, 139, 141, 0.48) !important;
+    box-shadow: 0 16px 34px rgba(15, 139, 141, 0.2) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-hero-actions .audit-primary-action svg {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-secondary-action:not(.audit-commercial-action),
+#view-history #auditHistoryDetail.history-report-modern .history-detail-actions button:not(.history-delete-btn) {
+    color: #1f3348 !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd8e3 !important;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-secondary-action:not(.audit-commercial-action):hover,
+#view-history #auditHistoryDetail.history-report-modern .history-detail-actions button:not(.history-delete-btn):hover {
+    color: #087f7f !important;
+    border-color: rgba(15, 139, 141, 0.34) !important;
+    background: #f3fbfb !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-board {
+    background: #ffffff !important;
+    border: 1px solid #dbe4eb !important;
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.06) !important;
+    color: #070d25 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-label {
+    color: #070d25 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-value strong {
+    color: var(--audit-score-color) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-value span,
+#view-history #auditHistoryDetail.history-report-modern .audit-score-date {
+    color: #687286 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-caption-card {
+    background: linear-gradient(135deg, #fff8e7, #fff3d6) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-caption {
+    color: #2d3446 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-url-card {
+    background: linear-gradient(135deg, #f2fbfc, #eef5f9) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-score-url {
+    color: #087f7f !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-value-line small,
+#view-history #auditHistoryDetail.history-report-modern .audit-pillar-score-core small {
+    color: #7b8796 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-metric-status {
+    color: var(--metric-color, #087f7f) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-score-chip {
+    color: #111827 !important;
+    background: #f0fbfb !important;
+    border: 1px solid rgba(15, 139, 141, 0.2) !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-score-chip small {
+    color: #087f7f !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-agent-score-chip strong {
+    color: #111827 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-risk-meta,
+#view-history #auditHistoryDetail.history-report-modern .audit-risk-meta span:not(.audit-severity) {
+    color: #4b5f75 !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-severity-critical {
+    color: #991b1b !important;
+    background: #fee2e2 !important;
+    border-color: #fecaca !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-severity-high,
+#view-history #auditHistoryDetail.history-report-modern .audit-severity-attention {
+    color: #9a3412 !important;
+    background: #ffedd5 !important;
+    border-color: #fed7aa !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-severity-medium {
+    color: #854d0e !important;
+    background: #fef3c7 !important;
+    border-color: #fde68a !important;
+}
+
+#view-history #auditHistoryDetail.history-report-modern .audit-severity-low,
+#view-history #auditHistoryDetail.history-report-modern .audit-severity-strong {
+    color: #047857 !important;
+    background: #d1fae5 !important;
+    border-color: #a7f3d0 !important;
+}
+
+/* Fallback para históricos antigos/comparativos que ainda usam o painel clássico. */
+#view-history #auditHistoryDetail .history-detail-panel,
+#view-history #auditHistoryDetail .history-detail-block,
+#view-history #auditHistoryDetail .history-action-checklist,
+#view-history #auditHistoryDetail .history-chat-agents {
+    background: #ffffff !important;
+    border-color: #dbe5eb !important;
+    color: #111827 !important;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, 0.08) !important;
+}
+
+#view-history #auditHistoryDetail .history-detail-summary,
+#view-history #auditHistoryDetail .history-verification-result {
+    background: #f0fbfb !important;
+    border-color: rgba(15, 139, 141, 0.2) !important;
+    color: #334155 !important;
+}
+
+#view-history #auditHistoryDetail .history-card h3,
+#view-history #auditHistoryDetail .history-detail-head h3,
+#view-history #auditHistoryDetail .history-detail-summary strong,
+#view-history #auditHistoryDetail .history-detail-block h4,
+#view-history #auditHistoryDetail .history-vulnerability-top strong,
+#view-history #auditHistoryDetail .history-action-check strong,
+#view-history #auditHistoryDetail .history-verification-head strong,
+#view-history #auditHistoryDetail .history-verification-row strong,
+#view-history #auditHistoryDetail .history-chat-agents h4,
+#view-history #auditHistoryDetail .history-chat-agent-list strong {
+    color: #111827 !important;
+}
+
+#view-history #auditHistoryDetail .history-detail-head p,
+#view-history #auditHistoryDetail .history-detail-block li p,
+#view-history #auditHistoryDetail .history-vulnerability-item > p,
+#view-history #auditHistoryDetail .history-vulnerability-meta span,
+#view-history #auditHistoryDetail .history-action-head p,
+#view-history #auditHistoryDetail .history-action-footer span,
+#view-history #auditHistoryDetail .history-verification-head p,
+#view-history #auditHistoryDetail .history-verification-row p,
+#view-history #auditHistoryDetail .history-verification-row small,
+#view-history #auditHistoryDetail .history-chat-agents p,
+#view-history #auditHistoryDetail .history-chat-agent-list span,
+#view-history #auditHistoryDetail .history-detail-muted,
+#view-history #auditHistoryDetail .history-detail-muted p {
+    color: #475569 !important;
+}
+
+#view-history #auditHistoryDetail .history-vulnerability-item,
+#view-history #auditHistoryDetail .history-action-check,
+#view-history #auditHistoryDetail .history-verification-row,
+#view-history #auditHistoryDetail .history-chat-agent-list button {
+    background: #f8fbff !important;
+    border-color: #dbe5eb !important;
+}
+
+#view-history #auditHistoryDetail .history-action-check:hover,
+#view-history #auditHistoryDetail .history-action-check.is-checked,
+#view-history #auditHistoryDetail .history-chat-agent-list button:hover {
+    background: #f0fdfa !important;
+    border-color: rgba(15, 139, 141, 0.32) !important;
+}
+
+#view-history #auditHistoryDetail .history-action-check input {
+    accent-color: #0f8b8d !important;
+}
+
+#view-history #auditHistoryDetail .history-action-check em,
+#view-history #auditHistoryDetail .history-detail-block li span,
+#view-history #auditHistoryDetail .history-action-head h4 {
+    color: #087f7f !important;
+}
+
+#view-history #auditHistoryDetail .history-action-tools button,
+#view-history #auditHistoryDetail .history-detail-actions button:not(.history-delete-btn) {
+    border-color: rgba(15, 139, 141, 0.28) !important;
+    background: #ffffff !important;
+    color: #087f7f !important;
+}
+
+#view-history #auditHistoryDetail .history-action-tools button:hover,
+#view-history #auditHistoryDetail .history-detail-actions button:not(.history-delete-btn):hover {
+    background: #f3fbfb !important;
+    border-color: rgba(15, 139, 141, 0.42) !important;
+}
+
+#view-history #auditHistoryDetail .history-action-footer button {
+    background: linear-gradient(135deg, #0f8b8d, #087f7f) !important;
+    border-color: rgba(15, 139, 141, 0.34) !important;
+    color: #ffffff !important;
+}
+
+#view-history #auditHistoryDetail .history-delete-btn,
+#view-history #auditHistoryDetail .history-detail-actions .history-delete-btn {
+    background: #fff5f5 !important;
+    border-color: rgba(239, 68, 68, 0.35) !important;
+    color: #dc2626 !important;
+}
