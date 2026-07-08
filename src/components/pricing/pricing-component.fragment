@@ -1,117 +1,131 @@
 <div id="view-precos" class="hidden w-full animate-fade-in-up">
 
-    <section class="ssw-pricing-hero">
+    <section class="ssw-pricing-hero" aria-labelledby="pricingHeroTitle">
         <div class="ssw-hero-inner">
             <p class="ssw-hero-eyebrow">Planos e preços</p>
-            <h1 class="ssw-hero-title">
-                Seu site pode estar <span>perdendo vendas</span> agora.
+            <h1 id="pricingHeroTitle" class="ssw-hero-title">
+                Escolha o plano ideal<br>
+                para o <span>seu negócio</span>
             </h1>
             <p class="ssw-hero-sub">
-                Descubra em minutos os problemas técnicos, comerciais e de experiência que afastam clientes com auditorias inteligentes e relatórios prontos para ação.
+                Planos flexíveis para freelancers, agências e empresas que querem tomar decisões com base em dados e gerar resultados reais.
             </p>
 
-            <div class="ssw-value-strip" aria-label="Diferenciais da SSW Intelligence">
-                <article>
-                    <i data-lucide="user-round-search"></i>
-                    <div>
-                        <strong>IA + visão humana</strong>
-                        <span>Simulação de usuários reais em diferentes perfis</span>
-                    </div>
-                </article>
+            <div class="ssw-value-strip" aria-label="Benefícios principais da S.S.W Intelligence">
                 <article>
                     <i data-lucide="file-check-2"></i>
                     <div>
-                        <strong>Relatórios prontos</strong>
-                        <span>PDFs executivos com insights e recomendações</span>
+                        <strong>Relatórios profissionais</strong>
+                        <span>Em PDF, prontos para clientes</span>
                     </div>
                 </article>
                 <article>
-                    <i data-lucide="git-compare-arrows"></i>
+                    <i data-lucide="building-2"></i>
                     <div>
-                        <strong>Benchmark competitivo</strong>
-                        <span>Compare seu site com concorrentes diretos</span>
+                        <strong>Dados confiáveis</strong>
+                        <span>Análises precisas e atualizadas</span>
+                    </div>
+                </article>
+                <article>
+                    <i data-lucide="headphones"></i>
+                    <div>
+                        <strong>Suporte especializado</strong>
+                        <span>Conte com nosso time</span>
                     </div>
                 </article>
                 <article>
                     <i data-lucide="badge-check"></i>
                     <div>
-                        <strong>Ação que gera resultado</strong>
-                        <span>Descubra o que corrigir para aumentar confiança</span>
+                        <strong>Cancelamento fácil</strong>
+                        <span>Cancele quando quiser</span>
                     </div>
                 </article>
             </div>
         </div>
     </section>
 
-    <section class="ssw-plans-section">
+    <section class="ssw-plans-section" aria-labelledby="pricingPlansTitle">
+        <h2 id="pricingPlansTitle" class="sr-only">Planos da S.S.W Intelligence</h2>
+
+        <div class="ssw-billing-toggle" aria-label="Alternar cobrança">
+            <button type="button" class="is-active" data-cycle="monthly" onclick="sswSetBillingCycle('monthly')">Mensal</button>
+            <button type="button" data-cycle="annual" onclick="sswSetBillingCycle('annual')">Anual</button>
+            <span>Economize até 20%</span>
+        </div>
+
         <div class="ssw-plans-grid">
 
-            <article class="ssw-plan-card">
+            <article class="ssw-plan-card" data-plan-card="freelancer">
                 <div class="ssw-plan-icon"><i data-lucide="user-round"></i></div>
                 <div class="ssw-plan-name">Freelancer</div>
-                <div class="ssw-plan-desc">Para devs e designers que querem auditar sites e fechar mais projetos.</div>
+                <div class="ssw-plan-desc">Ideal para profissionais que querem analisar e entregar mais resultados.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-row">
                         <span class="ssw-currency">R$</span>
-                        <span class="ssw-amount">99</span>
-                        <span class="ssw-cents">,99</span>
+                        <span class="ssw-amount" data-monthly="99" data-annual="79">99</span>
                         <span class="ssw-period">/mês</span>
                     </div>
-                    <div class="ssw-credit-note">10 créditos de auditoria</div>
-                    <span class="ssw-price-chip">R$ 9,99 / crédito</span>
+                    <div class="ssw-credit-note">10 créditos de auditoria por mês</div>
                 </div>
-                <button onclick="comprarPlano('basico')" class="ssw-btn ssw-btn-default">Começar agora</button>
-                <p class="ssw-features-label">Incluído no plano</p>
+                <div class="ssw-credit-options" role="group" aria-label="Escolha os créditos do plano Freelancer">
+                    <button type="button" class="is-active" onclick="sswSelectCreditOption(this)" data-package-monthly="freelancer_10_mensal" data-package-annual="freelancer_10_anual" data-monthly-price="99" data-annual-price="79" data-monthly-label="10 créditos de auditoria por mês" data-annual-label="120 créditos de auditoria no ano">10 créditos</button>
+                    <button type="button" onclick="sswSelectCreditOption(this)" data-package-monthly="freelancer_15_mensal" data-package-annual="freelancer_15_anual" data-monthly-price="129" data-annual-price="103" data-monthly-label="15 créditos de auditoria por mês" data-annual-label="180 créditos de auditoria no ano">15 créditos</button>
+                    <button type="button" onclick="sswSelectCreditOption(this)" data-package-monthly="freelancer_20_mensal" data-package-annual="freelancer_20_anual" data-monthly-price="159" data-annual-price="127" data-monthly-label="20 créditos de auditoria por mês" data-annual-label="240 créditos de auditoria no ano">20 créditos</button>
+                </div>
+                <button onclick="comprarPlanoFromCard(this)" class="ssw-btn ssw-btn-primary">Começar agora</button>
                 <ul class="ssw-feature-list">
+                    <li><i data-lucide="check"></i><span>Auditorias de site</span></li>
+                    <li><i data-lucide="check"></i><span>5 personas personalizadas</span></li>
                     <li><i data-lucide="check"></i><span>Relatórios em PDF</span></li>
-                    <li><i data-lucide="check"></i><span>Análise de Performance e SEO</span></li>
-                    <li><i data-lucide="check"></i><span>3 agents simuladores por análise</span></li>
-                    <li><i data-lucide="check"></i><span>Histórico por 30 dias</span></li>
+                    <li><i data-lucide="check"></i><span>Sugestões de melhorias</span></li>
                     <li><i data-lucide="check"></i><span>Suporte por e-mail</span></li>
                 </ul>
             </article>
 
-            <article class="ssw-plan-card ssw-plan-featured">
-                <div class="ssw-plan-icon"><i data-lucide="building-2"></i></div>
+            <article class="ssw-plan-card ssw-plan-featured" data-plan-card="agencia">
+                <div class="ssw-plan-badge">Mais escolhido</div>
+                <div class="ssw-plan-icon"><i data-lucide="briefcase-business"></i></div>
                 <div class="ssw-plan-name">Agência</div>
-                <div class="ssw-plan-desc">Ideal para agências que precisam escalar auditorias e gerar valor.</div>
+                <div class="ssw-plan-desc">Para agências que precisam escalar análises e gerar mais valor.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-row">
                         <span class="ssw-currency">R$</span>
-                        <span class="ssw-amount">149</span>
-                        <span class="ssw-cents">,99</span>
+                        <span class="ssw-amount" data-monthly="149" data-annual="119">149</span>
                         <span class="ssw-period">/mês</span>
                     </div>
-                    <div class="ssw-credit-note">40 créditos de auditoria</div>
-                    <span class="ssw-price-chip">R$ 3,75 / crédito <b>62% mais barato</b></span>
+                    <div class="ssw-credit-note">20 créditos de auditoria por mês</div>
                 </div>
-                <button onclick="comprarPlano('recomendado')" class="ssw-btn ssw-btn-primary">Quero escalar auditorias</button>
-                <p class="ssw-features-label">Tudo do Freelancer, mais:</p>
+                <div class="ssw-credit-options" role="group" aria-label="Escolha os créditos do plano Agência">
+                    <button type="button" class="is-active" onclick="sswSelectCreditOption(this)" data-package-monthly="agencia_20_mensal" data-package-annual="agencia_20_anual" data-monthly-price="149" data-annual-price="119" data-monthly-label="20 créditos de auditoria por mês" data-annual-label="240 créditos de auditoria no ano">20 créditos</button>
+                    <button type="button" onclick="sswSelectCreditOption(this)" data-package-monthly="agencia_30_mensal" data-package-annual="agencia_30_anual" data-monthly-price="179" data-annual-price="143" data-monthly-label="30 créditos de auditoria por mês" data-annual-label="360 créditos de auditoria no ano">30 créditos</button>
+                    <button type="button" onclick="sswSelectCreditOption(this)" data-package-monthly="agencia_40_mensal" data-package-annual="agencia_40_anual" data-monthly-price="219" data-annual-price="175" data-monthly-label="40 créditos de auditoria por mês" data-annual-label="480 créditos de auditoria no ano">40 créditos</button>
+                </div>
+                <button onclick="comprarPlanoFromCard(this)" class="ssw-btn ssw-btn-primary">Começar agora</button>
+                <span class="ssw-installment">ou 12x de R$ 14,90 sem juros</span>
                 <ul class="ssw-feature-list">
-                    <li><i data-lucide="check"></i><span>Exportação em PDF Premium</span></li>
-                    <li><i data-lucide="check"></i><span>Benchmarking competitivo</span></li>
-                    <li><i data-lucide="check"></i><span>Histórico estendido (1 ano)</span></li>
-                    <li><i data-lucide="check"></i><span>White-label (sua marca no PDF)</span></li>
+                    <li><i data-lucide="check"></i><span>Tudo do plano Freelancer</span></li>
+                    <li><i data-lucide="check"></i><span>12 personas personalizadas</span></li>
+                    <li><i data-lucide="check"></i><span>Relatórios White Label</span></li>
+                    <li><i data-lucide="check"></i><span>Exportar dados em CSV</span></li>
+                    <li><i data-lucide="check"></i><span>Múltiplos usuários</span></li>
                     <li><i data-lucide="check"></i><span>Suporte prioritário</span></li>
                 </ul>
             </article>
 
             <article class="ssw-plan-card">
-                <div class="ssw-plan-icon"><i data-lucide="crown"></i></div>
+                <div class="ssw-plan-icon"><i data-lucide="building-2"></i></div>
                 <div class="ssw-plan-name">Enterprise</div>
-                <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios white-label.</div>
+                <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios sob medida.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-consult">Sob consulta</div>
-                    <div class="ssw-credit-note">Volume personalizado</div>
+                    <div class="ssw-credit-note">Fale com nosso time</div>
                 </div>
                 <button onclick="falarComVendas()" class="ssw-btn ssw-btn-outline">Falar com especialista</button>
-                <p class="ssw-features-label">Tudo da Agência, mais:</p>
                 <ul class="ssw-feature-list">
-                    <li><i data-lucide="check"></i><span>150+ créditos por demanda</span></li>
-                    <li><i data-lucide="check"></i><span>Relatórios White-label (sua logo)</span></li>
-                    <li><i data-lucide="check"></i><span>Acesso à API REST</span></li>
-                    <li><i data-lucide="check"></i><span>Histórico personalizado</span></li>
-                    <li><i data-lucide="check"></i><span>Account Manager dedicado</span></li>
+                    <li><i data-lucide="check"></i><span>Tudo do plano Agência</span></li>
+                    <li><i data-lucide="check"></i><span>Créditos personalizados</span></li>
+                    <li><i data-lucide="check"></i><span>Integrações via API</span></li>
+                    <li><i data-lucide="check"></i><span>Gerente de conta dedicado</span></li>
                     <li><i data-lucide="check"></i><span>SLA e suporte dedicado</span></li>
                 </ul>
             </article>
@@ -119,158 +133,77 @@
         </div>
     </section>
 
-    <section class="ssw-fit-section">
-        <div class="ssw-fit-card">
-            <h2>Qual plano é ideal para você?</h2>
-            <div class="ssw-fit-grid">
-                <article>
-                    <i data-lucide="laptop"></i>
-                    <div>
-                        <strong>Freelancers</strong>
-                        <span>Validam sites antes de fechar projetos e entregam mais valor para seus clientes.</span>
-                    </div>
-                </article>
-                <article>
-                    <i data-lucide="users-round"></i>
-                    <div>
-                        <strong>Agências</strong>
-                        <span>Transformam auditorias em funil de vendas e aumentam o ticket médio dos projetos.</span>
-                    </div>
-                </article>
-                <article>
-                    <i data-lucide="shield-check"></i>
-                    <div>
-                        <strong>Empresas</strong>
-                        <span>Auditoria contínua, white-label e integração para escala e governança.</span>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section class="ssw-table-section">
+    <section class="ssw-table-section" aria-labelledby="pricingComparisonTitle">
         <div class="ssw-table-header">
-            <h2 class="ssw-section-title">Comparação completa de recursos</h2>
+            <h2 id="pricingComparisonTitle" class="ssw-section-title">Comparação de recursos</h2>
+            <p>Veja o que está incluído em cada plano.</p>
         </div>
         <div class="ssw-table-wrap">
             <table class="ssw-table">
                 <thead>
                     <tr>
-                        <th>Funcionalidade</th>
-                        <th>Freelancer</th>
-                        <th>Agência</th>
-                        <th>Enterprise</th>
+                        <th>Recursos</th>
+                        <th><i data-lucide="user-round"></i><span>Freelancer</span></th>
+                        <th><i data-lucide="briefcase-business"></i><span>Agência</span></th>
+                        <th><i data-lucide="building-2"></i><span>Enterprise</span></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="ssw-group-row"><td colspan="4">Capacidade de auditoria</td></tr>
-                    <tr><td>Créditos de auditoria</td><td>10</td><td>40</td><td>Personalizado</td></tr>
-                    <tr><td>Armazenamento de histórico</td><td>30 dias</td><td>1 ano</td><td>Personalizado</td></tr>
-                    <tr class="ssw-group-row"><td colspan="4">Inteligência artificial & agents</td></tr>
-                    <tr><td>Agents simuladores</td><td>3</td><td>3</td><td>Personalizado</td></tr>
-                    <tr><td>Veredito executivo IA</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>Análise comparativa (Benchmarking)</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr class="ssw-group-row"><td colspan="4">Relatórios e integrações</td></tr>
-                    <tr><td>Exportação em PDF</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>White-label (sua marca no PDF)</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>Acesso à API REST</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Créditos de auditoria/mês</td><td>Personalizado</td><td>Personalizado</td><td>Personalizado</td></tr>
+                    <tr><td>Personas personalizadas</td><td>5</td><td>12</td><td>Personalizado</td></tr>
+                    <tr><td>Relatórios em PDF</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Relatórios White Label</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Exportar dados em CSV</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Múltiplos usuários</td><td>—</td><td>Até 5</td><td>Personalizado</td></tr>
+                    <tr><td>Integrações via API</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Suporte</td><td>E-mail</td><td>Prioritário</td><td>Dedicado</td></tr>
+                    <tr><td>Gerente de conta dedicado</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>SLA (Acordo de nível de serviço)</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
                 </tbody>
             </table>
         </div>
     </section>
 
-    <section class="ssw-report-proof">
-        <div class="ssw-report-copy">
-            <h2>Relatórios que geram ação</h2>
-            <p>Relatórios executivos completos com diagnóstico técnico, análise comercial, experiência do usuário e recomendações priorizadas para aumentar seus resultados.</p>
-            <ul>
-                <li><i data-lucide="check-circle-2"></i>Mais de 50 verificações técnicas</li>
-                <li><i data-lucide="check-circle-2"></i>Simulação de usuários reais (IA)</li>
-                <li><i data-lucide="check-circle-2"></i>Análise de SEO, performance e UX</li>
-                <li><i data-lucide="check-circle-2"></i>Insights de conversão e clareza comercial</li>
-            </ul>
-        </div>
-        <div class="ssw-report-preview" aria-label="Exemplo visual de relatório">
-            <article class="ssw-report-cover">
-                <span>Relatório de Auditoria</span>
-                <strong>87</strong>
-                <small>/100</small>
-            </article>
-            <article class="ssw-report-page">
-                <strong>Resumo Executivo</strong>
-                <span></span><span></span><span></span>
-            </article>
-            <article class="ssw-report-page">
-                <strong>Performance e SEO</strong>
-                <span></span><span></span><span></span>
-            </article>
-            <article class="ssw-report-page">
-                <strong>Experiência do Usuário</strong>
-                <span></span><span></span><span></span>
-            </article>
-        </div>
-        <p class="ssw-report-caption">Exemplo de relatório real gerado pela plataforma</p>
-    </section>
-
-    <section class="ssw-trust-section">
-        <div class="ssw-trust-card">
-            <h2>Quem já confia na SSW Intelligence</h2>
-            <div class="ssw-trust-grid">
-                <article><i data-lucide="users"></i><strong>+1.200</strong><span>auditorias realizadas</span></article>
-                <article><i data-lucide="panel-top"></i><strong>+300</strong><span>sites analisados</span></article>
-                <article><i data-lucide="building-2"></i><strong>+87</strong><span>agências usando</span></article>
-                <article><i data-lucide="star"></i><strong>4,9/5</strong><span>avaliação dos usuários</span></article>
+    <section class="ssw-faq-section" aria-labelledby="pricingFaqTitle">
+        <h2 id="pricingFaqTitle" class="ssw-section-title">Dúvidas frequentes</h2>
+        <div class="ssw-faq-grid">
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos têm prazo de validade?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Os créditos ficam disponíveis na conta enquanto o plano estiver ativo.</p></div>
             </div>
-            <div class="ssw-trust-testimonial">
-                <div class="ssw-trust-avatars" aria-hidden="true">
-                    <span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <p>“A SSW mudou completamente a forma como entregamos projetos e mostramos valor para nossos clientes.”<br><strong>— Agência WebPro</strong></p>
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos acumulam de um mês para outro?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Sim. Créditos não utilizados permanecem na conta conforme as regras do plano contratado.</p></div>
+            </div>
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Posso usar para quantos sites eu quiser?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Sim. Cada auditoria consome créditos, e você pode analisar diferentes sites dentro do seu saldo.</p></div>
+            </div>
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Vocês analisam sites em qualquer tecnologia?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Sim. A análise avalia a experiência entregue ao usuário final, independente da tecnologia usada.</p></div>
+            </div>
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os relatórios são white label?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>White Label está disponível nos planos Agência e Enterprise.</p></div>
+            </div>
+            <div class="ssw-faq-item">
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Como funciona o cancelamento?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Você pode cancelar quando quiser. O acesso segue ativo até o fim do ciclo já contratado.</p></div>
             </div>
         </div>
+        <p class="ssw-faq-help"><i data-lucide="circle-help"></i> Ainda tem dúvidas? Fale com nosso time</p>
     </section>
 
-    <section class="ssw-faq-section">
-        <div class="ssw-faq-inner">
-            <h2 class="ssw-section-title">Dúvidas frequentes</h2>
-            <div class="ssw-faq-grid">
-                <div class="ssw-faq-item">
-                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos têm prazo de validade?</span><i data-lucide="plus"></i></button>
-                    <div class="ssw-faq-body"><p>Não. Seus créditos ficam atrelados à conta e são consumidos somente ao executar auditorias.</p></div>
-                </div>
-                <div class="ssw-faq-item">
-                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos acumulam de um mês para outro?</span><i data-lucide="plus"></i></button>
-                    <div class="ssw-faq-body"><p>Sim. O saldo permanece disponível na conta enquanto o acesso estiver ativo.</p></div>
-                </div>
-                <div class="ssw-faq-item">
-                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Posso usar para captar e vender projetos?</span><i data-lucide="plus"></i></button>
-                    <div class="ssw-faq-body"><p>Sim. A plataforma foi pensada para transformar diagnóstico em oportunidade comercial clara.</p></div>
-                </div>
-                <div class="ssw-faq-item">
-                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Vocês analisam sites em qualquer tecnologia?</span><i data-lucide="plus"></i></button>
-                    <div class="ssw-faq-body"><p>Sim. A auditoria analisa a experiência entregue no navegador, independente da stack usada por trás.</p></div>
-                </div>
-                <div class="ssw-faq-item">
-                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os relatórios são white-label?</span><i data-lucide="plus"></i></button>
-                    <div class="ssw-faq-body"><p>White-label está disponível nos planos Agência e Enterprise, conforme o nível de personalização.</p></div>
-                </div>
-                <div class="ssw-faq-item">
-                    <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Como funciona o cancelamento?</span><i data-lucide="plus"></i></button>
-                    <div class="ssw-faq-body"><p>Você pode cancelar quando quiser. O acesso e o saldo seguem as regras do plano contratado.</p></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="ssw-cta-section">
+    <section class="ssw-cta-section" aria-labelledby="pricingCtaTitle">
         <div class="ssw-cta-card">
             <div>
-                <h2>Pare de adivinhar.<br><span>Comece a tomar decisões com dados.</span></h2>
-                <p>A auditoria inteligente revela o que realmente importa para seu site vender mais, ranquear melhor e converter com mais confiança.</p>
+                <h2 id="pricingCtaTitle">Pronto para transformar<br>seus dados em <span>resultados?</span></h2>
+                <p>Comece agora e veja como a análise certa pode fazer diferença no seu negócio.</p>
             </div>
             <div>
-                <button onclick="comprarPlano('recomendado')" class="ssw-btn-cta">Fazer minha primeira auditoria <i data-lucide="arrow-right"></i></button>
-                <span>Acesso imediato · Sem compromisso · Cancele quando quiser</span>
+                <button onclick="comprarPlanoRecomendadoAtual()" class="ssw-btn-cta">Começar agora <i data-lucide="arrow-right"></i></button>
+                <span><i data-lucide="lock-keyhole"></i> Pagamento 100% seguro</span>
             </div>
         </div>
     </section>
