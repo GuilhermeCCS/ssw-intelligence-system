@@ -4256,6 +4256,7 @@ function getCodigoHTML() {
                 loading.style.display = 'flex';
             }
             startAuditLoadingAnimation(url, 'auto');
+            await new Promise(resolve => requestAnimationFrame(resolve));
             adjustFooterPosition(false);
 
             try {
@@ -4539,11 +4540,16 @@ function getCodigoHTML() {
                     '.audit-monitor-outer{stroke-dashoffset:var(--outer-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
                     '.audit-monitor-base{stroke-dashoffset:var(--base-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
                     '.audit-monitor-inner{stroke:#3f3f46;stroke-width:5;stroke-dashoffset:var(--inner-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);opacity:.82;}',
+                    '.audit-monitor-signal{fill:none;stroke:#ffffff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:13 87;stroke-dashoffset:100;opacity:0;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px rgba(255,255,255,.92));}',
+                    '.audit-monitor-stage.is-tracing .audit-monitor-signal{opacity:1;animation:auditMonitorTrace 2.4s linear infinite;}',
+                    '.audit-monitor-stage.is-tracing .audit-monitor-signal-base{animation-delay:-.8s;}',
+                    '.audit-monitor-stage.is-tracing .audit-monitor-signal-inner{animation-delay:-1.6s;}',
                     '.audit-monitor-percent{position:absolute;inset:34% 12% auto;min-height:58px;display:grid;place-items:center;text-align:center;color:#111827;font-size:clamp(2.25rem,5vw,4.1rem);font-weight:860;letter-spacing:-.08em;line-height:1;}',
                     '.audit-monitor-percent small{font-size:.36em;font-weight:760;letter-spacing:-.04em;color:#52525b;margin-left:5px;}',
                     '.audit-monitor-message{min-height:34px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.28rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .22s ease,transform .22s ease;}',
                     '.audit-monitor-message.is-changing{opacity:0;transform:translateY(4px);}',
-                    '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}}',
+                    '@keyframes auditMonitorTrace{to{stroke-dashoffset:0;}}',
+                    '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}.audit-monitor-stage.is-tracing .audit-monitor-signal{animation:none;}}',
                 '</style>',
                 '<span id="auditLoadingLens" class="audit-loading-lens" aria-hidden="true"></span>',
                 '<section id="auditMonitorLoader" aria-live="polite" aria-label="Auditoria em andamento">',
@@ -4554,6 +4560,9 @@ function getCodigoHTML() {
                                 '<path class="audit-monitor-line audit-monitor-outer" pathLength="100" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
                                 '<path class="audit-monitor-line audit-monitor-base" pathLength="100" d="M210 214V244M160 244H260"></path>',
                                 '<path class="audit-monitor-line audit-monitor-inner" pathLength="100" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
+                                '<path class="audit-monitor-signal audit-monitor-signal-outer" pathLength="100" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
+                                '<path class="audit-monitor-signal audit-monitor-signal-base" pathLength="100" d="M210 214V244M160 244H260"></path>',
+                                '<path class="audit-monitor-signal audit-monitor-signal-inner" pathLength="100" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
                             '</svg>',
                             '<div class="audit-monitor-percent"><span id="auditLoadingPercentValue">0</span><small>%</small></div>',
                         '</div>',
@@ -4623,9 +4632,9 @@ function getCodigoHTML() {
 
                 var loader = document.getElementById('auditMonitorLoader');
                 if (loader) {
-                    var outerDraw = Math.min(100, progress / 0.45);
-                    var baseDraw = Math.min(100, Math.max(0, (progress - 45) / 0.22));
-                    var innerDraw = Math.min(100, Math.max(0, (progress - 67) / 0.31));
+                    var outerDraw = Math.min(100, progress / 0.28);
+                    var baseDraw = Math.min(100, Math.max(0, (progress - 22) / 0.22));
+                    var innerDraw = Math.min(100, Math.max(0, (progress - 40) / 0.30));
                     var opacity = Math.min(1, progress / 10);
 
                     loader.style.setProperty('--outer-offset', String(100 - outerDraw));
@@ -4633,6 +4642,7 @@ function getCodigoHTML() {
                     loader.style.setProperty('--inner-offset', String(100 - innerDraw));
                     loader.style.setProperty('--loader-opacity', String(opacity));
                     loader.style.setProperty('--loader-shift', String((1 - opacity) * 10) + 'px');
+                    loader.querySelector('.audit-monitor-stage')?.classList.toggle('is-tracing', progress >= 70);
                 }
 
                 var percentEl = document.getElementById('auditLoadingPercentValue');
@@ -4640,7 +4650,10 @@ function getCodigoHTML() {
 
             }
 
-            setMonitorProgress(0);
+            setMonitorProgress(18);
+            requestAnimationFrame(function() {
+                setMonitorProgress(38);
+            });
             showLoadingMessage(loadingMessages[0]);
 
             _auditLoadingInterval = setInterval(function() {
@@ -4652,9 +4665,9 @@ function getCodigoHTML() {
             _auditTipsInterval = setInterval(pulseLoadingLens, 2600);
 
             _auditProgressInterval = setInterval(function() {
-                var increment = progress < 18 ? 0.42 : progress < 42 ? 0.28 : progress < 68 ? 0.2 : progress < 88 ? 0.12 : 0.035;
+                var increment = progress < 70 ? 1.05 : progress < 88 ? 0.3 : 0.06;
                 setMonitorProgress(progress + increment);
-            }, 170);
+            }, 90);
 
             return;
 
@@ -6664,9 +6677,12 @@ function getCodigoHTML() {
                     '</div>',
                     '<div class="history-chat-agent-list">',
                         agents.slice(0, 8).map((agent, index) => [
-                            `<button type="button" onclick="openHistoryPersonaChat(${index})">`,
-                                `<strong>${safeAuditText(agent.profile_name || agent.name || 'Persona')}</strong>`,
-                                `<span>${safeAuditText(agent.direct_quote || agent.description || 'Abrir conversa contextual')}</span>`,
+                            `<button type="button" aria-label="Conversar com ${safeAuditText(agent.profile_name || agent.name || 'esta persona')}" onclick="openHistoryPersonaChat(${index})">`,
+                                '<span class="history-chat-agent-copy">',
+                                    `<strong>${safeAuditText(agent.profile_name || agent.name || 'Persona')}</strong>`,
+                                    `<span>${safeAuditText(agent.direct_quote || agent.description || 'Abrir conversa contextual')}</span>`,
+                                '</span>',
+                                '<span class="history-chat-agent-cta"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Conversar <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></span>',
                             '</button>'
                         ].join('')).join(''),
                     '</div>',
@@ -7172,6 +7188,7 @@ function getCodigoHTML() {
             document.getElementById('compareArea').classList.add('hidden');
             document.getElementById('auditLoading').classList.remove('hidden');
             startAuditLoadingAnimation(url, mode);
+            await new Promise(resolve => requestAnimationFrame(resolve));
             document.getElementById('auditResults').classList.add('hidden');
             adjustFooterPosition(false);
             try {
