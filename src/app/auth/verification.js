@@ -43,10 +43,10 @@ async function reenviarCodigo() {
 
     let emailParaReenviar;
 
-    if (USER && USER.email) {
-        emailParaReenviar = USER.email;
-    } else if (emailTemporario) {
+    if (typeof emailTemporario !== 'undefined' && emailTemporario) {
         emailParaReenviar = emailTemporario;
+    } else if (USER && USER.email) {
+        emailParaReenviar = USER.email;
     } else {
         Toast.error('Usuário não encontrado. Faça login novamente.');
         logout();

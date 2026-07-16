@@ -1232,7 +1232,9 @@
         // States para recuperação de senha
         let authView = 'login'; // 'login', 'email', 'codigo'
         let emailTemporario = '';
+        let emailRecuperacaoTemporario = '';
         let codigoCadastroVerificado = '';
+        let fluxoVerificacaoAtivo = null; // 'cadastro' ou 'conta_existente'
         let cadastroEtapa = 'email';
         let loadingRecuperacao = false;
         let erroRecuperacao = '';
@@ -1335,6 +1337,7 @@
         function resetCadastroFluxo(options = {}) {
             codigoCadastroVerificado = '';
             senhaTemporaria = null;
+            fluxoVerificacaoAtivo = null;
             if (!options.keepEmail) {
                 emailTemporario = '';
                 const emailInput = getRegisterFormField('regEmail');
@@ -1348,6 +1351,7 @@
         function openRegisterPasswordStep(email, codigo) {
             emailTemporario = email || emailTemporario;
             codigoCadastroVerificado = codigo || codigoCadastroVerificado;
+            fluxoVerificacaoAtivo = null;
             setAuthPageState(true);
             const authScreen = document.getElementById('authScreen');
             const loginForm = document.getElementById('loginForm');
@@ -2145,9 +2149,21 @@
                     Toast.success("Enviamos um código de confirmação para seu e-mail.");
                     resetRegisterPasswordStrength();
                     resetRegisterCaptcha();
+                    USER = null;
+                    try {
+                        localStorage.removeItem('USER');
+                        if (typeof secureStorage !== 'undefined') {
+                            await secureStorage.removeItem('USER');
+                        }
+                    } catch (storageError) {
+                        console.warn('Não foi possível limpar sessão anterior:', storageError);
+                    }
                     emailTemporario = email;
                     senhaTemporaria = tempPassword;
                     codigoCadastroVerificado = '';
+                    fluxoVerificacaoAtivo = 'cadastro';
+                    const codigoInput = document.getElementById('inputVerifyCode');
+                    if (codigoInput) codigoInput.value = '';
                     const authScreen = document.getElementById('authScreen');
                     const verifyModal = document.getElementById('verifyModal');
                     if (authScreen) authScreen.classList.add('hidden');
@@ -2252,7 +2268,7 @@ function setAuthView(view) {
 }
 // Função para enviar código de recuperação
 async function enviarCodigoRecuperacao() {
-    const email = document.getElementById('recuperarEmail').value;
+    const email = document.getElementById('recuperarEmail').value.trim().toLowerCase();
     if(!email) {
         Toast.warning("Preencha o campo de e-mail");
         return;
@@ -2266,8 +2282,8 @@ async function enviarCodigoRecuperacao() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email})
         });
-        // Salva e-mail temporário independentemente do resultado (segurança)
-        emailTemporario = email;
+        // Mantém a recuperação isolada do fluxo de cadastro.
+        emailRecuperacaoTemporario = email;
         loadingRecuperacao = false;
         // Sempre muda para a tela de código (mesmo com erro, por segurança)
         setAuthView('codigo');
@@ -2280,7 +2296,7 @@ async function enviarCodigoRecuperacao() {
     } catch(e) {
         console.error('Erro ao enviar código:', e);
         loadingRecuperacao = false;
-        emailTemporario = email;
+        emailRecuperacaoTemporario = email;
         setAuthView('codigo');
         Toast.info("Se o e-mail existir, você receberá um código.");
     }
@@ -2294,16 +2310,17 @@ async function atualizarSenha() {
         Toast.warning("Preencha todos os campos");
         return;
     }
-    if(codigo.length !== 4) {
-        Toast.warning("O código deve ter 4 dígitos");
+    if(!/^\d{6}$/.test(codigo)) {
+        Toast.warning("O código deve ter 6 dígitos");
         return;
     }
     if(novaSenha !== confirmarSenha) {
         Toast.warning("As senhas não coincidem");
         return;
     }
-    if(novaSenha.length < 6) {
-        Toast.warning("A senha deve ter pelo menos 6 caracteres");
+    const passwordStrength = getPasswordStrength(novaSenha);
+    if (!passwordStrength.strong) {
+        Toast.warning("Use pelo menos 8 caracteres, número e símbolo.");
         return;
     }
     loadingRecuperacao = true;
@@ -2314,7 +2331,7 @@ async function atualizarSenha() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                email: emailTemporario,
+                email: emailRecuperacaoTemporario,
                 codigo: codigo,
                 nova_senha: novaSenha
             })
@@ -2327,9 +2344,9 @@ async function atualizarSenha() {
             setTimeout(() => {
                 setAuthView('login');
                 // Limpa campos
-                document.getElementById('loginEmail').value = emailTemporario;
+                document.getElementById('loginEmail').value = emailRecuperacaoTemporario;
                 document.getElementById('loginPass').value = '';
-                emailTemporario = '';
+                emailRecuperacaoTemporario = '';
             }, 2000);
         } else {
             erroRecuperacao = data.detail || "código inválido ou expirado";
@@ -2417,7 +2434,7 @@ function getEmailHTML() {
     return `
         <div class="text-center mb-8">
             <h2 class="text-3xl font-bold text-white mb-2">Recuperar Acesso</h2>
-            <p class="text-slate-400 text-sm">Enviaremos um código de 4 dígitos para seu e-mail</p>
+            <p class="text-slate-400 text-sm">Enviaremos um código de 6 dígitos para seu e-mail</p>
         </div>
         <div class="space-y-4">
             <div class="group">
@@ -2448,7 +2465,7 @@ function getCodigoHTML() {
     return `
         <div class="text-center mb-8">
             <h2 class="text-3xl font-bold text-white mb-2">Criar Nova Senha</h2>
-            <p class="text-slate-400 text-sm">Insira o código de 4 dígitos enviado ao seu e-mail</p>
+            <p class="text-slate-400 text-sm">Insira o código de 6 dígitos enviado ao seu e-mail</p>
         </div>
         ${erroRecuperacao ? `
             <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
@@ -2462,10 +2479,10 @@ function getCodigoHTML() {
         ` : ''}
         <div class="space-y-4">
             <div class="group">
-                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">código de 4 dígitos</label>
+                <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">código de 6 dígitos</label>
                 <div class="relative">
                     <i data-lucide="key" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="text" id="codigoRecuperacao" maxlength="4" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600 text-center tracking-widest text-xl" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('novaSenha').focus();}">
+                    <input type="text" id="codigoRecuperacao" maxlength="6" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600 text-center tracking-widest text-xl" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('novaSenha').focus();}">
                 </div>
             </div>
             <div class="group">
@@ -2505,6 +2522,7 @@ function getCodigoHTML() {
             // 2. VERIFICAÇÃO DE SEGURANÇA (NOVO)
             // Se o usuário não tiver a flag 'verificado' ou ela for falsa/0
             if (!USER.verificado || USER.verificado === 0 || USER.verificado === 'false') {
+                fluxoVerificacaoAtivo = 'conta_existente';
                 setAuthPageState(true);
                 // Mostra o Modal de Bloqueio
                 document.getElementById('verifyModal').classList.remove('hidden');
@@ -2763,6 +2781,10 @@ function getCodigoHTML() {
             }
             localStorage.removeItem('USER');
             USER = null;
+            emailTemporario = '';
+            emailRecuperacaoTemporario = '';
+            codigoCadastroVerificado = '';
+            fluxoVerificacaoAtivo = null;
             if (typeof hideAuthScreen === 'function') hideAuthScreen();
             const verifyModal = document.getElementById('verifyModal');
             if (verifyModal) verifyModal.classList.add('hidden');
@@ -2843,7 +2865,7 @@ function getCodigoHTML() {
                 return;
             }
             // Inicia o fluxo de recuperação de senha com o email do usuário logado
-            emailTemporario = USER.email;
+            emailRecuperacaoTemporario = USER.email;
             setAuthView('email');
             window.history.pushState({}, '', '/login');
             setAuthPageState(true);
@@ -2921,20 +2943,17 @@ function getCodigoHTML() {
         async function confirmarCodigoAPI() {
             const codigoInput = document.getElementById('inputVerifyCode');
             const codigo = codigoInput.value.trim();
-            const btn = event.target; // O botão clicado
-            if (codigo.length < 4) return Toast.warning("Digite o código de 4 números.");
+            const btn = event?.currentTarget?.closest('button') || document.querySelector('#verifyModal button[onclick="confirmarCodigoAPI()"]');
+            if (!/^\d{6}$/.test(codigo)) return Toast.warning("Digite o código de 6 números.");
 
-            // Determina qual email usar (fluxo de login ou cadastro)
+            // Prioriza o e-mail recém-cadastrado sobre sessões antigas salvas em USER
             let emailParaVerificar;
-            let isCadastroFlow = false;
+            const isCadastroFlow = fluxoVerificacaoAtivo === 'cadastro';
 
-            if (USER && USER.email) {
-                // Fluxo normal de login (usuário já logado)
-                emailParaVerificar = USER.email;
-            } else if (emailTemporario) {
-                // Fluxo de cadastro (usuário acabou de se cadastrar)
+            if (emailTemporario) {
                 emailParaVerificar = emailTemporario;
-                isCadastroFlow = true;
+            } else if (USER && USER.email) {
+                emailParaVerificar = USER.email;
             } else {
                 Toast.error("Usuário não encontrado. Faça login novamente.");
                 logout({ skipConfirm: true });
@@ -2942,9 +2961,11 @@ function getCodigoHTML() {
             }
 
             // Efeito visual de carregando
-            const textoOriginal = btn.innerHTML;
-            btn.innerHTML = "Verificando...";
-            btn.disabled = true;
+            const textoOriginal = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = "Verificando...";
+                btn.disabled = true;
+            }
             try {
                 // Chama sua API no Replit
                 const res = await fetch(`${API_URL}/api/verificar`, {
@@ -2952,7 +2973,8 @@ function getCodigoHTML() {
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         email: emailParaVerificar,
-                        codigo: codigo
+                        codigo: codigo,
+                        fluxo: isCadastroFlow ? 'cadastro' : 'conta_existente'
                     })
                 });
                 const data = await res.json();
@@ -2961,10 +2983,15 @@ function getCodigoHTML() {
                     Toast.success(isCadastroFlow ? "E-mail confirmado. Agora crie sua senha." : "Conta verificada com sucesso! Bem-vindo.");
 
                     if (isCadastroFlow) {
-                        const emailVerificado = emailTemporario || emailParaVerificar;
-                        codigoCadastroVerificado = codigo;
+                        const tokenDefinicaoSenha = data.password_setup_token;
+                        if (!tokenDefinicaoSenha) {
+                            Toast.error("Não foi possível liberar a criação da senha. Solicite um novo código.");
+                            return;
+                        }
+                        const emailVerificado = emailParaVerificar;
+                        codigoCadastroVerificado = tokenDefinicaoSenha;
                         document.getElementById('verifyModal').classList.add('hidden');
-                        openRegisterPasswordStep(emailVerificado, codigo);
+                        openRegisterPasswordStep(emailVerificado, tokenDefinicaoSenha);
                     } else {
                         // Fluxo normal de login (usuário já logado)
                         USER.verificado = true;
@@ -2988,8 +3015,10 @@ function getCodigoHTML() {
                 Toast.error("Erro de conexão com o servidor.");
             }
             // Restaura o botão
-            btn.innerHTML = textoOriginal;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }
         }
         function getPersonaUsage(fallbackCount = 0) {
             const usage = window.SSW_PERSONA_USAGE || {};
