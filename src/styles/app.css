@@ -9844,14 +9844,14 @@ body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-
 
 body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .flex > button:last-child {
     border: 1px solid rgba(255, 255, 255, 0.14) !important;
-    background: rgba(255, 255, 255, 0.045) !important;
-    color: #f8fafc !important;
+    background: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
     backdrop-filter: none !important;
 }
 
 body:not(.user-authenticated):not(.auth-page-active) #heroSection > .relative.z-10 > .flex > button:last-child:hover {
-    border-color: rgba(255, 255, 255, 0.28) !important;
-    background: rgba(255, 255, 255, 0.09) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    background: rgb(243, 244, 246) !important;
     transform: translateY(-1px) !important;
 }
 
