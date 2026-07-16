@@ -125,6 +125,8 @@ function rankingCleanHost(value) {
 
 function knownRankingDomain(site) {
     const candidates = [
+        site?.site_domain,
+        site?.full_url,
         site?.site_name,
         site?.name,
         site?.title,
@@ -181,7 +183,7 @@ function siteName(site) {
 }
 
 function siteUrl(site) {
-    return rankingText(site?.url || site?.site_url || site?.analyzed_url || site?.domain || site?.site_name, '');
+    return rankingText(site?.full_url || site?.site_domain || site?.url || site?.site_url || site?.analyzed_url || site?.domain || site?.site_name, '');
 }
 
 function siteDomain(site) {
@@ -210,6 +212,8 @@ function faviconDomain(site) {
 
     const candidates = [
         site?.favicon_domain,
+        site?.site_domain,
+        site?.full_url,
         site?.domain,
         site?.hostname,
         site?.host,
@@ -268,9 +272,13 @@ function trendValue(site) {
 
 function trendMarkup(site) {
     const value = trendValue(site);
-    if (value > 0) return `<span class="ranking-evolution up">↑ ${Math.abs(value)}</span>`;
-    if (value < 0) return `<span class="ranking-evolution down">↓ ${Math.abs(value)}</span>`;
-    return `<span class="ranking-evolution same">—</span>`;
+    if (value > 0) {
+        return `<span class="ranking-evolution up" title="Nota subiu ${Math.abs(value)} ponto(s)" aria-label="Nota subiu ${Math.abs(value)} ponto(s)">↑</span>`;
+    }
+    if (value < 0) {
+        return `<span class="ranking-evolution down" title="Nota caiu ${Math.abs(value)} ponto(s)" aria-label="Nota caiu ${Math.abs(value)} ponto(s)">↓</span>`;
+    }
+    return '';
 }
 
 function refreshRankingIcons() {
@@ -459,7 +467,7 @@ function renderTopThree(topSites) {
                 ${logoMarkup(site)}
                 <h3 class="ranking-site-name">${escapeHtml(siteName(site))}</h3>
                 <p class="ranking-site-domain">${escapeHtml(siteDomain(site))}</p>
-                <strong class="ranking-score-big">${formatScore(site)}</strong>
+                <strong class="ranking-score-big"><span>${formatScore(site)}</span>${trendMarkup(site)}</strong>
                 <div class="ranking-score-bar"><span style="width:${scoreWidth(score)}%"></span></div>
                 <div class="ranking-metric-grid">${metrics}</div>
             </article>
@@ -511,10 +519,9 @@ function renderRankingRows(dataToRender) {
                 </div>
                 <span class="ranking-row-category">${escapeHtml(siteCategory(site))}</span>
                 <div class="ranking-row-score">
-                    <strong>${formatScore(site)}</strong>
+                    <strong class="ranking-score-value"><span>${formatScore(site)}</span>${trendMarkup(site)}</strong>
                     <div class="ranking-score-bar"><span style="width:${scoreWidth(score)}%"></span></div>
                 </div>
-                ${trendMarkup(site)}
             </article>
         `;
     }).join('');
@@ -672,7 +679,7 @@ function searchRankingSite() {
                         <span>${escapeHtml(siteDomain(foundSite))}</span>
                     </div>
                     <div class="ranking-row-score" style="margin-left:auto;">
-                        <strong>${formatScore(foundSite)}</strong>
+                        <strong class="ranking-score-value"><span>${formatScore(foundSite)}</span>${trendMarkup(foundSite)}</strong>
                         <div class="ranking-score-bar"><span style="width:${scoreWidth(score)}%"></span></div>
                     </div>
                 </div>

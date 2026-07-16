@@ -386,6 +386,9 @@
         color: #ffffff;
         font-size: 2.35rem;
         font-weight: 950;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         letter-spacing: -0.04em;
         line-height: 1;
     }
@@ -544,13 +547,26 @@
     }
 
     .ranking-evolution {
+        display: inline-flex;
+        align-items: center;
         font-weight: 900;
         text-align: right;
+        font-size: 0.95rem;
+        line-height: 1;
     }
 
     .ranking-evolution.up { color: #22e889; }
     .ranking-evolution.down { color: #ff4f6d; }
-    .ranking-evolution.same { color: #a6b4c7; }
+
+    .ranking-score-big .ranking-evolution {
+        font-size: 1.05rem;
+    }
+
+    .ranking-score-value {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
 
     .ranking-full-link {
         width: 100%;
