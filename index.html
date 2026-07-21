@@ -593,10 +593,7 @@
                                     <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
                                     <span>Manual</span>
                                 </label>
-                                <label>
-                                    <input type="radio" name="auditMode" value="compare" class="accent-primary" onchange="document.getElementById('auditMode').value='compare';toggleManualSelect();">
-                                    <span>Comparativo</span>
-                                </label>
+                                <!-- Modo Comparativo desabilitado (endpoint /api/comparar removido) -->
                             </div>
 
                             <div id="normalSearchBar" class="search-bar-hero">
@@ -642,7 +639,6 @@
                             <select id="auditMode" class="hidden">
                                 <option value="auto">Seleção Automática</option>
                                 <option value="manual">Seleção Manual</option>
-                                <option value="compare">Modo Comparativo</option>
                             </select>
                         </div>
                     </div>

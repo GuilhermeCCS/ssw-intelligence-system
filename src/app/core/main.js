@@ -7549,7 +7549,16 @@ function getCodigoHTML() {
             }
         }
         // === FUNÇÃO DE COMPARAÇÃO ===
+        // STUB: o endpoint /api/comparar foi removido do backend.
+        // O código original da função foi preservado abaixo (inalcançável) para facilitar
+        // uma eventual reativação — basta remover o early return.
         async function runCompare() {
+            if (typeof Toast !== 'undefined' && Toast.warning) {
+                Toast.warning("O modo comparativo foi desabilitado. Use a análise automática ou manual.");
+            } else if (typeof alert === 'function') {
+                alert("O modo comparativo foi desabilitado.");
+            }
+            return;
             showOnlyAuditHomeView();
             showHomeAnalysisState();
             console.log("Iniciando processo de comparação...");
