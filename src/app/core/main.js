@@ -80,7 +80,7 @@
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
                 // Esconder todas as seções
-                const sections = ['auditoria-simples', 'ngrok-localhost', 'dominios-autorizados', 'batalha-comparativa', 'gestao-agents', 'relatorios-insights'];
+                const sections = ['auditoria-simples', 'ngrok-localhost', 'dominios-autorizados', 'gestao-agents', 'relatorios-insights'];
                 sections.forEach(id => {
                     const section = document.getElementById(id);
                     if (section) {
@@ -113,7 +113,6 @@
                 // Mapeamento de seções para arquivos PDF
                 const pdfFiles = {
                     'auditoria-simples': 'src/assets/PDF/audit01.pdf',
-                    'batalha-comparativa': 'src/assets/PDF/audit02.pdf',
                     'gestao-agents': 'src/assets/PDF/audit03.pdf',
                     'relatorios-insights': 'src/assets/PDF/audit04.pdf'
                 };
@@ -9285,7 +9284,7 @@ function getCodigoHTML() {
                                 <li class="flex items-start gap-3">
                                     <span class="text-primary font-bold">3.</span>
                                     <div>
-                                        <strong class="text-white">Escolha o modo de análise:</strong> Automático (recomendado), Manual ou Comparativo
+                                        <strong class="text-white">Escolha o modo de análise:</strong> Automático (recomendado) ou Manual
                                     </div>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -9658,7 +9657,7 @@ function getCodigoHTML() {
                                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
                             </button>
                             <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
-                                Oferecemos análise individual completa e análise comparativa entre sites. Nossas análises cobrem performance técnica, SEO, velocidade de carregamento, erros visuais, acessibilidade, experiência do usuário e muito mais. Todas incluem o feedback exclusivo das nossas agents ao final.
+                                Oferecemos análise completa de sites. Nossas análises cobrem performance técnica, SEO, velocidade de carregamento, erros visuais, acessibilidade, experiência do usuário e muito mais. Todas incluem o feedback exclusivo das nossas agents ao final.
                             </div>
                         </div>
                         <!-- FAQ Item 4 -->
@@ -9684,21 +9683,11 @@ function getCodigoHTML() {
                         <!-- FAQ Item 6 -->
                         <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
                             <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
-                                <span class="text-white font-medium">Como funciona a análise comparativa?</span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
-                            </button>
-                            <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
-                                A análise comparativa permite analisar dois ou mais sites simultaneamente, destacando semelhanças, diferenças e padrões de performance entre eles. Ideal para benchmarking competitivo, análise de concorrência ou compreensão de posicionamento no mercado. Inclui feedback das agents para cada site analisado.
-                            </div>
-                        </div>
-                        <!-- FAQ Item 7 -->
-                        <div class="bg-slate-900/20 rounded-xl border border-slate-800/50 overflow-hidden">
-                            <button onclick="this.parentElement.classList.toggle('expanded')" class="w-full p-4 text-left flex items-center justify-between hover:bg-slate-900/40 transition-colors">
                                 <span class="text-white font-medium">Como são calculados os créditos?</span>
                                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
                             </button>
                             <div class="hidden px-4 pb-4 text-slate-300 text-sm leading-relaxed">
-                                Cada análise consome uma quantidade específica de créditos dependendo da complexidade e do tipo de análise. Análises individuais consomem menos créditos que análises comparativas. Você pode adquirir pacotes de créditos na seção Gestão de Créditos.
+                                Cada análise consome 1 crédito. Você pode adquirir pacotes de créditos na seção Gestão de Créditos.
                             </div>
                         </div>
                         <!-- FAQ Item 8 -->

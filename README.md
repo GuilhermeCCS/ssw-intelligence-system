@@ -27,14 +27,6 @@ Flexibilidade total com sistema de créditos que permite usar a plataforma quand
 - Avaliação de performance, acessibilidade (WCAG), SEO, segurança e UX
 - Geração de scores e índices de qualidade digital
 
-### Análise Comparativa
-- Comparação detalhada lado a lado entre dois ou mais sites
-- Identificação precisa de gaps competitivos e pontos fortes/fracos
-- Benchmarking estratégico com métricas normalizadas
-- Insights acionáveis para superar estratégias de concorrentes
-- Visualização gráfica de diferenças e similaridades
-- Recomendações agentlizadas baseadas em comparação
-
 ### Relatórios Profissionais
 - Relatórios detalhados e completos em formato PDF
 - Exportação de dados em múltiplos formatos

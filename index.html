@@ -670,11 +670,11 @@
                     <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
                     <div id="checklistContainer" class="manual-persona-list"></div>
                 </div>
-                <!-- Compare Area -->
-                <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50">
+                <!-- Compare Area (mantido oculto: modo comparativo desabilitado) -->
+                <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50" aria-hidden="true">
                     <div class="flex items-center gap-2 mb-4 text-accent">
-                        <i data-lucide="git-compare" class="w-5 h-5"></i>
-                        <span class="text-sm font-bold uppercase tracking-wider">Modo Comparativo</span>
+                        <i data-lucide="git-compare" class="w-5 h-5" aria-hidden="true"></i>
+                        <span class="text-sm font-bold uppercase tracking-wider">Modo Comparativo (desabilitado)</span>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div class="relative">
@@ -808,7 +808,6 @@
                         <button type="button" class="history-filter-btn active" data-history-filter="all" onclick="setAuditHistoryFilter('all')">Todas</button>
                         <button type="button" class="history-filter-btn" data-history-filter="auto" onclick="setAuditHistoryFilter('auto')"><i data-lucide="zap"></i> Automáticas</button>
                         <button type="button" class="history-filter-btn" data-history-filter="manual" onclick="setAuditHistoryFilter('manual')"><i data-lucide="hand"></i> Manuais</button>
-                        <button type="button" class="history-filter-btn" data-history-filter="compare" onclick="setAuditHistoryFilter('compare')"><i data-lucide="chart-no-axes-combined"></i> Comparativas</button>
                     </div>
                     <div class="history-toolbar-note">
                         <i data-lucide="calendar-days" class="w-4 h-4"></i>
@@ -869,12 +868,6 @@
                                         <span class="flex items-center gap-2">
                                             <i data-lucide="shield-check" class="w-4 h-4"></i>
                                             Liberar auditoria
-                                        </span>
-                                    </button>
-                                    <button onclick="showTutorialSection('batalha-comparativa')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
-                                        <span class="flex items-center gap-2">
-                                            <i data-lucide="git-compare" class="w-4 h-4"></i>
-                                            Análise Comparativa
                                         </span>
                                     </button>
                                     <button onclick="showTutorialSection('gestao-agents')" class="tutorial-nav-btn text-slate-400 hover:text-white border border-transparent hover:border-blue-500/40 px-4 py-3 transition-all text-left w-full rounded-xl bg-white/[0.02]">
@@ -1395,124 +1388,7 @@
                                     </div>
                                 </div>
                             </section>
-                            <!-- SEÇÃO 4: Análise Comparativa -->
-                            <section id="batalha-comparativa" class="hidden scroll-mt-24">
-                                <div class="flex justify-between items-center mb-6">
-                                    <h2 class="text-2xl font-semibold text-white">Análise Comparativa</h2>
-                                    <button onclick="printTutorialSection('batalha-comparativa')" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded border border-cyan-500 transition-colors no-print">
-                                        <i data-lucide="file-down" class="w-4 h-4"></i>
-                                        Gerar PDF desta Seção
-                                    </button>
-                                </div>
-
-                                <div class="prose prose-invert max-w-none">
-                                    <p class="text-slate-300 text-lg leading-relaxed mb-8">
-                                        Compare dois sites simultaneamente e descubra quem leva a vantagem competitiva. Análise lado a lado com métricas detalhadas e recomendações estratégicas.
-                                    </p>
-
-                                    <h3 class="text-xl font-semibold text-white mb-4">Como Realizar uma Comparação</h3>
-                                    <div class="space-y-6 mb-8">
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">1. Acesso ao Modo Comparativo</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                No menu lateral, clique em "Nova Análise" e selecione a aba "Modo Comparativo" para comparar dois sites simultaneamente.
-                                            </p>
-                                        </div>
-
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">2. Configuração das URLs</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Digite a URL do seu site no campo "Site A" e a URL do concorrente no campo "Site B". Use URLs completas com protocolo.
-                                            </p>
-                                            <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-800">
-                                                <p class="text-xs text-slate-400 mb-2">Exemplo de configuração:</p>
-                                                <div class="grid grid-cols-2 gap-2 text-xs">
-                                                    <div>
-                                                        <span class="text-slate-500">Site A:</span>
-                                                        <code class="text-green-400 block">https://seusite.com.br</code>
-                                                    </div>
-                                                    <div>
-                                                        <span class="text-slate-500">Site B:</span>
-                                                        <code class="text-green-400 block">https://concorrente.com.br</code>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">3. Execução da Comparação</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Clique em "COMPARAR" para iniciar a análise. O sistema analisará ambos os sites sob as mesmas condições e métricas.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <h3 class="text-xl font-semibold text-white mb-4">Interpretação de Resultados</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Vencedor Global</h4>
-                                            <p class="text-slate-400 text-sm">Site com maior score agregado em todas as categorias analisadas. O vencedor é determinado pela média ponderada de performance, UX, SEO e comportamento.</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Pontos de Melhoria</h4>
-                                            <p class="text-slate-400 text-sm">Áreas onde seu site perdeu para o concorrente com recomendações específicas para alcançar ou superar o desempenho do adversário.</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Vantagens Competitivas</h4>
-                                            <p class="text-slate-400 text-sm">Pontos fortes do seu site em relação ao concorrente. Identifique onde você já lidera e mantenha essas vantagens.</p>
-                                        </div>
-                                        <div class="border border-slate-800 rounded-lg p-4">
-                                            <h4 class="text-white font-semibold mb-2">Oportunidades</h4>
-                                            <p class="text-slate-400 text-sm">Gaps identificados que podem ser explorados para ganhar vantagem competitiva. Áreas onde pequenas melhorias podem gerar grandes ganhos.</p>
-                                        </div>
-                                    </div>
-
-                                    <h3 class="text-xl font-semibold text-white mb-4">Estratégias de Benchmarking</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Seleção de Concorrentes</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Escolha concorrentes diretos (mesmo nicho), concorrentes indiretos (mesmo público-alvo) e referências do setor (líderes de mercado) para uma visão completa do cenário competitivo.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Análise de Páginas Específicas</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Compare páginas equivalentes (home vs home, checkout vs checkout, blog vs blog) para insights mais relevantes e acionáveis.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Monitoramento Contínuo</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Realize comparações periódicas para acompanhar evoluções do mercado e identificar quando concorrentes implementam melhorias significativas.
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <h3 class="text-xl font-semibold text-white mb-4">Limitações e Considerações</h3>
-                                    <div class="space-y-4 mb-8">
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Paridade de Condições</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                A análise é realizada sob as mesmas condições para ambos os sites, mas diferenças de infraestrutura, CDN ou geolocalização podem afetar resultados de performance.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Conteúdo Dinâmico</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Sites com conteúdo personalizado ou A/B testing podem apresentar variações. A análise considera o conteúdo padrão apresentado.
-                                            </p>
-                                        </div>
-                                        <div class="border-l-2 border-slate-700 pl-4">
-                                            <h4 class="text-white font-semibold mb-2">Contexto de Negócio</h4>
-                                            <p class="text-slate-300 text-sm leading-relaxed">
-                                                Métricas técnicas não refletem necessariamente a estratégia de negócio. Considere o posicionamento, público-alvo e objetivos ao interpretar resultados.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        <!-- SEÇÃO 4: Gestão de Agents -->
+                            <!-- SEÇÃO 4: Gestão de Agents -->
                         <section id="gestao-agents" class="hidden scroll-mt-24">
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-2xl font-semibold text-white">Gestão de Agents</h2>
@@ -1556,7 +1432,7 @@
                                     <div class="border-l-2 border-slate-700 pl-4">
                                         <h4 class="text-white font-semibold mb-2">3. Salvamento e Utilização</h4>
                                         <p class="text-slate-300 text-sm leading-relaxed">
-                                            Após preencher os dados, clique em "Salvar". A agent ficará disponível para seleção em análises individuais e comparativas.
+                                            Após preencher os dados, clique em "Salvar". A agent ficará disponível para seleção em análises individuais.
                                         </p>
                                     </div>
                                 </div>
