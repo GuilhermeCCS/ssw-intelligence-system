@@ -4555,7 +4555,7 @@ function getCodigoHTML() {
 
             container.innerHTML = [
                 '<style>',
-                    '#auditMonitorLoader{--outer-offset:100;--base-offset:100;--inner-offset:100;--loader-opacity:0;--loader-shift:10px;position:relative;z-index:1;width:min(100%,720px);min-height:min(560px,calc(100vh - 210px));display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;border-radius:28px;}',
+                    '#auditMonitorLoader{--loader-opacity:0;--loader-shift:10px;position:relative;z-index:1;width:min(100%,720px);min-height:min(560px,calc(100vh - 210px));display:flex;align-items:center;justify-content:center;color:#111827;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;border-radius:28px;}',
                     '.audit-loading-lens{position:absolute;left:18%;top:22%;z-index:0;width:64px;height:64px;border:4px solid #111827;border-radius:999px;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.72) rotate(-8deg);transition:opacity .42s ease,transform .42s ease,left .75s cubic-bezier(.2,.8,.2,1),top .75s cubic-bezier(.2,.8,.2,1);}',
                     '.audit-loading-lens:after{content:"";position:absolute;width:24px;height:4px;right:-17px;bottom:3px;background:#111827;border-radius:999px;transform:rotate(45deg);transform-origin:left center;}',
                     '.audit-loading-lens.is-visible{opacity:.14;transform:translate(-50%,-50%) scale(1) rotate(-8deg);}',
@@ -4564,20 +4564,16 @@ function getCodigoHTML() {
                     '.audit-monitor-url strong{color:#111827;font-weight:820;}',
                     '.audit-monitor-wrap{position:relative;width:min(100%,520px);aspect-ratio:420/280;}',
                     '.audit-monitor-svg{width:100%;height:100%;display:block;overflow:visible;}',
-                    '.audit-monitor-line{fill:none;stroke:#111827;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;vector-effect:non-scaling-stroke;filter:none;}',
-                    '.audit-monitor-outer{stroke-dashoffset:var(--outer-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
-                    '.audit-monitor-base{stroke-dashoffset:var(--base-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);}',
-                    '.audit-monitor-inner{stroke:#3f3f46;stroke-width:5;stroke-dashoffset:var(--inner-offset);transition:stroke-dashoffset .72s cubic-bezier(.2,.8,.2,1);opacity:.82;}',
+                    '.audit-monitor-line{fill:none;stroke:#111827;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;filter:none;}',
+                    '.audit-monitor-inner{stroke:#3f3f46;stroke-width:5;opacity:.82;}',
                     '.audit-monitor-signal{fill:none;stroke:#ffffff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:13 87;stroke-dashoffset:100;opacity:0;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px rgba(255,255,255,.92));}',
                     '.audit-monitor-stage.is-tracing .audit-monitor-signal{opacity:1;animation:auditMonitorTrace 2.4s linear infinite;}',
-                    '.audit-monitor-stage.is-tracing .audit-monitor-signal-base{animation-delay:-.8s;}',
-                    '.audit-monitor-stage.is-tracing .audit-monitor-signal-inner{animation-delay:-1.6s;}',
                     '.audit-monitor-percent{position:absolute;inset:34% 12% auto;min-height:58px;display:grid;place-items:center;text-align:center;color:#111827;font-size:clamp(2.25rem,5vw,4.1rem);font-weight:860;letter-spacing:-.08em;line-height:1;}',
                     '.audit-monitor-percent small{font-size:.36em;font-weight:760;letter-spacing:-.04em;color:#52525b;margin-left:5px;}',
                     '.audit-monitor-message{min-height:34px;display:grid;place-items:center;text-align:center;color:#18181b;font-size:clamp(1rem,2vw,1.28rem);font-weight:720;letter-spacing:-.025em;line-height:1.35;transition:opacity .22s ease,transform .22s ease;}',
                     '.audit-monitor-message.is-changing{opacity:0;transform:translateY(4px);}',
                     '@keyframes auditMonitorTrace{to{stroke-dashoffset:0;}}',
-                    '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-outer,.audit-monitor-base,.audit-monitor-inner,.audit-monitor-message{transition:none!important;}.audit-monitor-stage.is-tracing .audit-monitor-signal{animation:none;}}',
+                    '@media (prefers-reduced-motion:reduce){.audit-monitor-stage,.audit-monitor-message{transition:none!important;}.audit-monitor-stage.is-tracing .audit-monitor-signal{animation:none;}}',
                 '</style>',
                 '<span id="auditLoadingLens" class="audit-loading-lens" aria-hidden="true"></span>',
                 '<section id="auditMonitorLoader" aria-live="polite" aria-label="Auditoria em andamento">',
@@ -4585,11 +4581,9 @@ function getCodigoHTML() {
                         '<div class="audit-monitor-url"><strong>Analisando URL:</strong> ' + displayUrl + '</div>',
                         '<div id="auditMonitorWrap" class="audit-monitor-wrap">',
                             '<svg class="audit-monitor-svg" viewBox="0 0 420 280" role="img" aria-hidden="true">',
-                                '<path class="audit-monitor-line audit-monitor-outer" pathLength="100" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
-                                '<path class="audit-monitor-line audit-monitor-base" pathLength="100" d="M210 214V244M160 244H260"></path>',
-                                '<path class="audit-monitor-line audit-monitor-inner" pathLength="100" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
-                                '<path class="audit-monitor-signal audit-monitor-signal-outer" pathLength="100" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
-                                '<path class="audit-monitor-signal audit-monitor-signal-base" pathLength="100" d="M210 214V244M160 244H260"></path>',
+                                '<path class="audit-monitor-line audit-monitor-outer" d="M70 42H350Q372 42 372 64V190Q372 212 350 212H70Q48 212 48 190V64Q48 42 70 42Z"></path>',
+                                '<path class="audit-monitor-line audit-monitor-base" d="M210 214V244M160 244H260"></path>',
+                                '<path class="audit-monitor-line audit-monitor-inner" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
                                 '<path class="audit-monitor-signal audit-monitor-signal-inner" pathLength="100" d="M96 82H324Q336 82 336 94V162Q336 174 324 174H96Q84 174 84 162V94Q84 82 96 82Z"></path>',
                             '</svg>',
                             '<div class="audit-monitor-percent"><span id="auditLoadingPercentValue">0</span><small>%</small></div>',
@@ -4660,14 +4654,8 @@ function getCodigoHTML() {
 
                 var loader = document.getElementById('auditMonitorLoader');
                 if (loader) {
-                    var outerDraw = Math.min(100, progress / 0.28);
-                    var baseDraw = Math.min(100, Math.max(0, (progress - 22) / 0.22));
-                    var innerDraw = Math.min(100, Math.max(0, (progress - 40) / 0.30));
                     var opacity = Math.min(1, progress / 10);
 
-                    loader.style.setProperty('--outer-offset', String(100 - outerDraw));
-                    loader.style.setProperty('--base-offset', String(100 - baseDraw));
-                    loader.style.setProperty('--inner-offset', String(100 - innerDraw));
                     loader.style.setProperty('--loader-opacity', String(opacity));
                     loader.style.setProperty('--loader-shift', String((1 - opacity) * 10) + 'px');
                     loader.querySelector('.audit-monitor-stage')?.classList.toggle('is-tracing', progress >= 70);
