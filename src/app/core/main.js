@@ -7296,7 +7296,7 @@ function getCodigoHTML() {
                 const resSummaryEl = document.getElementById('resSummary');
                 if (resSummaryEl) resSummaryEl.innerText = technicalAudit.executive_summary;
                 const reportVulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
-                const reportActionSteps = flattenAuditActionPlan(technicalAudit.action_plan || {}).slice(0, reportVulnerabilities.length);
+                const reportActionSteps = getAuditActionStepsForReport(technicalAudit);
                 const reportAgents = getAuditAgentsFromResult(data.resultado || {});
                 updateAuditExecutiveSnapshot({
                     technicalAudit,
@@ -7379,65 +7379,10 @@ function getCodigoHTML() {
                         printDesktopEl.closest('.audit-shot-frame')?.classList.add('has-capture');
                     }
                 }
-                // ===============================================
-                // BLOCO 1: MATRIZ DE VULNERABILIDADES (EXPANDIDA)
-                // ===============================================
-    // ===============================================
-    // Vulnerabilidades
-    const vDiv = document.getElementById('vulnerabilitiesTableBody');
-    if (vDiv) {
-        const vulnerabilities = getAuditRealBarriers(technicalAudit.vulnerabilities || []);
-        console.log("Vulnerabilidades da API:", vulnerabilities);
-        if (!vulnerabilities.length) {
-            vDiv.innerHTML = '<div class="audit-empty-block"><strong>Nenhum risco cr?tico foi retornado.</strong><p>A auditoria n?o encontrou problemas relevantes o suficiente para compor uma matriz de vulnerabilidades.</p></div>';
-        } else {
-            vDiv.innerHTML = vulnerabilities.map((v, index) => {
-                const severity = getSeverityMeta(v.severity);
-                const pillarLabel = getVulnerabilityPillarLabel(v.pillar) || 'Pilar n?o informado';
-                return [
-                    '<article class="audit-risk-card audit-risk-' + severity.tone + '">',
-                        '<div class="audit-risk-number">' + String(index + 1).padStart(2, '0') + '</div>',
-                        '<div class="audit-risk-content">',
-                            '<div class="audit-risk-meta">',
-                                '<span class="audit-severity audit-severity-' + severity.tone + '">' + safeAuditText(severity.label) + '</span>',
-                                '<span>' + safeAuditText(pillarLabel) + '</span>',
-                            '</div>',
-                            '<h3>' + safeAuditText(v.title || 'Problema sem t?tulo') + '</h3>',
-                            '<p>' + safeAuditText(v.description || 'A API n?o retornou uma descri??o t?cnica para este item.') + '</p>',
-                        '</div>',
-                    '</article>'
-                ].join('');
-            }).join('');
-        }
-    }
-                // Renderiza Plano de A??o
-                const actionPlanList = document.getElementById('actionPlanList');
-                if (actionPlanList) {
-                    const actionPlan = data.resultado.technical_audit.action_plan || {};
-                    console.log("Action Plan da API:", actionPlan);
-                    const maxCorrectionSteps = Math.min(4, getAuditRealBarriers(data.resultado.technical_audit.vulnerabilities || []).length);
-                    const realSteps = [];
-                    Object.keys(actionPlan).forEach(period => {
-                        if (Array.isArray(actionPlan[period])) {
-                            actionPlan[period].forEach(step => realSteps.push({ period, step }));
-                        }
-                    });
-                    realSteps.splice(maxCorrectionSteps);
-                    console.log("Steps combinados:", realSteps);
-                    if (!realSteps.length) {
-                        actionPlanList.innerHTML = '<div class="audit-empty-block"><strong>Plano n?o retornado.</strong><p>A auditoria n?o trouxe a??es espec?ficas, mas voc? ainda pode baixar o PDF e revisar os pilares do diagn?stico.</p></div>';
-                    } else {
-                        actionPlanList.innerHTML = realSteps.map((item, i) => [
-                            '<article class="audit-action-card">',
-                                '<div class="audit-action-index">' + String(i + 1).padStart(2, '0') + '</div>',
-                                '<div>',
-                                    '<span>' + safeAuditText(humanizeActionPeriod(item.period, i)) + '</span>',
-                                    '<p>' + safeAuditText(item.step) + '</p>',
-                                '</div>',
-                            '</article>'
-                        ].join('')).join('');
-                    }
-                }
+                // Usa os renderizadores centrais para a auditoria atual e o histórico
+                // seguirem as mesmas regras de normalização e de apresentação.
+                renderAuditVulnerabilitiesScoped(document, technicalAudit);
+                renderAuditActionPlanScoped(document, technicalAudit);
                 const pGrid = document.getElementById('agentsTableBody');
                 const agentsResults = getAuditAgentsFromResult(data.resultado || {});
                 if (pGrid) {
