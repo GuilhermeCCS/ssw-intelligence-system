@@ -58,7 +58,7 @@
                 } else if (pathname === 'analise-gratis') {
                     hideAuthScreen();
                     showDemoAuditScreen(false);
-                } else if (pathname && ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'].includes(pathname)) {
+                } else if (pathname && ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'].includes(pathname)) {
                     hideAuthScreen();
                     nav(pathname);
                 } else if (!pathname || pathname === '') {
@@ -75,7 +75,6 @@
             initHeroTypewriter();
             initKineticNeuralWave();
             initHeroShowcaseCarousel();
-            initHeroSplitControl();
             
             // Função para navegação entre seções do tutorial
             window.showTutorialSection = function(sectionId) {
@@ -476,130 +475,6 @@
             startCarousel();
         }
 
-        function initHeroSplitControl() {
-            const hero = document.getElementById('heroSection');
-            const control = document.getElementById('heroSplitControl');
-            if (!hero || !control || control.dataset.splitReady === 'true') return;
-
-            control.dataset.splitReady = 'true';
-            const primaryContent = document.getElementById('heroPrimaryContent');
-            const showcase = document.getElementById('heroShowcaseCarousel');
-            const parsedMin = Number(control.dataset.min);
-            const parsedMax = Number(control.dataset.max);
-            const min = Number.isFinite(parsedMin) ? parsedMin : 0;
-            const max = Number.isFinite(parsedMax) ? parsedMax : 100;
-            const center = 50;
-            const desktopMedia = window.matchMedia('(min-width: 901px)');
-            let value = center;
-            let pointerId = null;
-            let pendingValue = null;
-            let frameId = null;
-
-            const clamp = (number, lower, upper) => Math.min(upper, Math.max(lower, number));
-            const fadeProgress = (number) => Math.pow(clamp(number, 0, 1), 1.35);
-
-            const render = nextValue => {
-                value = clamp(nextValue, min, max);
-                const delta = value - center;
-                const leftOpacity = value >= center
-                    ? 1
-                    : fadeProgress((value - min) / (center - min));
-                const rightOpacity = value <= center
-                    ? 1
-                    : fadeProgress((max - value) / (max - center));
-                const leftClosed = value <= min + 0.05;
-                const rightClosed = value >= max - 0.05;
-                const roundedValue = Math.round(value);
-
-                hero.style.setProperty('--hero-split', `${value}%`);
-                hero.style.setProperty('--hero-left-shift', `${delta / 2}vw`);
-                hero.style.setProperty('--hero-right-shift', `${-delta / 2}vw`);
-                hero.style.setProperty('--hero-left-opacity', leftOpacity.toFixed(3));
-                hero.style.setProperty('--hero-right-opacity', rightOpacity.toFixed(3));
-                hero.dataset.splitPosition = value.toFixed(1);
-                hero.classList.toggle('is-left-closed', leftClosed);
-                hero.classList.toggle('is-right-closed', rightClosed);
-                primaryContent?.setAttribute('aria-hidden', String(leftClosed));
-                showcase?.setAttribute('aria-hidden', String(rightClosed));
-                control.setAttribute('aria-valuenow', String(roundedValue));
-                control.setAttribute(
-                    'aria-valuetext',
-                    `${roundedValue}% apresentação, ${100 - roundedValue}% demonstração`
-                );
-            };
-
-            const scheduleRender = nextValue => {
-                pendingValue = nextValue;
-                if (frameId !== null) return;
-                frameId = window.requestAnimationFrame(() => {
-                    frameId = null;
-                    render(pendingValue);
-                });
-            };
-
-            const valueFromPointer = event => {
-                const rect = hero.getBoundingClientRect();
-                if (!rect.width) return value;
-                return ((event.clientX - rect.left) / rect.width) * 100;
-            };
-
-            const stopDragging = event => {
-                if (pointerId === null) return;
-                if (control.hasPointerCapture?.(pointerId)) {
-                    control.releasePointerCapture(pointerId);
-                }
-                pointerId = null;
-                hero.classList.remove('is-split-dragging');
-                control.classList.remove('is-dragging');
-                if (event) scheduleRender(valueFromPointer(event));
-            };
-
-            control.addEventListener('pointerdown', event => {
-                if (!desktopMedia.matches || document.body.classList.contains('user-authenticated')) return;
-                event.preventDefault();
-                pointerId = event.pointerId;
-                control.setPointerCapture?.(pointerId);
-                hero.classList.add('is-split-dragging');
-                control.classList.add('is-dragging');
-                scheduleRender(valueFromPointer(event));
-            });
-
-            control.addEventListener('pointermove', event => {
-                if (event.pointerId !== pointerId) return;
-                event.preventDefault();
-                scheduleRender(valueFromPointer(event));
-            });
-
-            control.addEventListener('pointerup', stopDragging);
-            control.addEventListener('pointercancel', stopDragging);
-            control.addEventListener('lostpointercapture', () => {
-                pointerId = null;
-                hero.classList.remove('is-split-dragging');
-                control.classList.remove('is-dragging');
-            });
-
-            control.addEventListener('keydown', event => {
-                if (!desktopMedia.matches) return;
-                let nextValue = value;
-                if (event.key === 'ArrowLeft') nextValue -= event.shiftKey ? 10 : 2;
-                else if (event.key === 'ArrowRight') nextValue += event.shiftKey ? 10 : 2;
-                else if (event.key === 'Home') nextValue = min;
-                else if (event.key === 'End') nextValue = max;
-                else if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') nextValue = center;
-                else return;
-
-                event.preventDefault();
-                render(nextValue);
-            });
-
-            control.addEventListener('dblclick', event => {
-                event.preventDefault();
-                render(center);
-            });
-
-            render(center);
-        }
-
         function initKineticNeuralWave() {
             const canvas = document.getElementById('neural-wave-canvas');
             const hero = document.getElementById('heroSection');
@@ -876,6 +751,7 @@
         }
 
         function showHomeLandingState({ focusInput = false } = {}) {
+            const isAuthenticated = Boolean(USER?.email || document.body.classList.contains('user-authenticated'));
             hideAuditLoading();
             setAnalysisFocusState(false);
             setHomePresentationVisible(true);
@@ -884,7 +760,8 @@
             document.querySelector('.hero-title-container')?.classList.remove('hidden');
             document.querySelector('.hero-subtitle-container')?.classList.remove('hidden');
             document.querySelector('.stats-container-premium')?.classList.remove('hidden');
-            document.querySelector('.search-container')?.classList.remove('hidden');
+            document.querySelector('.search-container')?.classList.toggle('hidden', !isAuthenticated);
+            document.getElementById('guestLandingActions')?.classList.toggle('hidden', isAuthenticated);
             document.getElementById('normalSearchBar')?.classList.remove('hidden');
             document.getElementById('compareSearchBar')?.classList.add('hidden');
             document.getElementById('turnstile-audit')?.classList.remove('hidden');
@@ -904,7 +781,7 @@
             positionLocalAuditHelp('auto');
             adjustFooterPosition(false);
             syncAuditWorkspaceLayout(false);
-            if (focusInput) {
+            if (focusInput && isAuthenticated) {
                 setTimeout(() => document.getElementById('auditUrl')?.focus(), 80);
             }
         }
@@ -1037,7 +914,7 @@
         }
 
         function showOnlyAuditHomeView() {
-            const views = ['agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'];
+            const views = ['agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) el.classList.add('hidden');
@@ -1068,8 +945,22 @@
         }
 
         function nav(view) {
+            const isAuthenticated = Boolean(USER?.email);
+            if (view === 'sites') view = 'home';
             if (view === 'analise-gratis' || view === 'demo-audit') {
-                showDemoAuditScreen(true);
+                if (!isAuthenticated) {
+                    showAuthScreen('login');
+                    return;
+                }
+                showSimplifiedSearch();
+                return;
+            }
+            if (!isAuthenticated && view !== 'home') {
+                showAuthScreen('login');
+                return;
+            }
+            if (isAuthenticated && view === 'home') {
+                showSimplifiedSearch();
                 return;
             }
             if (view === 'precos') {
@@ -1078,10 +969,6 @@
             }
             if (view === 'terms') {
                 openTermsPage();
-                return;
-            }
-            if (view === 'sites') {
-                openSitesPage();
                 return;
             }
             if (warnBeforeLeavingAudit()) {
@@ -1123,7 +1010,7 @@
 
             setActiveNavButton(view);
             // Esconde todas as views
-            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'];
+            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) {
@@ -2543,6 +2430,7 @@ function getCodigoHTML() {
             // Atualiza os botões
             updateUserMenuCircle();
             updateAuthButton();
+            showSimplifiedSearch();
             // Reload automático da página após login bem-sucedido
             // EVITA RELOAD INFINITO: Apenas recarrega se vier do fluxo de login explícito
             if (!window.fromLoginFlow) {
@@ -2553,9 +2441,6 @@ function getCodigoHTML() {
             } else {
                 console.log(' Usuário já carregado do storage - sem reload necessário');
                 window.fromLoginFlow = false; // Reseta a flag
-            }
-            if (window.location.pathname === '/login' || window.location.pathname === '/cadastro') {
-                nav('home');
             }
         }
         function toggleUserMenuCircle() {
@@ -2822,9 +2707,6 @@ function getCodigoHTML() {
             if (!termsTab) {
                 window.location.href = '/termos/';
             }
-        }
-        function openSitesPage() {
-            window.open('/sites/', '_blank', 'noopener,noreferrer');
         }
         function comprarCreditos() { openPricingPage(); }
         function showCreditsEndedModal() {
@@ -3597,9 +3479,6 @@ function getCodigoHTML() {
                             <button onclick="showSimplifiedSearch()" class="audit-secondary-action">
                                 Analisar outra URL
                             </button>
-                            <button onclick="openSitesPage()" class="audit-secondary-action audit-commercial-action">
-                                Solicitar correção com a S.S.W
-                            </button>
                         </div>
                     </section>
                 </article>
@@ -4076,88 +3955,18 @@ function getCodigoHTML() {
         }
 
         function openDemoAuditPage() {
-            showDemoAuditScreen(true);
+            showAuthScreen('login');
         }
 
-        function showDemoAuditScreen(pushState = true) {
-            setDemoAuditMode(true);
-            window.currentView = 'analise-gratis';
-            hideHistorySurfaces();
-            hideAuditChatSurfaces();
-            document.body.classList.remove('pricing-view-active', 'audit-active');
-            document.body.classList.add('audit-home-workspace');
-            if (pushState && window.location.pathname !== '/analise-gratis') {
-                window.history.pushState({}, '', '/analise-gratis');
-            }
-
-            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'];
-            views.forEach(v => {
-                const el = document.getElementById(`view-${v}`);
-                if (el) {
-                    el.classList.add('hidden');
-                    el.style.opacity = '';
-                    el.style.transform = '';
-                    el.style.transition = '';
-                }
-            });
-
-            const viewHome = document.getElementById('view-home');
-            if (viewHome) viewHome.classList.remove('hidden');
-            setDemoAuditOutputState(false);
-            setHomePresentationVisible(false);
-            const heroSection = document.getElementById('heroSection');
-            if (heroSection) heroSection.classList.remove('hidden');
-            setAnalysisFocusState(true);
-
-            ['manualSelectArea', 'compareArea', 'auditResults', 'auditLoading', 'emptyStateCards'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            hideAuditLoading();
-
-            const searchContainer = document.querySelector('.search-container');
-            if (searchContainer) searchContainer.classList.remove('hidden');
-            const normalSearchBar = document.getElementById('normalSearchBar');
-            const compareSearchBar = document.getElementById('compareSearchBar');
-            if (normalSearchBar) normalSearchBar.classList.remove('hidden');
-            if (compareSearchBar) compareSearchBar.classList.add('hidden');
-            const auditMode = document.getElementById('auditMode');
-            if (auditMode) auditMode.value = 'auto';
-            const autoRadio = document.querySelector('input[name="auditMode"][value="auto"]');
-            if (autoRadio) autoRadio.checked = true;
-
-            setAnalysisModeState('auto');
-            positionLocalAuditHelp('auto');
-            setModeOnlyCardsVisibility('auto');
-            setActiveNavButton('');
-            adjustFooterPosition(false);
-
-            requestAnimationFrame(() => {
-                syncAuditWorkspaceLayout(false);
-                initTurnstileAudit();
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-            });
-
-            if (hasUsedDemoAudit()) {
-                setTimeout(() => renderDemoAlreadyUsed(), 80);
+        function showDemoAuditScreen() {
+            if (!USER || !USER.email) {
+                showAuthScreen('login');
                 return;
             }
-
-            const auditUrl = document.getElementById('auditUrl');
-            if (auditUrl) {
-                auditUrl.value = '';
-                setTimeout(() => auditUrl.focus(), 100);
-            }
-            const mainContent = document.getElementById('mainContent');
-            if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'auto' });
-            window.scrollTo({ top: 0, behavior: 'auto' });
+            showSimplifiedSearch();
         }
 
         function handleAuditSubmit() {
-            if (document.body.classList.contains('demo-audit-public') || window.currentView === 'analise-gratis') {
-                runDemoAudit();
-                return;
-            }
             if (!USER || !USER.email) {
                 showAuthScreen('login');
                 return;
@@ -4333,7 +4142,7 @@ function getCodigoHTML() {
                 window.history.pushState({}, '', '/home');
             }
             // Esconde TODAS as views primeiro
-            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial', 'sites'];
+            const views = ['home', 'agents', 'domains', 'history', 'ranking', 'precos', 'about', 'terms', 'tutorial'];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) {
@@ -4360,6 +4169,7 @@ function getCodigoHTML() {
             if (subtitleContainer) subtitleContainer.classList.add('hidden');
             const statsContainer = document.querySelector('.stats-container-premium');
             if (statsContainer) statsContainer.classList.add('hidden');
+            document.getElementById('guestLandingActions')?.classList.add('hidden');
             const emptyStateCards = document.getElementById('emptyStateCards');
             if (emptyStateCards) emptyStateCards.classList.add('hidden');
             const manualSelectArea = document.getElementById('manualSelectArea');
@@ -10587,7 +10397,6 @@ function getCodigoHTML() {
             showSimplifiedSearch,
             openPricingPage,
             openTermsPage,
-            openSitesPage,
             comprarCreditos,
             showCreditsEndedModal,
             hideCreditsEndedModal,

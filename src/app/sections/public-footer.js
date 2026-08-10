@@ -279,7 +279,7 @@
         return {
             title: 'S.S.W Intelligence',
             subtitle: 'Silva Serviços Web',
-            description: 'Auditoria web com IA, simulação de personas reais e desenvolvimento de sites e sistemas otimizados para performance, clareza e conversão.',
+            description: 'Auditoria web com IA, simulação de personas reais e recomendações priorizadas para melhorar performance, clareza e conversão.',
             columns: [
                 {
                     label: 'Plataforma',
@@ -290,11 +290,11 @@
                     ]
                 },
                 {
-                    label: 'Serviços',
+                    label: 'Análise',
                     links: [
-                        { href: '/sites/', text: 'Sites e sistemas' },
                         { href: '/home', text: 'Auditoria com IA' },
-                        { href: '/agents', text: 'Personas IA' }
+                        { href: '/agents', text: 'Personas IA' },
+                        { href: '/ranking', text: 'Ranking público' }
                     ]
                 },
                 {

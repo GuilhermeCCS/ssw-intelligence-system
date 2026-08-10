@@ -4,9 +4,10 @@
   "description": "Plataforma de auditoria web e benchmarking competitivo impulsionada por IA",
   "main": "index.html",
   "scripts": {
-    "start": "serve .",
-    "build": "node scripts/build.js && echo 'Static build complete'",
-    "dev": "node scripts/build.js && serve . -l 3000",
+    "start": "serve . -l 3000",
+    "build": "node scripts/build.js --production && echo 'Static build complete'",
+    "build:local": "node scripts/build.js",
+    "dev": "serve . -l 3000",
     "preview": "serve . -l 4173"
   },
   "keywords": [
