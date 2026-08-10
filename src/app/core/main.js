@@ -3113,7 +3113,9 @@ function getCodigoHTML() {
             // Cria o modal de confirmação
             const modal = document.createElement('div');
             modal.id = 'confirmModal';
-            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up';
+            // A confirmação pode ser aberta sobre outros modais, como a tela de Conta.
+            // Portanto, ela precisa ficar acima do z-index da tela de configurações (z-[70]).
+            modal.className = 'fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in-up';
             modal.innerHTML = `
                 <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-w-md w-full mx-auto p-6 transform transition-all">
                     <div class="flex items-center justify-between mb-4">
