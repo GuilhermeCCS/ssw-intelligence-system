@@ -2531,7 +2531,6 @@ function getCodigoHTML() {
     const userAvatarCircle = document.getElementById('userAvatarCircle');
     const sidebarProfileName = document.getElementById('sidebarProfileName');
     const sidebarProfilePlan = document.getElementById('sidebarProfilePlan');
-    const sidebarProfileEmail = document.getElementById('sidebarProfileEmail');
 
     // Nossos novos containers
     const authButtonsContainer = document.getElementById('authButtonsContainer');
@@ -2543,7 +2542,6 @@ function getCodigoHTML() {
     const sidebarUserInfo = document.getElementById('sidebarUserInfo');
     const sidebarUserInitial = document.getElementById('sidebarUserInitial');
     const sidebarUserName = document.getElementById('sidebarUserName');
-    const sidebarUserEmail = document.getElementById('sidebarUserEmail');
     const sidebarUserCredits = document.getElementById('sidebarUserCredits');
     const sidebarUserPlan = document.getElementById('sidebarUserPlan');
 
@@ -2571,7 +2569,6 @@ function getCodigoHTML() {
         renderUserAvatar(userAvatarLarge, 'U', '');
         if (sidebarProfileName) sidebarProfileName.textContent = 'Meu perfil';
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = 'Starter';
-        if (sidebarProfileEmail) sidebarProfileEmail.textContent = 'm@example.com';
     } else {
         document.body.classList.add('user-authenticated');
         // --- ESTADO: LOGADO ---
@@ -2596,7 +2593,6 @@ function getCodigoHTML() {
         if (sidebarUserInfo) sidebarUserInfo.classList.remove('hidden');
         if (sidebarUserInitial) sidebarUserInitial.textContent = initial;
         if (sidebarUserName) sidebarUserName.textContent = displayName;
-        if (sidebarUserEmail) sidebarUserEmail.textContent = USER.email;
         if (sidebarUserCredits) sidebarUserCredits.textContent = USER.credits || 0;
         if (sidebarUserPlan) sidebarUserPlan.textContent = planLabel;
         renderUserAvatar(userAvatarCircle, initial, avatarUrl);
@@ -2607,7 +2603,6 @@ function getCodigoHTML() {
         if (userPlanCircle) userPlanCircle.textContent = planLabel;
         if (sidebarProfileName) sidebarProfileName.textContent = displayName;
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = planLabel;
-        if (sidebarProfileEmail) sidebarProfileEmail.textContent = USER.email;
     }
 
     // Recriar ícones Lucide
@@ -2792,34 +2787,114 @@ function getCodigoHTML() {
                 text.textContent = 'Sair';
             }
         }
-        // Função para mostrar configurações do usuário
+        function closeUserSettings() {
+            document.getElementById('accountSettingsModal')?.remove();
+        }
+
+        async function requestAccountDeletion() {
+            const confirmationInput = document.getElementById('deleteAccountConfirmation');
+            const confirmation = confirmationInput?.value?.trim() || '';
+
+            if (confirmation.toUpperCase() !== 'EXCLUIR') {
+                Toast.warning('Digite EXCLUIR para confirmar.');
+                confirmationInput?.focus();
+                return;
+            }
+
+            showConfirmDialog(
+                'Esta ação remove sua conta e seus dados operacionais. Ela não pode ser desfeita.',
+                async () => {
+                    try {
+                        const response = await fetch(`${API_URL}/api/account`, {
+                            method: 'DELETE',
+                            headers: authHeaders({ 'Content-Type': 'application/json' }),
+                            body: JSON.stringify({ confirmation: 'EXCLUIR' })
+                        });
+                        const data = await response.json().catch(() => ({}));
+                        if (!response.ok) {
+                            throw new Error(data.detail || 'Não foi possível excluir a conta.');
+                        }
+
+                        closeUserSettings();
+                        Toast.success('Sua conta foi excluída.');
+                        performLogout();
+                    } catch (error) {
+                        Toast.error(error.message || 'Não foi possível excluir a conta.');
+                    }
+                }
+            );
+        }
+
+        // Tela de conta: o e-mail só é revelado depois que o menu de três pontos é aberto.
         function showUserSettings() {
-            // Criar menu de configurações flutuante
+            if (!USER || !USER.email) {
+                showAuthScreen('login');
+                return;
+            }
+
+            closeUserSettings();
             const settingsMenu = document.createElement('div');
-            settingsMenu.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4';
+            settingsMenu.id = 'accountSettingsModal';
+            settingsMenu.className = 'fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm';
+            settingsMenu.setAttribute('role', 'dialog');
+            settingsMenu.setAttribute('aria-modal', 'true');
+            settingsMenu.setAttribute('aria-labelledby', 'accountSettingsTitle');
             settingsMenu.innerHTML = `
-                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-white">Configurações</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="text-slate-400 hover:text-white">
+                <section class="w-full max-w-xl overflow-hidden rounded-2xl border border-white/10 bg-[#212121] shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-white/10 px-6 py-5">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Configurações</p>
+                            <h3 id="accountSettingsTitle" class="mt-1 text-xl font-semibold text-white">Conta</h3>
+                        </div>
+                        <button type="button" data-close-account class="rounded-lg p-2 text-slate-400 transition hover:bg-white/10 hover:text-white" aria-label="Fechar conta">
                             <i data-lucide="x" class="w-5 h-5"></i>
                         </button>
                     </div>
-                    <div class="space-y-3">
-                        <button onclick="logout(); this.closest('.fixed').remove();" class="w-full text-left px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-3">
-                            <i data-lucide="log-out" class="w-4 h-4 text-red-400"></i>
-                            <span>Sair do Sistema</span>
-                        </button>
-                        <button onclick="this.closest('.fixed').remove();" class="w-full text-left px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-3">
-                            <i data-lucide="user" class="w-4 h-4 text-blue-400"></i>
-                            <span>Meu Perfil</span>
-                        </button>
+                    <div class="space-y-6 px-6 py-6">
+                        <div class="flex items-center gap-3">
+                            <span id="accountSettingsAvatar" class="flex h-11 w-11 items-center justify-center rounded-full bg-slate-200 font-bold text-slate-900"></span>
+                            <div>
+                                <p id="accountSettingsName" class="font-medium text-white"></p>
+                                <p class="text-sm text-slate-400">Dados da sua conta</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="block">
+                                <span class="mb-2 block text-sm font-medium text-slate-200">Nome de usuário</span>
+                                <input id="accountSettingsNameInput" type="text" readonly class="w-full rounded-lg border border-white/10 bg-[#2f2f2f] px-3 py-3 text-sm text-slate-100 outline-none" aria-readonly="true">
+                            </label>
+                            <label class="block">
+                                <span class="mb-2 block text-sm font-medium text-slate-200">E-mail</span>
+                                <input id="accountSettingsEmailInput" type="email" readonly class="w-full rounded-lg border border-white/10 bg-[#2f2f2f] px-3 py-3 text-sm text-slate-100 outline-none" aria-readonly="true">
+                            </label>
+                        </div>
+                        <section class="rounded-xl border border-red-400/20 bg-red-500/5 p-4">
+                            <h4 class="font-medium text-red-100">Excluir conta</h4>
+                            <p class="mt-1 text-sm leading-6 text-slate-400">Esta ação remove sua conta, personas, domínios, auditorias e uso do chat. Registros financeiros podem ser retidos pelo prazo legal aplicável.</p>
+                            <label class="mt-4 block">
+                                <span class="mb-2 block text-sm text-slate-300">Digite <strong class="font-semibold text-white">EXCLUIR</strong> para confirmar</span>
+                                <input id="deleteAccountConfirmation" type="text" autocomplete="off" class="w-full rounded-lg border border-red-400/30 bg-[#2f2f2f] px-3 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-red-300" placeholder="EXCLUIR">
+                            </label>
+                            <button type="button" data-delete-account class="mt-3 rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-100 transition hover:bg-red-500/20">Excluir minha conta</button>
+                        </section>
                     </div>
-                </div>
+                </section>
             `;
             document.body.appendChild(settingsMenu);
-            // Recriar ícones Lucide
-            lucide.createIcons();
+            const displayName = getUserDisplayName();
+            settingsMenu.querySelector('#accountSettingsName').textContent = displayName;
+            settingsMenu.querySelector('#accountSettingsAvatar').textContent = getUserInitial();
+            settingsMenu.querySelector('#accountSettingsNameInput').value = displayName;
+            settingsMenu.querySelector('#accountSettingsEmailInput').value = USER.email;
+            settingsMenu.querySelector('[data-close-account]').addEventListener('click', closeUserSettings);
+            settingsMenu.querySelector('[data-delete-account]').addEventListener('click', requestAccountDeletion);
+            settingsMenu.addEventListener('click', event => {
+                if (event.target === settingsMenu) closeUserSettings();
+            });
+            settingsMenu.addEventListener('keydown', event => {
+                if (event.key === 'Escape') closeUserSettings();
+            });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
         async function confirmarCodigoAPI() {
             const codigoInput = document.getElementById('inputVerifyCode');
