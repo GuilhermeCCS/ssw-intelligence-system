@@ -29,6 +29,12 @@
         function getUserPlanLabel(plan) {
             return normalizeUserPlan(plan) === 'pro' ? 'Pro' : 'Starter';
         }
+        function formatUserCredits(credits) {
+            const value = Number(credits);
+            const safeValue = Number.isFinite(value) && value >= 0 ? value : 0;
+            const formattedValue = safeValue.toLocaleString('pt-BR');
+            return `${formattedValue} ${safeValue === 1 ? 'crédito' : 'créditos'}`;
+        }
         function getFrontendPlanLimits(plan) {
             return FRONTEND_PLAN_LIMITS[normalizeUserPlan(plan || getUserPlan())] || FRONTEND_PLAN_LIMITS.starter;
         }
@@ -2530,6 +2536,7 @@ function getCodigoHTML() {
     const userAvatarLarge = document.getElementById('userAvatarLarge');
     const userAvatarCircle = document.getElementById('userAvatarCircle');
     const sidebarProfileName = document.getElementById('sidebarProfileName');
+    const sidebarProfileCredits = document.getElementById('sidebarProfileCredits');
     const sidebarProfilePlan = document.getElementById('sidebarProfilePlan');
 
     // Nossos novos containers
@@ -2568,6 +2575,7 @@ function getCodigoHTML() {
         renderUserAvatar(userAvatarCircle, 'U', '');
         renderUserAvatar(userAvatarLarge, 'U', '');
         if (sidebarProfileName) sidebarProfileName.textContent = 'Meu perfil';
+        if (sidebarProfileCredits) sidebarProfileCredits.textContent = '0 créditos';
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = 'Starter';
     } else {
         document.body.classList.add('user-authenticated');
@@ -2590,6 +2598,7 @@ function getCodigoHTML() {
         const avatarUrl = getUserAvatarUrl();
         const displayName = getUserDisplayName();
         const planLabel = getUserPlanLabel(USER.plan);
+        const creditsLabel = formatUserCredits(USER.credits);
         if (sidebarUserInfo) sidebarUserInfo.classList.remove('hidden');
         if (sidebarUserInitial) sidebarUserInitial.textContent = initial;
         if (sidebarUserName) sidebarUserName.textContent = displayName;
@@ -2602,6 +2611,7 @@ function getCodigoHTML() {
         if (userCreditsCircle) userCreditsCircle.textContent = USER.credits || 0;
         if (userPlanCircle) userPlanCircle.textContent = planLabel;
         if (sidebarProfileName) sidebarProfileName.textContent = displayName;
+        if (sidebarProfileCredits) sidebarProfileCredits.textContent = creditsLabel;
         if (sidebarProfilePlan) sidebarProfilePlan.textContent = planLabel;
     }
 
