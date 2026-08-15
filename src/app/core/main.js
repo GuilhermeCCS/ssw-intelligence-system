@@ -4781,6 +4781,7 @@ function getCodigoHTML() {
         var manualPersonaCarouselIndex = 0;
         var manualPersonaCarouselTotal = 0;
         var manualPersonaCarouselScrollFrame = 0;
+        var manualPersonaView = 'carousel';
         const MANUAL_PERSONA_ICON_RULES = [
             { match: /advoc|jurid|legal|direito/, icon: 'scale', label: 'Especialista jurídico' },
             { match: /contab|finance|fiscal|banco|invest/, icon: 'landmark', label: 'Especialista financeiro' },
@@ -4796,6 +4797,15 @@ function getCodigoHTML() {
 
         function normalizeTaxonomyValue(value, fallback) {
             return String(value || fallback || '').trim().toLowerCase().replace(/\s+/g, '_');
+        }
+
+        function normalizeTaxonomyLookup(value) {
+            return String(value || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, '_');
         }
 
         function getPersonaNiche(persona) {
@@ -4819,6 +4829,7 @@ function getCodigoHTML() {
         }
 
         function humanizeTaxonomy(value) {
+            if (normalizeTaxonomyLookup(value) === 'catalogo') return 'Catálogo';
             return String(value || 'geral').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
         }
 
@@ -4835,12 +4846,16 @@ function getCodigoHTML() {
             const currentNiche = nicheSelect.value || 'all';
             const currentType = typeSelect.value || 'all';
             const niches = [...new Set(personas.map(getPersonaNiche))].sort();
-            const types = [...new Set(personas.map(getPersonaType))].sort();
+            const types = [...new Map(personas.map(persona => {
+                const type = getPersonaType(persona);
+                return [normalizeTaxonomyLookup(type), type];
+            })).entries()].sort(([first], [second]) => first.localeCompare(second));
 
             nicheSelect.innerHTML = '<option value="all">Todos os nichos</option>' + niches.map(n => `<option value="${safeAuditText(n)}">${safeAuditText(humanizeTaxonomy(n))}</option>`).join('');
-            typeSelect.innerHTML = '<option value="all">Catálogo</option>' + types.map(t => `<option value="${safeAuditText(t)}">${safeAuditText(humanizeTaxonomy(t))}</option>`).join('');
+            typeSelect.innerHTML = '<option value="all">Todos os tipos</option>' + types.map(([key, type]) => `<option value="${safeAuditText(key)}">${safeAuditText(humanizeTaxonomy(type))}</option>`).join('');
             nicheSelect.value = niches.includes(currentNiche) ? currentNiche : 'all';
-            typeSelect.value = types.includes(currentType) ? currentType : 'all';
+            const currentTypeKey = normalizeTaxonomyLookup(currentType);
+            typeSelect.value = types.some(([key]) => key === currentTypeKey) ? currentTypeKey : 'all';
         }
 
         function updateManualPersonaCount() {
@@ -4848,8 +4863,8 @@ function getCodigoHTML() {
             const badge = document.getElementById('agentSelCount');
             if (!badge) return;
             badge.textContent = selected ? '1 / 1' : '0 / 1';
-            badge.style.color = selected ? '#e2e8f0' : '';
-            badge.style.borderColor = selected ? 'rgba(6,182,212,0.4)' : '';
+            badge.style.color = selected ? '#f4f4f5' : '';
+            badge.style.borderColor = selected ? 'rgba(255,255,255,0.54)' : '';
         }
 
         function setManualPersonaSelected(input) {
@@ -4874,13 +4889,38 @@ function getCodigoHTML() {
         function resetManualPersonaCarousel() {
             manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
             manualPersonaCarouselIndex = 1;
+            manualPersonaView = 'carousel';
             const carousel = document.getElementById('manualPersonaCarousel');
             if (carousel) carousel.scrollLeft = 0;
         }
 
         function showMoreManualPersonas() {
+            if (manualPersonaView !== 'list') return;
             manualPersonaVisibleCount += MANUAL_PERSONA_PAGE_SIZE;
             renderManualPersonaList();
+        }
+
+        function setManualPersonaView(view) {
+            manualPersonaView = view === 'list' ? 'list' : 'carousel';
+            if (manualPersonaView === 'list') {
+                manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
+            }
+            renderManualPersonaList();
+        }
+
+        function syncManualPersonaViewSwitcher() {
+            const carouselButton = document.getElementById('manualPersonaCarouselView');
+            const listButton = document.getElementById('manualPersonaListView');
+            if (carouselButton) {
+                const active = manualPersonaView === 'carousel';
+                carouselButton.classList.toggle('is-active', active);
+                carouselButton.setAttribute('aria-pressed', String(active));
+            }
+            if (listButton) {
+                const active = manualPersonaView === 'list';
+                listButton.classList.toggle('is-active', active);
+                listButton.setAttribute('aria-pressed', String(active));
+            }
         }
 
         function scrollManualPersonaCarousel(direction) {
@@ -4966,6 +5006,7 @@ function getCodigoHTML() {
         function renderManualPersonaList() {
             const cont = document.getElementById('checklistContainer');
             if (!cont) return;
+            syncManualPersonaViewSwitcher();
             const search = (document.getElementById('manualPersonaSearch')?.value || '').toLowerCase().trim();
             const niche = document.getElementById('manualPersonaNiche')?.value || 'all';
             const type = document.getElementById('manualPersonaType')?.value || 'all';
@@ -4975,7 +5016,7 @@ function getCodigoHTML() {
                 const haystack = `${p.name} ${p.description} ${p.niche} ${p.type}`.toLowerCase();
                 return (!search || haystack.includes(search)) &&
                     (niche === 'all' || p.niche === niche) &&
-                    (type === 'all' || p.type === type);
+                    (type === 'all' || normalizeTaxonomyLookup(p.type) === type);
             });
 
             if (filtered.length === 0) {
@@ -4991,14 +5032,17 @@ function getCodigoHTML() {
             const ordered = selectedPersona
                 ? [selectedPersona, ...filtered.filter(p => p.id !== selectedValue)]
                 : filtered;
-            const visible = ordered.slice(0, Math.max(MANUAL_PERSONA_PAGE_SIZE, manualPersonaVisibleCount));
+            const isCarouselView = manualPersonaView === 'carousel';
+            const visible = isCarouselView
+                ? ordered
+                : ordered.slice(0, Math.max(MANUAL_PERSONA_PAGE_SIZE, manualPersonaVisibleCount));
             manualPersonaCarouselIndex = Math.max(0, Math.min(manualPersonaCarouselIndex, visible.length - 1));
             manualPersonaCarouselTotal = ordered.length;
             const remaining = Math.max(0, ordered.length - visible.length);
             const cards = visible.map((p, index) => {
                 const checked = selectedValue === p.id ? 'checked' : '';
                 const selectedClass = checked ? ' is-selected' : '';
-                const featuredClass = index === manualPersonaCarouselIndex ? ' is-featured' : '';
+                const featuredClass = isCarouselView && index === manualPersonaCarouselIndex ? ' is-featured' : '';
                 const personaIcon = getManualPersonaIcon(p);
                 return `
                     <label class="manual-persona-row${selectedClass}${featuredClass}" data-carousel-index="${index}">
@@ -5019,37 +5063,44 @@ function getCodigoHTML() {
                 `;
             }).join('');
 
-            cont.innerHTML = visible.length > 1 ? `
-                <div class="manual-persona-carousel-shell">
-                    <button id="manualPersonaPrevious" class="manual-persona-carousel-nav is-previous" type="button" onclick="scrollManualPersonaCarousel(-1)" aria-label="Ver personas anteriores">
-                        <i data-lucide="chevron-left"></i>
-                    </button>
-                    <div id="manualPersonaCarousel" class="manual-persona-carousel" role="radiogroup" aria-label="Personas disponíveis">
+            if (isCarouselView) {
+                cont.innerHTML = visible.length > 1 ? `
+                    <div class="manual-persona-carousel-shell">
+                        <button id="manualPersonaPrevious" class="manual-persona-carousel-nav is-previous" type="button" onclick="scrollManualPersonaCarousel(-1)" aria-label="Ver personas anteriores">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <div id="manualPersonaCarousel" class="manual-persona-carousel" role="radiogroup" aria-label="Personas disponíveis">
+                            ${cards}
+                        </div>
+                        <button id="manualPersonaNext" class="manual-persona-carousel-nav is-next" type="button" onclick="scrollManualPersonaCarousel(1)" aria-label="Ver próximas personas">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="manual-persona-carousel-footer">
+                        <span><strong>${safeAuditText(String(ordered.length))}</strong> personas disponíveis</span>
+                        <span class="manual-persona-carousel-progress" aria-hidden="true"><i id="manualPersonaCarouselProgress"></i></span>
+                        <span class="manual-persona-carousel-hint"><i data-lucide="mouse-pointer-2"></i> Deslize para explorar</span>
+                    </div>
+                ` : `<div class="manual-persona-carousel-shell"><div id="manualPersonaCarousel" class="manual-persona-carousel is-single" role="radiogroup" aria-label="Persona disponível">${cards}</div></div>`;
+            } else {
+                cont.innerHTML = `
+                    <div class="manual-persona-list-view" role="radiogroup" aria-label="Personas disponíveis em lista">
                         ${cards}
                     </div>
-                    <button id="manualPersonaNext" class="manual-persona-carousel-nav is-next" type="button" onclick="scrollManualPersonaCarousel(1)" aria-label="Ver próximas personas">
-                        <i data-lucide="chevron-right"></i>
-                    </button>
-                </div>
-                <div class="manual-persona-carousel-footer">
-                    <span><strong>${safeAuditText(String(ordered.length))}</strong> personas disponíveis</span>
-                    <span class="manual-persona-carousel-progress" aria-hidden="true"><i id="manualPersonaCarouselProgress"></i></span>
-                    <span class="manual-persona-carousel-hint"><i data-lucide="mouse-pointer-2"></i> Deslize para explorar</span>
-                </div>
-            ` : `<div class="manual-persona-carousel-shell"><div id="manualPersonaCarousel" class="manual-persona-carousel is-single" role="radiogroup" aria-label="Persona disponível">${cards}</div></div>`;
-            cont.innerHTML += `
-                <div class="manual-persona-list-footer">
-                    <span>${safeAuditText(String(visible.length))} de ${safeAuditText(String(ordered.length))} pessoas</span>
-                    ${remaining > 0 ? '<button type="button" onclick="showMoreManualPersonas()">Mostrar mais <i data-lucide="chevron-down"></i></button>' : ''}
-                </div>
-            `;
+                    <div class="manual-persona-list-footer">
+                        <span>${safeAuditText(String(visible.length))} de ${safeAuditText(String(ordered.length))} pessoas</span>
+                        ${remaining > 0 ? '<button type="button" onclick="showMoreManualPersonas()">Mostrar mais <i data-lucide="chevron-down"></i></button>' : ''}
+                    </div>
+                `;
+            }
             const selected = Array.from(document.querySelectorAll('.agent-radio')).find(el => el.value === selectedValue);
             if (selected) setManualPersonaSelected(selected);
             updateManualPersonaCount();
+            syncManualPersonaViewSwitcher();
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
-            setupManualPersonaCarousel();
+            if (isCarouselView) setupManualPersonaCarousel();
         }
         async function validateManualPersonaNiche(personaId) {
             const warning = document.getElementById('manualPersonaWarning');
@@ -10588,6 +10639,7 @@ function getCodigoHTML() {
             handleManualPersonaFilterChange,
             scrollManualPersonaCarousel,
             showMoreManualPersonas,
+            setManualPersonaView,
             setManualPersonaSelected,
             showSimplifiedSearch,
             openPricingPage,
