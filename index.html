@@ -537,7 +537,20 @@
                         </div>
 
                         <div class="search-container pointer-events-auto">
-                            <!-- A escolha da persona vem antes do modo para permanecer no fluxo principal da análise. -->
+                            <!-- Seletor de Modo de Auditoria -->
+                            <div class="ssw-mode-selector mb-4" aria-label="Modo de auditoria">
+                                <label>
+                                    <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
+                                    <span>Automático</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
+                                    <span>Manual</span>
+                                </label>
+                                <!-- Modo Comparativo desabilitado (endpoint /api/comparar removido) -->
+                            </div>
+
+                            <!-- No modo manual, a persona é escolhida entre o modo e a URL. -->
                             <div id="manualSelectArea" class="hidden manual-persona-panel">
                                 <div class="manual-persona-head">
                                     <div>
@@ -561,19 +574,6 @@
                                 </div>
                                 <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
                                 <div id="checklistContainer" class="manual-persona-list"></div>
-                            </div>
-
-                            <!-- Seletor de Modo de Auditoria -->
-                            <div class="ssw-mode-selector mb-4" aria-label="Modo de auditoria">
-                                <label>
-                                    <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
-                                    <span>Automático</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
-                                    <span>Manual</span>
-                                </label>
-                                <!-- Modo Comparativo desabilitado (endpoint /api/comparar removido) -->
                             </div>
 
                             <div id="normalSearchBar" class="search-bar-hero">
