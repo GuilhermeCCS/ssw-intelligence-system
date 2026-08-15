@@ -4780,6 +4780,7 @@ function getCodigoHTML() {
         var manualPersonaVisibleCount = MANUAL_PERSONA_PAGE_SIZE;
         var manualPersonaCarouselIndex = 0;
         var manualPersonaCarouselTotal = 0;
+        var manualPersonaCarouselScrollFrame = 0;
         const MANUAL_PERSONA_ICON_RULES = [
             { match: /advoc|jurid|legal|direito/, icon: 'scale', label: 'Especialista jurídico' },
             { match: /contab|finance|fiscal|banco|invest/, icon: 'landmark', label: 'Especialista financeiro' },
@@ -4886,6 +4887,18 @@ function getCodigoHTML() {
             setManualPersonaCarouselActive(manualPersonaCarouselIndex + direction, true);
         }
 
+        function scrollManualPersonaCardIntoView(carousel, card) {
+            if (!carousel || !card) return;
+            const target = Math.max(0, Math.min(
+                carousel.scrollWidth - carousel.clientWidth,
+                card.offsetLeft - ((carousel.clientWidth - card.offsetWidth) / 2)
+            ));
+            const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            // A rolagem nativa é sincronizada ao refresh rate da tela e evita animações
+            // de layout no JavaScript. Em telas de 120 Hz, ela acompanha os 120 Hz.
+            carousel.scrollTo({ left: target, behavior: reduceMotion ? 'auto' : 'smooth' });
+        }
+
         function setManualPersonaCarouselActive(index, shouldScroll = false) {
             const carousel = document.getElementById('manualPersonaCarousel');
             if (!carousel) return;
@@ -4897,7 +4910,7 @@ function getCodigoHTML() {
 
             const activeCard = cards[manualPersonaCarouselIndex];
             if (shouldScroll && activeCard) {
-                activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                scrollManualPersonaCardIntoView(carousel, activeCard);
             }
             updateManualPersonaCarouselControls();
         }
@@ -4922,16 +4935,20 @@ function getCodigoHTML() {
             const carousel = document.getElementById('manualPersonaCarousel');
             if (!carousel) return;
             carousel.addEventListener('scroll', () => {
-                const cards = Array.from(carousel.querySelectorAll('.manual-persona-row'));
-                if (!cards.length) return;
-                const center = carousel.scrollLeft + carousel.clientWidth / 2;
-                const closestIndex = cards.reduce((closest, card, cardIndex) => {
-                    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-                    const closestCard = cards[closest];
-                    const closestCenter = closestCard.offsetLeft + closestCard.offsetWidth / 2;
-                    return Math.abs(cardCenter - center) < Math.abs(closestCenter - center) ? cardIndex : closest;
-                }, 0);
-                setManualPersonaCarouselActive(closestIndex);
+                if (manualPersonaCarouselScrollFrame) return;
+                manualPersonaCarouselScrollFrame = requestAnimationFrame(() => {
+                    manualPersonaCarouselScrollFrame = 0;
+                    const cards = Array.from(carousel.querySelectorAll('.manual-persona-row'));
+                    if (!cards.length) return;
+                    const center = carousel.scrollLeft + carousel.clientWidth / 2;
+                    const closestIndex = cards.reduce((closest, card, cardIndex) => {
+                        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+                        const closestCard = cards[closest];
+                        const closestCenter = closestCard.offsetLeft + closestCard.offsetWidth / 2;
+                        return Math.abs(cardCenter - center) < Math.abs(closestCenter - center) ? cardIndex : closest;
+                    }, 0);
+                    setManualPersonaCarouselActive(closestIndex);
+                });
             }, { passive: true });
             requestAnimationFrame(() => setManualPersonaCarouselActive(manualPersonaCarouselIndex, true));
         }
