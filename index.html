@@ -569,8 +569,19 @@
                                         <option value="all">Todos os nichos</option>
                                     </select>
                                     <select id="manualPersonaType" onchange="handleManualPersonaFilterChange()" class="input-pro">
-                                        <option value="all">Catálogo</option>
+                                        <option value="all">Todos os tipos</option>
                                     </select>
+                                </div>
+                                <div class="manual-persona-view-switcher" role="group" aria-label="Visualização das personas">
+                                    <span>Visualização</span>
+                                    <div>
+                                        <button id="manualPersonaCarouselView" type="button" class="is-active" aria-pressed="true" onclick="setManualPersonaView('carousel')">
+                                            <i data-lucide="gallery-horizontal-end"></i> Carrossel
+                                        </button>
+                                        <button id="manualPersonaListView" type="button" aria-pressed="false" onclick="setManualPersonaView('list')">
+                                            <i data-lucide="list"></i> Lista
+                                        </button>
+                                    </div>
                                 </div>
                                 <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
                                 <div id="checklistContainer" class="manual-persona-list"></div>
