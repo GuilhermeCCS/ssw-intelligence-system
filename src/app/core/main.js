@@ -4086,7 +4086,7 @@ function getCodigoHTML() {
                 'histórico permanente',
                 'plano completo de correção'
             ];
-            const hasImages = Boolean(images.desktop || images.mobile);
+            const hasImages = Boolean(images.desktop);
             results.innerHTML = [
                 '<section class="demo-report-shell">',
                     '<div class="demo-report-card">',
@@ -4417,7 +4417,7 @@ function getCodigoHTML() {
                 'Lendo a primeira dobra...',
                 'Verificando clareza da proposta...',
                 'Rastreando links importantes...',
-                'Validando experiência mobile...',
+                'Validando experiência da página...',
                 'Analisando CTAs principais...',
                 'Comparando sinais de confiança...',
                 'Buscando fricções invisíveis...',
@@ -4606,7 +4606,7 @@ function getCodigoHTML() {
                 'Abrindo a URL como um usuário real...',
                 'Mapeando estrutura, links e elementos principais...',
                 'Verificando se a página responde de forma estável...',
-                'Capturando evidências visuais em desktop e mobile...',
+                'Capturando evidências visuais em desktop...',
                 'Aguardando o Google PageSpeed concluir as métricas oficiais...',
                 'Lendo Core Web Vitals, SEO e acessibilidade...',
                 'Verificando sinais de confiança, segurança e estabilidade...',
@@ -6593,7 +6593,6 @@ function getCodigoHTML() {
             }
 
             setAuditCaptureImageScoped(root, 'printDesktop', images.desktop || images.desktop_screenshot || images.print_desktop || images.screenshot_desktop);
-            setAuditCaptureImageScoped(root, 'printMobile', images.mobile || images.mobile_screenshot || images.print_mobile || images.screenshot_mobile);
 
             renderAuditVulnerabilitiesScoped(root, technicalAudit);
             renderAuditAgentsScoped(root, result);
@@ -7424,11 +7423,6 @@ function getCodigoHTML() {
                     renderPillarsDashboard(technicalAudit);
                 }
                 if(data.images) {
-                    const printMobileEl = document.getElementById('printMobile');
-                    if (printMobileEl && data.images.mobile) {
-                        printMobileEl.src = "data:image/jpeg;base64," + data.images.mobile;
-                        printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
-                    }
                     const printDesktopEl = document.getElementById('printDesktop');
                     if (printDesktopEl && data.images.desktop) {
                         printDesktopEl.src = "data:image/jpeg;base64," + data.images.desktop;
@@ -8299,11 +8293,6 @@ function getCodigoHTML() {
                 updateAuditMetricCard('realLcp', fallbackMetrics.lcp, { type: 'time', statusId: 'realLcpStatus', maxTime: 10 }),
                 updateAuditMetricCard('realLoadTime', fallbackMetrics.load_time, { type: 'time', statusId: 'realLoadTimeStatus', maxTime: 14 })
             ]);
-            const printMobileEl = document.getElementById('printMobile');
-            if (printMobileEl) {
-                printMobileEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
-                printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
-            }
             const printDesktopEl = document.getElementById('printDesktop');
             if (printDesktopEl) {
                 printDesktopEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
@@ -10300,11 +10289,10 @@ function getCodigoHTML() {
                     if (!raw) return '';
                     return raw.startsWith('data:') ? raw : `data:image/jpeg;base64,${raw}`;
                 };
-                const getCapture = kind => {
-                    const fromData = normalizeDataUri(dados.images?.[kind] || dados.captures?.[kind] || dados.screenshots?.[kind]);
+                const getDesktopCapture = () => {
+                    const fromData = normalizeDataUri(dados.images?.desktop || dados.captures?.desktop || dados.screenshots?.desktop);
                     if (fromData) return fromData;
-                    const elementId = kind === 'desktop' ? 'printDesktop' : 'printMobile';
-                    return normalizeDataUri(document.getElementById(elementId)?.src || '');
+                    return normalizeDataUri(document.getElementById('printDesktop')?.src || '');
                 };
                 const imageFormat = src => src.includes('image/png') ? 'PNG' : 'JPEG';
                 const getLogoDataUri = () => {
@@ -10486,9 +10474,8 @@ function getCodigoHTML() {
                 }
 
                 sectionTitle('Prova visual', 'Visualização da Plataforma');
-                imageCard('Desktop', getCapture('desktop'), page.left, y, 112, 66);
-                imageCard('Mobile', getCapture('mobile'), page.left + 120, y, 58, 66);
-                y += 78;
+                imageCard('Desktop', getDesktopCapture(), page.left, y, 178, 100);
+                y += 112;
 
                 sectionTitle('Painel executivo', 'Métricas de Performance');
                 const perf = metrics.performance_score ?? technical.performance_score ?? technical.score;
