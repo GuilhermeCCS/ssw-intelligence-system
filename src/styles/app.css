@@ -1965,7 +1965,7 @@
         }
         .audit-screens-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+            grid-template-columns: minmax(0, 1fr);
             gap: 22px;
             align-items: start;
         }
@@ -12591,7 +12591,7 @@ html.history-view-active body #mainContent {
 
 #view-history .history-captures-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(220px, 0.45fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 18px;
     align-items: start;
 }
@@ -13047,7 +13047,7 @@ body.demo-audit-public #auditResults {
 
 .demo-report-captures {
     display: grid;
-    grid-template-columns: 1.6fr .8fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
     margin-top: 22px;
 }

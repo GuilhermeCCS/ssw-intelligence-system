@@ -3447,13 +3447,6 @@ function getCodigoHTML() {
                                 <div class="audit-shot-placeholder">A captura desktop aparece aqui quando a auditoria termina.</div>
                                 <img id="printDesktop" class="audit-shot-img" src="${blankPixel}" alt="Captura desktop do site auditado">
                             </figure>
-                            <figure class="audit-shot-frame audit-shot-mobile">
-                                <div class="audit-phone-shell">
-                                    <div class="audit-phone-notch"></div>
-                                    <div class="audit-shot-placeholder">Mobile</div>
-                                    <img id="printMobile" class="audit-shot-img" src="${blankPixel}" alt="Captura mobile do site auditado">
-                                </div>
-                            </figure>
                         </div>
                     </section>
 
@@ -4086,7 +4079,7 @@ function getCodigoHTML() {
                 'histórico permanente',
                 'plano completo de correção'
             ];
-            const hasImages = Boolean(images.desktop || images.mobile);
+            const hasImages = Boolean(images.desktop);
             results.innerHTML = [
                 '<section class="demo-report-shell">',
                     '<div class="demo-report-card">',
@@ -4109,8 +4102,7 @@ function getCodigoHTML() {
                         '</div>',
                         hasImages ? [
                             '<div class="demo-report-captures">',
-                                images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="data:image/jpeg;base64,' + images.desktop + '" alt="Captura desktop da URL analisada"></figure>' : '',
-                                images.mobile ? '<figure class="demo-report-capture"><strong>Mobile</strong><img src="data:image/jpeg;base64,' + images.mobile + '" alt="Captura mobile da URL analisada"></figure>' : '',
+                            images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="data:image/jpeg;base64,' + images.desktop + '" alt="Captura desktop da URL analisada"></figure>' : '',
                             '</div>'
                         ].join('') : '',
                         '<div class="demo-report-locks">',
@@ -4417,7 +4409,7 @@ function getCodigoHTML() {
                 'Lendo a primeira dobra...',
                 'Verificando clareza da proposta...',
                 'Rastreando links importantes...',
-                'Validando experiência mobile...',
+                'Validando experiência da página...',
                 'Analisando CTAs principais...',
                 'Comparando sinais de confiança...',
                 'Buscando fricções invisíveis...',
@@ -4606,7 +4598,7 @@ function getCodigoHTML() {
                 'Abrindo a URL como um usuário real...',
                 'Mapeando estrutura, links e elementos principais...',
                 'Verificando se a página responde de forma estável...',
-                'Capturando evidências visuais em desktop e mobile...',
+                'Capturando evidências visuais em desktop...',
                 'Aguardando o Google PageSpeed concluir as métricas oficiais...',
                 'Lendo Core Web Vitals, SEO e acessibilidade...',
                 'Verificando sinais de confiança, segurança e estabilidade...',
@@ -6175,8 +6167,7 @@ function getCodigoHTML() {
             };
 
             return {
-                desktop: pick('desktop', 'desktop_screenshot', 'print_desktop', 'screenshot_desktop'),
-                mobile: pick('mobile', 'mobile_screenshot', 'print_mobile', 'screenshot_mobile')
+                desktop: pick('desktop', 'desktop_screenshot', 'print_desktop', 'screenshot_desktop')
             };
         }
 
@@ -6202,7 +6193,7 @@ function getCodigoHTML() {
 
         function renderHistoryVisualEvidence(item, payload) {
             const images = getHistoryCaptureImages(item, payload);
-            const hasImages = Boolean(images.desktop || images.mobile);
+            const hasImages = Boolean(images.desktop);
             return [
                 `<section class="history-detail-block history-visual-evidence${hasImages ? '' : ' history-visual-evidence-empty'}">`,
                     '<div class="history-visual-head">',
@@ -6211,14 +6202,13 @@ function getCodigoHTML() {
                             '<h4>Evidência visual da análise</h4>',
                         '</div>',
                         hasImages
-                            ? '<small>Desktop e mobile retornados pela auditoria.</small>'
+                            ? '<small>Captura desktop retornada pela auditoria.</small>'
                             : '<small>Este histórico não possui captura salva.</small>',
                     '</div>',
                     hasImages
                         ? [
                             '<div class="history-captures-grid">',
-                                renderHistoryCaptureFigure('desktop', 'Desktop', images.desktop),
-                                renderHistoryCaptureFigure('mobile', 'Mobile', images.mobile),
+                            renderHistoryCaptureFigure('desktop', 'Desktop', images.desktop),
                             '</div>'
                         ].join('')
                         : '<p class="history-detail-muted">Análises antigas podem não ter imagens porque as capturas ainda não eram gravadas no payload do histórico. Ao rodar uma nova auditoria, elas passam a aparecer aqui.</p>',
@@ -6542,7 +6532,6 @@ function getCodigoHTML() {
             }
 
             setAuditCaptureImageScoped(root, 'printDesktop', images.desktop || images.desktop_screenshot || images.print_desktop || images.screenshot_desktop);
-            setAuditCaptureImageScoped(root, 'printMobile', images.mobile || images.mobile_screenshot || images.print_mobile || images.screenshot_mobile);
 
             renderAuditVulnerabilitiesScoped(root, technicalAudit);
             renderAuditAgentsScoped(root, result);
@@ -7373,11 +7362,6 @@ function getCodigoHTML() {
                     renderPillarsDashboard(technicalAudit);
                 }
                 if(data.images) {
-                    const printMobileEl = document.getElementById('printMobile');
-                    if (printMobileEl && data.images.mobile) {
-                        printMobileEl.src = "data:image/jpeg;base64," + data.images.mobile;
-                        printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
-                    }
                     const printDesktopEl = document.getElementById('printDesktop');
                     if (printDesktopEl && data.images.desktop) {
                         printDesktopEl.src = "data:image/jpeg;base64," + data.images.desktop;
@@ -8248,11 +8232,6 @@ function getCodigoHTML() {
                 updateAuditMetricCard('realLcp', fallbackMetrics.lcp, { type: 'time', statusId: 'realLcpStatus', maxTime: 10 }),
                 updateAuditMetricCard('realLoadTime', fallbackMetrics.load_time, { type: 'time', statusId: 'realLoadTimeStatus', maxTime: 14 })
             ]);
-            const printMobileEl = document.getElementById('printMobile');
-            if (printMobileEl) {
-                printMobileEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
-                printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
-            }
             const printDesktopEl = document.getElementById('printDesktop');
             if (printDesktopEl) {
                 printDesktopEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
@@ -10249,11 +10228,10 @@ function getCodigoHTML() {
                     if (!raw) return '';
                     return raw.startsWith('data:') ? raw : `data:image/jpeg;base64,${raw}`;
                 };
-                const getCapture = kind => {
-                    const fromData = normalizeDataUri(dados.images?.[kind] || dados.captures?.[kind] || dados.screenshots?.[kind]);
+                const getDesktopCapture = () => {
+                    const fromData = normalizeDataUri(dados.images?.desktop || dados.captures?.desktop || dados.screenshots?.desktop);
                     if (fromData) return fromData;
-                    const elementId = kind === 'desktop' ? 'printDesktop' : 'printMobile';
-                    return normalizeDataUri(document.getElementById(elementId)?.src || '');
+                    return normalizeDataUri(document.getElementById('printDesktop')?.src || '');
                 };
                 const imageFormat = src => src.includes('image/png') ? 'PNG' : 'JPEG';
                 const getLogoDataUri = () => {
@@ -10435,9 +10413,8 @@ function getCodigoHTML() {
                 }
 
                 sectionTitle('Prova visual', 'Visualização da Plataforma');
-                imageCard('Desktop', getCapture('desktop'), page.left, y, 112, 66);
-                imageCard('Mobile', getCapture('mobile'), page.left + 120, y, 58, 66);
-                y += 78;
+                imageCard('Desktop', getDesktopCapture(), page.left, y, 178, 100);
+                y += 112;
 
                 sectionTitle('Painel executivo', 'Métricas de Performance');
                 const perf = metrics.performance_score ?? technical.performance_score ?? technical.score;
