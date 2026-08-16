@@ -13047,7 +13047,7 @@ body.demo-audit-public #auditResults {
 
 .demo-report-captures {
     display: grid;
-    grid-template-columns: 1.6fr .8fr;
+    grid-template-columns: 1.6fr 0.8fr;
     gap: 16px;
     margin-top: 22px;
 }

@@ -3450,7 +3450,7 @@ function getCodigoHTML() {
                             <figure class="audit-shot-frame audit-shot-mobile">
                                 <div class="audit-phone-shell">
                                     <div class="audit-phone-notch"></div>
-                                    <div class="audit-shot-placeholder">Mobile</div>
+                                    <div class="audit-shot-placeholder">A captura mobile aparece aqui quando a auditoria termina.</div>
                                     <img id="printMobile" class="audit-shot-img" src="${blankPixel}" alt="Captura mobile do site auditado">
                                 </div>
                             </figure>
@@ -4109,8 +4109,8 @@ function getCodigoHTML() {
                         '</div>',
                         hasImages ? [
                             '<div class="demo-report-captures">',
-                                images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="data:image/jpeg;base64,' + images.desktop + '" alt="Captura desktop da URL analisada"></figure>' : '',
-                                images.mobile ? '<figure class="demo-report-capture"><strong>Mobile</strong><img src="data:image/jpeg;base64,' + images.mobile + '" alt="Captura mobile da URL analisada"></figure>' : '',
+                            images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="data:image/jpeg;base64,' + images.desktop + '" alt="Captura desktop da URL analisada"></figure>' : '',
+                            images.mobile ? '<figure class="demo-report-capture"><strong>Mobile</strong><img src="data:image/jpeg;base64,' + images.mobile + '" alt="Captura mobile da URL analisada"></figure>' : '',
                             '</div>'
                         ].join('') : '',
                         '<div class="demo-report-locks">',
@@ -6226,8 +6226,8 @@ function getCodigoHTML() {
             };
 
             return {
-                desktop: pick('desktop', 'desktop_screenshot', 'print_desktop', 'screenshot_desktop'),
-                mobile: pick('mobile', 'mobile_screenshot', 'print_mobile', 'screenshot_mobile')
+                mobile: pick('mobile', 'mobile_screenshot', 'print_mobile', 'screenshot_mobile'),
+                desktop: pick('desktop', 'desktop_screenshot', 'print_desktop', 'screenshot_desktop')
             };
         }
 
@@ -6262,14 +6262,14 @@ function getCodigoHTML() {
                             '<h4>Evidência visual da análise</h4>',
                         '</div>',
                         hasImages
-                            ? '<small>Desktop e mobile retornados pela auditoria.</small>'
+                            ? '<small>Capturas desktop e mobile retornadas pela auditoria.</small>'
                             : '<small>Este histórico não possui captura salva.</small>',
                     '</div>',
                     hasImages
                         ? [
                             '<div class="history-captures-grid">',
-                                renderHistoryCaptureFigure('desktop', 'Desktop', images.desktop),
-                                renderHistoryCaptureFigure('mobile', 'Mobile', images.mobile),
+                            renderHistoryCaptureFigure('desktop', 'Desktop', images.desktop),
+                            renderHistoryCaptureFigure('mobile', 'Mobile', images.mobile),
                             '</div>'
                         ].join('')
                         : '<p class="history-detail-muted">Análises antigas podem não ter imagens porque as capturas ainda não eram gravadas no payload do histórico. Ao rodar uma nova auditoria, elas passam a aparecer aqui.</p>',
