@@ -44,9 +44,9 @@ htmlPaths.forEach((htmlPath) => {
     : '';
 
   html = html
-    .replace(/^\s*<meta name="env-mp-public-key" content="[^"]*">\r?\n?/gm, '')
-    .replace(/^\s*<meta name="env-api-url" content="[^"]*">\r?\n?/gm, '')
-    .replace(/^\s*<meta name="env-google-client-id" content="[^"]*">\r?\n?/gm, '');
+    .replace(/^[\t ]*<meta name="env-mp-public-key" content="[^"]*">\r?\n?/gm, '')
+    .replace(/^[\t ]*<meta name="env-api-url" content="[^"]*">\r?\n?/gm, '')
+    .replace(/^[\t ]*<meta name="env-google-client-id" content="[^"]*">\r?\n?/gm, '');
 
   const metaTags = [mpMetaTag, apiUrlMetaTag, googleClientMetaTag]
     .filter(Boolean)

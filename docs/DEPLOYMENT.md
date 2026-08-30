@@ -8,17 +8,20 @@ Configure as seguintes variáveis em **Settings → Environment Variables**:
 
 ```bash
 VITE_MP_PUBLIC_KEY=APP_USR-sua-chave-mercado-pago
-ENCRYPTION_KEY=sua-chave-secreta-criptografia
 API_URL=sua-url-api
+VITE_GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
 ```
 
-### Desenvolvimento Local
+Esses valores são injetados no navegador. Portanto, use somente a chave **pública** do Mercado Pago, a URL pública da API e o client ID público do Google.
 
-1. Crie um arquivo `.env` na raiz do projeto com suas variáveis:
-```bash
-VITE_MP_PUBLIC_KEY=APP_USR-sua-chave-mercado-pago
-ENCRYPTION_KEY=sua-chave-secreta-criptografia
-API_URL=sua-url-api
+### Desenvolvimento local
+
+Defina as variáveis na sessão do terminal antes do build. O repositório não mantém arquivos `.env` nem modelos de credenciais:
+
+```powershell
+$env:VITE_MP_PUBLIC_KEY = 'TEST-sua-chave-publica-do-mercado-pago'
+$env:API_URL = 'http://localhost:8080'
+$env:VITE_GOOGLE_CLIENT_ID = 'seu-client-id.apps.googleusercontent.com'
 ```
 
 ## Deploy no Cloudflare Pages
@@ -89,15 +92,17 @@ npm start
 ### Chaves e Segredos
 
 - **VITE_MP_PUBLIC_KEY**: Chave pública do Mercado Pago (pode ser exposta)
-- **ENCRYPTION_KEY**: Chave para criptografia de localStorage (NÃO exponha)
-- **API_URL**: URL da API backend (configure conforme seu ambiente)
+- **API_URL**: URL pública da API backend (pode ser exposta)
+- **VITE_GOOGLE_CLIENT_ID**: Client ID público do OAuth do Google (pode ser exposto)
+
+Não use arquivos, variáveis ou argumentos de build do frontend para tokens privados, service roles, senhas ou chaves de criptografia. Mantenha-os apenas na API e no provedor de hospedagem apropriado.
 
 ### Boas Práticas
 
-1. **Nunca** commite `.env` no repositório
-2. Use chaves diferentes para desenvolvimento e produção
-3. Rote as chaves periodicamente
-4. Use variáveis de ambiente para todos os segredos
+1. **Nunca** commite arquivos `.env`, inclusive modelos contendo valores reais.
+2. Use configurações diferentes para desenvolvimento e produção.
+3. Mantenha segredos somente no backend e rotacione-os periodicamente.
+4. Revise qualquer valor injetado no HTML: ele se torna público.
 
 ## Troubleshooting
 
@@ -106,8 +111,8 @@ npm start
 **Causa**: Variável de ambiente não configurada
 
 **Solução**:
-- Local: Configure em `.env`
-- Cloudflare: Configure em Settings → Environment Variables
+- Local: Defina `VITE_MP_PUBLIC_KEY` na sessão do terminal antes do build.
+- Cloudflare: Configure em Settings → Environment Variables.
 
 ### Erro: "openCheckout is not defined"
 

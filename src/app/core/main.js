@@ -4298,6 +4298,13 @@ function getCodigoHTML() {
                 mainContent.scrollTo({ top: 0, behavior: 'smooth' });
             }
             window.scrollTo({ top: 0, behavior: 'auto' });
+            const landingAnalysis = document.getElementById('landing-analysis');
+            if (landingAnalysis) {
+                requestAnimationFrame(() => {
+                    landingAnalysis.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setTimeout(() => auditUrl?.focus(), 350);
+                });
+            }
             requestAnimationFrame(() => syncAuditWorkspaceLayout(false));
         }
         async function toggleManualSelect() {
@@ -10656,3 +10663,32 @@ function getCodigoHTML() {
 
 // ========== RANKING FUNCTIONS MOVED TO src/components/ranking/ranking-component.js ==========
 // ========== END RANKING FUNCTIONS ==========
+
+        (function initLandingMicrointeractions() {
+            const setup = () => {
+                const nav = document.querySelector('.ssw-landing-nav');
+                const updateNav = () => nav?.classList.toggle('is-scrolled', window.scrollY > 12);
+                updateNav();
+                window.addEventListener('scroll', updateNav, { passive: true });
+
+                const revealItems = document.querySelectorAll('.ssw-reveal');
+                if (!('IntersectionObserver' in window)) {
+                    revealItems.forEach(item => item.classList.add('is-visible'));
+                    return;
+                }
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    });
+                }, { threshold: 0.16 });
+                revealItems.forEach(item => observer.observe(item));
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setup, { once: true });
+            } else {
+                setup();
+            }
+        })();

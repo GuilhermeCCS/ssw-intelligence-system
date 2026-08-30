@@ -444,198 +444,168 @@
     </aside>
     <main class="flex-1 md:h-screen overflow-y-auto overflow-x-hidden relative scroll-smooth flex flex-col" id="mainContent" style="background: transparent !important;"></main>
         <div class="flex-1 p-4 md:p-10 pt-6 pb-20 flex flex-col" id="mainContentWrapper">
-            <div id="view-home" class="command-center max-w-6xl mx-auto space-y-8 animate-fade-in-up">
-                <!-- HERO SECTION ACETERNITY STYLE -->
-                <section id="heroSection" class="hero-elite hero-section-premium relative w-full min-h-screen bg-slate-950 overflow-hidden flex items-center justify-center">
-                    
-                    <!-- CIRCULAR REVEAL OVERLAY -->
-                    <div class="circular-reveal-overlay"></div>
-                    
-                    <!-- PASSO 1: GRID BACKGROUND -->
-                    <div class="absolute inset-0 pointer-events-none">
-                        <!-- Grid Pattern -->
-                        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-                        <!-- Radial Mask para fade nas bordas -->
-                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#020617_100%)]"></div>
+            <div id="view-home" class="command-center ssw-landing animate-fade-in-up">
+                <header class="ssw-landing-nav" aria-label="Navegação principal">
+                    <a class="ssw-landing-brand" href="#inicio" aria-label="S.S.W Intelligence — início">
+                        <img src="src/assets/images/logo/logo_ofc.png?v=20260627-logo-ofc-v2" alt="">
+                        <span>S.S.W Intelligence</span>
+                    </a>
+                    <nav class="ssw-landing-menu" aria-label="Seções da página">
+                        <a href="#produto">Produto</a>
+                        <a href="#como-funciona">Como funciona</a>
+                        <a href="#recursos">Recursos</a>
+                        <a href="#landing-analysis">Análises</a>
+                    </nav>
+                    <div class="ssw-landing-nav-actions">
+                        <button type="button" class="ssw-nav-login" onclick="showAuthScreen('login')">Fazer login</button>
+                        <button type="button" class="ssw-nav-cta" onclick="showAuthScreen('register')">Começar grátis</button>
                     </div>
+                </header>
 
-                    <!-- PASSO 2: BACKGROUND BEAMS (Feixes de Luz) -->
-                    <div class="absolute inset-0 pointer-events-none overflow-hidden" id="beams-container">
-                        <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:0" />
-                                    <stop offset="50%" style="stop-color:#00D4FF;stop-opacity:0.6" />
-                                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
-                                </linearGradient>
-                            </defs>
-                            <g class="beam-tracks" aria-hidden="true">
-                                <path d="M0,200 Q400,100 800,200 T1600,200" fill="none" stroke="#00d4ff" stroke-width="1"/>
-                                <path d="M0,400 Q400,300 800,400 T1600,400" fill="none" stroke="#00d4ff" stroke-width="0.8"/>
-                                <path d="M0,600 Q400,500 800,600 T1600,600" fill="none" stroke="#3b82f6" stroke-width="0.7"/>
-                            </g>
-                            <!-- Beam paths serão animados via CSS -->
-                            <path class="beam-path" d="M0,200 Q400,100 800,200 T1600,200" fill="none" stroke="url(#beam-gradient)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000"/>
-                            <path class="beam-path beam-delay-1" d="M0,400 Q400,300 800,400 T1600,400" fill="none" stroke="url(#beam-gradient)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000"/>
-                            <path class="beam-path beam-delay-2" d="M0,600 Q400,500 800,600 T1600,600" fill="none" stroke="url(#beam-gradient)" stroke-width="1" stroke-dasharray="1000" stroke-dashoffset="1000"/>
-                        </svg>
+                <section id="heroSection" class="ssw-landing-hero" aria-labelledby="landing-title">
+                    <div class="ssw-landing-grid" aria-hidden="true"></div>
+                    <div id="heroPrimaryContent" class="ssw-landing-hero-copy">
+                        <span class="ssw-eyebrow">Inteligência para experiências digitais</span>
+                        <h1 id="landing-title">Descubra onde seu site perde oportunidades.<span>Clareza, confiança e conversão.</span></h1>
+                        <p>Analise seu site, encontre pontos de atrito e transforme dados técnicos em prioridades claras de melhoria.</p>
+                        <div id="guestLandingActions" class="ssw-landing-hero-actions">
+                            <a class="ssw-button-primary" href="#landing-analysis">Analisar meu site</a>
+                            <a class="ssw-button-secondary" href="#como-funciona">Ver como funciona</a>
+                        </div>
+                        <small>Nenhuma configuração complexa.</small>
                     </div>
-
-                    <div id="heroShowcaseCarousel" class="hero-showcase-carousel" data-interval="7000" aria-label="Demonstração da plataforma S.S.W Intelligence">
-                        <div class="hero-showcase-copy">
-                            <span>Inteligência acionável</span>
-                            <h2>Da análise técnica à prioridade certa para evoluir.</h2>
-                            <p>A S.S.W Intelligence revela onde visitantes perdem confiança, clareza ou vontade de avançar e organiza os próximos passos para melhorar sua experiência digital.</p>
-                        </div>
-                        <div class="hero-showcase-frame">
-                            <img class="hero-showcase-slide is-active" src="src/assets/images/hero/ssw-platform-audit.png?v=20260622-3" alt="Tela da plataforma S.S.W Intelligence para auditoria de sites" aria-hidden="false">
-                            <img class="hero-showcase-slide" src="src/assets/images/hero/ssw-audit-excellence.png" alt="Resultado de excelência da auditoria S.S.W Intelligence" aria-hidden="true">
-                            <div class="hero-showcase-controls" aria-label="Selecionar imagem da vitrine">
-                                <button type="button" class="hero-showcase-dot is-active" data-slide-index="0" aria-label="Mostrar plataforma de auditoria" aria-current="true"></button>
-                                <button type="button" class="hero-showcase-dot" data-slide-index="1" aria-label="Mostrar resultado de excelência da auditoria" aria-current="false"></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PASSO 3: CONTEÚDO FRONTAL -->
-                    <div id="heroPrimaryContent" class="relative z-10 text-center px-4 max-w-5xl mx-auto pointer-events-auto">
-                        
-                        <!-- Badge -->
-                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm mb-8 animate-fade-in-up">
-                            <span class="text-2xl font-medium text-white/90">S.S.W Intelligence</span>
-                        </div>
-
-                        <!-- H1 com Gradient -->
-                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6 tracking-tight leading-tight animate-fade-in-up" style="animation-delay: 0.1s">
-                            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">
-                                Descubra por que seu site
-                            </span>
-                            <span class="block text-white mt-2">
-                                não converte como deveria.
-                            </span>
-                        </h1>
-
-                        <!-- Parágrafo -->
-                        <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto font-light animate-fade-in-up" style="animation-delay: 0.2s">
-                            A S.S.W Intelligence analisa clareza, confiança, performance e comportamento de personas reais para revelar onde você perde oportunidades — e mostra o caminho para transformar visitas em clientes.
-                        </p>
-
-                        <!-- A ferramenta de análise é acessada pela área autenticada. -->
-                        <div id="guestLandingActions" class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style="animation-delay: 0.3s">
-                            <button type="button" onclick="showAuthScreen('login')" class="group relative px-8 py-4 bg-gradient-to-r from-[#00D4FF] to-[#3b82f6] text-white font-semibold rounded-full hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all duration-300 hover:scale-105">
-                                <span class="relative z-10 flex items-center gap-2">
-                                    Entrar para analisar
-                                </span>
-                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-[#00D4FF] to-[#3b82f6] opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-300"></div>
-                            </button>
-                            <button type="button" onclick="showAuthScreen('register')" class="px-8 py-4 bg-white border border-white/20 text-black font-semibold rounded-full hover:bg-gray-100 hover:border-white/30 transition-all duration-300 hover:scale-105">
-                                <span class="flex items-center gap-2">
-                                    <i data-lucide="user-plus" class="w-5 h-5"></i>
-                                    Criar conta grátis
-                                </span>
-                            </button>
-                        </div>
-
-                        <div class="search-container pointer-events-auto">
-                            <!-- Seletor de Modo de Auditoria -->
-                            <div class="ssw-mode-selector mb-4" aria-label="Modo de auditoria">
-                                <label>
-                                    <input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();">
-                                    <span>Automático</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();">
-                                    <span>Manual</span>
-                                </label>
-                                <!-- Modo Comparativo desabilitado (endpoint /api/comparar removido) -->
-                            </div>
-
-                            <!-- No modo manual, a persona é escolhida entre o modo e a URL. -->
-                            <div id="manualSelectArea" class="hidden manual-persona-panel">
-                                <div class="manual-persona-head">
-                                    <div>
-                                        <span class="manual-persona-kicker">Modo manual</span>
-                                        <h3>Escolha a pessoa</h3>
-                                        <p>Selecione quem deve orientar a análise desta URL.</p>
-                                    </div>
-                                    <span id="agentSelCount" class="manual-persona-count">0 / 1</span>
-                                </div>
-                                <div class="manual-persona-controls">
-                                    <label class="manual-persona-search" for="manualPersonaSearch">
-                                        <i data-lucide="search" class="w-4 h-4"></i>
-                                        <input id="manualPersonaSearch" type="text" placeholder="Buscar pessoas..." oninput="handleManualPersonaFilterChange()" class="input-pro">
-                                    </label>
-                                    <select id="manualPersonaNiche" onchange="handleManualPersonaFilterChange()" class="input-pro">
-                                        <option value="all">Todos os nichos</option>
-                                    </select>
-                                    <select id="manualPersonaType" onchange="handleManualPersonaFilterChange()" class="input-pro">
-                                        <option value="all">Todos os tipos</option>
-                                    </select>
-                                </div>
-                                <div class="manual-persona-view-switcher" role="group" aria-label="Visualização das personas">
-                                    <span>Visualização</span>
-                                    <div>
-                                        <button id="manualPersonaCarouselView" type="button" class="is-active" aria-pressed="true" onclick="setManualPersonaView('carousel')">
-                                            <i data-lucide="gallery-horizontal-end"></i> Carrossel
-                                        </button>
-                                        <button id="manualPersonaListView" type="button" aria-pressed="false" onclick="setManualPersonaView('list')">
-                                            <i data-lucide="list"></i> Lista
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
-                                <div id="checklistContainer" class="manual-persona-list"></div>
-                            </div>
-
-                            <div id="normalSearchBar" class="search-bar-hero">
-                                <div class="search-input-wrapper">
-                                    <i data-lucide="globe-2" class="w-5 h-5 search-icon"></i>
-                                    <input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();handleAuditSubmit();}">
-                                </div>
-                                <button onclick="handleAuditSubmit()" class="search-button">
-                                    <i data-lucide="activity" class="w-4 h-4"></i>
-                                    <span>Analisar</span>
-                                </button>
-                            </div>
-
-                            <p id="localAuditHelp" class="text-xs text-slate-400 mt-2 text-left flex items-center justify-center sm:justify-start gap-1">
-                                <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
-                                <span>Testando um site local? Veja o nosso <span onclick="abrirTutorialNgrok()" class="text-blue-400 hover:text-blue-300 hover:underline font-medium cursor-pointer">Tutorial Ngrok</span> para gerar uma URL pública.</span>
-                            </p>
-
-                            <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center">
-                                <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                            </div>
-
-                            <div id="compareSearchBar" class="hidden search-bar-hero compare-mode">
-                                <div class="compare-input-block">
-                                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                    <input type="text" id="compareUrlA" placeholder="Site A - https://site-a.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('compareUrlB').focus();}">
-                                </div>
-                                <div class="compare-divider"></div>
-                                <div class="compare-input-block">
-                                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                    <input type="text" id="compareUrlB" placeholder="Site B - https://site-b.com" class="flex-1 bg-transparent text-white outline-none text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen();return;}runCompare();}">
-                                </div>
-                                <button onclick="if(!USER||!USER.email){showAuthScreen();return;}runCompare()" class="search-button">
-                                    <i data-lucide="git-compare" class="w-4 h-4"></i>
-                                    <span>Comparar</span>
-                                </button>
-                            </div>
-
-                            <div id="turnstile-compare" class="hidden flex justify-center mt-4 min-h-[65px] items-center">
-                                <div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div>
-                            </div>
-
-                            <select id="auditMode" class="hidden">
-                                <option value="auto">Seleção Automática</option>
-                                <option value="manual">Seleção Manual</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="absolute inset-0 shadow-[inset_0_0_150px_rgba(7,11,20,1)] pointer-events-none z-0"></div>
                 </section>
+
+                <section id="produto" class="ssw-product-showcase ssw-reveal" aria-label="Prévia do produto">
+                    <div class="ssw-section-intro ssw-section-intro-centered">
+                        <span class="ssw-eyebrow">Produto</span>
+                        <h2>Uma leitura clara da experiência que seu site entrega.</h2>
+                    </div>
+                    <div class="ssw-browser-frame ssw-screenshot-slot" data-screenshot-slot="dashboard principal">
+                        <div class="ssw-browser-bar"><span></span><span></span><span></span><em>sswintelligence.com.br</em></div>
+                        <div class="ssw-screenshot-placeholder">
+                            <strong>[INSERIR SCREENSHOT REAL DO DASHBOARD AQUI]</strong>
+                            <span>Dashboard principal / resultado geral da análise</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="recursos" class="ssw-insights-section">
+                    <div class="ssw-section-shell">
+                        <div class="ssw-section-intro">
+                            <span class="ssw-eyebrow">Uma visão mais profunda</span>
+                            <h2>Não apenas mostra problemas. Mostra o que priorizar.</h2>
+                            <p>O S.S.W Intelligence organiza sinais técnicos e comportamentais para revelar onde sua experiência digital pode evoluir.</p>
+                        </div>
+                        <div class="ssw-insights-list">
+                            <article class="ssw-insight-item ssw-reveal">
+                                <span>01</span>
+                                <div><h3>Seu visitante entende o que você oferece?</h3><p>Identifique mensagens confusas, hierarquias ruins e pontos que dificultam a compreensão da página.</p></div>
+                            </article>
+                            <article class="ssw-insight-item ssw-reveal">
+                                <span>02</span>
+                                <div><h3>Sua interface transmite segurança?</h3><p>Analise sinais que influenciam credibilidade, percepção de qualidade e confiança durante a navegação.</p></div>
+                            </article>
+                            <article class="ssw-insight-item ssw-reveal">
+                                <span>03</span>
+                                <div><h3>Existe algum ponto fazendo usuários desistirem?</h3><p>Encontre atritos de navegação, inconsistências e elementos que dificultam a próxima ação do visitante.</p></div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="landing-analysis" class="ssw-analysis-section">
+                    <div class="ssw-analysis-grid">
+                        <div class="ssw-section-intro">
+                            <span class="ssw-eyebrow">Análise</span>
+                            <h2>Da URL ao diagnóstico em poucos passos.</h2>
+                            <p>Informe o site. O S.S.W Intelligence analisa os principais sinais e organiza os resultados por relevância.</p>
+                        </div>
+                        <div class="ssw-analysis-visual ssw-screenshot-slot is-populated" data-screenshot-slot="tela de análise">
+                            <img src="src/assets/images/landing/analise-url-diagnostico.png" alt="Tela de análise do S.S.W Intelligence exibindo o score e o início do diagnóstico">
+                        </div>
+                    </div>
+
+                    <div class="search-container ssw-audit-entry" aria-label="Iniciar uma análise">
+                        <div class="ssw-mode-selector" aria-label="Modo de auditoria">
+                            <label><input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();"><span>Automático</span></label>
+                            <label><input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();"><span>Manual</span></label>
+                        </div>
+                        <div id="manualSelectArea" class="hidden manual-persona-panel">
+                            <div class="manual-persona-head"><div><span class="manual-persona-kicker">Modo manual</span><h3>Escolha a pessoa</h3><p>Selecione quem deve orientar a análise desta URL.</p></div><span id="agentSelCount" class="manual-persona-count">0 / 1</span></div>
+                            <div class="manual-persona-controls">
+                                <label class="manual-persona-search" for="manualPersonaSearch"><i data-lucide="search" class="w-4 h-4"></i><input id="manualPersonaSearch" type="text" placeholder="Buscar pessoas..." oninput="handleManualPersonaFilterChange()" class="input-pro"></label>
+                                <select id="manualPersonaNiche" onchange="handleManualPersonaFilterChange()" class="input-pro"><option value="all">Todos os nichos</option></select>
+                                <select id="manualPersonaType" onchange="handleManualPersonaFilterChange()" class="input-pro"><option value="all">Catálogo</option></select>
+                            </div>
+                            <div class="manual-persona-view-switcher" role="group" aria-label="Visualização das personas">
+                                <span>Visualização</span>
+                                <div>
+                                    <button id="manualPersonaCarouselView" type="button" class="is-active" aria-pressed="true" onclick="setManualPersonaView('carousel')">
+                                        <i data-lucide="gallery-horizontal-end"></i> Carrossel
+                                    </button>
+                                    <button id="manualPersonaListView" type="button" aria-pressed="false" onclick="setManualPersonaView('list')">
+                                        <i data-lucide="list"></i> Lista
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="manualPersonaWarning" class="hidden mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-100"></div>
+                            <div id="checklistContainer" class="manual-persona-list"></div>
+                        </div>
+                        <div id="normalSearchBar" class="search-bar-hero">
+                            <div class="search-input-wrapper"><i data-lucide="globe-2" class="w-5 h-5 search-icon"></i><input type="text" id="auditUrl" placeholder="https://seusite.com.br" class="search-input" onkeydown="if(event.key==='Enter'){event.preventDefault();handleAuditSubmit();}"></div>
+                            <button onclick="handleAuditSubmit()" class="search-button"><i data-lucide="activity" class="w-4 h-4"></i><span>Analisar</span></button>
+                        </div>
+                        <p id="localAuditHelp" class="ssw-audit-help"><i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i><span>Testando um site local? Veja o <span onclick="abrirTutorialNgrok()" class="ssw-inline-link">Tutorial Ngrok</span> para gerar uma URL pública.</span></p>
+                        <div id="turnstile-audit" class="flex justify-center mt-4 min-h-[65px] items-center"><div class="text-xs text-slate-500 animate-pulse">Carregando verificação de segurança...</div></div>
+                        <select id="auditMode" class="hidden"><option value="auto">Seleção Automática</option><option value="manual">Seleção Manual</option></select>
+                    </div>
+                </section>
+
+                <section id="como-funciona" class="ssw-process-section">
+                    <div class="ssw-section-intro ssw-section-intro-centered"><span class="ssw-eyebrow">Como funciona</span><h2>Uma análise. Três passos.</h2></div>
+                    <ol class="ssw-process-list">
+                        <li class="ssw-reveal"><span>01</span><h3>Informe o site</h3><p>Adicione a URL que deseja analisar.</p></li>
+                        <li class="ssw-reveal"><span>02</span><h3>Execute a análise</h3><p>O sistema processa diferentes sinais da experiência digital.</p></li>
+                        <li class="ssw-reveal"><span>03</span><h3>Priorize melhorias</h3><p>Receba um diagnóstico organizado para decidir o que corrigir primeiro.</p></li>
+                    </ol>
+                </section>
+
+                <section class="ssw-report-section">
+                    <div class="ssw-report-grid">
+                        <div class="ssw-section-intro"><span class="ssw-eyebrow">Relatório</span><h2>Do problema à próxima decisão.</h2><p>Cada análise transforma informações dispersas em um diagnóstico claro e acionável.</p></div>
+                        <div class="ssw-report-visual ssw-screenshot-slot" data-screenshot-slot="relatório">
+                            <strong>[INSERIR SCREENSHOT REAL DO RELATÓRIO AQUI]</strong><span>Relatório ou lista de problemas e recomendações</span>
+                            <i class="ssw-report-label ssw-report-label-score">Score</i><i class="ssw-report-label ssw-report-label-priority">Prioridade</i><i class="ssw-report-label ssw-report-label-recommendation">Recomendação</i>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ssw-result-example-section">
+                    <div class="ssw-result-example">
+                        <div class="ssw-result-score"><strong>92</strong><span>score</span></div>
+                        <div class="ssw-result-summary"><span class="ssw-eyebrow">Exemplo de resultado</span><h2>Experiência em nível de excelência</h2><div class="ssw-result-signals"><span>Clareza</span><span>Confiança</span><span>Experiência</span></div><p><strong>Prioridade identificada</strong> — manter a clareza da proposta enquanto novas jornadas são adicionadas.</p></div>
+                    </div>
+                </section>
+
+                <section class="ssw-audience-section">
+                    <div class="ssw-section-intro ssw-section-intro-centered"><span class="ssw-eyebrow">Para quem é</span><h2>Feito para quem precisa entender melhor uma experiência digital.</h2></div>
+                    <div class="ssw-audience-list">
+                        <article><h3>Desenvolvedores</h3><p>Encontre pontos de melhoria antes de entregar um projeto.</p></article>
+                        <article><h3>Agências</h3><p>Transforme análises em argumentos claros para clientes.</p></article>
+                        <article><h3>Times de produto</h3><p>Priorize melhorias de experiência com mais contexto.</p></article>
+                        <article><h3>Empresas</h3><p>Entenda como seu site é percebido antes de investir em mudanças.</p></article>
+                    </div>
+                </section>
+
+                <section class="ssw-difference-section">
+                    <div><span class="ssw-eyebrow">Contexto</span><h2>Menos opinião. Mais contexto para decidir.</h2><p>O objetivo não é gerar dezenas de métricas. É mostrar quais delas realmente merecem atenção.</p></div>
+                    <div class="ssw-data-placeholder" aria-label="Espaço reservado para dados reais do produto"><strong>[DADO REAL AQUI]</strong><span>Prioridades, scores e indicadores do produto</span></div>
+                </section>
+
+                <section class="ssw-final-cta" aria-labelledby="final-cta-title"><span></span><h2 id="final-cta-title">Seu site pode estar dizendo mais do que seus números mostram.</h2><p>Faça uma análise e descubra onde melhorar primeiro.</p><a class="ssw-button-primary" href="#landing-analysis">Analisar meu site</a><button type="button" class="ssw-final-login" onclick="showAuthScreen('login')">Já tenho uma conta</button></section>
+
+                <footer class="ssw-landing-footer"><span>S.S.W Intelligence</span><nav><a href="#produto">Produto</a><a href="#recursos">Sobre</a><a href="/termos/">Privacidade</a><a href="/termos/">Termos</a><a href="mailto:contato@sswintelligence.com.br">Contato</a></nav><small>© 2026 S.S.W Intelligence</small></footer>
                 <!-- Compare Area (mantido oculto: modo comparativo desabilitado) -->
                 <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50" aria-hidden="true">
                     <div class="flex items-center gap-2 mb-4 text-accent">

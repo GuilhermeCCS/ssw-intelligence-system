@@ -1,57 +1,92 @@
-# S.S.W Intelligence System
+# S.S.W Intelligence
 
-Plataforma avançada de auditoria web e análise de performance digital com inteligência artificial.
+Frontend da plataforma S.S.W Intelligence, voltada à auditoria de presença digital, análise de conversão e benchmarking assistidos por IA.
 
-## Sobre
+## Visão geral
 
-O S.S.W Intelligence System é uma solução completa e profissional para análise e avaliação de sites, fornecendo insights profundos e acionáveis sobre performance, acessibilidade, SEO, segurança e experiência do usuário. Desenvolvido com tecnologia de ponta em inteligência artificial e 15 agents agentlizadas, oferece uma visão 360° e abrangente da qualidade digital de qualquer site, permitindo que empresas e profissionais tomem decisões estratégicas baseadas em dados concretos.
+A aplicação oferece uma experiência web para criar auditorias, comparar sites, visualizar resultados, gerar relatórios e administrar créditos. O frontend é estático, construído com HTML, CSS e JavaScript modular, e consome a API SSW para autenticação, processamento das análises, pagamentos e histórico.
 
-## Diferenciais
+## Principais recursos
 
-### Tecnologia de IA Avançada
-Algoritmos proprietários que combinam análise técnica com inteligência comportamental, proporcionando insights que vão além de métricas superficiais. O sistema utiliza 15 agents diferentes para avaliar o site sob múltiplas perspectivas, garantindo uma análise completa e contextualizada.
+- Auditorias de performance, SEO, acessibilidade, segurança e experiência do usuário.
+- Diagnóstico de conversão e simulação por personas.
+- Comparação entre domínios e visualização de rankings.
+- Relatórios e histórico de análises.
+- Autenticação, recuperação de conta e login com Google.
+- Compra e gestão de créditos com Mercado Pago.
 
-### Análise em Tempo Real
-Resultados entregues em menos de 30 segundos, permitindo tomadas de decisão rápidas e eficientes. A plataforma processa mais de 50 métricas simultaneamente, cruzando dados de performance, acessibilidade, SEO e experiência do usuário em um único relatório consolidado.
+## Tecnologias
 
-### Modelo Pay-as-you-Go
-Flexibilidade total com sistema de créditos que permite usar a plataforma quando necessário, sem compromissos de longo prazo. Pague uma vez, use quando quiser. Sem mensalidades, sem validade, sem pegadinhas.
+- HTML, CSS e JavaScript sem framework de interface.
+- Tailwind CSS via CDN e componentes modulares em `src/`.
+- Node.js para servidor local e build de configuração pública.
+- Docker e Nginx para entrega da aplicação estática.
+- Cloudflare Pages como destino de deploy.
 
-## Funcionalidades
+## Estrutura do repositório
 
-### Auditoria Inteligente
-- Análise completa e abrangente de sites com mais de 50 métricas técnicas
-- Processamento em tempo real com resultados em menos de 30 segundos
-- 15 agents de inteligência artificial para análise comportamental multidimensional
-- Detecção automática de erros críticos, oportunidades de melhoria e pontos de atenção
-- Avaliação de performance, acessibilidade (WCAG), SEO, segurança e UX
-- Geração de scores e índices de qualidade digital
+```text
+.
+├── docs/                 # Guias técnicos, deploy e configurações auxiliares
+├── docker/               # Configuração do Nginx
+├── precos/               # Rota estática de preços
+├── public/               # Headers e recursos públicos
+├── scripts/              # Scripts de build
+├── sites/                # Rota estática de serviços
+├── src/
+│   ├── app/              # Fluxos da aplicação e módulos de interface
+│   ├── assets/           # Imagens e materiais de apoio
+│   ├── components/       # Componentes reutilizáveis
+│   ├── styles/           # Estilos globais
+│   └── utils/            # Configuração e utilitários do navegador
+├── termos/               # Rota estática de termos
+├── index.html            # Entrada principal da aplicação
+├── Dockerfile            # Imagem de produção
+└── package.json          # Scripts e dependências do projeto
+```
 
-### Relatórios Profissionais
-- Relatórios detalhados e completos em formato PDF
-- Exportação de dados em múltiplos formatos
-- Histórico completo de auditorias realizadas
-- Recomendações priorizadas por impacto e facilidade de implementação
-- Visualização de tendências e evolução ao longo do tempo
-- Anexos e evidências técnicas para cada finding
+## Desenvolvimento local
 
-### Sistema de Pagamento
-- Modelo pay-as-you-go com total flexibilidade de uso
-- Pacotes de créditos escaláveis para diferentes necessidades
-- Integração segura e certificada com Mercado Pago
-- Ativação imediata após confirmação de pagamento
-- Gestão transparente de créditos e histórico de transações
-- Múltiplas formas de pagamento disponíveis
+Pré-requisitos: Node.js 22 ou superior e npm. Para usar todos os fluxos, inicie também a API SSW na porta `8080`.
 
-## Design System
+```powershell
+npm ci
+npm run dev
+```
 
-Interface moderna e profissional com tema dark, totalmente responsiva e otimizada para diferentes dispositivos e tamanhos de tela. Design premium alinhado com os mais altos padrões SaaS B2B de alta performance, priorizando usabilidade, clareza visual e experiência do usuário. A arquitetura de interface segue princípios de design minimalista e funcional, com foco na apresentação clara de dados complexos.
+Abra `http://localhost:3000`. Em ambiente local, o frontend aponta automaticamente para `http://localhost:8080`.
 
-## Segurança e Privacidade
+## Build e publicação
 
-- Análise 100% segura com processamento em ambiente controlado
-- Criptografia de dados em trânsito e em repouso
-- Integração com gateways de pagamento certificados e compliant
-- Privacidade garantida com política de dados transparente
-- Conformidade com regulamentações de proteção de dados
-- Auditorias de segurança regulares e monitoramento contínuo
+O build injeta no HTML apenas configurações que podem ser públicas no navegador. Defina-as no ambiente de deploy ou, para testar localmente, na sessão do terminal:
+
+```powershell
+$env:VITE_MP_PUBLIC_KEY = 'TEST-sua-chave-publica-do-mercado-pago'
+$env:API_URL = 'https://sua-api.exemplo.com'
+$env:VITE_GOOGLE_CLIENT_ID = 'seu-client-id.apps.googleusercontent.com' # opcional
+npm run build
+```
+
+Para executar a imagem de produção localmente, use `docker compose -f docker-compose.local.yml up --build`. O guia completo está em [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) e as orientações de publicação em [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+## Configuração e segurança
+
+Nenhum arquivo de ambiente é versionado neste repositório. Arquivos `.env` são estritamente locais e estão protegidos pelo `.gitignore`.
+
+As únicas variáveis expostas ao navegador são `VITE_MP_PUBLIC_KEY`, `API_URL` e `VITE_GOOGLE_CLIENT_ID`. Não inclua senhas, tokens privados, chaves de serviço ou credenciais de banco de dados no frontend; elas pertencem exclusivamente à API e à plataforma de hospedagem.
+
+## Scripts disponíveis
+
+| Comando | Finalidade |
+| --- | --- |
+| `npm run dev` | Inicia o servidor estático em `http://localhost:3000`. |
+| `npm run build:local` | Gera a configuração local sem exigir a chave pública do Mercado Pago. |
+| `npm run build` | Executa o build de produção; exige `VITE_MP_PUBLIC_KEY`. |
+| `npm run preview` | Serve a aplicação em `http://localhost:4173`. |
+
+## Documentação adicional
+
+- [Desenvolvimento local](docs/LOCAL_DEVELOPMENT.md)
+- [Deploy](docs/DEPLOYMENT.md)
+- [Configuração de Open Graph](docs/OPEN_GRAPH_SETUP.md)
+- [Organização dos módulos da aplicação](src/app/README.md)

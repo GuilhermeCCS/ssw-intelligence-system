@@ -23,7 +23,7 @@ Em um terminal, inicie a API em `../sswapi-main`:
 
 ```powershell
 cd ..\sswapi-main
-Copy-Item .env.example .env
+# Crie o arquivo .env local conforme a documentação do repositório da API.
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
@@ -42,14 +42,16 @@ Abra `http://localhost:3000`. Em localhost, o frontend usa automaticamente a API
 
 ## Com Docker
 
-1. Crie os arquivos locais de ambiente:
+1. Defina a chave pública do Mercado Pago na sessão do terminal. Ela é necessária para criar a imagem do frontend:
 
 ```powershell
-Copy-Item ..\sswapi-main\.env.example ..\sswapi-main\.env
-Copy-Item .env.example .env
+$env:VITE_MP_PUBLIC_KEY = 'TEST-sua-chave-publica-do-mercado-pago'
+$env:VITE_GOOGLE_CLIENT_ID = '' # opcional
 ```
 
-2. Preencha as variaveis necessarias e rode:
+2. No repositório da API, crie e preencha o arquivo local `../sswapi-main/.env`; ele não deve ser versionado.
+
+3. Inicie os serviços:
 
 ```powershell
 docker compose -f docker-compose.local.yml up --build
