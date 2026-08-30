@@ -1,92 +1,78 @@
 # S.S.W Intelligence
 
-Frontend da plataforma S.S.W Intelligence, voltada à auditoria de presença digital, análise de conversão e benchmarking assistidos por IA.
+Interface web da S.S.W Intelligence, uma plataforma de auditoria de experiências digitais e análise de oportunidades de melhoria assistida por IA.
 
-## Visão geral
+## Produto
 
-A aplicação oferece uma experiência web para criar auditorias, comparar sites, visualizar resultados, gerar relatórios e administrar créditos. O frontend é estático, construído com HTML, CSS e JavaScript modular, e consome a API SSW para autenticação, processamento das análises, pagamentos e histórico.
+A aplicação transforma a análise de uma presença digital em uma jornada clara: coleta sinais técnicos e de experiência, organiza achados por prioridade e apresenta recomendações que apoiam decisões de produto, marketing e tecnologia.
 
-## Principais recursos
+## Capacidades
 
-- Auditorias de performance, SEO, acessibilidade, segurança e experiência do usuário.
-- Diagnóstico de conversão e simulação por personas.
-- Comparação entre domínios e visualização de rankings.
-- Relatórios e histórico de análises.
-- Autenticação, recuperação de conta e login com Google.
-- Compra e gestão de créditos com Mercado Pago.
+- Auditoria de performance, acessibilidade, SEO, segurança e experiência do usuário.
+- Diagnóstico de conversão e simulação por perfis de público.
+- Análise comparativa e acompanhamento de resultados.
+- Relatórios visuais e histórico de auditorias.
+- Fluxos de autenticação e administração da conta.
+- Interface responsiva, preparada para desktop e dispositivos móveis.
 
-## Tecnologias
+## Arquitetura
 
-- HTML, CSS e JavaScript sem framework de interface.
-- Tailwind CSS via CDN e componentes modulares em `src/`.
-- Node.js para servidor local e build de configuração pública.
-- Docker e Nginx para entrega da aplicação estática.
-- Cloudflare Pages como destino de deploy.
-
-## Estrutura do repositório
+O projeto é uma aplicação estática modular. A interface é composta em HTML, CSS e JavaScript, enquanto operações de dados e processamento são atendidas por serviços externos da plataforma.
 
 ```text
 .
-├── docs/                 # Guias técnicos, deploy e configurações auxiliares
-├── docker/               # Configuração do Nginx
-├── precos/               # Rota estática de preços
-├── public/               # Headers e recursos públicos
-├── scripts/              # Scripts de build
-├── sites/                # Rota estática de serviços
+├── docs/                 # Documentação técnica complementar
+├── docker/               # Configuração da imagem de entrega
+├── public/               # Recursos públicos e cabeçalhos HTTP
+├── scripts/              # Rotinas de build
+├── sites/                # Rota institucional de serviços
 ├── src/
-│   ├── app/              # Fluxos da aplicação e módulos de interface
+│   ├── app/              # Fluxos e módulos da aplicação
 │   ├── assets/           # Imagens e materiais de apoio
 │   ├── components/       # Componentes reutilizáveis
-│   ├── styles/           # Estilos globais
-│   └── utils/            # Configuração e utilitários do navegador
-├── termos/               # Rota estática de termos
-├── index.html            # Entrada principal da aplicação
+│   ├── styles/           # Design e estilos globais
+│   └── utils/            # Utilitários do navegador
+├── termos/               # Rota institucional de termos
+├── index.html            # Ponto de entrada
 ├── Dockerfile            # Imagem de produção
-└── package.json          # Scripts e dependências do projeto
+└── package.json          # Dependências e comandos do projeto
 ```
+
+## Tecnologias
+
+- HTML, CSS e JavaScript modular.
+- Tailwind CSS e componentes reutilizáveis.
+- Node.js para desenvolvimento e build.
+- Docker e Nginx para entrega estática.
+- Cloudflare Pages para publicação.
 
 ## Desenvolvimento local
 
-Pré-requisitos: Node.js 22 ou superior e npm. Para usar todos os fluxos, inicie também a API SSW na porta `8080`.
+Pré-requisitos: Node.js 22 ou superior e npm.
 
 ```powershell
 npm ci
 npm run dev
 ```
 
-Abra `http://localhost:3000`. Em ambiente local, o frontend aponta automaticamente para `http://localhost:8080`.
+O servidor de desenvolvimento fica disponível em `http://localhost:3000`.
 
-## Build e publicação
-
-O build injeta no HTML apenas configurações que podem ser públicas no navegador. Defina-as no ambiente de deploy ou, para testar localmente, na sessão do terminal:
-
-```powershell
-$env:VITE_MP_PUBLIC_KEY = 'TEST-sua-chave-publica-do-mercado-pago'
-$env:API_URL = 'https://sua-api.exemplo.com'
-$env:VITE_GOOGLE_CLIENT_ID = 'seu-client-id.apps.googleusercontent.com' # opcional
-npm run build
-```
-
-Para executar a imagem de produção localmente, use `docker compose -f docker-compose.local.yml up --build`. O guia completo está em [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) e as orientações de publicação em [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
-
-## Configuração e segurança
-
-Nenhum arquivo de ambiente é versionado neste repositório. Arquivos `.env` são estritamente locais e estão protegidos pelo `.gitignore`.
-
-As únicas variáveis expostas ao navegador são `VITE_MP_PUBLIC_KEY`, `API_URL` e `VITE_GOOGLE_CLIENT_ID`. Não inclua senhas, tokens privados, chaves de serviço ou credenciais de banco de dados no frontend; elas pertencem exclusivamente à API e à plataforma de hospedagem.
-
-## Scripts disponíveis
+## Comandos
 
 | Comando | Finalidade |
 | --- | --- |
-| `npm run dev` | Inicia o servidor estático em `http://localhost:3000`. |
-| `npm run build:local` | Gera a configuração local sem exigir a chave pública do Mercado Pago. |
-| `npm run build` | Executa o build de produção; exige `VITE_MP_PUBLIC_KEY`. |
-| `npm run preview` | Serve a aplicação em `http://localhost:4173`. |
+| `npm run dev` | Inicia o ambiente local de desenvolvimento. |
+| `npm run preview` | Executa uma prévia local da aplicação. |
+| `npm run build` | Prepara a aplicação para publicação. |
 
-## Documentação adicional
+## Segurança e publicação
+
+Este repositório público não contém informações confidenciais, dados operacionais ou configurações de infraestrutura. A configuração necessária para cada ambiente é administrada exclusivamente pela infraestrutura de publicação e pelos serviços internos da plataforma.
+
+As alterações enviadas à branch `main` seguem o fluxo de publicação configurado para produção.
+
+## Documentação complementar
 
 - [Desenvolvimento local](docs/LOCAL_DEVELOPMENT.md)
-- [Deploy](docs/DEPLOYMENT.md)
-- [Configuração de Open Graph](docs/OPEN_GRAPH_SETUP.md)
-- [Organização dos módulos da aplicação](src/app/README.md)
+- [Open Graph](docs/OPEN_GRAPH_SETUP.md)
+- [Organização dos módulos](src/app/README.md)
