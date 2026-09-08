@@ -91,7 +91,7 @@
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
     <link rel="stylesheet" href="src/styles/app.css?v=20260706-history-detail-contrast-1">
-    <link rel="stylesheet" href="src/styles/landing.css?v=20260907-3">
+    <link rel="stylesheet" href="src/styles/landing.css?v=20260908-hero-carousel">
     <link rel="stylesheet" href="src/styles/audit-entry.css?v=20260907-1">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
@@ -491,56 +491,53 @@
                 <section id="produto" class="lp-product-tour lp-container lp-editorial" aria-labelledby="product-title">
                     <div class="lp-tour-intro">
                         <h2 id="product-title">Dentro de uma análise.</h2>
-                        <p>Explore as etapas do relatório.</p>
+                        <p>Um relatório real, em três perspectivas.</p>
                     </div>
-                    <div class="lp-tour" data-product-tour>
-                        <div class="lp-tour-tabs" role="tablist" aria-label="Etapas do exemplo de análise">
-                            <button id="tour-tab-technical" type="button" role="tab" aria-selected="true" aria-controls="tour-panel-technical" tabindex="0"><span>01</span> Diagnóstico técnico</button>
-                            <button id="tour-tab-personas" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-personas" tabindex="-1"><span>02</span> Experiência de uso</button>
-                            <button id="tour-tab-actions" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-actions" tabindex="-1"><span>03</span> Plano de ação</button>
+                    <div class="lp-tour" data-product-tour role="region" aria-roledescription="carrossel" aria-label="Capturas do relatório da S.S.W Intelligence">
+                        <div class="lp-tour-toolbar">
+                            <div class="lp-tour-tabs" role="tablist" aria-label="Capturas do relatório">
+                                <button id="tour-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="tour-panel-overview" tabindex="0"><span>01</span> Visão geral</button>
+                                <button id="tour-tab-evidence" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-evidence" tabindex="-1"><span>02</span> Evidência visual</button>
+                                <button id="tour-tab-personas" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-personas" tabindex="-1"><span>03</span> Barreiras e personas</button>
+                            </div>
+                            <button type="button" class="lp-tour-playback" data-tour-playback aria-label="Pausar carrossel" hidden>
+                                <span data-tour-pause><i data-lucide="pause" aria-hidden="true"></i></span>
+                                <span data-tour-play hidden><i data-lucide="play" aria-hidden="true"></i></span>
+                                <span data-tour-playback-label>Pausar</span>
+                            </button>
                         </div>
-                        <div class="lp-tour-document">
-                            <div class="lp-document-heading"><span><img src="src/assets/images/logo/logo_ofc.png" alt="" width="24" height="24"> S.S.W Intelligence <span class="lp-document-divider">/</span> Auditoria web</span><span class="lp-document-example">Exemplo demonstrativo</span></div>
-                            <section id="tour-panel-technical" class="lp-tour-panel" role="tabpanel" aria-labelledby="tour-tab-technical" tabindex="0">
-                                <div class="lp-tour-report-title"><div><p>DIAGNÓSTICO TÉCNICO</p><h3>O que está afetando a navegação.</h3></div><span>seusite.com.br</span></div>
-                                <div class="lp-technical-layout">
-                                    <div class="lp-tour-metrics" aria-label="Indicadores ilustrativos, de zero a cem">
-                                        <div><span>Performance</span><strong class="needs-attention">68<small>/100</small></strong><p>Requer atenção</p></div>
-                                        <div><span>SEO</span><strong>91<small>/100</small></strong><p>Boa estrutura</p></div>
-                                        <div><span>Acessibilidade</span><strong>82<small>/100</small></strong><p>Pode melhorar</p></div>
-                                    </div>
-                                    <div class="lp-tour-findings"><h4>Pontos de atenção</h4><div><span class="lp-finding-marker" aria-hidden="true"></span><div><strong>Imagens pesadas no primeiro carregamento</strong><p>O conteúdo principal demora a aparecer, especialmente em conexões móveis.</p></div></div><div><span class="lp-finding-marker lp-finding-secondary" aria-hidden="true"></span><div><strong>Texto com pouco contraste</strong><p>Alguns elementos de apoio ficam difíceis de ler sobre o fundo da página.</p></div></div></div>
-                                </div>
-                                <div class="lp-tour-next"><span>Da métrica ao problema que precisa de atenção.</span><button type="button" data-tour-target="personas">Ver a experiência de uso <i data-lucide="arrow-right"></i></button></div>
-                            </section>
-                            <section id="tour-panel-personas" class="lp-tour-panel" role="tabpanel" aria-labelledby="tour-tab-personas" tabindex="0" hidden>
-                                <div class="lp-tour-report-title"><div><p>EXPERIÊNCIA DE USO</p><h3>Uma mesma página. Diferentes percepções.</h3></div><span>Simulação por IA</span></div>
-                                <div class="lp-tour-persona-layout">
-                                    <div class="lp-tour-persona-profile"><img src="src/assets/images/personas/p1.webp" alt="" width="72" height="72" loading="lazy"><div><h4>Visitante de primeira viagem</h4><p>Quer entender a oferta antes de entrar em contato.</p><span>Perfil ilustrativo</span></div></div>
-                                    <div class="lp-tour-persona-feedback"><span>PERCEPÇÃO SIMULADA</span><blockquote>“Entendi o serviço, mas não ficou claro o que acontece depois de clicar em ‘Saiba mais’.”</blockquote><div><strong>Ponto de atrito</strong><p>A ação principal não explica o próximo passo da jornada.</p></div></div>
-                                </div>
-                                <div class="lp-tour-next"><span>Personas de IA complementam testes com pessoas reais.</span><button type="button" data-tour-target="actions">Ver o plano de ação <i data-lucide="arrow-right"></i></button></div>
-                            </section>
-                            <section id="tour-panel-actions" class="lp-tour-panel" role="tabpanel" aria-labelledby="tour-tab-actions" tabindex="0" hidden>
-                                <div class="lp-tour-report-title"><div><p>PLANO DE AÇÃO</p><h3>O que corrigir primeiro.</h3></div><span>Recomendações priorizadas</span></div>
-                                <ol class="lp-tour-action-list">
-                                    <li><span>01</span><div><h4>Reduza o peso da imagem principal</h4><p>Comprima a imagem, use um formato moderno e sirva o tamanho adequado para cada tela.</p></div><span class="lp-action-priority">Alta prioridade</span></li>
-                                    <li><span>02</span><div><h4>Deixe o próximo passo explícito</h4><p>Troque “Saiba mais” por uma ação específica, como “Solicitar orçamento”.</p></div><span class="lp-action-priority">Alta prioridade</span></li>
-                                    <li><span>03</span><div><h4>Ajuste o contraste dos textos de apoio</h4><p>Reveja as cores para facilitar a leitura em diferentes telas e condições de uso.</p></div><span class="lp-action-priority lp-action-medium">Média prioridade</span></li>
-                                </ol>
-                                <div class="lp-tour-next"><span>Um ponto de partida para a próxima entrega.</span><button type="button" data-tour-target="technical">Voltar ao diagnóstico <i data-lucide="arrow-up-right"></i></button></div>
-                            </section>
+                        <div id="tour-slides" class="lp-tour-viewport" aria-live="off">
+                            <figure id="tour-panel-overview" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-overview" tabindex="0">
+                                <img src="src/assets/images/landing/report/visao-geral.png" alt="Visão geral do relatório: score de conversão 85 de 100, impacto comercial, principal barreira e próximo passo recomendado." width="1915" height="1079" fetchpriority="high" decoding="async">
+                                <figcaption><div><strong>O diagnóstico, logo de início.</strong><p>Score de conversão, principal barreira e o próximo passo.</p></div><a href="src/assets/images/landing/report/visao-geral.png" target="_blank" rel="noopener" aria-label="Ampliar captura da visão geral em uma nova aba">Ampliar captura <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
+                            </figure>
+                            <figure id="tour-panel-evidence" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-evidence" tabindex="0">
+                                <img src="src/assets/images/landing/report/evidencia-visual.png" alt="Evidência visual no relatório: capturas da página analisada em computador e celular, lado a lado." width="1913" height="1079" loading="lazy" decoding="async">
+                                <figcaption><div><strong>Veja o que o visitante encontra.</strong><p>A primeira impressão do site, no desktop e no celular.</p></div><a href="src/assets/images/landing/report/evidencia-visual.png" target="_blank" rel="noopener" aria-label="Ampliar captura da evidência visual em uma nova aba">Ampliar captura <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
+                            </figure>
+                            <figure id="tour-panel-personas" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-personas" tabindex="0">
+                                <img src="src/assets/images/landing/report/barreiras-personas.png" alt="Barreiras que travam a decisão e percepção de uma persona simulada, com indicadores de confiança, clareza e intenção de compra." width="1908" height="1079" loading="lazy" decoding="async">
+                                <figcaption><div><strong>Entenda onde a jornada trava.</strong><p>Pontos de atrito e a percepção de uma persona simulada.</p></div><a href="src/assets/images/landing/report/barreiras-personas.png" target="_blank" rel="noopener" aria-label="Ampliar captura de barreiras e personas em uma nova aba">Ampliar captura <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
+                            </figure>
+                        </div>
+                        <div class="lp-tour-footer" data-tour-controls hidden>
+                            <p>Relatório da S.S.W Intelligence</p>
+                            <div class="lp-tour-navigation" role="group" aria-label="Navegação do carrossel">
+                                <button type="button" data-tour-prev aria-label="Captura anterior" aria-controls="tour-slides"><i data-lucide="arrow-left" aria-hidden="true"></i></button>
+                                <span class="lp-tour-counter" data-tour-counter aria-label="Captura 1 de 3">01 <span>/ 03</span></span>
+                                <button type="button" data-tour-next aria-label="Próxima captura" aria-controls="tour-slides"><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+                            </div>
                         </div>
                     </div>
-                    <p class="lp-tour-caption">Prévia interativa com dados ilustrativos. O diagnóstico real depende do site analisado.</p>
+                    <p class="lp-tour-caption">Capturas de uma análise da plataforma. Os resultados variam conforme o site analisado.</p>
                 </section>
 
                 <section id="recursos" class="lp-resource-section lp-container lp-editorial" aria-labelledby="resources-title">
                     <div class="lp-resource-heading"><span>O que você recebe</span><h2 id="resources-title">Uma avaliação técnica.<br>E o contexto para agir.</h2><p>Para revisar uma entrega, conversar com seu cliente ou planejar a próxima melhoria.</p></div>
                     <div class="lp-resource-list">
-                        <article><span class="lp-resource-number">01</span><div><h3>Desempenho e estrutura</h3><p>Performance, SEO, acessibilidade e sinais de segurança organizados em um diagnóstico.</p><a href="#produto" data-tour-target="technical">Explorar diagnóstico <i data-lucide="arrow-up-right"></i></a></div></article>
+                        <article><span class="lp-resource-number">01</span><div><h3>Desempenho e estrutura</h3><p>Performance, SEO, acessibilidade e sinais de segurança organizados em um diagnóstico.</p><a href="#produto" data-tour-target="overview">Explorar diagnóstico <i data-lucide="arrow-up-right"></i></a></div></article>
                         <article><span class="lp-resource-number">02</span><div><h3>Experiência de navegação</h3><p>Simulações com personas de IA para encontrar dúvidas e obstáculos durante o uso do site.</p><a href="#produto" data-tour-target="personas">Explorar personas <i data-lucide="arrow-up-right"></i></a></div></article>
-                        <article><span class="lp-resource-number">03</span><div><h3>Recomendações de melhoria</h3><p>Problemas explicados e correções priorizadas para transformar o relatório em trabalho de verdade.</p><a href="#produto" data-tour-target="actions">Explorar plano de ação <i data-lucide="arrow-up-right"></i></a></div></article>
+                        <article><span class="lp-resource-number">03</span><div><h3>Recomendações de melhoria</h3><p>Problemas explicados e correções priorizadas para transformar o relatório em trabalho de verdade.</p><a href="#produto" data-tour-target="overview">Explorar plano de ação <i data-lucide="arrow-up-right"></i></a></div></article>
                     </div>
                 </section>
 
@@ -1691,7 +1688,7 @@
                 </section>
             </div>
             <script src="src/app/core/main.js?v=20260908-security-1"></script>
-            <script src="src/app/ui/landing.js?v=20260907-3"></script>
+            <script src="src/app/ui/landing.js?v=20260908-hero-carousel"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
     <div id="chatWidgetPanel" style="position:fixed;bottom:18px;right:18px;width:calc(100% - 36px);max-width:390px;height:540px;max-height:calc(100vh - 36px);border-radius:24px;border:1px solid rgba(255,255,255,0.14);box-shadow:0 22px 70px rgba(0,0,0,0.46),0 0 0 1px rgba(255,255,255,0.03);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#050a12 0%,#080d16 100%);pointer-events:auto;">
