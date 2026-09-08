@@ -1,5 +1,6 @@
 # Configuração para SPA (Single Page Application) com URLs limpas
-# Rotas da plataforma são redirecionadas para index.html.
+# Rotas da plataforma usam a URL canônica / para servir index.html internamente.
+# O Pages normaliza /index.html para / também em rewrites; esse alvo perderia a rota.
 # As páginas /precos/ e /termos/ ficam fora do SPA e são servidas por seus diretórios.
 /precos /precos/ 301
 /termos /termos/ 301
@@ -17,13 +18,13 @@
 /about/ /about 301
 /tutorial/ /tutorial 301
 /analise-gratis/ /analise-gratis 301
-/login /index.html 200
-/cadastro /index.html 200
-/home /index.html 200
-/analise-gratis /index.html 200
-/agents /index.html 200
-/domains /index.html 200
-/history /index.html 200
-/ranking /index.html 200
-/about /index.html 200
-/tutorial /index.html 200
+/login / 200
+/cadastro / 200
+/home / 200
+/analise-gratis / 200
+/agents / 200
+/domains / 200
+/history / 200
+/ranking / 200
+/about / 200
+/tutorial / 200

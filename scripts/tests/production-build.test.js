@@ -60,6 +60,13 @@ test('all declared routes, redirects, security headers and real HTTP errors work
         const response = await fetch(origin + from + '?source=test', { redirect: 'manual' });
         assert.equal(response.status, Number(status), from);
         if (status !== '200') assert.equal(response.headers.get('location'), to + '?source=test');
+        else {
+            // Pages canonicalizes HTML targets before serving rewrites. A target that
+            // redirects (such as /index.html -> /) would replace the requested SPA route.
+            assert(!rules.some(([source, , code]) => source === to && code !== '200'), 'Rewrite target must be canonical: ' + to);
+            assert.equal(response.headers.get('location'), null, from);
+            assert((await response.text()).includes('Produto'), from);
+        }
     }
     for (const privatePath of ['/package.json', '/.env', '/.git/config', '/scripts/test.js', '/docs/schema.sql', '/node_modules/private.js', '/missing.js', '/not-found', '/_headers']) {
         const response = await fetch(origin + privatePath);
