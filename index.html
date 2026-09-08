@@ -90,6 +90,7 @@
     <link rel="stylesheet" href="src/styles/base-styles.css">
     <link rel="stylesheet" href="src/styles/app.css?v=20260706-history-detail-contrast-1">
     <link rel="stylesheet" href="src/styles/landing.css?v=20260907-3">
+    <link rel="stylesheet" href="src/styles/audit-entry.css?v=20260907-1">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-primary selection:text-white">
@@ -556,10 +557,10 @@
 
                 <section id="duvidas" class="lp-faq-section lp-container lp-editorial" aria-labelledby="faq-title"><div class="lp-section-copy"><span class="lp-eyebrow">AINDA COM DÚVIDAS?</span><h2 id="faq-title">Bom saber<br>antes de começar.</h2><p>Conheça os detalhes da sua próxima análise.</p><a class="lp-text-link" href="mailto:contato@sswintelligence.com.br">Fale com a gente <i data-lucide="arrow-up-right"></i></a></div><div class="lp-faq-list"><details><summary>O que a S.S.W Intelligence analisa?<i data-lucide="plus"></i></summary><p>A plataforma reúne sinais de performance, SEO, acessibilidade, segurança e experiência do usuário. As personas com IA acrescentam percepções sobre clareza, confiança e navegação, ajudando a organizar oportunidades de melhoria.</p></details><details><summary>Preciso criar uma conta? É gratuito?<i data-lucide="plus"></i></summary><p>O cadastro é gratuito e você precisa entrar na conta para iniciar uma análise. As auditorias utilizam créditos. Consulte os valores e as condições disponíveis na <a href="/precos/">página de preços</a> antes de começar.</p></details><details><summary>Preciso instalar algo no meu site?<i data-lucide="plus"></i></summary><p>Para um site público, você informa a URL na plataforma. Sites com bloqueios de segurança podem precisar autorizar o acesso do auditor. Páginas locais precisam de uma URL pública; a documentação explica como disponibilizá-la.</p></details><details><summary>As personas são pessoas reais?<i data-lucide="plus"></i></summary><p>Não. São perfis simulados por inteligência artificial que ajudam a explorar diferentes perspectivas de navegação. Use essas percepções como apoio às decisões e, quando necessário, complemente com testes com usuários reais.</p></details><details><summary>Posso compartilhar o diagnóstico com meu time?<i data-lucide="plus"></i></summary><p>Você pode exportar os relatórios disponíveis em PDF e compartilhar o material. A geração do relatório depende do resultado e das condições da análise; consulte os detalhes apresentados no seu painel.</p></details></div></section>
 
-                <section id="landing-analysis" class="ssw-analysis-section lp-analysis-section" aria-label="Iniciar uma análise">
+                <section id="landing-analysis" class="ssw-analysis-section lp-analysis-section audit-input-section" aria-label="Iniciar uma análise">
 
                     <div class="search-container ssw-audit-entry" aria-label="Iniciar uma análise">
-                        <div class="ssw-mode-selector" aria-label="Modo de auditoria">
+                        <div class="ssw-mode-selector" role="radiogroup" aria-label="Modo de auditoria">
                             <label><input type="radio" name="auditMode" value="auto" checked class="accent-primary" onchange="document.getElementById('auditMode').value='auto';toggleManualSelect();"><span>Automático</span></label>
                             <label><input type="radio" name="auditMode" value="manual" class="accent-primary" onchange="document.getElementById('auditMode').value='manual';toggleManualSelect();"><span>Manual</span></label>
                         </div>
@@ -1687,7 +1688,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260907-landing-1"></script>
+            <script src="src/app/core/main.js?v=20260907-audit-entry-1"></script>
             <script src="src/app/ui/landing.js?v=20260907-3"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">

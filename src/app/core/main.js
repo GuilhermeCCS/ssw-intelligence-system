@@ -696,16 +696,19 @@
             if (spacer) spacer.classList.toggle('hidden', !visible);
         }
 
+        function getAuditInputSection() {
+            return document.getElementById('landing-analysis') || document.getElementById('heroSection');
+        }
+
         function setAnalysisFocusState(active) {
-            const heroSection = document.getElementById('heroSection');
-            if (heroSection) heroSection.classList.toggle('is-analysis-focus', !!active);
+            getAuditInputSection()?.classList.toggle('is-analysis-focus', !!active);
             if (active) document.getElementById('view-home')?.classList.remove('is-showing-audit');
             if (!active) setAnalysisModeState('auto');
         }
 
         function syncAuditWorkspaceLayout(hasResultsOverride = null) {
             const viewHome = document.getElementById('view-home');
-            const heroSection = document.getElementById('heroSection');
+            const inputSection = getAuditInputSection();
             const mainContent = document.getElementById('mainContent');
             const manualArea = document.getElementById('manualSelectArea');
             const auditResults = document.getElementById('auditResults');
@@ -720,22 +723,32 @@
                 && viewHome
                 && !viewHome.classList.contains('hidden')
             );
-            const heroVisible = Boolean(heroSection && !heroSection.classList.contains('hidden'));
+            const auditLoading = document.getElementById('auditLoading');
+            const inputVisible = Boolean(
+                inputSection
+                && !inputSection.classList.contains('hidden')
+                && !viewHome?.classList.contains('is-showing-audit')
+                && (!auditLoading || auditLoading.classList.contains('hidden'))
+            );
             const manualInputVisible = Boolean(
                 mode === 'manual'
-                && heroVisible
+                && inputVisible
                 && manualArea
                 && !manualArea.classList.contains('hidden')
             );
-            const isInputWorkspace = isAuthenticatedHome && !hasResults;
-            const shouldLockScroll = isInputWorkspace && !manualInputVisible;
+            const isWorkspace = isAuthenticatedHome && !hasResults;
+            const isInputWorkspace = isWorkspace && inputVisible;
+            const isStandaloneInput = inputSection?.id === 'landing-analysis';
+            // The standalone form grows with its content, including captcha and validation messages.
+            const shouldLockScroll = isWorkspace && !manualInputVisible && !isStandaloneInput;
 
             [document.documentElement, document.body].forEach(element => {
-                element.classList.toggle('audit-home-workspace', isInputWorkspace);
+                element.classList.toggle('audit-home-workspace', isWorkspace);
                 element.classList.toggle('audit-workspace-locked', shouldLockScroll);
                 element.classList.toggle('audit-manual-open', isInputWorkspace && manualInputVisible);
+                element.classList.toggle('audit-input-open', isInputWorkspace && isStandaloneInput);
             });
-            if (mainContent && isInputWorkspace) {
+            if (mainContent && isWorkspace) {
                 mainContent.classList.remove('overflow-y-auto');
                 mainContent.classList.add('overflow-y-hidden');
                 mainContent.style.overflowY = 'hidden';
@@ -751,10 +764,10 @@
         }
 
         function setAnalysisModeState(mode = 'auto') {
-            const heroSection = document.getElementById('heroSection');
-            if (!heroSection) return;
-            heroSection.classList.toggle('is-manual-mode', mode === 'manual');
-            heroSection.classList.toggle('is-compare-mode', mode === 'compare');
+            const inputSection = getAuditInputSection();
+            if (!inputSection) return;
+            inputSection.classList.toggle('is-manual-mode', mode === 'manual');
+            inputSection.classList.toggle('is-compare-mode', mode === 'compare');
             window.requestAnimationFrame(() => syncAuditWorkspaceLayout());
         }
 
@@ -7284,12 +7297,7 @@ function getCodigoHTML() {
                         data = await res.json();
                     } else if(res.status === 402) {
                         resetAuditCaptcha();
-                        setHomePresentationVisible(true);
-                        document.getElementById('heroSection').classList.remove('hidden');
-                        document.getElementById('emptyStateCards').classList.remove('hidden');
-                        document.getElementById('manualSelectArea').classList.toggle('hidden', mode !== 'manual');
-                        document.getElementById('compareArea').classList.toggle('hidden', mode !== 'compare');
-                        hideAuditLoading();
+                        restoreAuditInputState(mode);
                         showCreditsEndedModal();
                         return;
                     } else {
