@@ -1,10 +1,25 @@
-# Cloudflare Pages Headers
-# Injeta variáveis de ambiente como headers para acesso no frontend
+# Copied to dist/_headers by the build. Public config belongs in escaped HTML metadata.
 
 /*
-  X-Env-MP-Public-Key: %VITE_MP_PUBLIC_KEY%
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
-  X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Cache-Control: public, max-age=0, must-revalidate
+
+/login
+  X-Robots-Tag: noindex, nofollow
+/cadastro
+  X-Robots-Tag: noindex, nofollow
+/home
+  X-Robots-Tag: noindex, follow
+/agents
+  X-Robots-Tag: noindex, nofollow
+/history
+  X-Robots-Tag: noindex, nofollow
+/domains
+  X-Robots-Tag: noindex, nofollow
+/errors/*
+  X-Robots-Tag: noindex, nofollow

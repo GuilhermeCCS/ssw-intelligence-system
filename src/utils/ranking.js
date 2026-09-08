@@ -1,3 +1,6 @@
+function escapeLegacyRankingText(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+}
 async function loadRanking() {
     console.log("loadRanking chamado");
     const firstName = document.getElementById('podiumFirstName');
@@ -66,11 +69,11 @@ async function loadRanking() {
                             <div class="flex items-center gap-3">
                                 <span class="font-mono text-cyan-300 text-xs">#${idx + 4}</span>
                                 <div>
-                                    <div class="font-semibold text-white">${site.site_name || 'Sem Nome'}</div>
-                                    <div class="text-cyan-200 text-xs">${site.niche || 'Nicho não informado'}</div>
+                                    <div class="font-semibold text-white">${escapeLegacyRankingText(site.site_name || 'Sem Nome')}</div>
+                                    <div class="text-cyan-200 text-xs">${escapeLegacyRankingText(site.niche || 'Nicho não informado')}</div>
                                 </div>
                             </div>
-                            <span class="font-bold ${scoreColor} text-lg">${site.score !== undefined ? site.score : '--'}</span>
+                            <span class="font-bold ${scoreColor} text-lg">${escapeLegacyRankingText(site.score !== undefined ? site.score : '--')}</span>
                         </div>
                     `;
                 }).join('');
@@ -151,13 +154,13 @@ function searchRankingSite() {
                             <span class="text-3xl font-black ${positionColor}">#${position}</span>
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold text-white">${foundSite.site_name || 'Sem Nome'}</h4>
-                            <p class="text-cyan-200 text-sm mt-1">${foundSite.niche || 'Nicho não informado'}</p>
+                            <h4 class="text-xl font-bold text-white">${escapeLegacyRankingText(foundSite.site_name || 'Sem Nome')}</h4>
+                            <p class="text-cyan-200 text-sm mt-1">${escapeLegacyRankingText(foundSite.niche || 'Nicho não informado')}</p>
                         </div>
                     </div>
                     <div class="text-right">
                         <p class="text-slate-400 text-xs mb-1">Score</p>
-                        <span class="text-4xl font-black ${scoreColor}">${foundSite.score !== undefined ? foundSite.score : '--'}</span>
+                        <span class="text-4xl font-black ${scoreColor}">${escapeLegacyRankingText(foundSite.score !== undefined ? foundSite.score : '--')}</span>
                     </div>
                 </div>
                 <div class="mt-5 pt-5 border-t border-cyan-400/20">
@@ -183,7 +186,7 @@ function searchRankingSite() {
         searchResultContainer.innerHTML = `
             <div class="p-6 rounded-2xl border border-yellow-500/50 bg-yellow-500/10 text-yellow-400 text-center">
                 <p class="font-semibold">Site não encontrado</p>
-                <p class="text-sm mt-2">A busca por "<strong>${searchTerm}</strong>" não retornou resultados.</p>
+                <p class="text-sm mt-2">A busca por "<strong>${escapeLegacyRankingText(searchTerm)}</strong>" não retornou resultados.</p>
                 <p class="text-xs mt-3 text-yellow-300">Dica: Procure pelo nome exato do site ou parte dele.</p>
             </div>
         `;
@@ -231,15 +234,15 @@ function showSearchSuggestions() {
         if (site.score >= 80) scoreColor = 'text-emerald-300';
 
         return `
-            <li class="border-b border-cyan-400/10 last:border-b-0 hover:bg-cyan-950/30 cursor-pointer transition" onclick="selectSuggestion('${site.site_name.replace(/'/g, "\\'")}')">
+            <li class="border-b border-cyan-400/10 last:border-b-0 hover:bg-cyan-950/30 cursor-pointer transition" role="button" tabindex="0" data-site="${escapeLegacyRankingText(site.site_name)}" onclick="selectSuggestion(this.dataset.site)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectSuggestion(this.dataset.site);}">
                 <div class="p-3 flex items-center justify-between gap-3">
                     <div class="flex-1">
-                        <div class="text-white font-semibold text-sm">${site.site_name}</div>
-                        <div class="text-cyan-200 text-xs">${site.niche || 'Nicho não informado'}</div>
+                        <div class="text-white font-semibold text-sm">${escapeLegacyRankingText(site.site_name)}</div>
+                        <div class="text-cyan-200 text-xs">${escapeLegacyRankingText(site.niche || 'Nicho não informado')}</div>
                     </div>
                     <div class="text-right">
                         <span class="font-mono text-xs text-slate-400">#${position}</span>
-                        <div class="font-bold ${scoreColor}">${site.score || '--'}</div>
+                        <div class="font-bold ${scoreColor}">${escapeLegacyRankingText(site.score || '--')}</div>
                     </div>
                 </div>
             </li>

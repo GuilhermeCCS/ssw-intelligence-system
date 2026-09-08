@@ -22,7 +22,7 @@ class CheckoutMercadoPago {
       console.error('❌ ERRO CRÍTICO: VITE_MP_PUBLIC_KEY não configurada!');
       console.error('Configure esta variável de ambiente no Cloudflare Pages (Settings → Environment Variables)');
       console.error('Ou adicione ao .env para desenvolvimento local');
-      throw new Error('VITE_MP_PUBLIC_KEY não configurada. Configure no Cloudflare Pages ou .env');
+      // Defer failure to checkout so the rest of the page remains usable.
     }
   }
 
@@ -36,14 +36,11 @@ class CheckoutMercadoPago {
   isLocalTestMode() {
     try {
       const host = String(window.location.hostname || '').toLowerCase();
-      const params = new URLSearchParams(window.location.search || '');
-      return window.location.protocol === 'file:'
+            return window.location.protocol === 'file:'
         || host === 'localhost'
         || host === '127.0.0.1'
         || host === '::1'
-        || host === '[::1]'
-        || params.get('demoTest') === '1'
-        || localStorage.getItem('ssw_demo_audit_test_mode') === '1';
+        || host === '[::1]';
     } catch (error) {
       return false;
     }
@@ -56,6 +53,10 @@ class CheckoutMercadoPago {
   // Inicializa o SDK do Mercado Pago v2
   async init(publicKey = null) {
     const keyToUse = publicKey || this.MP_PUBLIC_KEY;
+    if (!keyToUse) {
+      this.showError('O pagamento está temporariamente indisponível. Tente novamente mais tarde.');
+      return false;
+    }
     try {
       // SDK v2 já está carregado via <script> no head
       if (!window.MercadoPago) {
@@ -71,21 +72,27 @@ class CheckoutMercadoPago {
       this.bricksBuilder = this.mp.bricks();
       
       this.isInitialized = true;
-      console.log('Mercado Pago v2 inicializado com sucesso');
     } catch (error) {
-      console.error('Erro ao inicializar Mercado Pago:', error);
+      console.error('Erro ao inicializar Mercado Pago:');
       throw error;
     }
   }
 
   // Abre o modal de checkout
   async openCheckout(packageData, userData = null) {
+    const activeUser = userData || (typeof USER !== 'undefined' ? USER : null);
+    if (!activeUser || typeof activeUser.token !== 'string' || !activeUser.token) {
+      if (typeof showAuthScreen === 'function') showAuthScreen('login');
+      else window.location.href = '/login';
+      return;
+    }
     if (!this.isInitialized) {
       await this.init();
+      if (!this.isInitialized) return;
     }
 
     this.selectedPackage = packageData;
-    this.currentUser = userData || { id: 'user_temp_id' };
+    this.currentUser = activeUser;
     
     this.createModal();
     this.showModal();
@@ -97,7 +104,7 @@ class CheckoutMercadoPago {
     if (this.modal) return;
 
     const modalHTML = `
-      <div id="checkout-modal" class="fixed inset-0 z-50 hidden">
+      <div id="checkout-modal" role="dialog" aria-modal="true" aria-label="Pagamento" class="fixed inset-0 z-50 hidden">
         <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="checkoutMP.closeModal()"></div>
         <div class="fixed inset-0 flex items-center justify-center p-4">
           <div class="relative w-full max-w-2xl bg-[#0F1117] border border-white/10 rounded-2xl shadow-2xl">
@@ -105,11 +112,9 @@ class CheckoutMercadoPago {
             <div class="flex items-center justify-between p-6 border-b border-white/10">
               <div>
                 <h3 class="text-2xl font-bold text-white">Finalizar Pagamento</h3>
-                <p class="text-slate-400 mt-1" id="package-info">
-                  ${this.selectedPackage?.nome || 'Pacote'} - R$ ${this.selectedPackage?.preco || '0,00'}
-                </p>
+                <p class="text-slate-400 mt-1" id="package-info"></p>
               </div>
-              <button onclick="checkoutMP.closeModal()" class="text-slate-400 hover:text-white transition-colors">
+              <button type="button" aria-label="Fechar pagamento" onclick="checkoutMP.closeModal()" class="text-slate-400 hover:text-white transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -219,6 +224,8 @@ class CheckoutMercadoPago {
 
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     this.modal = document.getElementById('checkout-modal');
+    const info = document.getElementById('package-info');
+    if (info) info.textContent = `${this.selectedPackage?.nome || 'Pacote'} - R$ ${this.selectedPackage?.preco || '0,00'}`;
   }
 
   renderCheckoutTurnstile() {
@@ -243,7 +250,7 @@ class CheckoutMercadoPago {
           window.turnstile.reset(this.turnstileWidget);
           return;
         } catch (error) {
-          console.warn('Falha ao resetar Turnstile do checkout:', error);
+          console.warn('Falha ao resetar Turnstile do checkout:');
           this.turnstileWidget = null;
           this.turnstileToken = null;
         }
@@ -288,7 +295,7 @@ class CheckoutMercadoPago {
           }
         });
       } catch (error) {
-        console.error('Erro ao renderizar Turnstile do checkout:', error);
+        console.error('Erro ao renderizar Turnstile do checkout:');
         this.turnstileWidget = null;
         this.turnstileToken = null;
         container.innerHTML = `
@@ -380,7 +387,6 @@ class CheckoutMercadoPago {
       callbacks: {
         onReady: () => {
           // Remove o spinner de loading quando o formulário aparecer
-          console.log('Payment Brick está pronto');
         },
         onSubmit: ({ selectedPaymentMethod, formData }) => {
           // Aqui você faz o fetch POST para o nosso '/api/pagamento/processar'
@@ -391,7 +397,7 @@ class CheckoutMercadoPago {
           });
         },
         onError: (error) => {
-          console.error("Erro no Brick:", error);
+          console.error("Erro no Brick:");
           
           // Verificar se é erro de SVG específico (height ou width)
           if (error.message && error.message.includes('svg') && 
@@ -416,7 +422,6 @@ class CheckoutMercadoPago {
         "payment-brick-container",
         settings
       );
-      console.log('Payment Brick criado com sucesso');
 
       this.renderCheckoutTurnstile();
 
@@ -437,7 +442,7 @@ class CheckoutMercadoPago {
         }
       }
     } catch (error) {
-      console.error('Erro ao criar Payment Brick:', error);
+      console.error('Erro ao criar Payment Brick:');
       
       // Verificar se é erro de SVG específico (height ou width)
       if (error.message && error.message.includes('svg') && 
@@ -460,7 +465,7 @@ class CheckoutMercadoPago {
                 });
               },
               onError: (err) => {
-                console.error('Erro no Brick simplificado:', err);
+                console.error('Erro no Brick simplificado:');
                 this.showError('Erro no formulário de pagamento');
               },
             },
@@ -471,7 +476,6 @@ class CheckoutMercadoPago {
             "payment-brick-container",
             minimalSettings
           );
-          console.log('Payment Brick simplificado criado com sucesso');
 
           this.renderCheckoutTurnstile();
 
@@ -489,7 +493,7 @@ class CheckoutMercadoPago {
             }
           }
         } catch (fallbackError) {
-          console.error('Erro até mesmo na configuração simplificada:', fallbackError);
+          console.error('Erro até mesmo na configuração simplificada:');
           this.showError('Erro ao carregar formulário de pagamento. Tente recarregar a página.');
         }
       } else {
@@ -534,7 +538,6 @@ class CheckoutMercadoPago {
     }
 
     // Obter email do usuário (de this.currentUser ou USER global)
-    const userEmail = this.currentUser?.email || (typeof USER !== 'undefined' ? USER.email : null);
 
     const payload = {
       pacote_id: this.selectedPackage.id,
@@ -555,36 +558,34 @@ class CheckoutMercadoPago {
 
       // 1. Verifica se a resposta não é OK (ex: 405, 500)
       if (!response.ok) {
-        const errorText = await response.text(); // Pega como texto para não quebrar o JSON parse
-        console.error("Erro do servidor:", response.status, errorText);
+        console.error('Solicitação de pagamento recusada.', { status: response.status });
         this.resetCheckoutTurnstile();
-        throw new Error(`Falha na API: ${response.status} - ${errorText || 'Erro interno do servidor'}`);
+        this.showError(publicErrorMessage(null, 'Não foi possível processar o pagamento. Confira os dados e tente novamente.', response.status));
+        return;
       }
       
       // 2. Se for OK, aí sim faz o parse do JSON
       const result = await response.json();
-      console.log("Sucesso:", result);
 
       if (result.acao_requerida === 'pagar_pix') {
         this.showPixPayment(result);
       } else if (result.acao_requerida === 'sucesso_cartao') {
         // Cartão aprovado - mostrar sucesso imediatamente
-        console.log('💳 Cartão aprovado! Chamando showSuccessScreen()...');
         await this.showSuccessScreen(result);
       } else if (result.acao_requerida === 'pendente') {
         this.showState('processing');
         if (result.payment_id) this.startPixPolling(result.payment_id);
       } else if (result.acao_requerida === 'erro') {
         this.resetCheckoutTurnstile();
-        this.showError(result.mensagem || 'Ocorreu um erro ao processar o pagamento');
+        this.showError('O pagamento não foi aprovado. Confira os dados ou use outra forma de pagamento.');
       } else {
         this.resetCheckoutTurnstile();
         this.showError('Resposta inesperada do servidor');
       }
     } catch (error) {
-      console.error('Erro no pagamento:', error);
+      console.error('Erro no pagamento:');
       this.resetCheckoutTurnstile();
-      this.showError(error.message || 'Erro de conexão com o servidor de pagamento');
+      this.showError('Erro de conexão com o servidor de pagamento');
     }
   }
 
@@ -656,7 +657,6 @@ class CheckoutMercadoPago {
         const data = await response.json();
         await this.applyUserPlan(data.plan, data.limits || null);
         await this.applyCreditBalance(data.credits || 0, showToast);
-        console.log('Créditos atualizados:', data.credits);
         return true;
       } else {
         console.warn('Não foi possível buscar dados atualizados do usuário');
@@ -667,7 +667,7 @@ class CheckoutMercadoPago {
         }
       }
     } catch (error) {
-      console.error('Erro ao atualizar créditos:', error);
+      console.error('Erro ao atualizar créditos:');
       // Não mostrar erro para o usuário, apenas log
       return false;
     }
@@ -685,15 +685,10 @@ class CheckoutMercadoPago {
 
   // Mostra tela de sucesso sem reload automático
   async showSuccessScreen(paymentResult = {}) {
-    console.log('🎉 showSuccessScreen() chamada - Mostrando tela de sucesso...');
-    console.log('📊 Timestamp:', new Date().toISOString());
-    console.log('🔍 Modal:', this.modal ? 'encontrado' : 'NÃO ENCONTRADO');
-    console.log('🔍 Container:', document.getElementById('payment-brick-container') ? 'encontrado' : 'NÃO ENCONTRADO');
     
     // Limpa qualquer timeout anterior
     if (window.successReloadTimeout) {
       clearTimeout(window.successReloadTimeout);
-      console.log('⏹️ Reload anterior cancelado');
     }
     
     // IMPORTANTE: Força o estado para 'initial' para garantir que o container seja visível
@@ -704,10 +699,10 @@ class CheckoutMercadoPago {
       await this.updateUserCredits(false);
     }
 
-    const saldoAtual = (typeof USER !== 'undefined' && USER) ? USER.credits : paymentResult.credits;
+    const saldoRecebido = (typeof USER !== 'undefined' && USER) ? USER.credits : paymentResult.credits;
+    const saldoAtual = saldoRecebido !== null && saldoRecebido !== undefined && Number.isFinite(Number(saldoRecebido)) ? Math.max(0, Number(saldoRecebido)) : '--';
 
     this.showState('initial');
-    console.log('🔄 Estado alterado para initial - Container agora visível');
     
     // Limpa o container do modal
     const container = document.getElementById('payment-brick-container');
@@ -743,7 +738,6 @@ class CheckoutMercadoPago {
           </div>
         </div>
       `;
-      console.log('✅ HTML de sucesso injetado no container');
     } else {
       console.error('❌ Container payment-brick-container não encontrado!');
     }
@@ -751,13 +745,11 @@ class CheckoutMercadoPago {
     // Garante que o modal está visível
     if (this.modal) {
       this.modal.classList.remove('hidden');
-      console.log('✅ Modal garantido como visível');
     } else {
       console.error('❌ Modal não encontrado!');
     }
     
     // NÃO FAZ RELOAD AUTOMÁTICO - Aguarda ação do usuário
-    console.log('✅ Tela de sucesso exibida - Aguardando ação do usuário');
   }
 
   // Mostra sucesso (mantido para compatibilidade)
@@ -779,7 +771,9 @@ class CheckoutMercadoPago {
 
   // Mostra erro
   showError(message) {
-    document.getElementById('error-message').textContent = message;
+    const target = document.getElementById('error-message');
+    if (target) target.textContent = message;
+    else if (typeof Toast !== 'undefined') Toast.error(message);
     this.showState('error');
   }
 
@@ -812,7 +806,6 @@ class CheckoutMercadoPago {
       if (window.pixPolling) {
         clearInterval(window.pixPolling);
         window.pixPolling = null;
-        console.log('Polling do Pix limpo ao fechar modal');
       }
     }
     this.resetPayment();
@@ -838,7 +831,9 @@ class CheckoutMercadoPago {
     if (codeElement) {
       navigator.clipboard.writeText(codeElement.textContent).then(() => {
         // Poderia adicionar um toast aqui
-        alert('Código Pix copiado!');
+        if (typeof Toast !== 'undefined') Toast.success('Código Pix copiado!');
+      }).catch(() => {
+        if (typeof Toast !== 'undefined') Toast.info('Selecione o código Pix e copie manualmente.');
       });
     }
   }
@@ -850,15 +845,23 @@ class CheckoutMercadoPago {
       clearInterval(window.pixPolling);
     }
     
-    console.log('Iniciando polling para pagamento Pix:', paymentId);
     
+    const startedAt = Date.now();
+    let checking = false;
     window.pixPolling = setInterval(async () => {
+      if (checking) return;
+      if (Date.now() - startedAt > 30 * 60 * 1000) {
+        clearInterval(window.pixPolling);
+        window.pixPolling = null;
+        this.showError('O prazo de acompanhamento terminou. Confira seu saldo antes de iniciar outro pagamento.');
+        return;
+      }
+      checking = true;
       try {
-        const response = await fetch(`${this.API_BASE_URL}/api/pagamento/status/${paymentId}`, { headers: this.authHeaders() });
+        const response = await fetch(`${this.API_BASE_URL}/api/pagamento/status/${encodeURIComponent(String(paymentId))}`, { headers: this.authHeaders() });
         
         if (response.ok) {
           const data = await response.json();
-          console.log('Status do pagamento Pix:', data);
           
           // Se pagamento foi aprovado
           if (data.status === 'approved') {
@@ -866,14 +869,15 @@ class CheckoutMercadoPago {
             clearInterval(window.pixPolling);
             window.pixPolling = null;
             
-            console.log('✅ Pix aprovado! Chamando showSuccessScreen()...');
             
             // Mostra tela de sucesso
             await this.showSuccessScreen(data);
           }
         }
       } catch (error) {
-        console.error('Erro ao verificar status do Pix:', error);
+        console.error('Não foi possível verificar o pagamento agora.');
+      } finally {
+        checking = false;
       }
     }, 3000); // Verifica a cada 3 segundos
   }

@@ -23,7 +23,7 @@ async function getSswPricingUser() {
             if (storedUser && storedUser.email) return storedUser;
         }
     } catch (error) {
-        console.warn('Não foi possível ler o usuário criptografado para checkout:', error);
+        console.warn('Não foi possível ler o usuário criptografado para checkout:');
     }
 
     try {
@@ -33,7 +33,7 @@ async function getSswPricingUser() {
             if (parsedUser && parsedUser.email) return parsedUser;
         }
     } catch (error) {
-        console.warn('Não foi possível ler o usuário local para checkout:', error);
+        console.warn('Não foi possível ler o usuário local para checkout:');
     }
 
     return null;
@@ -87,7 +87,7 @@ async function comprarPlano(pacoteId) {
     try {
         await openCheckout(pacoteSelecionado, activeUser);
     } catch (error) {
-        console.error('Erro ao abrir checkout:', error);
+        console.error('Erro ao abrir checkout:');
         sswPricingNotify('error', "Erro ao abrir checkout. Tente novamente.");
     }
 }
@@ -123,6 +123,7 @@ function sswSetBillingCycle(cycle = 'monthly') {
     root.dataset.billingCycle = selectedCycle;
     root.querySelectorAll('.ssw-billing-toggle button').forEach(button => {
         button.classList.toggle('is-active', button.dataset.cycle === selectedCycle);
+        button.setAttribute('aria-pressed', String(button.dataset.cycle === selectedCycle));
     });
     root.querySelectorAll('[data-plan-card]').forEach(card => sswUpdatePlanCard(card));
 }
@@ -139,27 +140,32 @@ function sswUpdatePlanCard(card) {
     const amount = card.querySelector('.ssw-amount');
     const creditNote = card.querySelector('.ssw-credit-note');
     const installment = card.querySelector('.ssw-installment');
+    const period = card.querySelector('.ssw-period');
 
     if (!selectedOption || !amount) return;
 
-    const price = selectedCycle === 'annual'
-        ? selectedOption.dataset.annualPrice
-        : selectedOption.dataset.monthlyPrice;
-    const label = selectedCycle === 'annual'
-        ? selectedOption.dataset.annualLabel
-        : selectedOption.dataset.monthlyLabel;
-
-    if (price) amount.textContent = price;
-    if (creditNote && label) creditNote.textContent = label;
+    const packageId = selectedCycle === 'annual'
+        ? selectedOption.dataset.packageAnnual
+        : selectedOption.dataset.packageMonthly;
+    const packageData = SSW_PRICING_PACKAGES[packageId];
+    if (!packageData) return;
+    const annual = selectedCycle === 'annual';
+    card.querySelectorAll('.ssw-credit-options button').forEach(option => {
+        const optionPackage = SSW_PRICING_PACKAGES[annual ? option.dataset.packageAnnual : option.dataset.packageMonthly];
+        if (optionPackage) option.textContent = `${optionPackage.creditos} créditos`;
+    });
+    const equivalentPrice = annual ? packageData.preco / 12 : packageData.preco;
+    amount.textContent = equivalentPrice.toLocaleString('pt-BR', {
+        minimumFractionDigits: Number.isInteger(equivalentPrice) ? 0 : 2,
+        maximumFractionDigits: 2,
+    });
+    if (period) period.textContent = annual ? '/mês equivalente' : '/mês';
+    if (creditNote) {
+        creditNote.textContent = `${packageData.creditos} créditos de auditoria no pacote ${annual ? 'anual' : 'mensal'}`;
+    }
     if (installment) {
-        const packageId = selectedOption.dataset.packageAnnual || selectedOption.dataset.packageMonthly || '';
-        const packageData = SSW_PRICING_PACKAGES[packageId];
-        if (selectedCycle === 'annual' && packageData?.preco) {
-            installment.textContent = `Plano anual: R$ ${Number(packageData.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        } else if (price) {
-            const monthlyPrice = Number(price);
-            installment.textContent = `ou 12x de R$ ${(monthlyPrice / 10).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros`;
-        }
+        const total = packageData.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        installment.textContent = `${annual ? 'Total anual' : 'Total desta compra'}: R$ ${total}. Condições de pagamento no checkout.`;
     }
 }
 

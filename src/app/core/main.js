@@ -141,12 +141,16 @@
                 if (typeof secureStorage !== 'undefined') {
                     return await secureStorage.getItem('USER');
                 }
-                const saved = localStorage.getItem('USER');
-                return saved ? JSON.parse(saved) : null;
+                try {
+                    const saved = localStorage.getItem('USER');
+                    return saved ? JSON.parse(saved) : null;
+                } catch (_) {
+                    return null;
+                }
             };
 
             const saved = await loadUserFromStorage();
-            if(saved && saved.token) {
+            if(saved && typeof saved.token === 'string' && saved.token && typeof saved.email === 'string') {
                 USER = saved;
                 window.fromLoginFlow = true;
                     loginSuccess();
@@ -154,7 +158,7 @@
                 if (typeof secureStorage !== 'undefined') {
                     secureStorage.removeItem('USER');
                 } else {
-                    localStorage.removeItem('USER');
+                    try { localStorage.removeItem('USER'); } catch (_) {}
                 }
             }
             // Atualiza os botões
@@ -1057,7 +1061,7 @@
                         // Inicia contadores se ainda não foram iniciados
                         if (!countdownInterval) {
                             startCountdown();
-                            setInterval(updateContadorPessoas, 120000); // Atualiza a cada 2 minutos
+                            updateContadorPessoas();
                         }
                     }
                 }
@@ -1086,10 +1090,9 @@
             if(view === 'domains') loadAuthorizedDomains();
             if(view === 'history') loadAuditHistory();
             if(view === 'ranking') {
-                console.log('🎯 Navegando para ranking');
-                console.log('🔍 loadRanking existe?', typeof loadRanking);
+
                 if (typeof loadRanking === 'function') {
-                    console.log('📊 Chamando loadRanking() da nav()');
+
                     loadRanking();
                 } else {
                     console.error('❌ loadRanking não está disponível');
@@ -1207,9 +1210,7 @@
             if (window.crypto?.getRandomValues) {
                 window.crypto.getRandomValues(values);
             } else {
-                for (let index = 0; index < values.length; index++) {
-                    values[index] = Math.floor(Math.random() * alphabet.length);
-                }
+                throw new Error('Geração segura de senha indisponível neste navegador.');
             }
             const randomPart = Array.from(values, value => alphabet[value % alphabet.length]).join('');
             return `Ssw@${randomPart}9!`;
@@ -1280,14 +1281,11 @@
         function isLocalTestMode() {
             try {
                 const host = String(window.location.hostname || '').toLowerCase();
-                const params = new URLSearchParams(window.location.search || '');
                 return window.location.protocol === 'file:'
                     || host === 'localhost'
                     || host === '127.0.0.1'
                     || host === '::1'
-                    || host === '[::1]'
-                    || params.get('demoTest') === '1'
-                    || localStorage.getItem('ssw_demo_audit_test_mode') === '1';
+                    || host === '[::1]';
             } catch (error) {
                 return false;
             }
@@ -1344,7 +1342,7 @@
                     window.turnstile.reset(getWidget());
                     return true;
                 } catch (error) {
-                    console.warn('Falha ao resetar Turnstile, renderizando novamente:', error);
+                    console.warn('Falha ao resetar Turnstile, renderizando novamente:');
                     setWidget(null);
                     setToken(null);
                     container.innerHTML = '';
@@ -1391,11 +1389,11 @@
                     });
                     setWidget(widgetId);
                 } catch (error) {
-                    console.error('Erro ao carregar Turnstile:', error);
+                    console.error('Erro ao carregar Turnstile:');
                     setWidget(null);
                     setToken(null);
                     container.innerHTML = retryButton;
-                    console.warn('Erro ao carregar captcha. O botão de recarregar foi exibido no próprio campo.', error);
+                    console.warn('Erro ao carregar captcha. O botão de recarregar foi exibido no próprio campo.');
                 } finally {
                     delete container.dataset.turnstileRendering;
                 }
@@ -1447,7 +1445,7 @@
                             }
                         });
                     } catch (error) {
-                        Toast.error('Erro ao carregar captcha: ' + error.message);
+                        Toast.error('Não foi possível carregar a verificação de segurança. Recarregue a página.');
                     }
                 }
             };
@@ -1512,7 +1510,7 @@
                             }
                         });
                     } catch (error) {
-                        Toast.error('Erro ao carregar captcha: ' + error.message);
+                        Toast.error('Não foi possível carregar a verificação de segurança. Recarregue a página.');
                     }
                 }
             };
@@ -1601,7 +1599,7 @@
                 const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
                 return JSON.parse(new TextDecoder().decode(bytes));
             } catch (error) {
-                console.warn('Nao foi possivel ler os dados do perfil Google:', error);
+                console.warn('Nao foi possivel ler os dados do perfil Google:');
                 return {};
             }
         }
@@ -1664,7 +1662,7 @@
                     hint.classList.add('hidden');
                 }
             } catch (error) {
-                console.error('Erro ao renderizar Google Sign-In:', error);
+                console.error('Erro ao renderizar Google Sign-In:');
                 container.innerHTML = '<div class="google-auth-disabled">Não foi possível carregar o Google.</div>';
                 if (hint) {
                     hint.textContent = 'Continue com e-mail e senha.';
@@ -1693,7 +1691,7 @@
                 });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok || !data.token) {
-                    throw new Error(data.detail || 'Não foi possível entrar com Google.');
+                    throw new Error(publicErrorMessage(null, 'Não foi possível entrar com Google.'));
                 }
 
                 const googleProfile = decodeGoogleCredentialPayload(token);
@@ -1724,8 +1722,8 @@
                 Toast.success('Login com Google realizado com sucesso.');
                 loginSuccess();
             } catch (error) {
-                console.error('Erro no login com Google:', error);
-                Toast.error(error.message || 'Não foi possível entrar com Google.');
+                console.error('Erro no login com Google:');
+                Toast.error('Não foi possível entrar com Google.');
             } finally {
                 setGoogleAuthBusy(false);
             }
@@ -1889,7 +1887,7 @@
                             }
                         });
                     } catch (error) {
-                        Toast.error('Erro ao carregar captcha: ' + error.message);
+                        Toast.error('Não foi possível carregar a verificação de segurança. Recarregue a página.');
                     }
                 }
             };
@@ -1952,7 +1950,7 @@
                             }
                         });
                     } catch (error) {
-                        Toast.error('Erro ao carregar captcha: ' + error.message);
+                        Toast.error('Não foi possível carregar a verificação de segurança. Recarregue a página.');
                     }
                 }
             };
@@ -1976,9 +1974,11 @@
         }
 
         async function fazerLogin() {
-            const email = document.getElementById('loginEmail').value;
+            const emailInput = document.getElementById('loginEmail');
+            const email = emailInput.value.trim();
             const pass = document.getElementById('loginPass').value;
             if(!email || !pass) return Toast.warning("Preencha todos os campos");
+            if (!emailInput.checkValidity()) { emailInput.reportValidity(); return; }
 
             const cfToken = getLoginCaptchaToken() || getLocalTestCaptchaToken();
             if (!cfToken) {
@@ -2005,11 +2005,11 @@
                     window.fromLoginFlow = true;
                     loginSuccess();
                 } else {
-                    Toast.error(data.detail || "Erro no login");
+                    Toast.error(res.status === 401 ? 'E-mail ou senha incorretos.' : publicErrorMessage(null, 'Não foi possível entrar. Tente novamente.', res.status));
                     resetLoginCaptcha();
                 }
             } catch(e) {
-                console.error('Erro de login (index.html):', e);
+                console.error('Não foi possível concluir o login.');
                 resetLoginCaptcha();
                 // Verifica se é erro de rede/conexão
                 if (e.name === 'TypeError' && e.message.includes('fetch')) {
@@ -2064,7 +2064,7 @@
                             await secureStorage.removeItem('USER');
                         }
                     } catch (storageError) {
-                        console.warn('Não foi possível limpar sessão anterior:', storageError);
+                        console.warn('Não foi possível limpar sessão anterior:');
                     }
                     emailTemporario = email;
                     senhaTemporaria = tempPassword;
@@ -2080,12 +2080,12 @@
                     if (typeof lucide !== 'undefined') lucide.createIcons();
                     iniciarContagemReenvio();
                 } else {
-                    console.error('Erro no cadastro:', data);
-                    Toast.error(data.detail || "Não foi possível iniciar o cadastro. Verifique o e-mail e tente novamente.");
+                    console.error('Erro no cadastro:');
+                    Toast.error(publicErrorMessage(null, "Não foi possível iniciar o cadastro. Verifique o e-mail e tente novamente."));
                     resetRegisterCaptcha();
                 }
             } catch(e) {
-                console.error('Erro de cadastro (index.html):', e);
+                console.error('Não foi possível concluir o cadastro.');
                 resetRegisterCaptcha();
                 // Verifica se é erro de rede/conexão
                 if (e.name === 'TypeError' && e.message.includes('fetch')) {
@@ -2157,9 +2157,9 @@
                     return;
                 }
 
-                Toast.error(data.detail || "Não foi possível definir sua senha. Tente reenviar o código.");
+                Toast.error(publicErrorMessage(null, "Não foi possível definir sua senha. Tente reenviar o código."));
             } catch (error) {
-                console.error('Erro ao finalizar cadastro:', error);
+                console.error('Erro ao finalizar cadastro:');
                 Toast.error("Erro de conexão ao definir senha.");
             } finally {
                 setRegisterSubmitLoading(false);
@@ -2202,7 +2202,7 @@ async function enviarCodigoRecuperacao() {
             Toast.info("Se o e-mail existir, você receberá um código.");
         }
     } catch(e) {
-        console.error('Erro ao enviar código:', e);
+        console.error('Erro ao enviar código:');
         loadingRecuperacao = false;
         emailRecuperacaoTemporario = email;
         setAuthView('codigo');
@@ -2257,12 +2257,12 @@ async function atualizarSenha() {
                 emailRecuperacaoTemporario = '';
             }, 2000);
         } else {
-            erroRecuperacao = data.detail || "código inválido ou expirado";
+            erroRecuperacao = publicErrorMessage(null, "código inválido ou expirado");
             Toast.error(erroRecuperacao);
             renderAuthView();
         }
     } catch(e) {
-        console.error('Erro ao atualizar senha:', e);
+        console.error('Erro ao atualizar senha:');
         loadingRecuperacao = false;
         erroRecuperacao = "Erro de conexão com o servidor";
         Toast.error(erroRecuperacao);
@@ -2349,7 +2349,7 @@ function getEmailHTML() {
                 <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">E-mail Corporativo</label>
                 <div class="relative">
                     <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="email" id="recuperarEmail" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();enviarCodigoRecuperacao();}">
+                    <input type="email" id="recuperarEmail" aria-label="E-mail para recuperação" autocomplete="email" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();enviarCodigoRecuperacao();}">
                 </div>
             </div>
             <button onclick="enviarCodigoRecuperacao()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase" ${loadingRecuperacao ? 'disabled' : ''}>
@@ -2377,12 +2377,12 @@ function getCodigoHTML() {
         </div>
         ${erroRecuperacao ? `
             <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
-                <p class="text-red-400 text-sm">${erroRecuperacao}</p>
+                <p class="text-red-400 text-sm">${safeAuditText(erroRecuperacao)}</p>
             </div>
         ` : ''}
         ${sucessoRecuperacao ? `
             <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 mb-4">
-                <p class="text-emerald-400 text-sm">${sucessoRecuperacao}</p>
+                <p class="text-emerald-400 text-sm">${safeAuditText(sucessoRecuperacao)}</p>
             </div>
         ` : ''}
         <div class="space-y-4">
@@ -2390,21 +2390,21 @@ function getCodigoHTML() {
                 <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">código de 6 dígitos</label>
                 <div class="relative">
                     <i data-lucide="key" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="text" id="codigoRecuperacao" maxlength="6" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600 text-center tracking-widest text-xl" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('novaSenha').focus();}">
+                    <input type="text" id="codigoRecuperacao" aria-label="Código de recuperação" inputmode="numeric" autocomplete="one-time-code" maxlength="6" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600 text-center tracking-widest text-xl" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('novaSenha').focus();}">
                 </div>
             </div>
             <div class="group">
                 <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Nova Senha</label>
                 <div class="relative">
                     <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="password" id="novaSenha" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('confirmarNovaSenha').focus();}">
+                    <input type="password" id="novaSenha" aria-label="Nova senha" autocomplete="new-password" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('confirmarNovaSenha').focus();}">
                 </div>
             </div>
             <div class="group">
                 <label class="text-[10px] font-bold text-slate-500 ml-1 mb-1 block uppercase tracking-wider group-focus-within:text-primary transition-colors">Confirmar Nova Senha</label>
                 <div class="relative">
                     <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors"></i>
-                    <input type="password" id="confirmarNovaSenha" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();atualizarSenha();}">
+                    <input type="password" id="confirmarNovaSenha" aria-label="Confirmar nova senha" autocomplete="new-password" class="input-pro w-full rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder-slate-600" onkeydown="if(event.key==='Enter'){event.preventDefault();atualizarSenha();}">
                 </div>
             </div>
             <button onclick="atualizarSenha()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg mt-4 tracking-wide text-sm uppercase" ${loadingRecuperacao ? 'disabled' : ''}>
@@ -2457,11 +2457,11 @@ function getCodigoHTML() {
             // EVITA RELOAD INFINITO: Apenas recarrega se vier do fluxo de login explícito
             if (!window.fromLoginFlow) {
                 setTimeout(() => {
-                    console.log(' Recarregando página após login...');
+
                     window.location.reload();
                 }, 1000);
             } else {
-                console.log(' Usuário já carregado do storage - sem reload necessário');
+
                 window.fromLoginFlow = false; // Reseta a flag
             }
         }
@@ -2682,10 +2682,17 @@ function getCodigoHTML() {
                     await Promise.resolve(secureStorage.removeItem('USER'));
                 }
             } catch (error) {
-                console.warn('Erro ao limpar secureStorage durante logout:', error);
+                console.warn('Erro ao limpar secureStorage durante logout:');
             }
-            localStorage.removeItem('USER');
+            try { localStorage.removeItem('USER'); } catch (_) {}
             USER = null;
+            senhaTemporaria = null;
+            if (typeof checkoutMP !== 'undefined') {
+                checkoutMP.currentUser = null;
+                checkoutMP.currentPayment = null;
+                checkoutMP.modal?.classList.add('hidden');
+            }
+            if (window.pixPolling) { clearInterval(window.pixPolling); window.pixPolling = null; }
             emailTemporario = '';
             emailRecuperacaoTemporario = '';
             codigoCadastroVerificado = '';
@@ -2838,14 +2845,14 @@ function getCodigoHTML() {
                         });
                         const data = await response.json().catch(() => ({}));
                         if (!response.ok) {
-                            throw new Error(data.detail || 'Não foi possível excluir a conta.');
+                            throw new Error(publicErrorMessage(null, 'Não foi possível excluir a conta.'));
                         }
 
                         closeUserSettings();
                         Toast.success('Sua conta foi excluída.');
                         performLogout();
                     } catch (error) {
-                        Toast.error(error.message || 'Não foi possível excluir a conta.');
+                        Toast.error('Não foi possível excluir a conta.');
                     }
                 }
             );
@@ -2988,12 +2995,12 @@ function getCodigoHTML() {
                     }
                 } else {
                     // ERRO (Código errado)
-                    Toast.error(data.detail || "Código incorreto. Tente novamente.");
+                    Toast.error(publicErrorMessage(null, "Código incorreto. Tente novamente."));
                     codigoInput.value = ""; // Limpa campo
                     codigoInput.focus();
                 }
             } catch (e) {
-                console.error(e);
+                console.error('A solicitação não pôde ser concluída.');
                 Toast.error("Erro de conexão com o servidor.");
             }
             // Restaura o botão
@@ -3062,7 +3069,7 @@ function getCodigoHTML() {
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative group">
                             <div class="flex justify-between items-start mb-2">
                                 <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-accent"><i data-lucide="user" class="w-4 h-4"></i></div>
-                                <button onclick="deleteAgent('${p.id}')" class="text-slate-600 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                <button onclick="deleteAgent(decodeURIComponent('${toHistoryInlineArg(p.id)}'))" aria-label="Excluir persona" class="text-slate-600 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                             </div>
                             <div class="flex flex-wrap gap-2 mb-3">
                                 <span class="text-[10px] font-bold uppercase tracking-wide rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2 py-1 text-cyan-200">${safeNiche}</span>
@@ -3073,8 +3080,8 @@ function getCodigoHTML() {
                 });
                 lucide.createIcons();
             } catch(e) {
-                console.error(e);
-                div.innerHTML = `<div class='text-red-300 col-span-3 text-center border border-red-500/20 bg-red-500/10 p-8 rounded-xl'>${safeAuditText(e.message || 'Erro ao carregar personas.')}</div>`;
+                console.error('A solicitação não pôde ser concluída.');
+                div.innerHTML = `<div class='text-red-300 col-span-3 text-center border border-red-500/20 bg-red-500/10 p-8 rounded-xl'>${safeAuditText('Erro ao carregar personas.')}</div>`;
             }
         }
         async function createAgent() {
@@ -3109,7 +3116,7 @@ function getCodigoHTML() {
                 });
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}));
-                    throw new Error(data.detail || "Erro ao criar perfil");
+                    throw new Error(publicErrorMessage(null, "Erro ao criar perfil"));
                 }
                 const data = await res.json().catch(() => ({}));
                 if (data.plan || data.custom_limit) {
@@ -3126,7 +3133,7 @@ function getCodigoHTML() {
                 await loadManageAgents();
                 if(document.getElementById('auditMode').value === 'manual') toggleManualSelect();
                 Toast.success("Perfil salvo com sucesso!");
-            } catch(e) { Toast.error(e.message || "Erro ao criar perfil"); }
+            } catch(e) { Toast.error("Erro ao criar perfil"); }
             updateCreateAgentButtonByLimit();
         }
         // Função de confirmação personalizada
@@ -3150,7 +3157,7 @@ function getCodigoHTML() {
                             <i data-lucide="x" class="w-5 h-5"></i>
                         </button>
                     </div>
-                    <p class="text-slate-300 mb-6">${message}</p>
+                    <p class="text-slate-300 mb-6">${safeAuditText(message)}</p>
                     <div class="flex gap-3 justify-end">
                         <button onclick="closeConfirmModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
                             Cancelar
@@ -3190,11 +3197,20 @@ function getCodigoHTML() {
             });
         }
         async function deleteAgent(id) {
-            showConfirmDialog("Deseja realmente excluir essa agent?", async () => {
-                await fetch(`${API_URL}/api/personas/${id}`, { method: 'DELETE', headers: authHeaders() });
-                loadManageAgents();
-                if(!document.getElementById('manualSelectArea').classList.contains('hidden')) toggleManualSelect();
-            }); // Fecha o callback do showConfirmDialog
+            showConfirmDialog("Deseja realmente excluir essa persona?", async () => {
+                try {
+                    const response = await fetch(`${API_URL}/api/personas/${encodeURIComponent(String(id))}`, { method: 'DELETE', headers: authHeaders() });
+                    if (!response.ok) {
+                        Toast.error(publicErrorMessage(null, 'Não foi possível excluir esta persona. Tente novamente.', response.status));
+                        return;
+                    }
+                    await loadManageAgents();
+                    if (!document.getElementById('manualSelectArea').classList.contains('hidden')) await toggleManualSelect();
+                    Toast.success('Persona excluída.');
+                } catch (_) {
+                    Toast.error('Não foi possível excluir esta persona. Verifique sua conexão.');
+                }
+            });
         }
         // === 5. AUDIT LOGIC (CORE) ===
         // Função para criar estrutura HTML inicial dos resultados da auditoria (Relatório Técnico Corporativo)
@@ -4033,7 +4049,7 @@ function getCodigoHTML() {
                     return { res, baseUrl };
                 } catch (error) {
                     lastError = error;
-                    console.warn('Falha ao chamar API da demonstração em', baseUrl, error);
+                    console.warn('A demonstração está temporariamente indisponível.');
                     if (!isDemoAuditLocalTest() || !isLocalApiBaseUrl(baseUrl)) break;
                 }
             }
@@ -4125,8 +4141,8 @@ function getCodigoHTML() {
                         '</div>',
                         hasImages ? [
                             '<div class="demo-report-captures">',
-                            images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="data:image/jpeg;base64,' + images.desktop + '" alt="Captura desktop da URL analisada"></figure>' : '',
-                            images.mobile ? '<figure class="demo-report-capture"><strong>Mobile</strong><img src="data:image/jpeg;base64,' + images.mobile + '" alt="Captura mobile da URL analisada"></figure>' : '',
+                                images.desktop ? '<figure class="demo-report-capture"><strong>Desktop</strong><img src="' + safeCaptureAttribute(images.desktop) + '" alt="Captura desktop da URL analisada"></figure>' : '',
+                                images.mobile ? '<figure class="demo-report-capture"><strong>Mobile</strong><img src="' + safeCaptureAttribute(images.mobile) + '" alt="Captura mobile da URL analisada"></figure>' : '',
                             '</div>'
                         ].join('') : '',
                         '<div class="demo-report-locks">',
@@ -4213,17 +4229,20 @@ function getCodigoHTML() {
                         renderDemoAlreadyUsed();
                         return;
                     }
-                    throw new Error(formatAuditApiError(payload.detail || payload.error || payload, res.status));
+                    const failure = new Error('Demo audit request failed');
+                    failure.publicMessage = formatAuditApiError(payload.detail || payload.error || payload, res.status);
+                    failure.auditReason = getAuditErrorDetailText(payload.detail || payload.error || payload);
+                    throw failure;
                 }
                 markDemoAuditUsed();
                 completeAuditLoadingBeforeHide(() => renderDemoAuditResults(payload, url));
                 resetAuditCaptcha();
             } catch (error) {
-                console.error('Erro na auditoria demonstrativa:', error);
+                console.error('Erro na auditoria demonstrativa:');
                 cancelAuditDueToApiError({
                     mode: 'auto',
-                    reason: error.message || 'Falha na demonstração.',
-                    displayMessage: error.message || 'Não foi possível concluir a demonstração agora.',
+                    reason: error.auditReason || '',
+                    displayMessage: error.publicMessage || 'Não foi possível concluir a demonstração agora.',
                     resetCaptcha: true
                 });
             }
@@ -4324,9 +4343,9 @@ function getCodigoHTML() {
             requestAnimationFrame(() => syncAuditWorkspaceLayout(false));
         }
         async function toggleManualSelect() {
-            console.log("toggleManualSelect chamada");
+
             const mode = document.getElementById('auditMode').value;
-            console.log("Modo selecionado:", mode);
+
             const manualArea = document.getElementById('manualSelectArea');
             const compareArea = document.getElementById('compareArea');
             const normalSearchBar = document.getElementById('normalSearchBar');
@@ -4339,7 +4358,7 @@ function getCodigoHTML() {
             const subtitleContainer = document.querySelector('.hero-subtitle-container');
             const statsContainer = document.querySelector('.stats-container-premium');
             const emptyStateCards = document.getElementById('emptyStateCards');
-            console.log("Elementos encontrados:", { manualArea, compareArea, normalSearchBar, compareSearchBar });
+
             setAnalysisModeState(mode);
             // Reset all areas
             if (manualArea) manualArea.classList.add('hidden');
@@ -4367,12 +4386,12 @@ function getCodigoHTML() {
                 if (emptyStateCards) emptyStateCards.classList.add('hidden');
             }
             if(mode === 'manual') {
-                console.log("Entrando no modo manual");
+
                 if (manualArea) manualArea.classList.remove('hidden');
                 syncAuditWorkspaceLayout(false);
                 requestAnimationFrame(focusManualPersonaPanel);
                 const cont = document.getElementById('checklistContainer');
-                console.log("Container encontrado:", cont);
+
                 if (cont) {
                     cont.innerHTML = "<div class='manual-persona-loading'><span></span><p>Carregando personas...</p></div>";
                     try {
@@ -4395,16 +4414,16 @@ function getCodigoHTML() {
                         renderManualPersonaList();
                         requestAnimationFrame(focusManualPersonaPanel);
                     } catch (e) {
-                        console.error(e);
+                        console.error('A solicitação não pôde ser concluída.');
                         cont.innerHTML = '<div class="manual-persona-empty manual-persona-empty-error">'
                             + '<p class="text-sm font-semibold text-red-200">Não consegui carregar suas personas.</p>'
-                            + '<p class="text-xs text-red-100/80 mt-2">' + safeAuditText(e.message || 'Verifique seu login e a API.') + '</p>'
+                            + '<p class="text-xs text-red-100/80 mt-2">' + safeAuditText('Verifique sua conexão e entre novamente, se necessário.') + '</p>'
                             + '<button onclick="toggleManualSelect()" class="mt-4 px-4 py-2 rounded-lg bg-red-500/15 border border-red-400/30 text-red-100 text-xs font-bold hover:bg-red-500/25 transition">Tentar novamente</button>'
                             + '</div>';
                     }
                 }
             } else if(mode === 'compare') {
-                console.log("Entrando no modo comparativo");
+
                 // Esconde a barra normal e mostra a barra comparativa
                 if (normalSearchBar) normalSearchBar.classList.add('hidden');
                 if (compareSearchBar) compareSearchBar.classList.remove('hidden');
@@ -5158,7 +5177,7 @@ function getCodigoHTML() {
                     Toast.warning("A persona selecionada pode não ser adequada para o nicho da URL.");
                 }
             } catch (e) {
-                console.warn('Não foi possível validar nicho da persona:', e);
+                console.warn('Não foi possível validar nicho da persona:');
             }
         }
 
@@ -5392,15 +5411,15 @@ function getCodigoHTML() {
                     })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || 'Não foi possível enviar sua dúvida agora.');
+                if (!res.ok) throw new Error(publicErrorMessage(null, 'Não foi possível enviar sua dúvida agora.'));
 
                 Toast.success('Dúvida enviada para o suporte.');
                 document.getElementById('supportSubject').value = '';
                 document.getElementById('supportMessage').value = '';
                 closeSupportForm();
             } catch (error) {
-                console.error('Erro ao enviar dúvida ao suporte:', error);
-                Toast.error(error.message || 'Não foi possível enviar sua dúvida agora.');
+                console.error('Erro ao enviar dúvida ao suporte:');
+                Toast.error('Não foi possível enviar sua dúvida agora.');
             } finally {
                 setSupportSubmitLoading(false);
             }
@@ -5413,10 +5432,7 @@ function getCodigoHTML() {
         let authorizedDomainsCache = [];
 
         function getAuthorizedDomainApiError(data, fallback) {
-            const detail = data?.detail;
-            if (typeof detail === 'string') return detail;
-            if (detail && typeof detail === 'object') return detail.message || fallback;
-            return fallback;
+            return publicErrorMessage(null, fallback);
         }
 
         async function copyAuthorizedDomainValue(value) {
@@ -5447,7 +5463,7 @@ function getCodigoHTML() {
                 const headerName = item.header_name || 'X-SSW-Audit-Token';
                 const userAgent = item.user_agent || 'SSW-Intelligence-Auditor/1.0';
                 const userAgentMarker = 'SSW-Intelligence-Auditor';
-                const inline = value => encodeURIComponent(String(value || ''));
+                const inline = value => toHistoryInlineArg(value);
                 const developerMessage = [
                     `Olá! Preciso liberar a auditoria da S.S.W Intelligence no site ${domain}.`,
                     '',
@@ -5500,7 +5516,7 @@ function getCodigoHTML() {
             const fileUrl = `https://${domain}/.well-known/ssw-verification.txt`;
             const metaTag = `<meta name="ssw-verification" content="${token}">`;
             const wafRule = `${item.header_name || 'X-SSW-Audit-Token'} = ${auditToken}`;
-            const inline = value => encodeURIComponent(String(value || ''));
+            const inline = value => toHistoryInlineArg(value);
 
             return [
                 '<div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-5">',
@@ -5552,8 +5568,8 @@ function getCodigoHTML() {
                 list.innerHTML = items.map(item => {
                     const statusClass = 'border-cyan-400/25 bg-cyan-400/[0.04]';
                     const statusText = 'A S.S.W já enviará o User-Agent e o header privado nas próximas auditorias deste domínio. Se o site ainda bloquear, envie a instrução abaixo para quem cuida do Cloudflare, firewall ou plugin de segurança.';
-                    const idArg = encodeURIComponent(String(item.id || ''));
-                    const domainArg = encodeURIComponent(String(item.domain || ''));
+                    const idArg = toHistoryInlineArg(item.id);
+                    const domainArg = toHistoryInlineArg(item.domain);
 
                     return [
                         `<article class="rounded-2xl border ${statusClass} p-5 md:p-6">`,
@@ -5600,7 +5616,7 @@ function getCodigoHTML() {
                 const statusText = item.verified
                     ? `Validado por ${safeAuditText(item.verification_method || 'token')}. O header autorizado será usado apenas se a auditoria normal for bloqueada.`
                     : 'Publique o token por DNS, arquivo ou meta tag e clique em verificar.';
-                const idArg = encodeURIComponent(String(item.id || ''));
+                const idArg = toHistoryInlineArg(item.id);
 
                 return [
                     `<article class="rounded-2xl border ${statusClass} p-5 md:p-6">`,
@@ -5642,8 +5658,8 @@ function getCodigoHTML() {
                 renderAuthorizedDomains(authorizedDomainsCache);
                 if (showToast) Toast.success('Domínios atualizados.');
             } catch (error) {
-                console.error('Erro ao carregar domínios autorizados:', error);
-                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Domínios indisponíveis</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p><button onclick="loadAuthorizedDomains(true)">Tentar novamente</button></div>`;
+                console.error('Erro ao carregar domínios autorizados:');
+                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Domínios indisponíveis</strong><p>${safeAuditText('Tente novamente em instantes.')}</p><button onclick="loadAuthorizedDomains(true)">Tentar novamente</button></div>`;
             }
         }
 
@@ -5671,7 +5687,7 @@ function getCodigoHTML() {
                 Toast.success('Site adicionado. Copie a instrução e envie para quem cuida da segurança do site.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
-                Toast.error(error.message || 'Erro ao adicionar domínio.');
+                Toast.error('Erro ao adicionar domínio.');
             }
         }
 
@@ -5688,7 +5704,7 @@ function getCodigoHTML() {
                 Toast.success('Liberação confirmada. Teste a auditoria novamente.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
-                Toast.warning(error.message || 'Não foi possível confirmar a liberação.', 10000);
+                Toast.warning('Não foi possível confirmar a liberação.', 10000);
             }
         }
 
@@ -5704,7 +5720,7 @@ function getCodigoHTML() {
                 Toast.success('Novo código gerado. Copie a instrução atualizada e envie para o técnico.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
-                Toast.error(error.message || 'Erro ao rotacionar token.');
+                Toast.error('Erro ao rotacionar token.');
             }
         }
 
@@ -5720,7 +5736,7 @@ function getCodigoHTML() {
                 Toast.success(data.msg || 'Liberação removida.');
                 await loadAuthorizedDomains(false);
             } catch (error) {
-                Toast.error(error.message || 'Erro ao excluir domínio.');
+                Toast.error('Erro ao excluir domínio.');
             }
         }
 
@@ -5770,7 +5786,7 @@ function getCodigoHTML() {
         }
 
         function toHistoryInlineArg(value) {
-            return encodeURIComponent(String(value ?? ''));
+            return encodeURIComponent(String(value ?? '')).replace(/'/g, '%27');
         }
 
         function setAuditHistoryFilter(type = 'all') {
@@ -5814,12 +5830,12 @@ function getCodigoHTML() {
                     headers: authHeaders()
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || 'Não foi possível carregar o histórico.');
+                if (!res.ok) throw new Error(publicErrorMessage(null, 'Não foi possível carregar o histórico.'));
                 renderAuditHistoryList(data.items || [], data);
                 if (showToast) Toast.success('Histórico atualizado.');
             } catch (error) {
-                console.error('Erro ao carregar historico:', error);
-                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Histórico indisponível</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p><button onclick="loadAuditHistory(true)">Tentar novamente</button></div>`;
+                console.error('Erro ao carregar historico:');
+                list.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Histórico indisponível</strong><p>${safeAuditText('Tente novamente em instantes.')}</p><button onclick="loadAuditHistory(true)">Tentar novamente</button></div>`;
             } finally {
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
@@ -5926,14 +5942,14 @@ function getCodigoHTML() {
                         headers: authHeaders()
                     });
                     const data = await res.json().catch(() => ({}));
-                    if (!res.ok) throw new Error(data.detail || 'Não foi possível excluir esta análise.');
+                    if (!res.ok) throw new Error(publicErrorMessage(null, 'Não foi possível excluir esta análise.'));
                     const detail = document.getElementById('auditHistoryDetail');
                     if (detail) detail.classList.add('hidden');
                     await loadAuditHistory(false);
                     Toast.success(data.msg || 'Análise removida do histórico.');
                 } catch (error) {
-                    console.error('Erro ao excluir historico:', error);
-                    Toast.error(error.message || 'Erro ao excluir análise.');
+                    console.error('Erro ao excluir historico:');
+                    Toast.error('Erro ao excluir análise.');
                 }
             };
 
@@ -5974,7 +5990,7 @@ function getCodigoHTML() {
         }
 
         function encodeHistoryActionPayload(action) {
-            return encodeURIComponent(JSON.stringify(action || {}));
+            return encodeURIComponent(JSON.stringify(action || {})).replace(/'/g, '%27');
         }
 
         function renderHistoryVulnerabilitiesDetailed(vulnerabilities) {
@@ -6177,7 +6193,7 @@ function getCodigoHTML() {
                     body: JSON.stringify({ actions: selected })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || 'Não foi possível validar as correções.');
+                if (!res.ok) throw new Error(publicErrorMessage(null, 'Não foi possível validar as correções.'));
                 if (USER && typeof data.novo_saldo !== 'undefined') {
                     USER.credits = data.novo_saldo;
                     if (typeof secureStorage !== 'undefined') await secureStorage.setItem('USER', USER);
@@ -6189,8 +6205,8 @@ function getCodigoHTML() {
                 if (confirmed > 0) Toast.success(data.verification?.message || 'Correções confirmadas pela IA.', 10000);
                 else Toast.warning(data.verification?.message || 'A IA não confirmou mudanças suficientes na URL.', 10000);
             } catch (error) {
-                console.error('Erro ao validar correcoes:', error);
-                Toast.error(error.message || 'Erro ao validar correções.');
+                console.error('Erro ao validar correcoes:');
+                Toast.error('Erro ao validar correções.');
             } finally {
                 if (btn) { btn.disabled = false; btn.innerText = 'Validar correções com IA'; }
                 if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -6210,11 +6226,11 @@ function getCodigoHTML() {
                     headers: authHeaders()
                 });
                 const item = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(item.detail || 'Não foi possível abrir esta análise.');
+                if (!res.ok) throw new Error(publicErrorMessage(null, 'Não foi possível abrir esta análise.'));
                 renderAuditHistoryDetail(item);
             } catch (error) {
-                console.error('Erro ao abrir item do historico:', error);
-                detail.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Detalhe indisponível</strong><p>${safeAuditText(error.message || 'Tente novamente em instantes.')}</p></div>`;
+                console.error('Erro ao abrir item do historico:');
+                detail.innerHTML = `<div class="history-empty-state history-empty-error"><strong>Detalhe indisponível</strong><p>${safeAuditText('Tente novamente em instantes.')}</p></div>`;
             } finally {
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
@@ -6222,12 +6238,26 @@ function getCodigoHTML() {
 
         function normalizeHistoryCaptureSrc(value) {
             const raw = String(value || '').trim();
-            if (!raw) return '';
-            if (/^data:image\//i.test(raw)) return raw;
-            if (/^https?:\/\//i.test(raw)) return raw;
+            if (!raw || raw.length > 20000000) return '';
+            if (/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(raw)) return raw;
+            if (/^https?:\/\//i.test(raw)) {
+                try {
+                    const parsed = new URL(raw);
+                    if (parsed.username || parsed.password) return '';
+                    return parsed.href;
+                } catch (_) { return ''; }
+            }
             const compact = raw.replace(/\s+/g, '');
             if (!/^[A-Za-z0-9+/=]+$/.test(compact) || compact.length < 80) return '';
             return `data:image/jpeg;base64,${compact}`;
+        }
+
+        function safeCaptureAttribute(value) {
+            // Screenshots may legitimately exceed text limits. Validate their format,
+            // then encode the attribute without truncating the image data.
+            return normalizeHistoryCaptureSrc(value).replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[char]));
         }
 
         function getHistoryCaptureImages(item, payload) {
@@ -6269,7 +6299,7 @@ function getCodigoHTML() {
             return [
                 `<figure class="history-capture-frame history-capture-${kind}">`,
                     `<div class="history-capture-label">${safeAuditText(label)}</div>`,
-                    `<img src="${safeAuditText(src)}" alt="Captura ${safeAuditText(label.toLowerCase())} salva no histórico">`,
+                    `<img src="${safeCaptureAttribute(src)}" alt="Captura ${safeAuditText(label.toLowerCase())} salva no histórico">`,
                 '</figure>'
             ].join('');
         }
@@ -7033,7 +7063,7 @@ function getCodigoHTML() {
             const clean = raw.replace(/^(Erro IA|Erro de captura|Erro de metricas oficiais|Erro de métricas oficiais|Erro de historico|Erro interno):\s*/i, '').trim();
             const lower = clean.toLowerCase();
 
-            const platformCaptchaError = status === 403 ||
+            const platformCaptchaError =
                 lower.includes('turnstile') ||
                 lower.includes('captcha inválido') ||
                 lower.includes('captcha invalido') ||
@@ -7061,7 +7091,7 @@ function getCodigoHTML() {
             }
 
             if (stage === 'servidor' || status >= 500) {
-                return 'O backend interrompeu a análise por um erro interno antes de gerar o relatório. Seu saldo foi mantido. Tente novamente em alguns minutos.';
+                return 'O serviço não conseguiu concluir a análise. Seu saldo foi mantido. Tente novamente em alguns minutos.';
             }
 
             if (
@@ -7075,7 +7105,7 @@ function getCodigoHTML() {
                 return 'Não conseguimos abrir esse site para a auditoria. Ele pode estar offline, lento ou bloqueando acessos automatizados. Teste outra URL pública, tente novamente em alguns minutos ou use o Ngrok se for um projeto local.';
             }
 
-            return clean || 'Erro ao iniciar auditoria.';
+            return publicErrorMessage(null, 'Não foi possível iniciar a auditoria. Confira a URL, seu saldo e tente novamente.', status);
         }
 
         function restoreAuditInputState(mode = 'auto') {
@@ -7123,9 +7153,7 @@ function getCodigoHTML() {
             const oldNotice = document.getElementById('auditCancelNotice');
             if (oldNotice) oldNotice.remove();
 
-            const technicalReason = reasonText && !reasonText.toLowerCase().includes('captcha')
-                ? `<p class="audit-cancel-reason">Motivo técnico informado: ${safeAuditText(reasonText)}</p>`
-                : '';
+            const technicalReason = ''; // Technical details are recorded by the API, never rendered.
             const antiBotGuidance = antiBotDetected
                 ? `
                     <div class="audit-cancel-guidance">
@@ -7142,7 +7170,7 @@ function getCodigoHTML() {
                 <div class="audit-cancel-icon"><i data-lucide="${antiBotDetected ? 'shield-alert' : 'alert-triangle'}" class="w-5 h-5"></i></div>
                 <div class="audit-cancel-copy">
                     <strong>${antiBotDetected ? 'Bloqueio anti-bot detectado' : 'Análise cancelada com saldo preservado'}</strong>
-                    <p>${message}</p>
+                    <p>${safeAuditText(message)}</p>
                     ${antiBotGuidance}
                     ${technicalReason}
                     <div class="audit-cancel-actions">
@@ -7540,14 +7568,14 @@ function getCodigoHTML() {
                 adjustFooterPosition(true);
                 // Verificação adicional para garantir o posicionamento
                 setTimeout(() => {
-                    console.log('Verificação adicional do footer após auditoria');
+
                     checkForAuditResults();
                 }, 500);
             } catch(e) {
                 window.SSWConsole?.capture?.('error', ['Erro na auditoria', e]);
                 cancelAuditDueToApiError({
                     mode,
-                    reason: e.message || 'Erro inesperado durante a auditoria.',
+                    reason: 'Erro inesperado durante a auditoria.',
                     displayMessage: 'A interface interrompeu a renderização do relatório por um erro inesperado. A análise foi cancelada antes de mostrar dados incompletos.',
                     resetCaptcha: true
                 });
@@ -7567,7 +7595,7 @@ function getCodigoHTML() {
             return;
             showOnlyAuditHomeView();
             showHomeAnalysisState();
-            console.log("Iniciando processo de comparação...");
+
             // Oculta os cards IMEDIATAMENTE ao iniciar comparação
             const emptyStateCards = document.getElementById('emptyStateCards');
             const compareArea = document.getElementById('compareArea');
@@ -7656,10 +7684,10 @@ function getCodigoHTML() {
                     throw compareError;
                 }
                 const response = await res.json();
-                console.log("📡 Resposta da API:", response);
+
                 // Extrai battle_data se existir (novo formato), ou usa response diretamente
                 const data = response.battle_data || response;
-                console.log("📦 Dados para renderizar:", data);
+
                 // Validação: aceita novo formato (executive_verdict) ou antigo (site_a/site_b)
                 if(!data || (!data.executive_verdict && (!data.site_a || !data.site_b))) {
                     throw new Error("Dados da API incompletos ou formato inválido");
@@ -7675,116 +7703,23 @@ function getCodigoHTML() {
                 }
                 cancelAuditDueToApiError({
                     mode: 'compare',
-                    reason: e.rawDetail || e.message || 'Falha de conexão com a API comparativa.',
-                    displayMessage: e.message || 'Não foi possível conectar com a API comparativa. A análise foi cancelada.',
+                    reason: e.rawDetail || 'Falha de conexão com a API comparativa.',
+                    displayMessage: 'Não foi possível conectar com a API comparativa. A análise foi cancelada.',
                     resetCaptcha: true
                 });
                 return;
-                resetCompareCaptcha();
-                console.warn("⚠️ Ativando MODO SIMULAÇÃO (Fallback). Motivo:", e.message);
-                hideAuditLoading();
-                // 5. MODO SIMULAÇÃO - Novo Formato Enriquecido
-                setTimeout(() => {
-                    const scoreA = Math.floor(Math.random() * 20) + 70;
-                    const scoreB = Math.floor(Math.random() * 20) + 60;
-                    const isSiteABetter = scoreA > scoreB;
-                    const mockData = {
-                        executive_verdict: {
-                            winner_site: isSiteABetter ? "Site A" : "Site B",
-                            score_diff: isSiteABetter ? `+${scoreA - scoreB} pontos` : `+${scoreB - scoreA} pontos`,
-                            summary: isSiteABetter
-                                ? "Site A demonstra desempenho superior em velocidade, acessibilidade e experiência do usuário."
-                                : "Site B supera na estrutura visual e otimização, mas deixa espaço para melhorias em performance."
-                        },
-                        agent_battleground: [
-                            {
-                                agent: "Executivo/CEO",
-                                preference: isSiteABetter ? "Site A" : "Site B",
-                                reason: "Apresentação clara com dados acionáveis"
-                            },
-                            {
-                                agent: "Design Enthusiast",
-                                preference: !isSiteABetter ? "Site A" : "Site B",
-                                reason: "Estética moderna com excelente tipografia"
-                            },
-                            {
-                                agent: "Usuário Mobile",
-                                preference: isSiteABetter ? "Site A" : "Site B",
-                                reason: "Navegação fluida e responsiva"
-                            },
-                            {
-                                agent: "Idoso/Iniciante",
-                                preference: isSiteABetter ? "Site A" : "Site B",
-                                reason: "Interface intuitiva com contraste adequado"
-                            }
-                        ],
-                        technical_faceoff: [
-                            {
-                                criteria: "Velocidade (LCP)",
-                                winner: isSiteABetter ? "Site A" : "Site B",
-                                analysis: isSiteABetter
-                                    ? "Site A carrega em ~1.8s, Site B em ~2.5s"
-                                    : "Site B otimizado com lazy loading eficiente"
-                            },
-                            {
-                                criteria: "Acessibilidade (WCAG)",
-                                winner: isSiteABetter ? "Site A" : "Site B",
-                                analysis: "Contraste e navegação teclado implementados"
-                            },
-                            {
-                                criteria: "SEO Score",
-                                winner: isSiteABetter ? "Site A" : "Site B",
-                                analysis: "Meta tags e structured data bem configurados"
-                            },
-                            {
-                                criteria: "Performance (Lighthouse)",
-                                winner: isSiteABetter ? "Site A" : "Site B",
-                                analysis: "Score acima de 85 em desktop"
-                            }
-                        ],
-                        gap_analysis: {
-                            site_a_missing: [
-                                "Otimização de imagens em formatos modernos",
-                                "Implementação de Progressive Web App",
-                                "Análise A/B integrada"
-                            ],
-                            site_b_missing: [
-                                "Melhor compressão de assets",
-                                "Cache headers configurados",
-                                "Minificação de CSS/JS"
-                            ]
-                        },
-                        action_plan_for_a: [
-                            "Converter todas as imagens para WebP com fallback PNG",
-                            "Implementar Service Worker para offline capability",
-                            "Adicionar lazy loading em imagens acima da dobra",
-                            "Otimizar CLS (Cumulative Layout Shift) removendo fontes não-críticas",
-                            "Implementar CDN para servir assets estáticos",
-                            "Configurar cache headers com max-age apropriado"
-                        ],
-                        novo_saldo: Math.max(0, USER.credits - 1)
-                    };
-                    displayCompareResults(mockData);
-                }, 2500);
+
             }
         }
         function displayCompareResults(data) {
-            console.log("🎯 Exibindo resultados:", data);
+
             // Armazenar dados globalmente para exportação PDF (comparação)
             auditData = data;
             currentAuditUrl = (data.site_a?.url || "Site A") + " vs " + (data.site_b?.url || "Site B");
-            console.log("📊 Detectando formato...", {
-                hasExecutiveVerdict: !!data.executive_verdict,
-                hasSiteData: !!(data.site_a && data.site_b),
-                executive_verdict: data.executive_verdict ? '✓ Presente' : '✗ Ausente',
-                agent_battleground: data.agent_battleground ? `✓ ${data.agent_battleground.length} itens` : '✗ Ausente',
-                technical_faceoff: data.technical_faceoff ? `✓ ${data.technical_faceoff.length} itens` : '✗ Ausente',
-                gap_analysis: data.gap_analysis ? '✓ Presente' : '✗ Ausente',
-                action_plan_for_a: data.action_plan_for_a ? `✓ ${data.action_plan_for_a.length} itens` : '✗ Ausente'
-            });
+
             // 1. Proteção contra dados vazios
             if (!data) {
-                console.error("❌ Dados inválidos recebidos:", data);
+                console.error("❌ Dados inválidos recebidos:");
                 alert("Erro ao renderizar resultados. Tente novamente.");
                 updateCompareUI(false); // Volta para mostrar inputs
                 return;
@@ -7800,13 +7735,13 @@ function getCodigoHTML() {
             updateUserMenuCircle();
             // 2. Detecta Novo Formato (Análise Comparativa Rica)
             if (data.executive_verdict && data.agent_battleground) {
-                console.log("✨ Usando renderizador RELATÓRIO EXECUTIVO (novo formato enriquecido)");
+
                 renderComparisonReportV2(data, resDiv);
                 updateCompareUI(true);
             }
             // Fallback para Formato Antigo
             else if (data.site_a && data.site_b) {
-                console.log("🔄 Usando renderizador V1 (formato antigo compatível)");
+
                 renderComparisonResultsV1(data, resDiv);
                 updateCompareUI(true);
             } else {
@@ -7825,7 +7760,7 @@ function getCodigoHTML() {
             const technical = data.technical_faceoff || [];
             const gaps = data.gap_analysis || {};
             const actionPlan = data.action_plan_for_a || [];
-            console.log("📄 Renderizando relatório executivo...");
+
             const isSiteAWinner = verdict.winner_site && verdict.winner_site.toLowerCase().includes('a');
             container.innerHTML = `
                 <div class="report-container">
@@ -7839,16 +7774,16 @@ function getCodigoHTML() {
                         <div class="report-section">
                             <h3 style="font-size: 18px; font-weight: bold; color: black; margin-top: 0;">VENCEDOR DA ANÁLISE</h3>
                             <p style="font-size: 36px; font-weight: 900; color: ${isSiteAWinner ? '#0066cc' : '#cc3300'}; margin: 20px 0;">
-                                ${verdict.winner_site || 'Indeterminado'}
+                                ${safeAuditText(verdict.winner_site || 'Indeterminado')}
                             </p>
                             <p style="font-size: 16px; color: #666; margin-bottom: 20px;">
-                                <strong>Diferença de Desempenho:</strong> ${verdict.score_diff || 'N/A'}
+                                <strong>Diferença de Desempenho:</strong> ${safeAuditText(verdict.score_diff || 'N/A')}
                             </p>
                         </div>
                         <div class="report-section">
                             <h3 style="font-size: 16px; font-weight: bold; color: black; margin-top: 0;">RESUMO EXECUTIVO</h3>
                             <p style="font-size: 14px; line-height: 1.8; color: #333; margin: 0;">
-                                ${verdict.summary || 'Análise não disponível'}
+                                ${safeAuditText(verdict.summary || 'Análise não disponível')}
                             </p>
                         </div>
                         <div style="margin-top: 60px; padding-top: 30px; border-top: 1px solid #ddd; font-size: 11px; color: #999;">
@@ -7871,9 +7806,9 @@ function getCodigoHTML() {
                                 <tbody>
                                     ${agents.map(p => `
                                         <tr>
-                                            <td style="font-weight: bold;">${p.agent || 'N/A'}</td>
-                                            <td>${p.preference || 'N/A'}</td>
-                                            <td>${p.reason || 'Sem dados'}</td>
+                                            <td style="font-weight: bold;">${safeAuditText(p.agent || 'N/A')}</td>
+                                            <td>${safeAuditText(p.preference || 'N/A')}</td>
+                                            <td>${safeAuditText(p.reason || 'Sem dados')}</td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
@@ -7896,11 +7831,11 @@ function getCodigoHTML() {
                                 <tbody>
                                     ${technical.map(t => `
                                         <tr>
-                                            <td style="font-weight: bold;">${t.criteria || 'N/A'}</td>
+                                            <td style="font-weight: bold;">${safeAuditText(t.criteria || 'N/A')}</td>
                                             <td style="color: ${t.winner && t.winner.toLowerCase().includes('a') ? '#0066cc' : '#cc3300'}; font-weight: bold;">
-                                                ${t.winner || 'N/A'}
+                                                ${safeAuditText(t.winner || 'N/A')}
                                             </td>
-                                            <td>${t.analysis || 'Sem dados'}</td>
+                                            <td>${safeAuditText(t.analysis || 'Sem dados')}</td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
@@ -7916,13 +7851,13 @@ function getCodigoHTML() {
                             <div class="report-gap-column" style="page-break-inside: avoid; margin-bottom: 15px;">
                                 <h4 style="font-size: 13px; font-weight: bold; color: #0066cc; margin-top: 0;">O QUE FALTA NO SITE A</h4>
                                 <ul style="list-style: disc; margin-left: 20px; padding: 0; color: #333; page-break-inside: avoid;">
-                                    ${(gaps.site_a_missing || []).map(gap => `<li style="margin: 8px 0; font-size: 12px; page-break-inside: avoid;">${gap}</li>`).join('') || '<li style="color: #999;">Nenhuma lacuna identificada</li>'}
+                                    ${(gaps.site_a_missing || []).map(gap => `<li style="margin: 8px 0; font-size: 12px; page-break-inside: avoid;">${safeAuditText(gap)}</li>`).join('') || '<li style="color: #999;">Nenhuma lacuna identificada</li>'}
                                 </ul>
                             </div>
                             <div class="report-gap-column" style="page-break-inside: avoid;">
                                 <h4 style="font-size: 13px; font-weight: bold; color: #cc3300; margin-top: 0;">O QUE FALTA NO SITE B</h4>
                                 <ul style="list-style: disc; margin-left: 20px; padding: 0; color: #333; page-break-inside: avoid;">
-                                    ${(gaps.site_b_missing || []).map(gap => `<li style="margin: 8px 0; font-size: 12px; page-break-inside: avoid;">${gap}</li>`).join('') || '<li style="color: #999;">Nenhuma lacuna identificada</li>'}
+                                    ${(gaps.site_b_missing || []).map(gap => `<li style="margin: 8px 0; font-size: 12px; page-break-inside: avoid;">${safeAuditText(gap)}</li>`).join('') || '<li style="color: #999;">Nenhuma lacuna identificada</li>'}
                                 </ul>
                             </div>
                         </div>
@@ -7934,7 +7869,7 @@ function getCodigoHTML() {
                             <ol class="report-checklist" style="color: #333; page-break-inside: avoid;">
                                 ${actionPlan.slice(0, 4).map(action => `
                                     <li style="margin: 12px 0; font-size: 13px; line-height: 1.6; padding: 8px; background: #fafafa; page-break-inside: avoid;">
-                                        ${action}
+                                        ${safeAuditText(action)}
                                     </li>
                                 `).join('')}
                             </ol>
@@ -7963,13 +7898,7 @@ function getCodigoHTML() {
             const technical = data.technical_faceoff || [];
             const gaps = data.gap_analysis || {};
             const actionPlan = data.action_plan_for_a || [];
-            console.log("🎯 V2 - Renderizando com dados:", {
-                verdict: verdict.winner_site,
-                agents: agents.length,
-                technical: technical.length,
-                gaps: { a: gaps.site_a_missing?.length || 0, b: gaps.site_b_missing?.length || 0 },
-                actionPlan: actionPlan.length
-            });
+
             const isSiteAWinner = verdict.winner_site && verdict.winner_site.toLowerCase().includes('a');
             const winnerColor = isSiteAWinner ? 'from-cyan-500 to-blue-600' : 'from-orange-500 to-red-600';
             const badgeColor = isSiteAWinner ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300' : 'bg-red-500/20 border-red-500/50 text-red-300';
@@ -7984,11 +7913,11 @@ function getCodigoHTML() {
                                 <div class="inline-block mb-6">
                                     <i data-lucide="crown" class="w-10 h-10 ${accentColor}"></i>
                                 </div>
-                                <h2 class="text-5xl md:text-6xl font-black text-white mb-4">${verdict.winner_site || 'Indeterminado'}</h2>
-                                <p class="text-slate-300 text-lg mb-6 max-w-2xl mx-auto">${verdict.summary || 'Análise em progresso...'}</p>
+                                <h2 class="text-5xl md:text-6xl font-black text-white mb-4">${safeAuditText(verdict.winner_site || 'Indeterminado')}</h2>
+                                <p class="text-slate-300 text-lg mb-6 max-w-2xl mx-auto">${safeAuditText(verdict.summary || 'Análise em progresso...')}</p>
                                 <div class="flex flex-col md:flex-row items-center justify-center gap-4">
                                     <div class="px-6 py-3 rounded-full border ${badgeColor} font-bold text-lg">
-                                        ${verdict.score_diff || '+0 pontos'}
+                                        ${safeAuditText(verdict.score_diff || '+0 pontos')}
                                     </div>
                                     <div class="text-slate-400 text-sm">Diferença de Desempenho</div>
                                 </div>
@@ -8015,14 +7944,14 @@ function getCodigoHTML() {
                             <div class="group p-6 rounded-2xl border ${agentBg} backdrop-blur-xl hover:border-slate-500/50 transition-all hover:translate-y-[-4px]">
                                 <div class="flex items-start justify-between mb-4">
                                     <div>
-                                        <h4 class="text-lg font-bold text-white">${p.agent || 'Agent ' + (idx + 1)}</h4>
+                                        <h4 class="text-lg font-bold text-white">${safeAuditText(p.agent || 'Agent ' + (idx + 1))}</h4>
                                         <div class="inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold border ${agentBadgeColor}">
-                                            Prefere: ${p.preference || 'N/A'}
+                                            Prefere: ${safeAuditText(p.preference || 'N/A')}
                                         </div>
                                     </div>
                                     <i data-lucide="heart" class="w-5 h-5 ${agentWinsA ? 'text-cyan-400' : 'text-orange-400'}"></i>
                                 </div>
-                                <p class="text-slate-300 text-sm mt-4">${p.reason || 'Sem dados disponíveis'}</p>
+                                <p class="text-slate-300 text-sm mt-4">${safeAuditText(p.reason || 'Sem dados disponíveis')}</p>
                             </div>
                             `;
                         }).join('')}
@@ -8050,13 +7979,13 @@ function getCodigoHTML() {
                                     <div class="flex-1">
                                         <h5 class="font-bold text-white text-sm mb-2 flex items-center gap-2">
                                             <span class="w-2 h-2 rounded-full ${techWinnerA ? 'bg-cyan-400' : 'bg-orange-400'}"></span>
-                                            ${t.criteria || 'Critério ' + (idx + 1)}
+                                            ${safeAuditText(t.criteria || 'Critério ' + (idx + 1))}
                                         </h5>
-                                        <p class="text-slate-300 text-sm">${t.analysis || 'Análise indisponível'}</p>
+                                        <p class="text-slate-300 text-sm">${safeAuditText(t.analysis || 'Análise indisponível')}</p>
                                     </div>
                                     <div class="flex-shrink-0 text-right">
                                         <div class="text-2xl font-black ${techWinnerA ? 'text-cyan-400' : 'text-orange-400'}">${techSignal}</div>
-                                        <p class="text-xs text-slate-400 mt-1">${t.winner || 'N/A'}</p>
+                                        <p class="text-xs text-slate-400 mt-1">${safeAuditText(t.winner || 'N/A')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -8087,7 +8016,7 @@ function getCodigoHTML() {
                                 ${(gaps.site_a_missing || []).map(gap => `
                                 <li class="flex items-start gap-3 text-slate-300 text-sm">
                                     <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 flex-shrink-0"></span>
-                                    <span>${gap}</span>
+                                    <span>${safeAuditText(gap)}</span>
                                 </li>
                                 `).join('')}
                             </ul>
@@ -8103,7 +8032,7 @@ function getCodigoHTML() {
                                 ${(gaps.site_b_missing || []).map(gap => `
                                 <li class="flex items-start gap-3 text-slate-300 text-sm">
                                     <span class="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 flex-shrink-0"></span>
-                                    <span>${gap}</span>
+                                    <span>${safeAuditText(gap)}</span>
                                 </li>
                                 `).join('')}
                             </ul>
@@ -8129,7 +8058,7 @@ function getCodigoHTML() {
                                     <span class="text-sm font-bold text-blue-300">${idx + 1}</span>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-white font-medium">${action}</p>
+                                    <p class="text-white font-medium">${safeAuditText(action)}</p>
                                 </div>
                                 <i data-lucide="arrow-right" class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                             </div>
@@ -8150,7 +8079,7 @@ function getCodigoHTML() {
                     </button>
                 </div>
             `;
-            console.log("✅ V2 Renderizado com sucesso - Novo formato");
+
             lucide.createIcons();
         }
         // ===== RENDERIZADOR V1 - FORMATO COMPATÍVEL (ANTIGO) =====
@@ -8169,7 +8098,7 @@ function getCodigoHTML() {
                     <div class="inline-block p-4 rounded-2xl bg-slate-900/50 border border-slate-700 mb-4">
                         <i data-lucide="trophy" class="w-8 h-8 text-yellow-500 mx-auto mb-2"></i>
                         <h3 class="text-xl font-bold text-white">Vencedor do Duelo</h3>
-                        <p class="text-2xl font-black ${winnerClass} mt-1">${winner}</p>
+                        <p class="text-2xl font-black ${winnerClass} mt-1">${safeAuditText(winner)}</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -8177,28 +8106,28 @@ function getCodigoHTML() {
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h4 class="text-cyan-400 font-bold text-lg">Seu Site</h4>
-                                <p class="text-xs text-slate-500 font-mono truncate max-w-[200px]">${data.site_a.url}</p>
+                                <p class="text-xs text-slate-500 font-mono truncate max-w-[200px]">${safeAuditText(data.site_a.url)}</p>
                             </div>
                             <div class="text-5xl font-black text-white">${scoreA}</div>
                         </div>
-                        <p class="text-sm text-slate-300 mb-6 min-h-[50px]">${data.site_a.summary}</p>
+                        <p class="text-sm text-slate-300 mb-6 min-h-[50px]">${safeAuditText(data.site_a.summary)}</p>
                         <div class="space-y-2">
                             <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Pontos de Atenção</p>
-                            ${vulnsA.map(v => `<div class="flex items-center gap-2 text-xs text-red-300 bg-red-900/10 p-2 rounded border border-red-900/20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${v}</div>`).join('')}
+                            ${vulnsA.map(v => `<div class="flex items-center gap-2 text-xs text-red-300 bg-red-900/10 p-2 rounded border border-red-900/20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${safeAuditText(v)}</div>`).join('')}
                         </div>
                     </div>
                     <div class="glass-panel p-6 rounded-2xl border border-slate-700/50 relative overflow-hidden group">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h4 class="text-orange-400 font-bold text-lg">Concorrente</h4>
-                                <p class="text-xs text-slate-500 font-mono truncate max-w-[200px]">${data.site_b.url}</p>
+                                <p class="text-xs text-slate-500 font-mono truncate max-w-[200px]">${safeAuditText(data.site_b.url)}</p>
                             </div>
                             <div class="text-5xl font-black text-white">${scoreB}</div>
                         </div>
-                        <p class="text-sm text-slate-300 mb-6 min-h-[50px]">${data.site_b.summary}</p>
+                        <p class="text-sm text-slate-300 mb-6 min-h-[50px]">${safeAuditText(data.site_b.summary)}</p>
                         <div class="space-y-2">
                             <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Pontos de Atenção</p>
-                            ${vulnsB.map(v => `<div class="flex items-center gap-2 text-xs text-red-300 bg-red-900/10 p-2 rounded border border-red-900/20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${v}</div>`).join('')}
+                            ${vulnsB.map(v => `<div class="flex items-center gap-2 text-xs text-red-300 bg-red-900/10 p-2 rounded border border-red-900/20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${safeAuditText(v)}</div>`).join('')}
                         </div>
                     </div>
                 </div>
@@ -8208,263 +8137,15 @@ function getCodigoHTML() {
                     </button>
                 </div>
             `;
-            console.log("✅ V1 Renderizado com sucesso - Formato antigo");
+
             lucide.createIcons();
         }
         // === 6. FALLBACK AUDIT (QUANDO IA ESTIVER INDISPONÍVEL) ===
-        async function generateFallbackAudit(url, mode, selected) {
-            // Criar estrutura HTML inicial para todas as seções
-            showHomeAnalysisState();
-            createAuditResultsStructureModern();
-            setAuditPillarsVisibility(mode === 'auto');
-            // Armazenar dados globalmente para exportação PDF (fallback)
-            auditData = {
-                url: url,
-                technical_audit: {
-                    score: Math.floor(Math.random() * 30) + 60,
-                    performance_score: Math.floor(Math.random() * 30) + 60,
-                    seo_score: Math.floor(Math.random() * 30) + 60,
-                    accessibility_score: Math.floor(Math.random() * 30) + 60,
-                    lcp: (Math.random() * 3 + 1).toFixed(1),
-                    load_time: (Math.random() * 4 + 1).toFixed(1),
-                    executive_summary: "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.",
-                    vulnerabilities: [],
-                    action_plan: []
-                },
-                agents_results: [],
-                behavioral_analysis: []
-            };
-            currentAuditUrl = url;
-            document.getElementById('auditResults').classList.remove('hidden');
-            // Gera score aleatório entre 60-89
-            const score = Math.floor(Math.random() * 30) + 60;
-            // Atualiza créditos (simula consumo)
-            USER.credits = Math.max(0, USER.credits - 1);
-            // Salva dados criptografados se secureStorage disponível
-            if (typeof secureStorage !== 'undefined') {
-                await secureStorage.setItem('USER', USER);
-            } else {
-                localStorage.setItem('USER', JSON.stringify(USER));
-            }
-            updateUserMenuCircle();
-            // Popula Dados Fallback com verificações de segurança
-            updateAuditScoreBoard(score);
-            const resUrlEl = document.getElementById('reportUrl');
-            if (resUrlEl) resUrlEl.innerText = url.replace(/https?:\/\//, '').split('/')[0];
-            const resSummaryEl = document.getElementById('resSummary');
-            if (resSummaryEl) resSummaryEl.innerText = "Análise realizada com modo de avaliação básica. Sistema de IA temporariamente indisponível. Esta análise contém informações gerais baseadas em heurísticas web comuns.";
-            updateAuditExecutiveSnapshot({
-                technicalAudit: { score },
-                vulnerabilities: [],
-                actionSteps: [],
-                agents: []
+        async function generateFallbackAudit(url, mode) {
+            cancelAuditDueToApiError({
+                mode: mode || 'auto',
+                displayMessage: 'Não foi possível concluir a análise. Nenhum relatório foi gerado. Tente novamente em alguns instantes.'
             });
-            // Função para determinar cor baseada no score
-            function getScoreColor(score) {
-                score = Number(score);
-                if (!Number.isFinite(score)) return "";
-                if (score >= 90) return "audit-metric-good";
-                if (score >= 50) return "audit-metric-warning";
-                return "audit-metric-bad";
-            }
-            // Função para determinar cor de tempo (em segundos)
-            function getTimeColor(timeStr) {
-                const time = parseFloat(timeStr);
-                if (!Number.isFinite(time)) return "";
-                if (time <= 2.5) return "audit-metric-good";
-                if (time <= 4.0) return "audit-metric-warning";
-                return "audit-metric-bad";
-            }
-            // Gera métricas reais simuladas para fallback
-            const fallbackMetrics = {
-                performance_score: Math.floor(Math.random() * 30) + 60, // 60-89
-                seo_score: Math.floor(Math.random() * 20) + 80, // 80-99
-                accessibility_score: Math.floor(Math.random() * 25) + 70, // 70-94
-                lcp: `${(Math.random() * 3 + 1.5).toFixed(1)} s`, // 1.5-4.5s
-                load_time: `${(Math.random() * 2 + 1).toFixed(1)} s` // 1.0-3.0s
-            };
-            // Popula métricas reais do Google PageSpeed (Fallback)
-            const perfScoreEl = document.getElementById('realPerformanceScore');
-            if (perfScoreEl) {
-                perfScoreEl.innerText = fallbackMetrics.performance_score;
-                perfScoreEl.className = `audit-metric-value ${getScoreColor(fallbackMetrics.performance_score)}`;
-            }
-            const seoScoreEl = document.getElementById('realSeoScore');
-            if (seoScoreEl) {
-                seoScoreEl.innerText = fallbackMetrics.seo_score;
-                seoScoreEl.className = `audit-metric-value ${getScoreColor(fallbackMetrics.seo_score)}`;
-            }
-            const a11yScoreEl = document.getElementById('realA11yScore');
-            if (a11yScoreEl) {
-                a11yScoreEl.innerText = fallbackMetrics.accessibility_score;
-                a11yScoreEl.className = `audit-metric-value ${getScoreColor(fallbackMetrics.accessibility_score)}`;
-            }
-            const lcpEl = document.getElementById('realLcp');
-            if (lcpEl) {
-                lcpEl.innerText = fallbackMetrics.lcp;
-                lcpEl.className = `audit-metric-value ${getTimeColor(fallbackMetrics.lcp)}`;
-            }
-            const loadTimeEl = document.getElementById('realLoadTime');
-            if (loadTimeEl) {
-                loadTimeEl.innerText = fallbackMetrics.load_time;
-                loadTimeEl.className = `audit-metric-value ${getTimeColor(fallbackMetrics.load_time)}`;
-            }
-            // Imagens placeholder com verificações
-            updateAuditTechnicalSummary([
-                updateAuditMetricCard('realPerformanceScore', fallbackMetrics.performance_score, { statusId: 'realPerformanceStatus' }),
-                updateAuditMetricCard('realSeoScore', fallbackMetrics.seo_score, { statusId: 'realSeoStatus' }),
-                updateAuditMetricCard('realA11yScore', fallbackMetrics.accessibility_score, { statusId: 'realA11yStatus' }),
-                updateAuditMetricCard('realLcp', fallbackMetrics.lcp, { type: 'time', statusId: 'realLcpStatus', maxTime: 10 }),
-                updateAuditMetricCard('realLoadTime', fallbackMetrics.load_time, { type: 'time', statusId: 'realLoadTimeStatus', maxTime: 14 })
-            ]);
-            const printMobileEl = document.getElementById('printMobile');
-            if (printMobileEl) {
-                printMobileEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDMwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMzAwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk1vYmlsZSBWaWV3PC90ZXh0Pgo8L3N2Zz4=";
-                printMobileEl.closest('.audit-shot-frame')?.classList.add('has-capture');
-            }
-            const printDesktopEl = document.getElementById('printDesktop');
-            if (printDesktopEl) {
-                printDesktopEl.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMUYyOTM3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNjY3MDgxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkRlc2t0b3AgVmlldzwvdGV4dD4KPC9zdmc+";
-                printDesktopEl.closest('.audit-shot-frame')?.classList.add('has-capture');
-            }
-            if (mode === 'auto') {
-                renderPillarsDashboard({
-                    score,
-                    real_metrics: fallbackMetrics,
-                    pillars_evaluation: {
-                        accessibility_performance: { score: fallbackMetrics.accessibility_score, brief: 'Performance e acessibilidade estimadas em modo de contingencia.' },
-                        security: { score: Math.max(55, score - 8), brief: 'Sinais de confiança avaliados por heurísticas básicas.' },
-                        functional_integrity: { score: Math.max(50, score - 5), brief: 'Fluxos e links exigem validação detalhada na próxima auditoria completa.' },
-                        conversion_ux: { score, brief: 'Clareza da oferta e chamadas de ação avaliadas por regras gerais.' }
-                    }
-                });
-            }
-            // Vulnerabilidades baseadas no score
-            const vDiv = document.getElementById('vulnerabilitiesTableBody');
-            if (vDiv) {
-                const listaVulnerabilidades = [
-                    {
-                        severity: score < 70 ? 'CR?TICO' : score < 80 ? 'ALTO' : 'M?DIO',
-                        pillar: 'Performance',
-                        title: score < 70 ? 'Performance geral baixa' : score < 80 ? 'Otimiza??es de performance necess?rias' : 'Pequenas otimiza??es sugeridas',
-                        description: 'A an?lise em modo de conting?ncia detectou oportunidades de melhoria na performance geral do site.'
-                    },
-                    { severity: 'M?DIO', pillar: 'SEO', title: 'SEO t?cnico', description: 'Existem melhorias a serem implementadas nos aspectos t?cnicos de descoberta e estrutura da p?gina.' },
-                    { severity: 'BAIXO', pillar: 'Acessibilidade', title: 'Acessibilidade e clareza', description: 'Algumas pr?ticas de acessibilidade poderiam ser revisadas para tornar a experi?ncia mais previs?vel.' }
-                ];
-                vDiv.innerHTML = listaVulnerabilidades.map((v, index) => {
-                    const severity = getSeverityMeta(v.severity);
-                    return [
-                        '<article class="audit-risk-card audit-risk-' + severity.tone + '">',
-                            '<div class="audit-risk-number">' + String(index + 1).padStart(2, '0') + '</div>',
-                            '<div class="audit-risk-content">',
-                                '<div class="audit-risk-meta">',
-                                    '<span class="audit-severity audit-severity-' + severity.tone + '">' + safeAuditText(severity.label) + '</span>',
-                                    '<span>' + safeAuditText(v.pillar) + '</span>',
-                                '</div>',
-                                '<h3>' + safeAuditText(v.title) + '</h3>',
-                                '<p>' + safeAuditText(v.description) + '</p>',
-                            '</div>',
-                        '</article>'
-                    ].join('');
-                }).join('');
-            }
-            // Agents simuladas
-            const pDiv = document.getElementById('agentsTableBody');
-            if (pDiv) {
-                const agentsToUse = selected.length > 0 ? selected : [];
-                if (!agentsToUse.length) {
-                    pDiv.innerHTML = '<div class="audit-empty-block"><strong>Nenhuma agent foi aplicada.</strong><p>O modo de conting?ncia entregou apenas uma leitura t?cnica b?sica.</p></div>';
-                } else {
-                    const quotes = [
-                        'Site funcional, mas poderia ser mais intuitivo.',
-                        'Navega??o aceit?vel, mas alguns elementos poderiam ser mais claros.',
-                        'Consigo usar sem grandes dificuldades, embora existam pontos de fric??o.'
-                    ];
-                    pDiv.innerHTML = agentsToUse.map((agent, index) => {
-                        const fallbackPersona = typeof agent === 'string' ? manualPersonaCache.find(p => p.id === agent) : null;
-                        const agentName = fallbackPersona?.name || (typeof agent === 'string' ? agent.split(':')[0] : agent.name) || 'Persona SSW';
-                        const agentScore = Math.floor(Math.random() * 4) + 6;
-                        const tone = agentScore >= 8 ? 'strong' : agentScore <= 6 ? 'critical' : 'attention';
-                        const quote = quotes[index % quotes.length];
-                        const fallbackAgent = enrichChatPersona({
-                            id: fallbackPersona?.id || agentName,
-                            profile_name: agentName,
-                            score: agentScore,
-                            direct_quote: quote
-                        }, index);
-                        const fallbackMetrics = getPersonaInsightMetrics(fallbackAgent, agentScore);
-                        return [
-                            '<article class="audit-agent-card audit-agent-' + tone + '">',
-                                '<div class="audit-agent-insight-panel">',
-                                    '<div class="audit-agent-reader-head">',
-                                        '<img class="audit-agent-reader-avatar" src="' + safeAuditText(fallbackAgent.avatar_url) + '" alt="' + safeAuditText(agentName) + '" loading="lazy">',
-                                        '<div>',
-                                            '<span>Leitura da persona</span>',
-                                            '<strong>' + safeAuditText(agentName) + '</strong>',
-                                        '</div>',
-                                    '</div>',
-                                    '<blockquote>"' + safeAuditText(quote) + '"</blockquote>',
-                                    '<div class="audit-agent-score-grid" aria-label="Indicadores da leitura da persona">',
-                                        '<div class="audit-agent-score-chip audit-agent-score-confidence">',
-                                            '<small>Confiança</small>',
-                                            '<strong>' + fallbackMetrics.confidence + '/10</strong>',
-                                        '</div>',
-                                        '<div class="audit-agent-score-chip audit-agent-score-clarity">',
-                                            '<small>Clareza</small>',
-                                            '<strong>' + fallbackMetrics.clarity + '/10</strong>',
-                                        '</div>',
-                                        '<div class="audit-agent-score-chip audit-agent-score-intention">',
-                                            '<small>Intenção</small>',
-                                            '<strong>' + safeAuditText(fallbackMetrics.intentLabel) + '</strong>',
-                                            '<em>' + fallbackMetrics.intention + '/10</em>',
-                                        '</div>',
-                                    '</div>',
-                                '</div>',
-                                '<div class="audit-agent-profile-panel">',
-                                    '<div class="audit-agent-header">',
-                                        '<div>',
-                                            '<span>Persona simulada</span>',
-                                            '<h3>' + safeAuditText(agentName) + '</h3>',
-                                            '<p>Leitura comportamental em modo de contingência para manter uma visão humana da experiência.</p>',
-                                        '</div>',
-                                    '</div>',
-                                    '<div class="audit-agent-journey-flow">',
-                                        '<div class="audit-agent-journey-title">Jornada simulada</div>',
-                                        '<div class="audit-agent-journey-line">',
-                                            '<div class="audit-agent-journey-step"><span class="audit-agent-dot">01</span><strong>Primeira impressão</strong><p>Observa clareza e confiança inicial.</p></div>',
-                                            '<div class="audit-agent-journey-step"><span class="audit-agent-dot">02</span><strong>Oferta</strong><p>Avalia se entende valor e próximo passo.</p></div>',
-                                            '<div class="audit-agent-journey-step"><span class="audit-agent-dot">03</span><strong>Contato</strong><p>Procura um caminho simples para avançar.</p></div>',
-                                        '</div>',
-                                    '</div>',
-                                '</div>',
-                            '</article>'
-                        ].join('');
-                    }).join('');
-                }
-            }
-            // Plano de A??o Fallback
-            const actionPlanList = document.getElementById('actionPlanList');
-            if (actionPlanList) {
-                const fallbackSteps = [
-                    'Otimizar imagens e implementar lazy loading para melhorar performance.',
-                    'Revisar meta tags e estrutura SEO para melhorar leitura por buscadores.',
-                    'Melhorar contraste, foco e navega??o por teclado para acessibilidade.'
-                ];
-                actionPlanList.innerHTML = fallbackSteps.map((stepText, i) => [
-                    '<article class="audit-action-card">',
-                        '<div class="audit-action-index">' + String(i + 1).padStart(2, '0') + '</div>',
-                        '<div><span>' + safeAuditText(getCorrectionStepLabel(i)) + '</span><p>' + safeAuditText(stepText) + '</p></div>',
-                    '</article>'
-                ].join('')).join('');
-            }
-            initAuditResultReveal();
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-            hasUnsavedAuditSession = true;
-            adjustFooterPosition(true);
-            hideAuditLoading();
         }
         // === FUNÇÕES DE CONTROLE DO FOOTER ===
         function adjustFooterPosition(hasAuditResults = false) {
@@ -8519,10 +8200,7 @@ function getCodigoHTML() {
             // Verifica se há resultados de auditoria na tela
             const auditResults = document.getElementById('auditResults');
             const hasResults = !!(auditResults && !auditResults.classList.contains('hidden'));
-            console.log('=== DEBUG FOOTER ===');
-            console.log('auditResults hidden:', auditResults ? auditResults.classList.contains('hidden') : 'elemento não encontrado');
-            console.log('hasResults:', hasResults);
-            console.log('Footer parent:', document.getElementById('mainFooter')?.parentNode?.tagName || 'não encontrado');
+
             adjustFooterPosition(hasResults);
         }
         // === FUNÇÃO PARA BOTÃO FLUTUANTE DE CHAT ===
@@ -8904,7 +8582,7 @@ function getCodigoHTML() {
                 content.style.cssText = 'min-width:0;display:grid;gap:6px;';
                 const title = document.createElement('div');
                 title.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;';
-                title.innerHTML = `<span class="agent-select-card-title">${safeAuditText(normalizedAgent.profile_name)}</span><span class="agent-select-card-meta">Score ${normalizedAgent.score || '--'}/10</span>`;
+                title.innerHTML = `<span class="agent-select-card-title">${safeAuditText(normalizedAgent.profile_name)}</span><span class="agent-select-card-meta">Score ${safeAuditText(normalizedAgent.score || '--')}/10</span>`;
                 const desc = document.createElement('div');
                 desc.style.cssText = 'font-size:13px; color: #cbd5e1; line-height:1.6;';
                 desc.innerText = normalizedAgent.description || 'Perspectiva projetada para análise estratégica e recomendações rápidas.';
@@ -9183,7 +8861,7 @@ function getCodigoHTML() {
                     })
                 });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.detail || 'Falha no chat');
+                if (!res.ok) throw new Error(publicErrorMessage(null, 'Falha no chat'));
                 // Remove typing indicator e põe resposta
                 const loadingEl = document.getElementById(loadingId);
                 if (loadingEl) loadingEl.remove();
@@ -9197,7 +8875,7 @@ function getCodigoHTML() {
             } catch (e) {
                 const loadingEl = document.getElementById(loadingId);
                 if (loadingEl) loadingEl.remove();
-                appendMsg('ai', e.message || 'Erro de conexao. Tente novamente.');
+                appendMsg('ai', 'Erro de conexao. Tente novamente.');
             } finally {
                 input.disabled = false;
                 if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
@@ -9259,10 +8937,10 @@ function getCodigoHTML() {
         // Event listener global para botões de chat
         document.addEventListener('click', function(e) {
             if (e.target.closest('.chat-button')) {
-                console.log('Botão de chat clicado!');
+
                 const button = e.target.closest('.chat-button');
                 const agentData = JSON.parse(button.getAttribute('data-agent'));
-                console.log('Dados da agent:', agentData);
+
                 openChat(agentData);
             }
         });
@@ -10223,7 +9901,7 @@ function getCodigoHTML() {
                 doc.save(fileName);
                 Toast.success('Análise estratégica gerada com sucesso!');
             } catch (error) {
-                console.error('Erro ao gerar PDF:', error);
+                console.error('Erro ao gerar PDF:');
                 Toast.error('Erro ao gerar PDF. Tente novamente.');
             }
         }
@@ -10345,7 +10023,7 @@ function getCodigoHTML() {
                         context.restore();
                         return canvas.toDataURL('image/png');
                     } catch (logoError) {
-                        console.warn('Logo indisponível para o PDF:', logoError);
+                        console.warn('Logo indisponível para o PDF:');
                         return '';
                     }
                 };
@@ -10456,7 +10134,7 @@ function getCodigoHTML() {
                             doc.addImage(logoSrc, 'PNG', x, logoY, size, size, undefined, 'FAST');
                             return;
                         } catch (logoError) {
-                            console.warn('Falha ao inserir logo no PDF:', logoError);
+                            console.warn('Falha ao inserir logo no PDF:');
                         }
                     }
                     doc.setFont('helvetica', 'bold');
@@ -10643,7 +10321,7 @@ function getCodigoHTML() {
                 doc.save(fileName);
                 Toast.success('Relatório executivo premium gerado com sucesso!');
             } catch (error) {
-                console.error('Erro ao gerar PDF premium:', error);
+                console.error('Erro ao gerar PDF premium:');
                 Toast.error('Erro ao gerar PDF premium. Tente novamente.');
             }
         }

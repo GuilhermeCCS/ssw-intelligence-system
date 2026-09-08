@@ -68,5 +68,9 @@ docker compose -f docker-compose.local.yml down
 ## Builds
 
 - `npm run dev`: servidor estatico para desenvolvimento; nao altera arquivos rastreados.
-- `npm run build:local`: injeta configuracoes locais; permite rodar sem chave de pagamento.
-- `npm run build`: build de producao; exige `VITE_MP_PUBLIC_KEY`.
+- `npm run build:local`: gera `dist` com configuracoes locais, sem modificar os fontes; permite rodar sem chave de pagamento.
+- `npm run build`: gera `dist` para producao; exige `VITE_MP_PUBLIC_KEY` e URL HTTPS para a API.
+- `npm run preview`: serve apenas `dist` em `http://127.0.0.1:4173`; execute um build antes.
+- `npm test`: valida fluxos do frontend e isolamento do artefato publico.
+
+O servidor `npm run dev` serve a raiz para desenvolvimento. Nao o exponha na internet nem use esse comando em producao. O Docker e o Cloudflare publicam somente `dist`; veja [DEPLOYMENT.md](DEPLOYMENT.md).

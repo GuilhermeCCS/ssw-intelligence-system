@@ -1,0 +1,2 @@
+# Preserve upstream bytes, including license whitespace, for integrity checks.
+src/vendor/**/*.js -text -whitespace

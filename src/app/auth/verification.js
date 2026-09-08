@@ -72,14 +72,14 @@ async function reenviarCodigo() {
             return;
         }
 
-        Toast.error(data.detail || 'Erro ao reenviar. Tente novamente.');
+        Toast.error(publicErrorMessage(null, 'Erro ao reenviar. Tente novamente.'));
         setReenviarButtonState(button, {
             disabled: false,
             label: 'Tentar novamente',
             muted: false
         });
     } catch (error) {
-        console.error('Erro ao reenviar código:', error);
+        console.error('Erro ao reenviar código:');
         Toast.error('Erro de conexão. Tente novamente.');
         setReenviarButtonState(button, {
             disabled: false,

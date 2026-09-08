@@ -20,7 +20,7 @@ async function loadPricingSection() {
             nav('precos');
         }
     } catch (error) {
-        console.error('Erro ao carregar seção de preços:', error);
+        console.error('Erro ao carregar seção de preços:');
     }
 }
 

@@ -15,16 +15,16 @@ async function fazerLogin() {
         if (res.ok) {
             // Criptografa dados sensíveis antes de salvar
             if (typeof secureStorage !== 'undefined') {
-                secureStorage.setItem('USER', data);
+                await secureStorage.setItem('USER', data);
             } else {
                 localStorage.setItem('USER', JSON.stringify(data));
             }
-            window.location.href = 'index.html';
+            window.location.href = '/home';
         } else {
-            msg.innerText = data.detail || "Erro ao entrar.";
+            msg.innerText = "Não foi possível entrar. Confira os dados e tente novamente.";
         }
     } catch (e) { 
-        console.error('Erro de login:', e);
+        console.error('Erro de login:');
         
         // Verifica se é erro de rede/conexão
         if (e.name === 'TypeError' && e.message.includes('fetch')) {
@@ -47,9 +47,9 @@ async function fazerCadastro() {
             body: JSON.stringify({ nome: email.split('@')[0], email, senha })
         });
         const data = await res.json();
-        alert(data.msg || data.detail);
+        alert(res.ok ? "Cadastro iniciado. Verifique seu e-mail." : "Não foi possível iniciar o cadastro. Confira seus dados e tente novamente.");
     } catch (e) { 
-        console.error('Erro de cadastro:', e);
+        console.error('Erro de cadastro:');
         
         // Verifica se é erro de rede/conexão
         if (e.name === 'TypeError' && e.message.includes('fetch')) {

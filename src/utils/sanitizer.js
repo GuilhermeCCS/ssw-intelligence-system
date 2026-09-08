@@ -15,9 +15,7 @@ const attackLog = [];
 function logAttack(type, payload) {
   const entry = {
     timestamp: new Date().toISOString(),
-    type,
-    payload: typeof payload === 'string' ? payload.substring(0, 100) : JSON.stringify(payload).substring(0, 100),
-    userAgent: navigator.userAgent
+    type
   };
   
   attackLog.push(entry);
@@ -113,7 +111,7 @@ function sanitizeURL(url) {
   try {
     new URL(url);
   } catch {
-    console.warn('⚠️ URL com formato inválido bloqueada:', url);
+    console.warn('URL com formato inválido bloqueada.');
     logAttack('INVALID_URL', { url });
     return '#';
   }
@@ -124,7 +122,7 @@ function sanitizeURL(url) {
   
   for (const protocol of dangerousProtocols) {
     if (lowerUrl.startsWith(protocol)) {
-      console.warn('⚠️ URL com protocolo perigoso bloqueada:', url);
+      console.warn('URL com protocolo perigoso bloqueada.');
       logAttack('DANGEROUS_PROTOCOL', { protocol, url });
       return '#';
     }
@@ -132,7 +130,7 @@ function sanitizeURL(url) {
   
   // Apenas permite HTTP/HTTPS
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    console.warn('⚠️ URL com protocolo não permitido:', url);
+    console.warn('URL com protocolo não permitido bloqueada.');
     logAttack('INVALID_PROTOCOL', { url });
     return '#';
   }
@@ -147,6 +145,7 @@ function sanitizeURL(url) {
  */
 function sanitizeText(text) {
   if (!text) return '';
+  text = String(text);
   
   // Previne DoS via strings muito longas
   if (text.length > MAX_STRING_LENGTH) {
@@ -160,9 +159,10 @@ function sanitizeText(text) {
   text = text.replace(dangerousChars, '');
   
   // Escapa caracteres HTML perigosos
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  // Also escape quotes: callers use this value in quoted HTML attributes.
+  return text.replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
 }
 
 /**
@@ -183,7 +183,7 @@ function sanitizeEmail(email) {
   // Valida formato de email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    console.warn('⚠️ Email com formato inválido:', email);
+    console.warn('E-mail com formato inválido.');
     logAttack('INVALID_EMAIL', { email });
     return '';
   }
@@ -252,7 +252,7 @@ function sanitizeObject(obj) {
   
   const sanitized = {};
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && !['__proto__', 'constructor', 'prototype'].includes(key)) {
       const value = obj[key];
       
       if (typeof value === 'string') {

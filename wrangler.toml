@@ -1,12 +1,5 @@
-name = "ssw-intelligence-system"
+# Existing Pages project (the dashboard project slug differs from its pages.dev hostname).
+name = "sswintelligence"
 compatibility_date = "2024-01-01"
-
-[env.production]
-routes = [
-  { pattern = "ssw-intelligence-system.pages.dev/*", zone_name = "ssw-intelligence-system.pages.dev" }
-]
-
-[env.staging]
-routes = [
-  { pattern = "ssw-intelligence-system-staging.pages.dev/*", zone_name = "ssw-intelligence-system-staging.pages.dev" }
-]
+pages_build_output_dir = "./dist"
+# No Worker routes, private secrets or service bindings belong in this static project.

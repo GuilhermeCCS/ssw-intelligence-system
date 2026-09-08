@@ -38,7 +38,7 @@ async function loadRankingSection() {
         };
         document.head.appendChild(script);
     } catch (error) {
-        console.error('Erro ao carregar seção de ranking:', error);
+        console.error('Erro ao carregar seção de ranking:');
     }
 }
 

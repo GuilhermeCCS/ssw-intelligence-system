@@ -22,8 +22,8 @@
                 <article>
                     <i data-lucide="building-2"></i>
                     <div>
-                        <strong>Dados confiáveis</strong>
-                        <span>Análises precisas e atualizadas</span>
+                        <strong>Diagnóstico técnico</strong>
+                        <span>Indicadores do site analisado</span>
                     </div>
                 </article>
                 <article>
@@ -36,8 +36,8 @@
                 <article>
                     <i data-lucide="badge-check"></i>
                     <div>
-                        <strong>Cancelamento fácil</strong>
-                        <span>Cancele quando quiser</span>
+                        <strong>Créditos de auditoria</strong>
+                        <span>Consumo por análise</span>
                     </div>
                 </article>
             </div>
@@ -50,7 +50,7 @@
         <div class="ssw-billing-toggle" aria-label="Alternar cobrança">
             <button type="button" class="is-active" data-cycle="monthly" onclick="sswSetBillingCycle('monthly')">Mensal</button>
             <button type="button" data-cycle="annual" onclick="sswSetBillingCycle('annual')">Anual</button>
-            <span>Economize até 20%</span>
+            <span>Cerca de 20% de economia no anual</span>
         </div>
 
         <div class="ssw-plans-grid">
@@ -65,7 +65,8 @@
                         <span class="ssw-amount" data-monthly="99" data-annual="79">99</span>
                         <span class="ssw-period">/mês</span>
                     </div>
-                    <div class="ssw-credit-note">10 créditos de auditoria por mês</div>
+                    <div class="ssw-credit-note">10 créditos de auditoria no pacote mensal</div>
+                    <div class="ssw-installment" aria-live="polite">Total desta compra: R$ 99,00. Condições de pagamento no checkout.</div>
                 </div>
                 <div class="ssw-credit-options" role="group" aria-label="Escolha os créditos do plano Freelancer">
                     <button type="button" class="is-active" onclick="sswSelectCreditOption(this)" data-package-monthly="freelancer_10_mensal" data-package-annual="freelancer_10_anual" data-monthly-price="99" data-annual-price="79" data-monthly-label="10 créditos de auditoria por mês" data-annual-label="120 créditos de auditoria no ano">10 créditos</button>
@@ -75,7 +76,7 @@
                 <button onclick="comprarPlanoFromCard(this)" class="ssw-btn ssw-btn-primary">Começar agora</button>
                 <ul class="ssw-feature-list">
                     <li><i data-lucide="check"></i><span>Auditorias de site</span></li>
-                    <li><i data-lucide="check"></i><span>5 personas personalizadas</span></li>
+                    <li><i data-lucide="check"></i><span>Até 3 personas personalizadas</span></li>
                     <li><i data-lucide="check"></i><span>Relatórios em PDF</span></li>
                     <li><i data-lucide="check"></i><span>Sugestões de melhorias</span></li>
                     <li><i data-lucide="check"></i><span>Suporte por e-mail</span></li>
@@ -83,7 +84,7 @@
             </article>
 
             <article class="ssw-plan-card ssw-plan-featured" data-plan-card="agencia">
-                <div class="ssw-plan-badge">Mais escolhido</div>
+                <div class="ssw-plan-badge">Para agências</div>
                 <div class="ssw-plan-icon"><i data-lucide="briefcase-business"></i></div>
                 <div class="ssw-plan-name">Agência</div>
                 <div class="ssw-plan-desc">Para agências que precisam escalar análises e gerar mais valor.</div>
@@ -93,7 +94,8 @@
                         <span class="ssw-amount" data-monthly="149" data-annual="119">149</span>
                         <span class="ssw-period">/mês</span>
                     </div>
-                    <div class="ssw-credit-note">20 créditos de auditoria por mês</div>
+                    <div class="ssw-credit-note">20 créditos de auditoria no pacote mensal</div>
+                    <div class="ssw-installment" aria-live="polite">Total desta compra: R$ 149,00. Condições de pagamento no checkout.</div>
                 </div>
                 <div class="ssw-credit-options" role="group" aria-label="Escolha os créditos do plano Agência">
                     <button type="button" class="is-active" onclick="sswSelectCreditOption(this)" data-package-monthly="agencia_20_mensal" data-package-annual="agencia_20_anual" data-monthly-price="149" data-annual-price="119" data-monthly-label="20 créditos de auditoria por mês" data-annual-label="240 créditos de auditoria no ano">20 créditos</button>
@@ -101,33 +103,25 @@
                     <button type="button" onclick="sswSelectCreditOption(this)" data-package-monthly="agencia_40_mensal" data-package-annual="agencia_40_anual" data-monthly-price="219" data-annual-price="175" data-monthly-label="40 créditos de auditoria por mês" data-annual-label="480 créditos de auditoria no ano">40 créditos</button>
                 </div>
                 <button onclick="comprarPlanoFromCard(this)" class="ssw-btn ssw-btn-primary">Começar agora</button>
-                <span class="ssw-installment">ou 12x de R$ 14,90 sem juros</span>
                 <ul class="ssw-feature-list">
                     <li><i data-lucide="check"></i><span>Tudo do plano Freelancer</span></li>
-                    <li><i data-lucide="check"></i><span>12 personas personalizadas</span></li>
-                    <li><i data-lucide="check"></i><span>Relatórios White Label</span></li>
-                    <li><i data-lucide="check"></i><span>Exportar dados em CSV</span></li>
-                    <li><i data-lucide="check"></i><span>Múltiplos usuários</span></li>
-                    <li><i data-lucide="check"></i><span>Suporte prioritário</span></li>
+                    <li><i data-lucide="check"></i><span>Até 8 personas personalizadas</span></li>
+                    <li><i data-lucide="check"></i><span>Histórico de até 20 análises</span></li>
+                    <li><i data-lucide="check"></i><span>Histórico disponível por até 90 dias</span></li>
+                    <li><i data-lucide="check"></i><span>Suporte por e-mail</span></li>
                 </ul>
             </article>
 
             <article class="ssw-plan-card">
                 <div class="ssw-plan-icon"><i data-lucide="building-2"></i></div>
                 <div class="ssw-plan-name">Enterprise</div>
-                <div class="ssw-plan-desc">Para grandes volumes, integrações e relatórios sob medida.</div>
+                <div class="ssw-plan-desc">Converse com nosso time sobre as necessidades da sua empresa.</div>
                 <div class="ssw-price-block">
                     <div class="ssw-price-consult">Sob consulta</div>
                     <div class="ssw-credit-note">Fale com nosso time</div>
                 </div>
                 <button onclick="falarComVendas()" class="ssw-btn ssw-btn-outline">Falar com especialista</button>
-                <ul class="ssw-feature-list">
-                    <li><i data-lucide="check"></i><span>Tudo do plano Agência</span></li>
-                    <li><i data-lucide="check"></i><span>Créditos personalizados</span></li>
-                    <li><i data-lucide="check"></i><span>Integrações via API</span></li>
-                    <li><i data-lucide="check"></i><span>Gerente de conta dedicado</span></li>
-                    <li><i data-lucide="check"></i><span>SLA e suporte dedicado</span></li>
-                </ul>
+                <p class="ssw-credit-note">Consulte a disponibilidade, o escopo e as condições antes de contratar.</p>
             </article>
 
         </div>
@@ -149,16 +143,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Créditos de auditoria/mês</td><td>Personalizado</td><td>Personalizado</td><td>Personalizado</td></tr>
-                    <tr><td>Personas personalizadas</td><td>5</td><td>12</td><td>Personalizado</td></tr>
-                    <tr><td>Relatórios em PDF</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>Relatórios White Label</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>Exportar dados em CSV</td><td>—</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>Múltiplos usuários</td><td>—</td><td>Até 5</td><td>Personalizado</td></tr>
-                    <tr><td>Integrações via API</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>Suporte</td><td>E-mail</td><td>Prioritário</td><td>Dedicado</td></tr>
-                    <tr><td>Gerente de conta dedicado</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
-                    <tr><td>SLA (Acordo de nível de serviço)</td><td>—</td><td>—</td><td><i data-lucide="check"></i></td></tr>
+                    <tr><td>Créditos por pacote mensal</td><td>10, 15 ou 20</td><td>20, 30 ou 40</td><td>Sob consulta</td></tr>
+                    <tr><td>Créditos por pacote anual</td><td>120, 180 ou 240</td><td>240, 360 ou 480</td><td>Sob consulta</td></tr>
+                    <tr><td>Personas personalizadas</td><td>Até 3</td><td>Até 8</td><td>Sob consulta</td></tr>
+                    <tr><td>Relatórios em PDF</td><td><i data-lucide="check"></i></td><td><i data-lucide="check"></i></td><td>Sob consulta</td></tr>
+                    <tr><td>Análises no histórico</td><td>Até 10</td><td>Até 20</td><td>Sob consulta</td></tr>
+                    <tr><td>Retenção do histórico</td><td>Até 30 dias</td><td>Até 90 dias</td><td>Sob consulta</td></tr>
+                    <tr><td>Suporte</td><td>E-mail</td><td>E-mail</td><td>Sob consulta</td></tr>
                 </tbody>
             </table>
         </div>
@@ -168,12 +159,12 @@
         <h2 id="pricingFaqTitle" class="ssw-section-title">Dúvidas frequentes</h2>
         <div class="ssw-faq-grid">
             <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos têm prazo de validade?</span><i data-lucide="plus"></i></button>
-                <div class="ssw-faq-body"><p>Os créditos ficam disponíveis na conta enquanto o plano estiver ativo.</p></div>
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Quando recebo meus créditos?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Os créditos do pacote são adicionados à sua conta após a confirmação do pagamento.</p></div>
             </div>
             <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os créditos acumulam de um mês para outro?</span><i data-lucide="plus"></i></button>
-                <div class="ssw-faq-body"><p>Sim. Créditos não utilizados permanecem na conta conforme as regras do plano contratado.</p></div>
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Como é calculado o valor anual?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>No anual, o valor mensal em destaque equivale ao total do pacote dividido por 12. O total anual e a quantidade de créditos aparecem no card antes da compra.</p></div>
             </div>
             <div class="ssw-faq-item">
                 <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Posso usar para quantos sites eu quiser?</span><i data-lucide="plus"></i></button>
@@ -181,15 +172,15 @@
             </div>
             <div class="ssw-faq-item">
                 <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Vocês analisam sites em qualquer tecnologia?</span><i data-lucide="plus"></i></button>
-                <div class="ssw-faq-body"><p>Sim. A análise avalia a experiência entregue ao usuário final, independente da tecnologia usada.</p></div>
+                <div class="ssw-faq-body"><p>A análise usa a página pública exibida no navegador. Sites que exigem login ou bloqueiam o acesso podem impedir a captura.</p></div>
             </div>
             <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Os relatórios são white label?</span><i data-lucide="plus"></i></button>
-                <div class="ssw-faq-body"><p>White Label está disponível nos planos Agência e Enterprise.</p></div>
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Posso exportar o relatório?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>Os relatórios disponíveis podem ser exportados em PDF pela plataforma.</p></div>
             </div>
             <div class="ssw-faq-item">
-                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Como funciona o cancelamento?</span><i data-lucide="plus"></i></button>
-                <div class="ssw-faq-body"><p>Você pode cancelar quando quiser. O acesso segue ativo até o fim do ciclo já contratado.</p></div>
+                <button class="ssw-faq-trigger" onclick="sswToggleFAQ(this)" aria-expanded="false"><span>Quais são as condições de pagamento?</span><i data-lucide="plus"></i></button>
+                <div class="ssw-faq-body"><p>As formas de pagamento e as condições de parcelamento são apresentadas no checkout antes da confirmação.</p></div>
             </div>
         </div>
         <p class="ssw-faq-help"><i data-lucide="circle-help"></i> Ainda tem dúvidas? Fale com nosso time</p>
@@ -203,7 +194,7 @@
             </div>
             <div>
                 <button onclick="comprarPlanoRecomendadoAtual()" class="ssw-btn-cta">Começar agora <i data-lucide="arrow-right"></i></button>
-                <span><i data-lucide="lock-keyhole"></i> Pagamento 100% seguro</span>
+                <span><i data-lucide="lock-keyhole"></i> Pagamento via Mercado Pago</span>
             </div>
         </div>
     </section>

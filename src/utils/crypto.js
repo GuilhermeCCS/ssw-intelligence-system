@@ -1,7 +1,8 @@
 /**
- * Utilitário de Criptografia para Dados Sensíveis
+ * Utilitário de armazenamento local com compatibilidade de sessões existentes.
  * Usa Web Crypto API para criptografia AES-GCM
- * Segue as melhores práticas OWASP para derivação de chaves
+ * A chave é armazenada no mesmo navegador. Isto não protege contra XSS nem
+ * substitui autorização no servidor ou cookies HttpOnly.
  * Vanilla JS - compatível com script tags
  */
 
@@ -92,7 +93,7 @@ async function encrypt(data) {
 
     return btoa(String.fromCharCode(...combined));
   } catch (error) {
-    console.error('Erro ao criptografar:', error);
+    console.error('Erro ao criptografar:');
     return null;
   }
 }
@@ -135,7 +136,7 @@ async function decrypt(encryptedData) {
 
     return JSON.parse(bufferToStr(decrypted));
   } catch (error) {
-    console.error('Erro ao descriptografar:', error);
+    console.error('Erro ao descriptografar:');
     return null;
   }
 }
@@ -153,7 +154,7 @@ const secureStorage = {
         return false;
       }
     } catch (error) {
-      console.error('Erro ao salvar dados criptografados:', error);
+      console.error('Erro ao salvar dados criptografados:');
       return false;
     }
   },
@@ -167,7 +168,7 @@ const secureStorage = {
       }
       return null;
     } catch (error) {
-      console.error('Erro ao recuperar dados criptografados:', error);
+      console.error('Erro ao recuperar dados criptografados:');
       return null;
     }
   },
@@ -177,18 +178,18 @@ const secureStorage = {
       localStorage.removeItem(key);
       return true;
     } catch (error) {
-      console.error('Erro ao remover dados:', error);
+      console.error('Erro ao remover dados:');
       return false;
     }
   },
 
-  // Método para limpar todos os dados criptografados
+  // Clear only this utility's entries; preserve consent and unrelated preferences.
   clear() {
     try {
-      localStorage.clear();
+      ['USER', 'SSW_SESSION', 'SSW_PREFERENCES'].forEach(key => localStorage.removeItem(key));
       return true;
     } catch (error) {
-      console.error('Erro ao limpar storage:', error);
+      console.error('Erro ao limpar storage:');
       return false;
     }
   },
@@ -224,7 +225,7 @@ const secureStorage = {
       
       return { success: false, migrated: false };
     } catch (error) {
-      console.error('Erro ao migrar dado:', error);
+      console.error('Erro ao migrar dado:');
       return { success: false, migrated: false };
     }
   }
@@ -250,6 +251,6 @@ window.secureStorage = secureStorage;
       }
     }
   } catch (error) {
-    console.warn('Erro na migração automática:', error);
+    console.warn('Erro na migração automática:');
   }
 })();

@@ -51,7 +51,7 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
                     return extractPersonasPayload(data, includeSystem);
                 }
                 if (requireAuth || !includeSystem) {
-                    throw new Error(data.detail || `Erro ao carregar personas (${res.status})`);
+                    throw new Error(publicErrorMessage(null, 'Não foi possível carregar suas personas.', res.status));
                 }
             } else if (requireAuth || !includeSystem) {
                 throw new Error("Faça login para carregar suas personas.");
@@ -60,12 +60,13 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
             const catalogRes = await fetch(`${API_URL}/api/personas/catalog`);
             const catalogData = await catalogRes.json().catch(() => ({}));
             if (!catalogRes.ok) {
-                throw new Error(catalogData.detail || `Erro ao carregar catálogo de personas (${catalogRes.status})`);
+                throw new Error(publicErrorMessage(null, 'Não foi possível carregar as personas disponíveis.', catalogRes.status));
             }
             return extractPersonasPayload(catalogData, true);
         }
 
         // Função para mostrar tela de autenticação
+    let authReturnFocus = null;
     function setAuthBackdropState(isActive) {
         const elements = [
             document.getElementById('mainContent'),
@@ -75,6 +76,7 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
             document.getElementById('sidebarRevealButton')
         ].filter(Boolean);
         elements.forEach((element) => {
+            element.inert = isActive;
             if (isActive) {
                 element.style.setProperty('filter', 'blur(8px) saturate(0.78)', 'important');
                 element.style.setProperty('opacity', '0.36', 'important');
@@ -100,12 +102,20 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
     }
 
     function showAuthScreen(type = 'login', pushRoute = true) {
+    if (!document.body.classList.contains('auth-page-active')) authReturnFocus = document.activeElement;
     const route = type === 'register' ? '/cadastro' : '/login';
     if (pushRoute && window.location.pathname !== route) {
         window.history.pushState({}, '', route);
     }
     setAuthPageState(true);
     document.getElementById('authScreen').classList.remove('hidden');
+    requestAnimationFrame(() => {
+        const screen = document.getElementById('authScreen');
+        if (!screen.classList.contains('hidden')) {
+            const input = screen.querySelector(type === 'register' ? '#regEmail' : '#loginEmail');
+            input?.focus({ preventScroll: true });
+        }
+    });
 
     // Abre a aba correta (Login ou Cadastro) dependendo de qual botão foi clicado
     if (type === 'register') {
@@ -139,7 +149,32 @@ const API_URL = window.ENV?.API_URL || "https://ssw-intelligence-api.onrender.co
         function hideAuthScreen() {
             document.getElementById('authScreen').classList.add('hidden');
             setAuthPageState(false);
+            if (authReturnFocus?.isConnected) authReturnFocus.focus({ preventScroll: true });
+            authReturnFocus = null;
         }
+
+        document.addEventListener('keydown', event => {
+            const screen = document.getElementById('authScreen');
+            if (!screen || screen.classList.contains('hidden')) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeAuthScreenToHome();
+                return;
+            }
+            if (event.key !== 'Tab') return;
+            const focusable = Array.from(screen.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), iframe, [tabindex="0"]'))
+                .filter(element => element.getClientRects().length > 0 && !element.closest('[inert]'));
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (!first) return;
+            if (event.shiftKey && (document.activeElement === first || !screen.contains(document.activeElement))) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && (document.activeElement === last || !screen.contains(document.activeElement))) {
+                event.preventDefault();
+                first.focus();
+            }
+        });
 
         function closeAuthScreenToHome() {
             if (typeof nav === 'function') {

@@ -169,13 +169,12 @@ function scoreWidth(siteOrNumber) {
 
 function metricValue(site, keys, offset = 0) {
     for (const key of keys) {
-        const value = Number(site?.[key]);
+        if (site?.[key] === null || site?.[key] === undefined || site?.[key] === '') continue;
+        const value = Number(site[key]);
         if (Number.isFinite(value)) return Math.round(Math.max(0, Math.min(100, value)));
     }
 
-    const base = scoreValue(site);
-    if (base === null) return '--';
-    return Math.round(Math.max(0, Math.min(100, base + offset)));
+    return '--';
 }
 
 function siteName(site) {
@@ -326,7 +325,7 @@ async function loadRanking() {
 
         console.log('ranking carregado com sucesso');
     } catch (e) {
-        console.error('Erro no loadRanking:', e);
+        console.error('Não foi possível carregar o ranking.');
         renderRankingError();
     }
 }

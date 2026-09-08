@@ -28,7 +28,11 @@ if (apiUrlMetaEnv) {
 const isLocalFrontend = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(String(window.location.hostname || '').toLowerCase());
 const forceRemoteApi = new URLSearchParams(window.location.search || '').get('remoteApi') === '1';
 if (isLocalFrontend && !forceRemoteApi) {
-  window.ENV.API_URL = localStorage.getItem('ssw_local_api_url') || 'http://localhost:8080';
+  try {
+    window.ENV.API_URL = localStorage.getItem('ssw_local_api_url') || 'http://localhost:8080';
+  } catch (_) {
+    window.ENV.API_URL = 'http://localhost:8080';
+  }
   console.info('SSW local: usando API local em', window.ENV.API_URL);
 }
 
@@ -54,7 +58,7 @@ if (!window.ENV.VITE_MP_PUBLIC_KEY) {
     });
 }
 
-// Método 3: Fallback para desenvolvimento local (lê de .env se disponível)
+// A configuração pública precisa ser fornecida durante o build.
 if (!window.ENV.VITE_MP_PUBLIC_KEY) {
-  console.warn('⚠️ Variável de ambiente não encontrada - usando fallback hardcoded');
+  console.warn('Configuração de pagamento indisponível.');
 }

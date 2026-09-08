@@ -21,7 +21,7 @@ async function loadStandalonePricingPage() {
         }
         window.dispatchEvent(new Event('loadPricingSection'));
     } catch (error) {
-        console.error('Erro ao carregar página de preços:', error);
+        console.error('Erro ao carregar página de preços:');
         container.innerHTML = `
             <section class="pricing-page-error">
                 <h1>Não foi possível carregar os preços</h1>

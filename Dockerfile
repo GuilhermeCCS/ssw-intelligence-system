@@ -14,14 +14,12 @@ COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
 COPY . ./
-RUN npm run build \
-    && mkdir /site \
-    && cp -R index.html precos public sites src termos _redirects /site/
+RUN npm run build
 
 FROM nginx:alpine
 
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /site/ /usr/share/nginx/html/
+COPY --from=build /app/dist/ /usr/share/nginx/html/
 
 EXPOSE 80
 

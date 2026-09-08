@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="env-mp-public-key" content="APP_USR-0666c374-0f5e-4421-b67d-f9879c8866ac">
     <meta name="env-api-url" content="https://ssw-intelligence-api.onrender.com">
-    <meta name="env-google-client-id" content="364411998724-tsm44qcrauagi6s4ke58rbqe6p21b2st.apps.googleusercontent.com">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="env-google-client-id" content="364411998724-tsm44qcrauagi6s4ke58rbqe6p21b2st.apps.googleusercontent.com">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Preços da SSWINTELLIGENCE para auditoria web com IA, créditos e relatórios profissionais.">
     <title>Preços | SSWINTELLIGENCE</title>
     <link rel="canonical" href="https://sswintelligence.com.br/precos/">
@@ -29,15 +29,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/src/config/tailwind.cdn.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/src/vendor/lucide/lucide.min.js?v=1.43.0"></script>
+    <script src="/src/vendor/lucide/legacy-brand.js?v=1"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="/src/utils/errors.js?v=20260908-security-1"></script>
     <script src="/src/utils/env-injector.js"></script>
-    <script src="/src/utils/crypto.js"></script>
-    <script src="/src/app/payments/mercado-pago-checkout.js"></script>
+    <script src="/src/utils/crypto.js?v=20260908-security-1"></script>
+    <script src="/src/app/payments/mercado-pago-checkout.js?v=20260908-security-1"></script>
     <link rel="stylesheet" href="/src/styles/cyber-theme.css">
     <link rel="stylesheet" href="/src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
-    <script src="/src/app/ui/toast.js"></script>
+    <script src="/src/app/ui/toast.js?v=20260908-security-1"></script>
     <script src="/src/app/ui/cookie-consent.js?v=20260616-cookie-consent-4" defer></script>
     <script src="/src/components/pricing/pricing-component.js?v=20260708-pricing-agency-credits-v1" defer></script>
     <script src="/src/app/sections/pricing-page.js?v=20260708-pricing-agency-credits-v1" defer></script>
@@ -246,12 +248,12 @@
                 <a href="/home">Plataforma</a>
                 <a href="/home#recursos">Recursos</a>
                 <a href="/precos/" class="is-active" aria-current="page">Preços</a>
-                <a href="/home#sobre">Sobre</a>
-                <a href="/home#contato">Contato</a>
+                <a href="/home#como-funciona">Como funciona</a>
+                <a href="mailto:contato@sswintelligence.com.br">Contato</a>
             </nav>
             <nav class="terms-top-actions" aria-label="Ações principais">
-                <a href="/home">Entrar</a>
-                <a href="/home">Começar agora</a>
+                <a href="/login">Entrar</a>
+                <a href="/cadastro">Começar agora</a>
             </nav>
         </div>
     </header>

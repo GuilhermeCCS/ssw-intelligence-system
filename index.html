@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -10,19 +10,20 @@
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://sdk.mercadopago.com https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://js.cloudflare.com https://accounts.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://accounts.google.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' http://localhost:8080 http://127.0.0.1:8080 https://ssw-intelligence-api.onrender.com https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://*.mlstatic.com https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://unpkg.com https://accounts.google.com https://static.cloudflareinsights.com https://cloudflareinsights.com; media-src 'self' blob:; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.br https://*.mercadolibre.com https://*.mercadolivre.com.br https://challenges.cloudflare.com https://accounts.google.com; worker-src 'self' blob:;">
     <!-- Console cleaner: use localStorage.SSW_DEBUG = "1" or ?debug to re-enable logs -->
-    <script src="src/app/ui/console-cleaner.js"></script>
+    <script src="src/app/ui/console-cleaner.js?v=20260908-security-1"></script>
     <!-- Mercado Pago SDK v2 -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <!-- Environment Variables Injector (carrega primeiro) -->
+    <script src="src/utils/errors.js?v=20260908-security-1"></script>
     <script src="src/utils/env-injector.js?v=20260703-local-api-1"></script>
     <!-- DOMPurify para sanitização de inputs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="/src/vendor/dompurify/purify.min.js?v=3.4.15"></script>
     <!-- Sanitizer Util -->
-    <script src="src/utils/sanitizer.js"></script>
+    <script src="src/utils/sanitizer.js?v=20260908-security-1"></script>
     <!-- Checkout Mercado Pago (carrega primeiro para definir window.openCheckout) -->
-    <script src="src/app/payments/mercado-pago-checkout.js"></script>
+    <script src="src/app/payments/mercado-pago-checkout.js?v=20260908-security-1"></script>
     <!-- Crypto Security (carrega antes para definir secureStorage) -->
-    <script src="src/utils/crypto.js"></script>
+    <script src="src/utils/crypto.js?v=20260908-security-1"></script>
     <!-- Cloudflare Turnstile -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- Google Identity Services -->
@@ -80,10 +81,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="src/config/tailwind.cdn.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/src/vendor/lucide/lucide.min.js?v=1.43.0"></script>
+    <script src="/src/vendor/lucide/legacy-brand.js?v=1"></script>
     <!-- jsPDF e AutoTable para geração de PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="/src/vendor/jspdf/jspdf.umd.min.js?v=4.2.1"></script>
+    <script src="/src/vendor/jspdf-autotable/jspdf.plugin.autotable.min.js?v=5.0.8"></script>
     <!-- Cyber/SaaS Theme -->
     <link rel="stylesheet" href="src/styles/cyber-theme.css">
     <!-- Base Styles -->
@@ -123,9 +125,9 @@
             <p class="support-form-note">A mensagem será enviada para contato@sswintelligence.com.br.</p>
         </form>
     </div>
-    <script src="src/app/ui/toast.js"></script>
+    <script src="src/app/ui/toast.js?v=20260908-security-1"></script>
     <script src="src/app/ui/cookie-consent.js?v=20260616-cookie-consent-4"></script>
-    <script src="src/app/auth/auth-shell.js?v=20260615-logout-flow-1"></script>
+    <script src="src/app/auth/auth-shell.js?v=20260908-security-1"></script>
     <div id="authScreen" class="fixed inset-0 z-50 hidden auth-split-screen">
         <div class="auth-split-shell" role="dialog" aria-modal="true" aria-label="Autenticação S.S.W Intelligence">
             <section class="auth-split-form-panel">
@@ -568,8 +570,8 @@
                             <div class="manual-persona-head"><div><span class="manual-persona-kicker">Modo manual</span><h3>Escolha a pessoa</h3><p>Selecione quem deve orientar a análise desta URL.</p></div><span id="agentSelCount" class="manual-persona-count">0 / 1</span></div>
                             <div class="manual-persona-controls">
                                 <label class="manual-persona-search" for="manualPersonaSearch"><i data-lucide="search" class="w-4 h-4"></i><input id="manualPersonaSearch" type="text" placeholder="Buscar pessoas..." oninput="handleManualPersonaFilterChange()" class="input-pro"></label>
-                                <select id="manualPersonaNiche" onchange="handleManualPersonaFilterChange()" class="input-pro"><option value="all">Todos os nichos</option></select>
-                                <select id="manualPersonaType" onchange="handleManualPersonaFilterChange()" class="input-pro"><option value="all">Catálogo</option></select>
+                                <select id="manualPersonaNiche" aria-label="Filtrar personas por nicho" onchange="handleManualPersonaFilterChange()" class="input-pro"><option value="all">Todos os nichos</option></select>
+                                <select id="manualPersonaType" aria-label="Filtrar personas por tipo" onchange="handleManualPersonaFilterChange()" class="input-pro"><option value="all">Catálogo</option></select>
                             </div>
                             <div class="manual-persona-view-switcher" role="group" aria-label="Visualização das personas">
                                 <span>Visualização</span>
@@ -649,16 +651,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         <div class="md:col-span-3 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nome do Perfil</label>
-                            <input type="text" id="newAgentName" maxlength="20" placeholder="Ex: Cliente ocupado" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newAgentDesc').focus();}">
+                            <input type="text" id="newAgentName" aria-label="Nome do perfil" maxlength="20" placeholder="Ex: Cliente ocupado" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('newAgentDesc').focus();}">
                         </div>
                         <div class="md:col-span-5 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Descrição Comportamental</label>
-                            <input type="text" id="newAgentDesc" maxlength="160" placeholder="Ex: desconfiado, apressado, leigo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
+                            <input type="text" id="newAgentDesc" aria-label="Descrição comportamental" maxlength="160" placeholder="Ex: desconfiado, apressado, leigo" class="input-pro w-full rounded-xl p-3 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();if(!USER||!USER.email){showAuthScreen('register');return;}createAgent();}">
                             <p class="text-[11px] text-slate-500 ml-1">Separe por vírgulas. Até 7 descrições, com 20 caracteres cada.</p>
                         </div>
                         <div class="md:col-span-2 space-y-2">
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Nicho</label>
-                            <input type="text" id="newAgentNiche" maxlength="20" placeholder="Ex: restaurante" class="input-pro w-full rounded-xl p-3 text-white text-sm">
+                            <input type="text" id="newAgentNiche" aria-label="Nicho do perfil" maxlength="20" placeholder="Ex: restaurante" class="input-pro w-full rounded-xl p-3 text-white text-sm">
                         </div>
                         <div class="md:col-span-2 md:pt-[24px]">
                             <button id="createAgentBtn" onclick="if(!USER||!USER.email){showAuthScreen('login');return;}createAgent()" class="btn-primary w-full text-white py-3 rounded-xl font-bold text-xs h-[46px] shadow-lg">SALVAR</button>
@@ -695,7 +697,7 @@
                         <div>
                             <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-1">Site que bloqueou a auditoria</label>
                             <div class="mt-2 flex flex-col sm:flex-row gap-3">
-                                <input id="authorizedDomainInput" type="text" placeholder="exemplo.com.br" class="input-pro flex-1 rounded-xl p-4 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();createAuthorizedDomain();}">
+                                <input id="authorizedDomainInput" aria-label="Domínio autorizado" type="text" placeholder="exemplo.com.br" class="input-pro flex-1 rounded-xl p-4 text-white text-sm" onkeydown="if(event.key==='Enter'){event.preventDefault();createAuthorizedDomain();}">
                                 <button onclick="createAuthorizedDomain()" class="btn-primary text-white font-bold px-6 py-4 rounded-xl">
                                     Gerar instrução
                                 </button>
@@ -1688,7 +1690,7 @@
                     </div>
                 </section>
             </div>
-            <script src="src/app/core/main.js?v=20260907-audit-entry-1"></script>
+            <script src="src/app/core/main.js?v=20260908-security-1"></script>
             <script src="src/app/ui/landing.js?v=20260907-3"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
@@ -1736,7 +1738,7 @@
     <div id="chatBackBtn" style="display:none;"></div>
 </div>
 <!-- Modal de Verificação de Segurança -->
-<div id="verifyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+<div id="verifyModal" role="dialog" aria-modal="true" aria-label="Verificação de conta" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
     <div class="glass-panel p-8 rounded-2xl border border-slate-700 w-full max-w-md text-center relative overflow-hidden">
         <div class="relative z-10">
             <div class="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700 shadow-lg">
@@ -1747,7 +1749,7 @@
                 Para liberar sua <span class="text-primary font-bold">conta</span>, digite o código de 6 dígitos enviado para o seu e-mail.
             </p>
             <div class="space-y-4">
-                <input type="text" id="inputVerifyCode" placeholder="000000" maxlength="6"
+                <input type="text" id="inputVerifyCode" aria-label="Código de verificação" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" maxlength="6"
                        class="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 text-center text-3xl font-mono text-white tracking-[1em] outline-none focus:border-primary transition-all placeholder-slate-800">
                 <button onclick="confirmarCodigoAPI()" class="btn-primary w-full text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2">
                     <i data-lucide="unlock" class="w-4 h-4"></i> LIBERAR ACESSO

@@ -14,7 +14,7 @@
                         setTimeout(checkForAuditResults, 0);
                     }
                 } catch (error) {
-                    console.error('Erro ao carregar footer:', error);
+                    console.error('Erro ao carregar footer:');
                 }
             }
 

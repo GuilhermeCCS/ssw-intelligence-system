@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /login
+Disallow: /cadastro
+Disallow: /history
+Disallow: /agents
+Disallow: /domains
+Disallow: /errors/
+
+Sitemap: https://sswintelligence.com.br/sitemap.xml
