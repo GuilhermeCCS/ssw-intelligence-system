@@ -688,9 +688,10 @@
         }
 
         function setHomePresentationVisible(visible) {
-            document.querySelectorAll('.home-editorial-section').forEach(section => {
+            document.querySelectorAll('.home-editorial-section, #view-home > .lp-editorial').forEach(section => {
                 section.classList.toggle('hidden', !visible);
             });
+            if (visible) document.getElementById('view-home')?.classList.remove('is-showing-audit');
             const spacer = document.getElementById('homeFooterSpacer');
             if (spacer) spacer.classList.toggle('hidden', !visible);
         }
@@ -698,6 +699,7 @@
         function setAnalysisFocusState(active) {
             const heroSection = document.getElementById('heroSection');
             if (heroSection) heroSection.classList.toggle('is-analysis-focus', !!active);
+            if (active) document.getElementById('view-home')?.classList.remove('is-showing-audit');
             if (!active) setAnalysisModeState('auto');
         }
 
@@ -795,6 +797,7 @@
         function showHomeAnalysisState() {
             setAnalysisFocusState(false);
             setHomePresentationVisible(false);
+            document.getElementById('view-home')?.classList.add('is-showing-audit');
             document.getElementById('auditCancelNotice')?.remove();
             document.getElementById('heroSection')?.classList.add('hidden');
             document.getElementById('emptyStateCards')?.classList.add('hidden');
