@@ -18,6 +18,9 @@
         analytics: ['SSW_ANALYTICS_SESSION', 'SSW_ANALYTICS_ID'],
         marketing: ['SSW_MARKETING_SOURCE', 'SSW_CAMPAIGN_OPT_IN']
     };
+    // First visit: let the page settle before asking.
+    const BANNER_DELAY_MS = 700;
+    const EXIT_FALLBACK_MS = 400;
 
     let storage = null;
     let lastFocusedElement = null;
@@ -37,6 +40,10 @@
             };
         }
         return storage;
+    }
+
+    function prefersReducedMotion() {
+        return Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     }
 
     function normalizeCategories(categories) {
@@ -126,42 +133,42 @@
             {
                 key: 'necessary',
                 title: 'Necess&aacute;rios',
-                description: 'Mant&ecirc;m a base operacional da SSW: sess&atilde;o autenticada, prote&ccedil;&atilde;o contra abuso, valida&ccedil;&otilde;es de seguran&ccedil;a, pagamentos e o registro da sua escolha de privacidade.',
-                disabled: true
+                description: 'Mant&ecirc;m login, prote&ccedil;&atilde;o contra abuso, valida&ccedil;&otilde;es de seguran&ccedil;a, pagamentos e o registro desta escolha. Sem eles o site n&atilde;o funciona.',
+                alwaysOn: true
             },
             {
                 key: 'preferences',
                 title: 'Prefer&ecirc;ncias',
-                description: 'Preservam ajustes que tornam o uso mais cont&iacute;nuo, como escolhas de interface, estado de componentes, prefer&ecirc;ncias de navega&ccedil;&atilde;o e configura&ccedil;&otilde;es que evitam retrabalho.',
-                disabled: false
+                description: 'Lembram ajustes de interface e de navega&ccedil;&atilde;o, como o estado do menu lateral, para voc&ecirc; n&atilde;o refazer tudo a cada visita.'
             },
             {
                 key: 'analytics',
-                title: 'Analytics e desempenho',
-                description: 'Coletam sinais agregados de uso, estabilidade, velocidade e erros para identificar gargalos reais e priorizar melhorias que afetam a experi&ecirc;ncia de auditoria.',
-                disabled: false
+                title: 'Desempenho',
+                description: 'Medem uso, velocidade e erros de forma agregada, para encontrar lentid&otilde;es reais e priorizar melhorias.'
             },
             {
                 key: 'marketing',
-                title: 'Marketing e comunica&ccedil;&atilde;o',
-                description: 'Ajudam a calibrar comunica&ccedil;&otilde;es sobre planos, cr&eacute;ditos, conte&uacute;dos e novidades para que voc&ecirc; receba mensagens mais pertinentes ao seu momento na plataforma.',
-                disabled: false
+                title: 'Comunica&ccedil;&atilde;o',
+                description: 'Ajudam a ajustar mensagens sobre planos, cr&eacute;ditos e novidades ao seu momento na plataforma.'
             }
         ].map(function(item) {
-            const toggleId = 'cookieToggle' + item.key.charAt(0).toUpperCase() + item.key.slice(1);
-            return [
-                '<article class="cookie-category-card">',
-                    '<div class="cookie-category-copy">',
-                        '<div class="cookie-category-title-row">',
-                            '<h3>', item.title, '</h3>',
-                        '</div>',
-                        '<p>', item.description, '</p>',
-                    '</div>',
-                    '<label class="cookie-toggle" for="', toggleId, '">',
-                        '<input id="', toggleId, '" class="cookie-toggle-input" type="checkbox" data-cookie-toggle="', item.key, '"', item.disabled ? ' checked disabled' : '', '>',
+            const id = 'cookieCategory' + item.key.charAt(0).toUpperCase() + item.key.slice(1);
+            const control = item.alwaysOn
+                ? '<span class="cookie-always-on">Sempre ativo</span>'
+                : [
+                    '<label class="cookie-toggle">',
+                        '<input class="cookie-toggle-input" type="checkbox" role="switch" data-cookie-toggle="', item.key, '" aria-labelledby="', id, 'Title" aria-describedby="', id, 'Text">',
                         '<span class="cookie-toggle-track" aria-hidden="true"><span></span></span>',
-                    '</label>',
-                '</article>'
+                    '</label>'
+                ].join('');
+            return [
+                '<div class="cookie-category">',
+                    '<div class="cookie-category-copy">',
+                        '<h3 id="', id, 'Title">', item.title, '</h3>',
+                        '<p id="', id, 'Text">', item.description, '</p>',
+                    '</div>',
+                    control,
+                '</div>'
             ].join('');
         }).join('');
     }
@@ -169,20 +176,17 @@
     function ensureElements() {
         if (!document.getElementById('cookieConsentBanner')) {
             document.body.insertAdjacentHTML('beforeend', [
-                '<div id="cookieConsentBanner" class="cookie-consent-banner hidden" role="dialog" aria-labelledby="cookieConsentTitle" aria-describedby="cookieConsentDescription">',
-                    '<div class="cookie-consent-shell">',
-                        '<div class="cookie-consent-copy">',
-                            '<p class="cookie-consent-kicker">Privacidade SSW</p>',
-                            '<h2 id="cookieConsentTitle">Cookies e privacidade</h2>',
-                            '<p id="cookieConsentDescription">Usamos cookies essenciais para manter login, seguran&ccedil;a, auditorias e pagamentos funcionando com estabilidade. Com sua permiss&atilde;o, tamb&eacute;m usamos dados opcionais para lembrar prefer&ecirc;ncias, medir desempenho e tornar comunica&ccedil;&otilde;es mais relevantes.</p>',
-                        '</div>',
+                '<section id="cookieConsentBanner" class="cookie-consent-banner hidden" aria-labelledby="cookieConsentTitle" aria-describedby="cookieConsentDescription">',
+                    '<div class="cookie-consent-card">',
+                        '<h2 id="cookieConsentTitle">Cookies</h2>',
+                        '<p id="cookieConsentDescription">Usamos cookies necess&aacute;rios para login, seguran&ccedil;a e pagamentos. Prefer&ecirc;ncias, medi&ccedil;&atilde;o de desempenho e comunica&ccedil;&atilde;o s&oacute; s&atilde;o ativadas se voc&ecirc; permitir. <a href="/termos/">Termos e privacidade</a></p>',
                         '<div class="cookie-consent-actions">',
-                            '<button type="button" class="cookie-btn cookie-btn-ghost" data-cookie-action="reject">Recusar tudo</button>',
-                            '<button type="button" class="cookie-btn cookie-btn-secondary" data-cookie-action="settings">Configura&ccedil;&otilde;es</button>',
-                            '<button type="button" class="cookie-btn cookie-btn-primary" data-cookie-action="accept">Aceitar cookies</button>',
+                            '<button type="button" class="cookie-btn cookie-btn-secondary" data-cookie-action="reject">Recusar opcionais</button>',
+                            '<button type="button" class="cookie-btn cookie-btn-primary" data-cookie-action="accept">Aceitar todos</button>',
                         '</div>',
+                        '<button type="button" class="cookie-link-btn" data-cookie-action="settings">Escolher o que permitir</button>',
                     '</div>',
-                '</div>'
+                '</section>'
             ].join(''));
         }
 
@@ -190,23 +194,22 @@
             document.body.insertAdjacentHTML('beforeend', [
                 '<div id="cookieSettingsModal" class="cookie-settings-modal hidden" aria-hidden="true">',
                     '<div class="cookie-settings-backdrop" data-cookie-action="close-settings"></div>',
-                    '<section class="cookie-settings-card" role="dialog" aria-modal="true" aria-labelledby="cookieSettingsTitle" tabindex="-1">',
-                        '<button type="button" class="cookie-settings-close" data-cookie-action="close-settings" aria-label="Fechar configura&ccedil;&otilde;es">',
-                            '<i data-lucide="x"></i>',
+                    '<section class="cookie-settings-card" role="dialog" aria-modal="true" aria-labelledby="cookieSettingsTitle" aria-describedby="cookieSettingsDescription" tabindex="-1">',
+                        '<button type="button" class="cookie-settings-close" data-cookie-action="close-settings" aria-label="Fechar prefer&ecirc;ncias de cookies">',
+                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',
                         '</button>',
                         '<div class="cookie-settings-head">',
-                            '<p class="cookie-consent-kicker">Central de privacidade</p>',
-                            '<h2 id="cookieSettingsTitle">Gerenciar cookies</h2>',
-                            '<p>Escolha quais recursos opcionais podem ficar ativos neste navegador. A categoria necess&aacute;ria permanece ligada para preservar conta, seguran&ccedil;a, cobran&ccedil;as e funcionamento b&aacute;sico do sistema.</p>',
-                            '<p class="cookie-reject-note"><strong>Se voc&ecirc; recusar tudo:</strong> o acesso principal continua funcionando, mas a SSW n&atilde;o poder&aacute; lembrar prefer&ecirc;ncias opcionais, medir com precis&atilde;o pontos de lentid&atilde;o ou adaptar comunica&ccedil;&otilde;es sobre planos, cr&eacute;ditos e novidades ao seu uso.</p>',
+                            '<h2 id="cookieSettingsTitle">Prefer&ecirc;ncias de cookies</h2>',
+                            '<p id="cookieSettingsDescription">Escolha o que fica ativo neste navegador. Voc&ecirc; pode mudar essa escolha quando quiser.</p>',
                         '</div>',
                         '<div class="cookie-category-list">',
                             buildCategoryRows(),
                         '</div>',
+                        '<p class="cookie-reject-note">Se recusar os opcionais, tudo continua funcionando. S&oacute; deixamos de lembrar suas prefer&ecirc;ncias, medir lentid&otilde;es com precis&atilde;o e ajustar comunica&ccedil;&otilde;es ao seu uso.</p>',
                         '<div class="cookie-settings-actions">',
-                            '<button type="button" class="cookie-btn cookie-btn-ghost" data-cookie-action="reject">Recusar tudo</button>',
-                            '<button type="button" class="cookie-btn cookie-btn-secondary" data-cookie-action="save">Salvar prefer&ecirc;ncias</button>',
-                            '<button type="button" class="cookie-btn cookie-btn-primary" data-cookie-action="accept">Aceitar todos</button>',
+                            '<button type="button" class="cookie-btn cookie-btn-secondary" data-cookie-action="reject">Recusar opcionais</button>',
+                            '<button type="button" class="cookie-btn cookie-btn-secondary" data-cookie-action="accept">Aceitar todos</button>',
+                            '<button type="button" class="cookie-btn cookie-btn-primary" data-cookie-action="save">Salvar escolhas</button>',
                         '</div>',
                     '</section>',
                 '</div>'
@@ -214,7 +217,6 @@
         }
 
         bindEvents();
-        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     function bindEvents() {
@@ -240,27 +242,74 @@
         if (document.body.dataset.cookieEscapeReady === 'true') return;
         document.body.dataset.cookieEscapeReady = 'true';
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') hideSettings();
+            const modal = document.getElementById('cookieSettingsModal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            if (event.key === 'Escape') {
+                hideSettings();
+            } else if (event.key === 'Tab') {
+                trapFocus(event, modal);
+            }
         });
+    }
+
+    // aria-modal promises the rest of the page is out of reach, so Tab cycles inside the dialog.
+    function trapFocus(event, modal) {
+        const focusable = Array.prototype.filter.call(
+            modal.querySelectorAll('button, [href], input:not([disabled])'),
+            function(element) { return element.offsetParent !== null; }
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+
+    // Plays the element's exit animation, then hides it. Reduced motion hides at once.
+    function leave(element, onDone) {
+        if (!element || element.classList.contains('hidden')) return;
+        const finish = function() {
+            if (!element.classList.contains('is-leaving')) return;
+            element.classList.remove('is-leaving');
+            element.classList.add('hidden');
+            if (onDone) onDone();
+        };
+        if (prefersReducedMotion()) {
+            element.classList.add('is-leaving');
+            finish();
+            return;
+        }
+        element.classList.add('is-leaving');
+        element.addEventListener('animationend', function handler(event) {
+            if (event.target !== element && !element.contains(event.target)) return;
+            element.removeEventListener('animationend', handler);
+            finish();
+        });
+        window.setTimeout(finish, EXIT_FALLBACK_MS);
     }
 
     function setToggleState(categories) {
         const normalized = normalizeCategories(categories);
         document.querySelectorAll('[data-cookie-toggle]').forEach(function(input) {
-            const key = input.dataset.cookieToggle;
-            input.checked = key === 'necessary' ? true : Boolean(normalized[key]);
+            input.checked = Boolean(normalized[input.dataset.cookieToggle]);
         });
     }
 
     function showBanner() {
         ensureElements();
         const banner = document.getElementById('cookieConsentBanner');
-        if (banner) banner.classList.remove('hidden');
+        if (!banner) return;
+        banner.classList.remove('is-leaving');
+        banner.classList.remove('hidden');
     }
 
     function hideBanner() {
-        const banner = document.getElementById('cookieConsentBanner');
-        if (banner) banner.classList.add('hidden');
+        leave(document.getElementById('cookieConsentBanner'));
     }
 
     function openSettings(trigger) {
@@ -272,29 +321,31 @@
         const modal = document.getElementById('cookieSettingsModal');
         const card = modal ? modal.querySelector('.cookie-settings-card') : null;
         if (modal) {
+            modal.classList.remove('is-leaving');
             modal.classList.remove('hidden');
             modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('cookie-settings-open');
         }
         if (card) card.focus({ preventScroll: true });
-        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     function hideSettings() {
         const modal = document.getElementById('cookieSettingsModal');
-        if (!modal || modal.classList.contains('hidden')) return;
-        modal.classList.add('hidden');
+        if (!modal || modal.classList.contains('hidden') || modal.classList.contains('is-leaving')) return;
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('cookie-settings-open');
-        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-            lastFocusedElement.focus({ preventScroll: true });
+        const returnFocus = lastFocusedElement;
+        leave(modal);
+        // The banner trigger may be gone after a choice; fall back to the page.
+        if (returnFocus && typeof returnFocus.focus === 'function' && document.contains(returnFocus) && returnFocus.offsetParent !== null) {
+            returnFocus.focus({ preventScroll: true });
         }
     }
 
     function saveSettings() {
         const categories = { necessary: true };
         document.querySelectorAll('[data-cookie-toggle]').forEach(function(input) {
-            categories[input.dataset.cookieToggle] = input.dataset.cookieToggle === 'necessary' ? true : input.checked;
+            categories[input.dataset.cookieToggle] = input.checked;
         });
         saveConsent(categories, 'custom');
     }
@@ -306,7 +357,9 @@
             applyConsent(consent);
         } else {
             applyConsent({ categories: DEFAULT_CATEGORIES });
-            showBanner();
+            window.setTimeout(function() {
+                if (!readConsent()) showBanner();
+            }, prefersReducedMotion() ? 0 : BANNER_DELAY_MS);
         }
     }
 

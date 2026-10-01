@@ -403,8 +403,10 @@
 .ssw-landing-v2 .lp-footer nav a svg { width: 14px; height: 14px; }
 .ssw-landing-v2 .lp-footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px 30px; }
 .ssw-landing-v2 .lp-footer-bottom small { color: #9aa3ad; font-size: 13.5px; }
-.ssw-landing-v2 .lp-footer-bottom nav { flex-direction: row; gap: 24px; }
+.ssw-landing-v2 .lp-footer-bottom nav { flex-direction: row; flex-wrap: wrap; gap: 0 24px; }
 .ssw-landing-v2 .lp-footer-bottom nav a { font-size: 13.5px; }
+.ssw-landing-v2 .lp-footer-bottom nav button { display: inline-flex; align-items: center; min-height: 36px; padding: 0; border: 0; background: none; color: #b5bcc4; font-family: inherit; font-size: 13.5px; cursor: pointer; }
+.ssw-landing-v2 .lp-footer-bottom nav button:hover { color: #ffffff; }
 
 /* ---------- Signed-in and audit states ---------- */
 /* The audit form lives only inside the signed-in workspace; marketing hides once signed in. */
