@@ -49,14 +49,14 @@
                     targets.set(element, Math.min(index, 3) * stagger);
                 });
             };
-            observeGroup('.lp-hero-label, #landing-title, .lp-hero-intro > p, .lp-hero-actions', 65);
-            observeGroup('.lp-tour-intro, .lp-tour', 100);
-            observeGroup('.lp-resource-heading, .lp-resource-list > article');
-            observeGroup('.lp-personas-grid > .lp-section-copy, .lp-orbit-core, .lp-persona-avatar', 95);
-            observeGroup('.lp-centered-heading, .lp-steps > li');
-            observeGroup('.lp-report-grid > .lp-section-copy, .lp-report-figure', 110);
-            observeGroup('.lp-section-heading, .lp-audiences > article');
-            observeGroup('.lp-faq-section > .lp-section-copy, .lp-faq-list');
+            observeGroup('#landing-title, .lp-hero-lede, .lp-hero-actions, .lp-hero-result', 70);
+            observeGroup('#produto .lp-heading, .lp-tour', 100);
+            observeGroup('#recursos .lp-heading, .lp-areas > li');
+            observeGroup('.lp-personas-section .lp-copy, .lp-persona-card', 95);
+            observeGroup('#como-funciona .lp-heading');
+            observeGroup('.lp-report-section .lp-copy, .lp-doc', 110);
+            observeGroup('#para-quem .lp-heading, .lp-audiences > li');
+            observeGroup('.lp-faq-grid > .lp-copy, .lp-faq-list');
             observeGroup('.lp-final-cta .lp-container > *', 65);
 
             const observer = new IntersectionObserver((entries) => {
@@ -70,6 +70,45 @@
             }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
             targets.forEach((_, element) => observer.observe(element));
         }
+        // Stages: sequences that explain the product (result arriving, journey, steps), driven by CSS.
+        const countUp = (element) => {
+            const target = Number(element.dataset.countTo);
+            if (!Number.isFinite(target)) return;
+            if (reducedMotion.matches) { element.textContent = String(target); return; }
+            const duration = 900;
+            let start;
+            const tick = (now) => {
+                start ??= now;
+                const progress = Math.min(1, (now - start) / duration);
+                element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+                if (progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        };
+        const stages = root.querySelectorAll('[data-stage]');
+        if (stages.length && 'IntersectionObserver' in window && !reducedMotion.matches) {
+            root.classList.add('lp-motion');
+            root.querySelectorAll('[data-stage] [data-count-to]').forEach((counter) => { counter.textContent = '0'; });
+            const stageObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const stage = entry.target;
+                    stage.classList.add('is-in');
+                    stage.querySelectorAll('[data-count-to]').forEach((counter) => {
+                        window.setTimeout(() => countUp(counter), Number(counter.dataset.countDelay) || 0);
+                    });
+                    stageObserver.unobserve(stage);
+                });
+            }, { threshold: 0.3, rootMargin: '0px 0px -40px 0px' });
+            stages.forEach((stage) => stageObserver.observe(stage));
+            // Switching to reduced motion mid-visit shows every stage in its final state.
+            reducedMotion.addEventListener('change', () => {
+                if (!reducedMotion.matches) return;
+                stageObserver.disconnect();
+                root.classList.remove('lp-motion');
+                root.querySelectorAll('[data-stage] [data-count-to]').forEach((counter) => { counter.textContent = counter.dataset.countTo; });
+            });
+        }
         return { enter, cancelWithin };
     };
 
@@ -80,6 +119,14 @@
         const toggle = document.getElementById('landingMenuToggle');
         if (!root || !header || !menu || !toggle) return;
         setupMotion(root);
+
+        // Header gains a soft shadow once the page scrolls under it.
+        const topSentinel = document.getElementById('inicio');
+        if (topSentinel && 'IntersectionObserver' in window) {
+            new IntersectionObserver(([entry]) => {
+                header.classList.toggle('is-scrolled', !entry.isIntersecting && entry.boundingClientRect.top < 0);
+            }).observe(topSentinel);
+        }
 
         const closeMenu = (restoreFocus = false) => {
             header.classList.remove('is-menu-open');
@@ -109,6 +156,64 @@
             });
         });
         window.matchMedia('(min-width: 901px)').addEventListener('change', () => closeMenu());
+
+        // Hero form: guests need an account first, so the URL survives sign-up and pre-fills the audit input.
+        const PENDING_URL_KEY = 'ssw:pendingAuditUrl';
+        const storage = (() => { try { return window.sessionStorage; } catch { return null; } })();
+        const normalizeUrl = (value) => {
+            const raw = value.trim();
+            if (!raw) return null;
+            const withScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
+            try {
+                const url = new URL(withScheme);
+                if (!/^https?:$/.test(url.protocol) || !url.hostname.includes('.')) return null;
+                return url.href;
+            } catch {
+                return null;
+            }
+        };
+        root.querySelectorAll('[data-hero-url-form]').forEach((form) => {
+            const input = form.querySelector('input[name="url"]');
+            const field = form.querySelector('.lp-hero-field');
+            const error = form.querySelector('[data-hero-url-error]');
+            const showError = (message) => {
+                field?.classList.toggle('is-invalid', Boolean(message));
+                if (message && field) {
+                    field.classList.remove('is-shaking');
+                    void field.offsetWidth;
+                    field.classList.add('is-shaking');
+                }
+                input?.setAttribute('aria-invalid', message ? 'true' : 'false');
+                if (!error) return;
+                error.textContent = message || '';
+                error.hidden = !message;
+            };
+            input?.addEventListener('input', () => showError(''));
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const typed = input?.value || '';
+                const url = normalizeUrl(typed);
+                if (!url) {
+                    showError(typed.trim() ? 'Confira o endereço. Exemplo: seusite.com.br' : 'Digite o endereço do site que você quer analisar.');
+                    input?.focus();
+                    return;
+                }
+                showError('');
+                try { storage?.setItem(PENDING_URL_KEY, url); } catch { /* private mode: sign-up still works */ }
+                if (typeof window.showAuthScreen === 'function') window.showAuthScreen('register');
+            });
+        });
+        const applyPendingUrl = () => {
+            if (!document.body.classList.contains('user-authenticated')) return;
+            const auditInput = document.getElementById('auditUrl');
+            let pending = null;
+            try { pending = storage?.getItem(PENDING_URL_KEY); } catch { pending = null; }
+            if (!pending || !auditInput) return;
+            if (!auditInput.value) auditInput.value = pending;
+            try { storage?.removeItem(PENDING_URL_KEY); } catch { /* ignore */ }
+        };
+        applyPendingUrl();
+        new MutationObserver(applyPendingUrl).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
         const tour = document.querySelector('[data-product-tour]');
         if (!tour) return;
@@ -151,10 +256,16 @@
             updateIndicator();
             if (movePanelFocus) panels[index].focus({ preventScroll: true });
         };
+        const TOUR_DELAY = 6500;
+        tour.style.setProperty('--lp-tour-ms', `${TOUR_DELAY}ms`);
         const scheduleAdvance = () => {
             window.clearTimeout(timer);
+            tabs.forEach(tab => tab.classList.remove('is-timing'));
             if (!autoplay || reducedMotion.matches || !inView || hovered || document.hidden || !tour.getClientRects().length) return;
-            timer = window.setTimeout(() => selectTab(tabs[(activeIndex + 1) % tabs.length], false), 6500);
+            timer = window.setTimeout(() => selectTab(tabs[(activeIndex + 1) % tabs.length], false), TOUR_DELAY);
+            const activeTab = tabs[activeIndex];
+            void activeTab.offsetWidth;
+            activeTab.classList.add('is-timing');
         };
         const setAutoplay = (enabled) => {
             autoplay = enabled && !reducedMotion.matches;

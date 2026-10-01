@@ -78,7 +78,7 @@
     }
     </script>
     <link rel="icon" type="image/x-icon" href="src/assets/images/logo/logos.ico?v=20260627-logo-ofc-v2">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="src/config/tailwind.cdn.js"></script>
     <script src="/src/vendor/lucide/lucide.min.js?v=1.43.0"></script>
@@ -91,7 +91,7 @@
     <!-- Base Styles -->
     <link rel="stylesheet" href="src/styles/base-styles.css">
     <link rel="stylesheet" href="src/styles/app.css?v=20260706-history-detail-contrast-1">
-    <link rel="stylesheet" href="src/styles/landing.css?v=20260908-hero-carousel">
+    <link rel="stylesheet" href="src/styles/landing.css?v=20260930-home-v5">
     <link rel="stylesheet" href="src/styles/audit-entry.css?v=20260907-1">
     <link rel="stylesheet" href="src/styles/cookie-consent.css?v=20260616-cookie-consent-4">
 </head>
@@ -471,90 +471,213 @@
                     </div>
                 </header>
 
-                <section id="heroSection" class="lp-hero lp-editorial" aria-labelledby="landing-title">
-                    <div id="heroPrimaryContent" class="lp-hero-copy lp-container">
-                        <div class="lp-hero-title">
-                            <p class="lp-hero-label">Auditoria de sites</p>
-                            <h1 id="landing-title">Encontre os problemas<br>do seu site.</h1>
+                <section id="heroSection" class="lp-hero lp-hero-v3 lp-editorial" aria-labelledby="landing-title">
+                    <div id="heroPrimaryContent" class="lp-hero-copy lp-container" data-stage>
+                        <h1 id="landing-title">Cole a URL.<br> Veja o que corrigir <span class="lp-hero-mark">primeiro</span>.</h1>
+                        <p class="lp-hero-lede">Performance, SEO, acessibilidade, segurança e experiência de uso num só diagnóstico, com as correções ordenadas pelo que mais pesa na conversão.</p>
+                        <div id="guestLandingActions" class="lp-hero-actions">
+                            <form class="lp-hero-form" data-hero-url-form novalidate>
+                                <label class="lp-sr-only" for="heroAuditUrl">Endereço do site</label>
+                                <div class="lp-hero-field">
+                                    <i data-lucide="globe" aria-hidden="true"></i>
+                                    <input id="heroAuditUrl" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="https://seusite.com.br" aria-describedby="heroAuditNote heroAuditError">
+                                    <button type="submit">Analisar site</button>
+                                </div>
+                                <p id="heroAuditError" class="lp-hero-error" role="alert" data-hero-url-error hidden></p>
+                                <p id="heroAuditNote" class="lp-hero-note">Cadastro gratuito · Auditorias por créditos · Nada para instalar</p>
+                            </form>
                         </div>
-                        <div class="lp-hero-intro">
-                            <p>Performance, acessibilidade e experiência de uso. A S.S.W reúne os pontos de atenção do seu site e mostra o que corrigir primeiro.</p>
-                            <div id="guestLandingActions" class="lp-hero-actions">
-                                <button type="button" class="lp-button" onclick="showAuthScreen('register')">Analisar meu site <i data-lucide="arrow-up-right"></i></button>
-                                <a class="lp-hero-demo" href="#produto">Ver um exemplo <i data-lucide="arrow-down"></i></a>
+                    </div>
+                    <div class="lp-hero-result lp-container">
+                        <p class="lp-hero-result-title"><span>Assim chega o resultado</span><a href="#produto">Ver o relatório completo <i data-lucide="arrow-down" aria-hidden="true"></i></a></p>
+                        <dl class="lp-hero-result-card" data-stage aria-label="Exemplo de resultado: análise de sswintelligence.com.br">
+                            <div><dt>Site analisado</dt><dd class="is-mono">sswintelligence.com.br</dd><dd class="is-meta">08 set 2026</dd></div>
+                            <div><dt>Score de conversão</dt><dd class="is-score"><span class="lp-count" data-count-to="85" data-count-delay="520">85</span><span class="lp-of">/100</span></dd></div>
+                            <div><dt>Maior barreira</dt><dd class="is-strong">Call to Action Oportuna</dd><dd><span class="lp-hero-chip">Impacto alto</span></dd></div>
+                            <div><dt>Próximo passo</dt><dd>Reescrever os botões da página principal com foco no benefício da auditoria.</dd></div>
+                        </dl>
+                        <figure class="lp-hero-peek" aria-hidden="true">
+                            <img src="src/assets/images/landing/report/barreiras-personas.png" alt="" width="1908" height="1079" loading="lazy" decoding="async">
+                        </figure>
+                    </div>
+                </section>
+
+                <section id="produto" class="lp-section lp-tour-section lp-editorial" aria-labelledby="product-title">
+                    <div class="lp-container">
+                        <div class="lp-heading">
+                            <h2 id="product-title">Um relatório real, por dentro.</h2>
+                            <p>Três partes de uma análise feita no próprio site da S.S.W. O conteúdo muda conforme o site analisado.</p>
+                        </div>
+                        <div class="lp-tour" data-product-tour role="region" aria-roledescription="carrossel" aria-label="Capturas do relatório da S.S.W Intelligence">
+                            <div class="lp-tour-toolbar">
+                                <div class="lp-tour-tabs" role="tablist" aria-label="Capturas do relatório">
+                                    <button id="tour-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="tour-panel-overview" tabindex="0"><span>01</span> Visão geral</button>
+                                    <button id="tour-tab-evidence" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-evidence" tabindex="-1"><span>02</span> Evidência visual</button>
+                                    <button id="tour-tab-personas" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-personas" tabindex="-1"><span>03</span> Barreiras e personas</button>
+                                </div>
+                                <button type="button" class="lp-tour-playback" data-tour-playback aria-label="Pausar carrossel" hidden>
+                                    <span data-tour-pause><i data-lucide="pause" aria-hidden="true"></i></span>
+                                    <span data-tour-play hidden><i data-lucide="play" aria-hidden="true"></i></span>
+                                    <span data-tour-playback-label>Pausar</span>
+                                </button>
                             </div>
-                            <p class="lp-hero-note">Cadastro gratuito. Auditorias por créditos.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="produto" class="lp-product-tour lp-container lp-editorial" aria-labelledby="product-title">
-                    <div class="lp-tour-intro">
-                        <h2 id="product-title">Dentro de uma análise.</h2>
-                        <p>Um relatório real, em três perspectivas.</p>
-                    </div>
-                    <div class="lp-tour" data-product-tour role="region" aria-roledescription="carrossel" aria-label="Capturas do relatório da S.S.W Intelligence">
-                        <div class="lp-tour-toolbar">
-                            <div class="lp-tour-tabs" role="tablist" aria-label="Capturas do relatório">
-                                <button id="tour-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="tour-panel-overview" tabindex="0"><span>01</span> Visão geral</button>
-                                <button id="tour-tab-evidence" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-evidence" tabindex="-1"><span>02</span> Evidência visual</button>
-                                <button id="tour-tab-personas" type="button" role="tab" aria-selected="false" aria-controls="tour-panel-personas" tabindex="-1"><span>03</span> Barreiras e personas</button>
+                            <div id="tour-slides" class="lp-tour-viewport" aria-live="off">
+                                <figure id="tour-panel-overview" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-overview" tabindex="0">
+                                    <img src="src/assets/images/landing/report/visao-geral.png" alt="Visão geral do relatório: score de conversão 85 de 100, impacto comercial, principal barreira e próximo passo recomendado." width="1915" height="1079" loading="lazy" decoding="async">
+                                    <figcaption><div><strong>O diagnóstico logo de início.</strong><p>Score de conversão, a principal barreira e o próximo passo.</p></div><a href="src/assets/images/landing/report/visao-geral.png" target="_blank" rel="noopener" aria-label="Ampliar captura da visão geral em uma nova aba">Ampliar <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
+                                </figure>
+                                <figure id="tour-panel-evidence" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-evidence" tabindex="0">
+                                    <img src="src/assets/images/landing/report/evidencia-visual.png" alt="Evidência visual no relatório: capturas da página analisada em computador e celular, lado a lado." width="1913" height="1079" loading="lazy" decoding="async">
+                                    <figcaption><div><strong>O que o visitante vê primeiro.</strong><p>A primeira impressão do site, no computador e no celular.</p></div><a href="src/assets/images/landing/report/evidencia-visual.png" target="_blank" rel="noopener" aria-label="Ampliar captura da evidência visual em uma nova aba">Ampliar <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
+                                </figure>
+                                <figure id="tour-panel-personas" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-personas" tabindex="0">
+                                    <img src="src/assets/images/landing/report/barreiras-personas.png" alt="Barreiras que travam a decisão e percepção de uma persona simulada, com indicadores de confiança, clareza e intenção de compra." width="1908" height="1079" loading="lazy" decoding="async">
+                                    <figcaption><div><strong>Onde a jornada trava.</strong><p>Pontos de atrito em ordem de impacto e a leitura de uma persona.</p></div><a href="src/assets/images/landing/report/barreiras-personas.png" target="_blank" rel="noopener" aria-label="Ampliar captura de barreiras e personas em uma nova aba">Ampliar <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
+                                </figure>
                             </div>
-                            <button type="button" class="lp-tour-playback" data-tour-playback aria-label="Pausar carrossel" hidden>
-                                <span data-tour-pause><i data-lucide="pause" aria-hidden="true"></i></span>
-                                <span data-tour-play hidden><i data-lucide="play" aria-hidden="true"></i></span>
-                                <span data-tour-playback-label>Pausar</span>
-                            </button>
-                        </div>
-                        <div id="tour-slides" class="lp-tour-viewport" aria-live="off">
-                            <figure id="tour-panel-overview" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-overview" tabindex="0">
-                                <img src="src/assets/images/landing/report/visao-geral.png" alt="Visão geral do relatório: score de conversão 85 de 100, impacto comercial, principal barreira e próximo passo recomendado." width="1915" height="1079" fetchpriority="high" decoding="async">
-                                <figcaption><div><strong>O diagnóstico, logo de início.</strong><p>Score de conversão, principal barreira e o próximo passo.</p></div><a href="src/assets/images/landing/report/visao-geral.png" target="_blank" rel="noopener" aria-label="Ampliar captura da visão geral em uma nova aba">Ampliar captura <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
-                            </figure>
-                            <figure id="tour-panel-evidence" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-evidence" tabindex="0">
-                                <img src="src/assets/images/landing/report/evidencia-visual.png" alt="Evidência visual no relatório: capturas da página analisada em computador e celular, lado a lado." width="1913" height="1079" loading="lazy" decoding="async">
-                                <figcaption><div><strong>Veja o que o visitante encontra.</strong><p>A primeira impressão do site, no desktop e no celular.</p></div><a href="src/assets/images/landing/report/evidencia-visual.png" target="_blank" rel="noopener" aria-label="Ampliar captura da evidência visual em uma nova aba">Ampliar captura <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
-                            </figure>
-                            <figure id="tour-panel-personas" class="lp-tour-slide" role="tabpanel" aria-labelledby="tour-tab-personas" tabindex="0">
-                                <img src="src/assets/images/landing/report/barreiras-personas.png" alt="Barreiras que travam a decisão e percepção de uma persona simulada, com indicadores de confiança, clareza e intenção de compra." width="1908" height="1079" loading="lazy" decoding="async">
-                                <figcaption><div><strong>Entenda onde a jornada trava.</strong><p>Pontos de atrito e a percepção de uma persona simulada.</p></div><a href="src/assets/images/landing/report/barreiras-personas.png" target="_blank" rel="noopener" aria-label="Ampliar captura de barreiras e personas em uma nova aba">Ampliar captura <i data-lucide="maximize-2" aria-hidden="true"></i></a></figcaption>
-                            </figure>
-                        </div>
-                        <div class="lp-tour-footer" data-tour-controls hidden>
-                            <p>Relatório da S.S.W Intelligence</p>
-                            <div class="lp-tour-navigation" role="group" aria-label="Navegação do carrossel">
-                                <button type="button" data-tour-prev aria-label="Captura anterior" aria-controls="tour-slides"><i data-lucide="arrow-left" aria-hidden="true"></i></button>
-                                <span class="lp-tour-counter" data-tour-counter aria-label="Captura 1 de 3">01 <span>/ 03</span></span>
-                                <button type="button" data-tour-next aria-label="Próxima captura" aria-controls="tour-slides"><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+                            <div class="lp-tour-footer" data-tour-controls hidden>
+                                <p>Relatório da S.S.W Intelligence</p>
+                                <div class="lp-tour-navigation" role="group" aria-label="Navegação do carrossel">
+                                    <button type="button" data-tour-prev aria-label="Captura anterior" aria-controls="tour-slides"><i data-lucide="arrow-left" aria-hidden="true"></i></button>
+                                    <span class="lp-tour-counter" data-tour-counter aria-label="Captura 1 de 3">01 <span>/ 03</span></span>
+                                    <button type="button" data-tour-next aria-label="Próxima captura" aria-controls="tour-slides"><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <p class="lp-tour-caption">Capturas de uma análise da plataforma. Os resultados variam conforme o site analisado.</p>
                 </section>
 
-                <section id="recursos" class="lp-resource-section lp-container lp-editorial" aria-labelledby="resources-title">
-                    <div class="lp-resource-heading"><span>O que você recebe</span><h2 id="resources-title">Uma avaliação técnica.<br>E o contexto para agir.</h2><p>Para revisar uma entrega, conversar com seu cliente ou planejar a próxima melhoria.</p></div>
-                    <div class="lp-resource-list">
-                        <article><span class="lp-resource-number">01</span><div><h3>Desempenho e estrutura</h3><p>Performance, SEO, acessibilidade e sinais de segurança organizados em um diagnóstico.</p><a href="#produto" data-tour-target="overview">Explorar diagnóstico <i data-lucide="arrow-up-right"></i></a></div></article>
-                        <article><span class="lp-resource-number">02</span><div><h3>Experiência de navegação</h3><p>Simulações com personas de IA para encontrar dúvidas e obstáculos durante o uso do site.</p><a href="#produto" data-tour-target="personas">Explorar personas <i data-lucide="arrow-up-right"></i></a></div></article>
-                        <article><span class="lp-resource-number">03</span><div><h3>Recomendações de melhoria</h3><p>Problemas explicados e correções priorizadas para transformar o relatório em trabalho de verdade.</p><a href="#produto" data-tour-target="overview">Explorar plano de ação <i data-lucide="arrow-up-right"></i></a></div></article>
+                <section id="recursos" class="lp-section lp-areas-section lp-editorial" aria-labelledby="resources-title">
+                    <div class="lp-container">
+                        <div class="lp-heading">
+                            <h2 id="resources-title">O que entra em cada análise.</h2>
+                            <p>Sinais técnicos e de experiência no mesmo relatório, sem precisar de uma ferramenta para cada coisa.</p>
+                        </div>
+                        <ul class="lp-areas">
+                            <li><i data-lucide="gauge" aria-hidden="true"></i><h3>Performance</h3><p>Tempo de carregamento e peso da página, os primeiros sinais que o visitante sente.</p></li>
+                            <li><i data-lucide="search-check" aria-hidden="true"></i><h3>SEO</h3><p>Estrutura, metadados e o que ajuda o site a ser encontrado nas buscas.</p></li>
+                            <li><i data-lucide="accessibility" aria-hidden="true"></i><h3>Acessibilidade</h3><p>Contraste, leitura e navegação para quem usa o site de formas diferentes.</p></li>
+                            <li><i data-lucide="shield-check" aria-hidden="true"></i><h3>Segurança</h3><p>Sinais técnicos de proteção, que também pesam na confiança de quem visita.</p></li>
+                            <li><i data-lucide="mouse-pointer-click" aria-hidden="true"></i><h3>Experiência de uso</h3><p>Clareza, navegação e pontos de atrito ao longo da jornada.</p></li>
+                            <li><i data-lucide="target" aria-hidden="true"></i><h3>Conversão</h3><p>Score de 0 a 100, a maior barreira e o próximo passo recomendado.</p><a href="#produto" data-tour-target="overview">Ver no relatório <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></li>
+                        </ul>
                     </div>
                 </section>
 
-                <section class="lp-personas-section lp-editorial" aria-labelledby="personas-title">
-                    <div class="lp-personas-grid lp-container"><div class="lp-persona-visual"><div class="lp-orbit lp-orbit-outer"></div><div class="lp-orbit lp-orbit-inner"></div><div class="lp-orbit-core"><i data-lucide="scan-eye"></i></div><div class="lp-persona-avatar lp-persona-one"><img src="src/assets/images/personas/p1.webp" alt="" loading="lazy" width="68" height="68"><span>Clareza</span></div><div class="lp-persona-avatar lp-persona-two"><img src="src/assets/images/personas/p3.webp" alt="" loading="lazy" width="68" height="68"><span>Usabilidade</span></div><div class="lp-persona-avatar lp-persona-three"><img src="src/assets/images/personas/p5.webp" alt="" loading="lazy" width="68" height="68"><span>Confiança</span></div><span class="lp-persona-caption"><i data-lucide="sparkles"></i> Diferentes perfis. Novas perspectivas.</span></div><div class="lp-section-copy"><span class="lp-eyebrow">UM OLHAR ALÉM DO CÓDIGO</span><h2 id="personas-title">Veja seu site pelos<br>olhos de quem usa.</h2><p>Nem todo visitante navega da mesma forma. As personas com IA simulam diferentes perfis para revelar dúvidas, obstáculos e percepções que uma métrica sozinha não explica.</p><ul class="lp-check-list"><li><i data-lucide="check"></i> Seleção automática ou escolha manual de uma persona</li><li><i data-lucide="check"></i> Feedback sobre clareza, navegação e confiança</li><li><i data-lucide="check"></i> Mais contexto para suas decisões de experiência</li></ul><p class="lp-footnote">Simulações por IA complementam a análise; não substituem testes com pessoas reais.</p></div></div>
+                <section id="personas" class="lp-section lp-personas-section lp-editorial" aria-labelledby="personas-title">
+                    <div class="lp-container lp-split">
+                        <div class="lp-copy">
+                            <h2 id="personas-title">Veja seu site pelos olhos de quem usa.</h2>
+                            <p>Nem todo visitante navega do mesmo jeito. As personas simulam perfis diferentes para mostrar dúvidas, objeções e sinais de confiança que uma métrica sozinha não explica.</p>
+                            <ul class="lp-checks">
+                                <li><i data-lucide="check" aria-hidden="true"></i> Seleção automática ou escolha manual da persona</li>
+                                <li><i data-lucide="check" aria-hidden="true"></i> Notas de confiança, clareza e intenção de compra</li>
+                                <li><i data-lucide="check" aria-hidden="true"></i> A jornada simulada, passo a passo</li>
+                            </ul>
+                            <div class="lp-roster">
+                                <div class="lp-roster-faces" aria-hidden="true">
+                                    <img src="src/assets/images/personas/p2.webp" alt="" width="40" height="40" loading="lazy">
+                                    <img src="src/assets/images/personas/p3.webp" alt="" width="40" height="40" loading="lazy">
+                                    <img src="src/assets/images/personas/p5.webp" alt="" width="40" height="40" loading="lazy">
+                                    <img src="src/assets/images/personas/p7.webp" alt="" width="40" height="40" loading="lazy">
+                                    <img src="src/assets/images/personas/p9.webp" alt="" width="40" height="40" loading="lazy">
+                                </div>
+                                <p>Um catálogo de perfis, com filtro por nicho.</p>
+                            </div>
+                            <p class="lp-footnote">Simulações por IA complementam a análise; não substituem testes com pessoas reais.</p>
+                        </div>
+                        <figure class="lp-persona-card" data-stage>
+                            <div class="lp-persona-head">
+                                <img src="src/assets/images/personas/p8.webp" alt="" width="52" height="52" loading="lazy">
+                                <div><span>Persona simulada</span><strong>Especialista em UX e Conversão</strong></div>
+                            </div>
+                            <blockquote>“A usabilidade básica está presente, mas a otimização da jornada do usuário pode aumentar significativamente a taxa de conversão.”</blockquote>
+                            <dl class="lp-persona-scores">
+                                <div><dt>Confiança</dt><dd><span class="lp-count" data-count-to="8" data-count-delay="250">8</span>/10</dd></div>
+                                <div><dt>Clareza</dt><dd><span class="lp-count" data-count-to="8" data-count-delay="370">8</span>/10</dd></div>
+                                <div><dt>Intenção de compra</dt><dd><span class="lp-count" data-count-to="8" data-count-delay="490">8</span>/10</dd></div>
+                            </dl>
+                            <ol class="lp-persona-journey" aria-label="Jornada simulada">
+                                <li><span>01</span><div><strong>Analisou o site</strong><p>Sucesso: a análise foi iniciada corretamente.</p></div></li>
+                                <li><span>02</span><div><strong>Verificou a proposta de valor</strong><p>Sucesso: a proposta de valor foi facilmente identificada.</p></div></li>
+                            </ol>
+                            <figcaption>Trecho de um relatório real da plataforma.</figcaption>
+                        </figure>
+                    </div>
                 </section>
 
-                <section id="como-funciona" class="lp-section lp-container lp-editorial" aria-labelledby="process-title">
-                    <div class="lp-centered-heading"><span class="lp-eyebrow">DA URL AO PRÓXIMO PASSO</span><h2 id="process-title">Complexo por dentro.<br>Simples de usar.</h2><p>Três passos para transformar o seu olhar sobre o site.</p></div>
-                    <ol class="lp-steps"><li><div class="lp-step-top"><span>01</span><i data-lucide="link"></i></div><h3>Adicione a URL</h3><p>Entre na sua conta e informe o endereço público do site que deseja analisar.</p></li><li><div class="lp-step-top"><span>02</span><i data-lucide="scan-search"></i></div><h3>Escolha o olhar da análise</h3><p>Use a seleção automática ou escolha uma persona para orientar o diagnóstico.</p></li><li><div class="lp-step-top"><span>03</span><i data-lucide="list-checks"></i></div><h3>Transforme achados em ação</h3><p>Veja os resultados, entenda os pontos de atenção e priorize as melhorias.</p></li></ol>
+                <section id="como-funciona" class="lp-section lp-steps-section lp-editorial" aria-labelledby="process-title">
+                    <div class="lp-container">
+                        <div class="lp-heading">
+                            <h2 id="process-title">Da URL ao plano de ação em três passos.</h2>
+                            <p>O trabalho pesado fica do nosso lado. Do seu, sobra decidir o que corrigir.</p>
+                        </div>
+                        <ol class="lp-steps" data-stage>
+                            <li><span class="lp-step-num">01</span><h3>Informe a URL</h3><p>Entre na sua conta e cole o endereço público do site. Não precisa instalar nada.</p></li>
+                            <li><span class="lp-step-num">02</span><h3>Escolha quem vai olhar</h3><p>Deixe a seleção automática decidir ou escolha uma persona para orientar o diagnóstico.</p></li>
+                            <li><span class="lp-step-num">03</span><h3>Corrija na ordem certa</h3><p>Veja o score, as barreiras e o plano de correção por prioridade. Comece pelo que pesa mais.</p></li>
+                        </ol>
+                    </div>
                 </section>
 
-                <section id="relatorio" class="lp-report-section lp-editorial" aria-labelledby="report-title"><div class="lp-container lp-report-grid"><div class="lp-section-copy"><span class="lp-eyebrow">INTELIGÊNCIA QUE VIRA AÇÃO</span><h2 id="report-title">Um relatório feito<br>para sair do papel.</h2><p>Leve a conversa além do “acho que”. Reúna achados técnicos, percepções de personas e recomendações em um material para orientar seu time ou seu cliente.</p><ul class="lp-check-list"><li><i data-lucide="check"></i> Resumo executivo e indicadores técnicos</li><li><i data-lucide="check"></i> Problemas identificados e plano de ação</li><li><i data-lucide="check"></i> Exportação em PDF nos relatórios disponíveis</li></ul><a class="lp-text-link" href="src/assets/images/tutorial/detalhes/D1RED.png" target="_blank" rel="noopener">Ampliar exemplo de relatório <i data-lucide="arrow-up-right"></i></a></div><figure class="lp-report-figure"><div class="lp-report-image"><img src="src/assets/images/tutorial/detalhes/D1RED.png" alt="Capturas de um relatório da S.S.W: plano de ação recomendado, feedback das personas, problemas encontrados e indicadores técnicos." loading="lazy" width="1035" height="863"></div><figcaption><i data-lucide="file-chart-column"></i> Exemplo de relatório da plataforma <span>Diagnóstico + plano de ação</span></figcaption></figure></div></section>
+                <section id="relatorio" class="lp-section lp-report-section lp-editorial" aria-labelledby="report-title">
+                    <div class="lp-container lp-split lp-split-reverse">
+                        <div class="lp-copy">
+                            <h2 id="report-title">Um relatório para levar à reunião.</h2>
+                            <p>Leve a conversa além do “acho que”. Achados técnicos, a leitura das personas e as recomendações num material só, para orientar seu time ou seu cliente.</p>
+                            <ul class="lp-checks">
+                                <li><i data-lucide="check" aria-hidden="true"></i> Resumo executivo e indicadores técnicos</li>
+                                <li><i data-lucide="check" aria-hidden="true"></i> Problemas identificados e plano de ação</li>
+                                <li><i data-lucide="check" aria-hidden="true"></i> Exportação em PDF nos relatórios disponíveis</li>
+                            </ul>
+                        </div>
+                        <figure class="lp-doc" data-stage aria-label="Exemplo de relatório: sswintelligence.com.br">
+                            <div class="lp-doc-head"><strong>S.S.W Intelligence</strong><span>sswintelligence.com.br · 08 set 2026</span></div>
+                            <p class="lp-doc-kicker">Diagnóstico de conversão concluído</p>
+                            <p class="lp-doc-title">Por que este site pode estar perdendo oportunidades.</p>
+                            <p class="lp-doc-text">O site apresenta uma estrutura sólida e focada em conversão, com elementos de UX bem definidos. Pequenos ajustes podem otimizar ainda mais a experiência do usuário e a taxa de conversão.</p>
+                            <dl class="lp-doc-grid">
+                                <div><dt>Score de conversão</dt><dd class="is-score"><span class="lp-count" data-count-to="85" data-count-delay="380">85</span><span class="lp-of">/100</span></dd></div>
+                                <div><dt>Impacto comercial</dt><dd>Boa base comercial</dd></div>
+                                <div><dt>Maior barreira</dt><dd>Call to Action Oportuna</dd></div>
+                                <div><dt>Próximo passo</dt><dd>Refinar os textos dos botões de CTA da página principal</dd></div>
+                            </dl>
+                            <div class="lp-doc-actions" aria-hidden="true"><span class="lp-doc-pdf"><i data-lucide="download"></i> Baixar PDF</span><span>Nova análise</span></div>
+                        </figure>
+                    </div>
+                </section>
 
-                <section class="lp-section lp-container lp-editorial" aria-labelledby="audience-title"><div class="lp-section-heading"><div><span class="lp-eyebrow">PARA QUEM CONSTRÓI O DIGITAL</span><h2 id="audience-title">Uma visão melhor.<br>Em cada lado da mesa.</h2></div><p>Da entrega de um projeto à próxima decisão do negócio, tenha mais contexto para evoluir.</p></div><div class="lp-audiences"><article><i data-lucide="code-2"></i><h3>Desenvolvedores</h3><p>Encontre pontos de atenção e refine a experiência antes da entrega.</p></article><article><i data-lucide="layers-3"></i><h3>Agências</h3><p>Apresente oportunidades de melhoria com um diagnóstico para seus clientes.</p></article><article><i data-lucide="blocks"></i><h3>Times de produto</h3><p>Conecte sinais técnicos e de experiência às prioridades do time.</p></article><article><i data-lucide="building-2"></i><h3>Empresas</h3><p>Entenda o que precisa mudar antes de investir na próxima versão do site.</p></article></div></section>
+                <section id="para-quem" class="lp-section lp-audience-section lp-editorial" aria-labelledby="audience-title">
+                    <div class="lp-container">
+                        <div class="lp-heading">
+                            <h2 id="audience-title">Para quem constrói e decide sobre sites.</h2>
+                            <p>Da entrega de um projeto à próxima decisão do negócio.</p>
+                        </div>
+                        <ul class="lp-audiences">
+                            <li><i data-lucide="code-2" aria-hidden="true"></i><h3>Desenvolvedores</h3><p>Encontre pontos de atenção e refine a experiência antes da entrega.</p></li>
+                            <li><i data-lucide="layers-3" aria-hidden="true"></i><h3>Agências</h3><p>Apresente oportunidades de melhoria com um diagnóstico para seus clientes.</p></li>
+                            <li><i data-lucide="blocks" aria-hidden="true"></i><h3>Times de produto</h3><p>Conecte sinais técnicos e de experiência às prioridades do time.</p></li>
+                            <li><i data-lucide="building-2" aria-hidden="true"></i><h3>Empresas</h3><p>Entenda o que precisa mudar antes de investir na próxima versão do site.</p></li>
+                        </ul>
+                    </div>
+                </section>
 
-                <section id="duvidas" class="lp-faq-section lp-container lp-editorial" aria-labelledby="faq-title"><div class="lp-section-copy"><span class="lp-eyebrow">AINDA COM DÚVIDAS?</span><h2 id="faq-title">Bom saber<br>antes de começar.</h2><p>Conheça os detalhes da sua próxima análise.</p><a class="lp-text-link" href="mailto:contato@sswintelligence.com.br">Fale com a gente <i data-lucide="arrow-up-right"></i></a></div><div class="lp-faq-list"><details><summary>O que a S.S.W Intelligence analisa?<i data-lucide="plus"></i></summary><p>A plataforma reúne sinais de performance, SEO, acessibilidade, segurança e experiência do usuário. As personas com IA acrescentam percepções sobre clareza, confiança e navegação, ajudando a organizar oportunidades de melhoria.</p></details><details><summary>Preciso criar uma conta? É gratuito?<i data-lucide="plus"></i></summary><p>O cadastro é gratuito e você precisa entrar na conta para iniciar uma análise. As auditorias utilizam créditos. Consulte os valores e as condições disponíveis na <a href="/precos/">página de preços</a> antes de começar.</p></details><details><summary>Preciso instalar algo no meu site?<i data-lucide="plus"></i></summary><p>Para um site público, você informa a URL na plataforma. Sites com bloqueios de segurança podem precisar autorizar o acesso do auditor. Páginas locais precisam de uma URL pública; a documentação explica como disponibilizá-la.</p></details><details><summary>As personas são pessoas reais?<i data-lucide="plus"></i></summary><p>Não. São perfis simulados por inteligência artificial que ajudam a explorar diferentes perspectivas de navegação. Use essas percepções como apoio às decisões e, quando necessário, complemente com testes com usuários reais.</p></details><details><summary>Posso compartilhar o diagnóstico com meu time?<i data-lucide="plus"></i></summary><p>Você pode exportar os relatórios disponíveis em PDF e compartilhar o material. A geração do relatório depende do resultado e das condições da análise; consulte os detalhes apresentados no seu painel.</p></details></div></section>
+                <section id="duvidas" class="lp-section lp-faq-section lp-editorial" aria-labelledby="faq-title">
+                    <div class="lp-container lp-faq-grid">
+                        <div class="lp-copy">
+                            <h2 id="faq-title">Bom saber antes de começar.</h2>
+                            <p>Não achou sua dúvida aqui? A gente responde por e-mail.</p>
+                            <a class="lp-text-link" href="mailto:contato@sswintelligence.com.br">contato@sswintelligence.com.br <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                        </div>
+                        <div class="lp-faq-list">
+                            <details><summary>O que a S.S.W Intelligence analisa?<i data-lucide="plus" aria-hidden="true"></i></summary><p>A plataforma reúne sinais de performance, SEO, acessibilidade, segurança e experiência do usuário. As personas com IA acrescentam percepções sobre clareza, confiança e navegação, ajudando a organizar oportunidades de melhoria.</p></details>
+                            <details><summary>Preciso criar uma conta? É gratuito?<i data-lucide="plus" aria-hidden="true"></i></summary><p>O cadastro é gratuito e você precisa entrar na conta para iniciar uma análise. As auditorias utilizam créditos. Consulte os valores e as condições disponíveis na <a href="/precos/">página de preços</a> antes de começar.</p></details>
+                            <details><summary>Preciso instalar algo no meu site?<i data-lucide="plus" aria-hidden="true"></i></summary><p>Para um site público, você informa a URL na plataforma. Sites com bloqueios de segurança podem precisar autorizar o acesso do auditor. Páginas locais precisam de uma URL pública; a documentação explica como disponibilizá-la.</p></details>
+                            <details><summary>As personas são pessoas reais?<i data-lucide="plus" aria-hidden="true"></i></summary><p>Não. São perfis simulados por inteligência artificial que ajudam a explorar diferentes perspectivas de navegação. Use essas percepções como apoio às decisões e, quando necessário, complemente com testes com usuários reais.</p></details>
+                            <details><summary>Posso compartilhar o diagnóstico com meu time?<i data-lucide="plus" aria-hidden="true"></i></summary><p>Você pode exportar os relatórios disponíveis em PDF e compartilhar o material. A geração do relatório depende do resultado e das condições da análise; consulte os detalhes apresentados no seu painel.</p></details>
+                        </div>
+                    </div>
+                </section>
 
                 <section id="landing-analysis" class="ssw-analysis-section lp-analysis-section audit-input-section" aria-label="Iniciar uma análise">
 
@@ -595,9 +718,37 @@
                 </section>
 
                 <section class="lp-final-cta lp-editorial" aria-labelledby="final-cta-title">
-                    <div class="lp-container"><span class="lp-eyebrow">O PRÓXIMO PASSO É SEU</span><h2 id="final-cta-title">Um site melhor começa<br>com uma visão mais clara.</h2><p>Descubra onde melhorar. Decida com mais confiança.</p><button type="button" class="lp-button" onclick="showAuthScreen('register')">Criar minha conta <i data-lucide="arrow-right"></i></button><a class="lp-final-pricing" href="/precos/">Conhecer preços e créditos <i data-lucide="arrow-up-right"></i></a></div>
+                    <div class="lp-container" data-stage>
+                        <h2 id="final-cta-title">Descubra o que corrigir <span class="lp-hero-mark">primeiro</span>.</h2>
+                        <p>Cadastro gratuito. Você só usa créditos quando roda uma auditoria.</p>
+                        <form class="lp-hero-form lp-final-form" data-hero-url-form novalidate>
+                            <label class="lp-sr-only" for="finalAuditUrl">Endereço do site</label>
+                            <div class="lp-hero-field">
+                                <i data-lucide="globe" aria-hidden="true"></i>
+                                <input id="finalAuditUrl" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="https://seusite.com.br" aria-describedby="finalAuditError">
+                                <button type="submit">Analisar site</button>
+                            </div>
+                            <p id="finalAuditError" class="lp-hero-error" role="alert" data-hero-url-error hidden></p>
+                        </form>
+                        <a class="lp-final-pricing" href="/precos/">Ver preços e créditos <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                    </div>
                 </section>
-                <footer class="lp-footer lp-editorial"><div class="lp-container"><div class="lp-footer-top"><div><a class="lp-brand" href="#inicio"><img src="src/assets/images/logo/logo_ofc.png" alt="" loading="lazy" width="38" height="38"><span>S.S.W <strong>Intelligence</strong></span></a><p>Inteligência para entender.<br>Clareza para evoluir.</p></div><nav aria-label="Produto"><h3>Plataforma</h3><a href="#recursos">Recursos</a><a href="#como-funciona">Como funciona</a><a href="/precos/">Preços e créditos</a></nav><nav aria-label="Institucional"><h3>Conecte-se</h3><a href="/sites/">Criação de sites</a><a href="mailto:contato@sswintelligence.com.br">Fale com a gente</a><a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer">Instagram <i data-lucide="arrow-up-right"></i></a></nav></div><div class="lp-footer-bottom"><small>© 2026 S.S.W Intelligence. Todos os direitos reservados.</small><nav aria-label="Informações legais"><a href="/termos/">Termos e privacidade</a><a href="#duvidas">Dúvidas frequentes</a></nav><span><span class="lp-status-dot"></span> Feito no Brasil</span></div></div></footer>
+                <footer class="lp-footer lp-editorial">
+                    <div class="lp-container">
+                        <div class="lp-footer-top">
+                            <div class="lp-footer-brand">
+                                <a class="lp-brand" href="#inicio"><img src="src/assets/images/logo/logo_ofc.png" alt="" loading="lazy" width="38" height="38"><span>S.S.W <strong>Intelligence</strong></span></a>
+                                <p>Auditoria de sites com plano de ação.<br>Feita no Brasil.</p>
+                            </div>
+                            <nav aria-label="Produto"><h3>Plataforma</h3><a href="#produto">O relatório</a><a href="#recursos">O que analisamos</a><a href="#como-funciona">Como funciona</a><a href="/precos/">Preços e créditos</a></nav>
+                            <nav aria-label="Institucional"><h3>Conecte-se</h3><a href="/sites/">Criação de sites</a><a href="mailto:contato@sswintelligence.com.br">Fale com a gente</a><a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer">Instagram <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></nav>
+                        </div>
+                        <div class="lp-footer-bottom">
+                            <small>© 2026 S.S.W Intelligence. Todos os direitos reservados.</small>
+                            <nav aria-label="Informações legais"><a href="/termos/">Termos e privacidade</a><a href="#duvidas">Dúvidas frequentes</a></nav>
+                        </div>
+                    </div>
+                </footer>
                 <!-- Compare Area (mantido oculto: modo comparativo desabilitado) -->
                 <div id="compareArea" class="hidden glass-panel p-6 rounded-2xl border border-slate-800/50" aria-hidden="true">
                     <div class="flex items-center gap-2 mb-4 text-accent">
@@ -1688,7 +1839,7 @@
                 </section>
             </div>
             <script src="src/app/core/main.js?v=20260908-security-1"></script>
-            <script src="src/app/ui/landing.js?v=20260908-hero-carousel"></script>
+            <script src="src/app/ui/landing.js?v=20260930-home-v5"></script>
 <!-- Modal de Chat com Agent -->
 <div id="chatModal" class="hidden fixed inset-0 z-50 no-print" style="background:transparent;backdrop-filter:none;pointer-events:none;">
     <div id="chatWidgetPanel" style="position:fixed;bottom:18px;right:18px;width:calc(100% - 36px);max-width:390px;height:540px;max-height:calc(100vh - 36px);border-radius:24px;border:1px solid rgba(255,255,255,0.14);box-shadow:0 22px 70px rgba(0,0,0,0.46),0 0 0 1px rgba(255,255,255,0.03);overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#050a12 0%,#080d16 100%);pointer-events:auto;">
