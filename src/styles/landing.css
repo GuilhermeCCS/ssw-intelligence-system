@@ -389,6 +389,9 @@
 /* ---------- Footer ---------- */
 .ssw-landing-v2 .lp-footer { padding-top: 72px; background: var(--lp-footer); color: #b5bcc4; }
 .ssw-landing-v2 .lp-footer :where(a, button):focus-visible { outline-color: #ffffff; }
+.ssw-landing-v2 .lp-footer-return { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+.ssw-landing-v2 .lp-back-to-top { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid #9aa3ad; border-radius: 50%; color: #ffffff; text-decoration: none; }
+.ssw-landing-v2 .lp-back-to-top:hover { background: var(--lp-mark); border-color: var(--lp-mark); color: var(--lp-ink); }
 .ssw-landing-v2 .lp-footer-top { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid rgba(255, 255, 255, .1); }
 .ssw-landing-v2 .lp-footer .lp-brand { color: #ffffff; }
 .ssw-landing-v2 .lp-footer .lp-brand strong { color: #b5bcc4; }

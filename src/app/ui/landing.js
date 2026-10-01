@@ -157,6 +157,30 @@
         });
         window.matchMedia('(min-width: 901px)').addEventListener('change', () => closeMenu());
 
+        // Use explicit behavior: the public page can scroll outside #mainContent.
+        root.addEventListener('click', (event) => {
+            const link = event.target.closest('a[href^="#"]');
+            if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            if (link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+            const hash = link.getAttribute('href');
+            const target = document.getElementById(hash.slice(1));
+            if (!target || !root.contains(target)) return;
+            event.preventDefault();
+            closeMenu();
+            if (window.location.hash !== hash) window.history.pushState(null, '', hash);
+            // Preserve keyboard navigation after replacing native anchor navigation.
+            const focusTarget = target.id === 'inicio' ? header.querySelector('.lp-brand') : target;
+            if (!focusTarget.hasAttribute('tabindex') && focusTarget.tabIndex < 0) {
+                focusTarget.setAttribute('tabindex', '-1');
+                focusTarget.addEventListener('blur', () => focusTarget.removeAttribute('tabindex'), { once: true });
+            }
+            focusTarget.focus({ preventScroll: true });
+            target.scrollIntoView({
+                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+                block: 'start'
+            });
+        });
+
         // Hero form: guests need an account first, so the URL survives sign-up and pre-fills the audit input.
         const PENDING_URL_KEY = 'ssw:pendingAuditUrl';
         const storage = (() => { try { return window.sessionStorage; } catch { return null; } })();
