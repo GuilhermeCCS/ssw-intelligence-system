@@ -28,10 +28,10 @@
     <link rel="icon" type="image/x-icon" href="/src/assets/images/logo/logos.ico?v=20260627-logo-ofc-v2">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/styles/cookie-consent.css?v=20261001-cookie-consent-5">
+    <link rel="stylesheet" href="/src/styles/landing.css?v=20261001-home-v7">
     <script src="/src/vendor/lucide/lucide.min.js?v=1.43.0"></script>
     <script src="/src/vendor/lucide/legacy-brand.js?v=1"></script>
     <script src="/src/app/ui/cookie-consent.js?v=20261001-cookie-consent-5" defer></script>
-    <script src="/src/app/sections/public-footer.js?v=20260623-public-footer-invertase" defer></script>
     <style>
         :root {
             color-scheme: dark;
@@ -535,7 +535,29 @@
         </main>
     </div>
 
-    <div data-public-footer></div>
+    <div class="ssw-landing-v2">
+    <footer class="lp-footer lp-editorial">
+        <div class="lp-container">
+            <div class="lp-footer-return">
+                <a class="lp-back-to-top" href="#topo" aria-label="Voltar ao topo" title="Voltar ao topo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7M12 5v14"/></svg>
+                </a>
+            </div>
+            <div class="lp-footer-top">
+                <div class="lp-footer-brand">
+                    <a class="lp-brand" href="/home"><img src="/src/assets/images/logo/logo_ofc.png" alt="" loading="lazy" width="38" height="38"><span>S.S.W <strong>Intelligence</strong></span></a>
+                    <p>Auditoria de sites com plano de ação.<br>Feita no Brasil.</p>
+                </div>
+                <nav aria-label="Produto"><h3>Plataforma</h3><a href="/home#produto">O relatório</a><a href="/home#recursos">O que analisamos</a><a href="/home#como-funciona">Como funciona</a><a href="/precos/">Preços e créditos</a></nav>
+                <nav aria-label="Institucional"><h3>Conecte-se</h3><a href="/sites/">Criação de sites</a><a href="mailto:contato@sswintelligence.com.br">Fale com a gente</a><a href="https://instagram.com/sswintelligence" target="_blank" rel="noopener noreferrer">Instagram <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></nav>
+            </div>
+            <div class="lp-footer-bottom">
+                <small>© 2026 S.S.W Intelligence. Todos os direitos reservados.</small>
+                <nav aria-label="Informações legais"><a href="/termos/">Termos e privacidade</a><a href="/home#duvidas">Dúvidas frequentes</a><button type="button" data-cookie-action="settings">Preferências de cookies</button></nav>
+            </div>
+        </div>
+    </footer>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
