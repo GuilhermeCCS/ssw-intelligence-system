@@ -8919,7 +8919,8 @@ body.auth-page-active #appTopbar {
 .sidebar-reveal-button {
     position: fixed;
     top: 14px;
-    left: 14px;
+    right: 14px;
+    left: auto;
     z-index: 92;
     width: 34px;
     height: 34px;
@@ -9090,6 +9091,26 @@ body:not(.auth-page-active) .sidebar-close-button {
 @media (max-width: 767px) {
     #sidebarRevealButton {
         display: inline-flex !important;
+        right: 14px !important;
+        left: auto !important;
+    }
+
+    #userAvatarContainer {
+        position: relative !important;
+        z-index: 110 !important;
+    }
+
+    #userMenuCircleDropdown {
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: calc(100% + 8px) !important;
+        top: auto !important;
+        width: 100% !important;
+        max-height: min(70vh, 520px) !important;
+        overflow-y: auto !important;
+        z-index: 120 !important;
+        pointer-events: auto !important;
     }
 
     body.mobile-menu-open #sidebarRevealButton,
