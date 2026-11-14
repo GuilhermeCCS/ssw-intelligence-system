@@ -19,6 +19,7 @@ async function loadStandalonePricingPage() {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
+        window.dispatchEvent(new Event('loadPublicFooter'));
         window.dispatchEvent(new Event('loadPricingSection'));
     } catch (error) {
         console.error('Erro ao carregar página de preços:');

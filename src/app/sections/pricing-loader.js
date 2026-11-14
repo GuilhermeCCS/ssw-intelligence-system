@@ -14,6 +14,7 @@ async function loadPricingSection() {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
+        window.dispatchEvent(new Event('loadPublicFooter'));
         // Dispara evento para inicializar o carrossel
         window.dispatchEvent(new Event('loadPricingSection'));
         if (window.location.pathname.replace('/', '') === 'precos' && typeof nav === 'function') {
