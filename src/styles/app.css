@@ -4296,9 +4296,40 @@
 
 #view-about { margin: -24px -16px 0 !important; width: calc(100% + 32px) !important; max-width:none !important; }
                 @media(min-width:768px){ #view-about { margin: -24px -40px 0 !important; width: calc(100% + 80px) !important; } }
-                @media(max-width:700px){
-                    #view-about > section:first-child > div { grid-template-columns:1fr !important; }
-                    #view-about > section:nth-of-type(3) { grid-template-columns:1fr !important; }
+                .about-content-width { max-width:1120px; margin-left:auto; margin-right:auto; }
+                .about-intro { padding:clamp(76px,11vw,142px) 32px 88px; border-bottom:1px solid rgba(255,255,255,.1); }
+                .about-eyebrow { margin:0 0 18px; color:#22d3ee; font-size:12px; font-weight:700; letter-spacing:.08em; }
+                .about-intro h1 { max-width:880px; margin:0; color:#f5f7fa; font-size:clamp(42px,7vw,76px); font-weight:700; line-height:1.04; letter-spacing:-.045em; }
+                .about-lead { max-width:630px; margin:25px 0 0; color:#aab4c2; font-size:18px; line-height:1.7; }
+                .about-action { display:inline-flex; align-items:center; gap:10px; margin-top:28px; padding:12px 0; border:0; border-bottom:1px solid #22d3ee; background:transparent; color:#e9faff; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; }
+                .about-action i { width:16px; height:16px; color:#22d3ee; transition:transform .18s ease; }
+                .about-action:hover i { transform:translateX(4px); }
+                .about-work { display:grid; grid-template-columns:minmax(230px,.72fr) minmax(0,1.28fr); align-items:start; gap:clamp(36px,7vw,88px); padding:76px 32px 82px; }
+                .about-work-copy { padding-top:10px; }
+                .about-work-copy h2, .about-method h2 { margin:0; color:#f5f7fa; font-size:clamp(28px,3.6vw,42px); font-weight:600; line-height:1.17; letter-spacing:-.035em; }
+                .about-work-copy > p:last-child { margin:20px 0 0; color:#aab4c2; font-size:15px; line-height:1.8; }
+                .about-report { margin:0; }
+                .about-report img { display:block; width:100%; height:auto; border:1px solid rgba(255,255,255,.12); border-radius:3px; }
+                .about-report figcaption { margin-top:10px; color:#758397; font-size:12px; }
+                .about-method { padding:72px 32px 80px; border-top:1px solid rgba(255,255,255,.1); border-bottom:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.018); }
+                .about-method h2 { max-width:500px; }
+                .about-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; margin:42px 0 0; padding:0; list-style:none; }
+                .about-steps li { display:flex; align-items:flex-start; gap:16px; padding-top:17px; border-top:1px solid rgba(255,255,255,.18); }
+                .about-steps li > span { color:#22d3ee; font-size:12px; font-weight:700; }
+                .about-steps h3 { margin:0 0 8px; color:#f5f7fa; font-size:16px; font-weight:600; }
+                .about-steps p { margin:0; color:#98a5b6; font-size:14px; line-height:1.65; }
+                .about-end { display:flex; align-items:center; justify-content:space-between; gap:30px; padding:64px 32px 80px; }
+                .about-end .about-eyebrow { margin-bottom:10px; }
+                .about-end h2 { max-width:620px; margin:0; color:#f5f7fa; font-size:clamp(24px,3.4vw,36px); font-weight:600; line-height:1.2; letter-spacing:-.03em; }
+                .about-end .about-action { flex-shrink:0; margin:0; }
+                @media(max-width:760px){
+                    .about-intro { padding:64px 22px 58px; }
+                    .about-lead { font-size:16px; }
+                    .about-work { grid-template-columns:1fr; gap:30px; padding:56px 22px 60px; }
+                    .about-work-copy { max-width:560px; }
+                    .about-method { padding:56px 22px 60px; }
+                    .about-steps { grid-template-columns:1fr; gap:22px; margin-top:30px; }
+                    .about-end { align-items:flex-start; flex-direction:column; padding:48px 22px 60px; }
                 }
                 .abt-inner { max-width:1080px; margin:0 auto; padding:90px 32px; }
                 @media(max-width:767px){ .abt-inner { padding:60px 20px; } }

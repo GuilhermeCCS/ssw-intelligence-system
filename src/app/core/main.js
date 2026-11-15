@@ -981,7 +981,7 @@
                 showSimplifiedSearch();
                 return;
             }
-            if (!isAuthenticated && view !== 'home') {
+            if (!isAuthenticated && view !== 'home' && view !== 'about') {
                 showAuthScreen('login');
                 return;
             }
