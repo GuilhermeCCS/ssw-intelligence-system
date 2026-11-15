@@ -9433,7 +9433,7 @@ function getCodigoHTML() {
             });
         }
         function showAboutCard() {
-            nav('about');
+            window.location.assign('/about');
         }
         function _showAboutCard_legacy() {
             const existingModal = document.getElementById('aboutModal');

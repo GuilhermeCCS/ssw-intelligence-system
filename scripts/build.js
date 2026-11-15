@@ -56,7 +56,7 @@ function buildSite({ root = path.resolve(__dirname, '..'), production = false, e
     fs.mkdirSync(output, { recursive: true });
     publicDirectories.forEach(directory => copyPublicDirectory(path.join(root, directory), path.join(output, directory)));
     const runtime = [['env-mp-public-key', mpKey], ['env-api-url', apiUrl], ['env-google-client-id', googleId]];
-    for (const file of ['index.html', 'precos/index.html', 'termos/index.html', 'sites/index.html']) {
+    for (const file of ['index.html', 'about/index.html', 'precos/index.html', 'termos/index.html', 'sites/index.html']) {
         let html = fs.readFileSync(path.join(root, file), 'utf8');
         html = html.replace(/^[\t ]*<meta name="env-(?:mp-public-key|api-url|google-client-id)" content="[^"]*">\r?\n?/gm, '');
         html = html.replace('<meta charset="UTF-8">', '<meta charset="UTF-8">\n    ' + runtime.filter(([, value]) => value).map(([name, value]) => '<meta name="' + name + '" content="' + escapeHtml(value) + '">').join('\n    '));
