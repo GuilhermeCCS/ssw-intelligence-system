@@ -4296,6 +4296,10 @@
 
 #view-about { margin: -24px -16px 0 !important; width: calc(100% + 32px) !important; max-width:none !important; }
                 @media(min-width:768px){ #view-about { margin: -24px -40px 0 !important; width: calc(100% + 80px) !important; } }
+                @media(max-width:700px){
+                    #view-about > section:first-child > div { grid-template-columns:1fr !important; }
+                    #view-about > section:nth-of-type(3) { grid-template-columns:1fr !important; }
+                }
                 .abt-inner { max-width:1080px; margin:0 auto; padding:90px 32px; }
                 @media(max-width:767px){ .abt-inner { padding:60px 20px; } }
                 .abt-section-link { display:flex;align-items:center;height:52px;padding:0 18px;color:#3d4f63;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.18s,border-color 0.18s;cursor:pointer; }

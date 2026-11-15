@@ -346,11 +346,6 @@
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
                     <span>Ranking público</span>
                 </button>
-                <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    <span>Liberar auditoria</span>
-                </button>
-
                 <p class="sidebar-section-label">Crescimento</p>
                 <a href="/precos/" target="_blank" rel="noopener noreferrer" onclick="toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="precos">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
@@ -361,6 +356,10 @@
                 <button type="button" onclick="nav('tutorial'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="tutorial">
                     <i data-lucide="book-open" class="w-4 h-4"></i>
                     <span>Documentação</span>
+                </button>
+                <button onclick="nav('domains'); toggleSidebar(false);" class="sidebar-nav-item border border-transparent" data-nav-target="domains">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Liberar auditoria</span>
                 </button>
                 <button type="button" onclick="openSupportForm(); toggleSidebar(false);" class="sidebar-nav-item border border-transparent">
                     <i data-lucide="circle-help" class="w-4 h-4"></i>
@@ -1683,105 +1682,44 @@
                     <div style="height: 8rem;"></div>
             </div>
             <!-- VIEW: Sobre Nós -->
-
             <div id="view-about" class="hidden animate-fade-in-up">
-
-                <!-- HERO -->
-                <div style="position:relative;width:100%;min-height:560px;background:linear-gradient(140deg,#070a13 0%,#0c1424 55%,#09101c 100%);display:flex;align-items:center;padding:110px 32px;overflow:hidden;border-bottom:1px solid rgba(34,211,238,0.1);">
-                    <div class="abt-inner" style="padding-top:0;padding-bottom:0;width:100%;">
-                        <p class="text-reveal delay-100" style="color:#22d3ee;font-size:13px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;margin:0 0 24px;">SSW INTELLIGENCE - 2026</p>
-                        <h1 class="text-reveal delay-200" style="color:#ffffff;font-size:clamp(40px,6.5vw,72px);font-weight:900;line-height:1.15;margin:0 0 28px;letter-spacing:-2px;max-width:900px;">Fazemos da web<br>um lugar melhor<br><span style="color:#22d3ee; background: linear-gradient(135deg, #22d3ee 0%, #67e8f9 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">para todos.</span></h1>
-                        <p class="text-reveal delay-300" style="color:#a0aec0;font-size:18px;line-height:1.8;max-width:650px;margin:0 0 44px;font-weight:500;">Somos uma plataforma de auditoria web com IA que transforma sinais técnicos e comportamentais em decisões claras para melhorar a experiência digital.</p>
-                        <div class="text-reveal delay-400" style="display:flex;gap:16px;flex-wrap:wrap;">
-                            <button onclick="nav('home')" style="padding:16px 36px;border-radius:10px;background:#22d3ee;color:#ffffff;font-size:15px;font-weight:800;border:none;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(34,211,238,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(34,211,238,0.4)';" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px rgba(34,211,238,0.3)';">Começar Auditoria</button>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- QUEM SOMOS - texto completo -->
-                <div id="abt-quem" style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div class="abt-inner">
-                        <p class="text-reveal" style="color:#22d3ee;font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 20px;">Quem somos</p>
-                        <h2 class="text-reveal delay-100" style="color:#ffffff;font-size:clamp(32px,4vw,48px);font-weight:800;line-height:1.25;margin:0 0 32px;letter-spacing:-0.5px;">Uma plataforma construída para quem leva o digital a sério.</h2>
-                        <div style="max-width:900px;">
-                            <p class="text-reveal delay-200" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0 0 24px;">A S.S.W Intelligence nasceu para resolver uma lacuna crítica do mercado digital: empresas recebem opiniões sobre seus sites, mas raramente entendem como clientes reais se comportam diante deles. Nossa plataforma audita performance, SEO, clareza e usabilidade com apoio de IA para transformar dados em prioridades de melhoria.</p>
-                            <p class="text-reveal delay-300" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0 0 24px;">Para garantir a confiabilidade dos dados, nossa infraestrutura não se baseia em suposições visuais. O sistema realiza uma captura real da estrutura da página, cruzando dados de código com métricas de performance vitais (Core Web Vitals) extraídas diretamente de fontes oficiais de medição. Isso nos permite identificar gargalos invisíveis a olho nu, desde falhas de renderização e tempo de carregamento até problemas de acessibilidade estrutural e falhas de SEO técnico.</p>
-                            <p class="text-reveal delay-400" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0 0 24px;">No entanto, dados técnicos isolados não contam a história completa de um site. A verdadeira inteligência da plataforma está na sua camada de processamento por Inteligência Artificial. Nós aplicamos perfis comportamentais simulados - os nossos arquétipos de "agents" - sobre as métricas extraídas. Isso significa que o sistema não apenas aponta uma falha técnica, mas contextualiza como esse erro impacta especificamente a jornada, a confiança e a retenção de um usuário dentro daquele nicho de mercado.</p>
-                            <p class="text-reveal delay-500" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0;">O resultado desse cruzamento de dados é um caminho claro: diagnosticar, priorizar e executar. A plataforma entrega inteligência acionável para que sua equipe tome decisões com foco em velocidade, confiança, conversão e crescimento.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PULL QUOTE - Missão -->
-                <div id="abt-missao" style="background:rgba(34,211,238,0.02);border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div class="abt-inner">
-                        <p class="text-reveal" style="color:#22d3ee;font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 40px;">Nossa missão</p>
-                        <blockquote class="text-reveal delay-100" style="color:#ffffff;font-size:clamp(24px,3vw,36px);font-weight:700;line-height:1.5;margin:0;max-width:900px;border-left:4px solid #22d3ee;padding-left:32px;">"Queremos transformar dados de usabilidade em decisões melhores e decisões melhores em produtos digitais que vendem, carregam rápido e fazem sentido para pessoas reais."</blockquote>
-                    </div>
-                </div>
-
-                <!-- CULTURA - texto simples -->
-                <div id="abt-cultura" style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div class="abt-inner">
-                        <p class="text-reveal" style="color:#22d3ee;font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 20px;">Nossa cultura</p>
-                        <h2 class="text-reveal delay-100" style="color:#ffffff;font-size:clamp(28px,4vw,42px);font-weight:800;margin:0 0 40px;line-height:1.25;letter-spacing:-0.4px;">Os princípios que guiam cada decisão que tomamos.</h2>
-                        <div style="max-width:900px;">
-                            <p class="text-reveal delay-200" style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 12px;">Dados Confiáveis</p>
-                            <p class="text-reveal delay-300" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0 0 32px;">Nenhuma recomendação é gerada sem embasamento técnico. Baseamos nossas auditorias em métricas reais, extraídas e validadas através de parâmetros de mercado. Acreditamos que o acesso a dados precisos é a única base segura para a formulação de estratégias de otimização.</p>
-
-                            <p class="text-reveal delay-400" style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 12px;">Alta Performance</p>
-                            <p class="text-reveal delay-500" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0 0 32px;">A eficiência técnica é o pilar de uma presença digital sólida. Tanto na arquitetura do nosso próprio sistema quanto nas análises que entregamos aos clientes, tratamos a velocidade e a estabilidade não como diferenciais, mas como requisitos estruturais essenciais.</p>
-
-                            <p class="text-reveal delay-600" style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 12px;">Foco na Experiência</p>
-                            <p class="text-reveal delay-700" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0 0 32px;">A tecnologia existe para servir às pessoas. Por isso, aliamos a auditoria de código estrutural à simulação de perfis comportamentais. Nossos relatórios são desenhados para traduzir problemas técnicos no impacto real que eles causam na jornada e na usabilidade do visitante.</p>
-
-                            <p class="text-reveal delay-800" style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 12px;">Evolução Contínua</p>
-                            <p class="text-reveal" style="color:#8292a8;font-size:18px;line-height:1.9;margin:0;">O ecossistema web transforma-se rapidamente. Para manter a relevância, calibramos nossos motores de análise de forma contínua, alinhando-os às diretrizes mais recentes de SEO, acessibilidade e engenharia de software, garantindo entregas sempre atualizadas.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUTO - 3 pilares sem bordas externas -->
-                <div id="abt-produto" style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div class="abt-inner">
-                        <p class="text-reveal" style="color:#22d3ee;font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 20px;">O que fazemos</p>
-                        <h2 class="text-reveal delay-100" style="color:#ffffff;font-size:clamp(28px,4vw,42px);font-weight:800;margin:0 0 48px;letter-spacing:-0.4px;">Três pilares. Uma análise completa. Decisões melhores.</h2>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;">
-                            <div class="text-reveal delay-200" style="padding:48px 32px;border-right:1px solid rgba(255,255,255,0.05);background:rgba(34,211,238,0.01);">
-                                <i data-lucide="activity" style="width:26px;height:26px;color:#22d3ee;display:block;margin-bottom:20px;"></i>
-                                <p style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 16px;">Auditoria Web Avançada</p>
-                                <p style="color:#8292a8;font-size:16px;line-height:1.8;margin:0;">Performance, Core Web Vitals, SEO técnico, experiência mobile, conversão e concorrentes em um diagnóstico claro e priorizado.</p>
-                            </div>
-                            <div class="text-reveal delay-300" style="padding:48px 32px;border-right:1px solid rgba(255,255,255,0.05);background:rgba(34,211,238,0.01);">
-                                <i data-lucide="users" style="width:26px;height:26px;color:#22d3ee;display:block;margin-bottom:20px;"></i>
-                                <p style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 16px;">Simulação de Personas por IA</p>
-                                <p style="color:#8292a8;font-size:16px;line-height:1.8;margin:0;">Perfis comportamentais por nicho simulam a jornada de clientes reais e revelam dúvidas, atritos e objeções antes que eles custem vendas.</p>
-                            </div>
-                            <div class="text-reveal delay-400" style="padding:48px 32px;background:rgba(34,211,238,0.01);">
-                                <i data-lucide="list-checks" style="width:26px;height:26px;color:#22d3ee;display:block;margin-bottom:20px;"></i>
-                                <p style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 16px;">Plano de Ação Priorizado</p>
-                                <p style="color:#8292a8;font-size:16px;line-height:1.8;margin:0;">Recomendações organizadas por impacto para orientar correções e otimizações com mais segurança.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- CTA - split layout -->
-                <div id="abt-contato" style="background:linear-gradient(135deg,rgba(34,211,238,0.05) 0%,rgba(34,211,238,0.01) 100%);border-top:1px solid rgba(34,211,238,0.15);">
-                    <div class="abt-inner" style="display:grid;grid-template-columns:1fr auto;align-items:center;gap:48px;">
+                <section style="position:relative;overflow:hidden;padding:clamp(56px,9vw,112px) 24px;background:radial-gradient(ellipse at 78% 45%,rgba(34,211,238,.16),transparent 34%),linear-gradient(135deg,#080d18,#101a2b 65%,#09111d);border-bottom:1px solid rgba(255,255,255,.08);">
+                    <div style="max-width:1120px;margin:auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);align-items:center;gap:clamp(32px,7vw,90px);">
                         <div>
-                            <p class="text-reveal" style="color:#22d3ee;font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 20px;">Pronto para começar?</p>
-                            <h2 class="text-reveal delay-100" style="color:#ffffff;font-size:clamp(28px,4vw,42px);font-weight:800;margin:0 0 20px;letter-spacing:-0.5px;">Audite, entenda e melhore com clareza.</h2>
-                            <p class="text-reveal delay-200" style="color:#8292a8;font-size:18px;line-height:1.75;margin:0;max-width:500px;">Comece uma análise e encontre os pontos que merecem atenção na sua jornada digital.</p>
+                            <span style="display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid rgba(34,211,238,.25);border-radius:999px;color:#67e8f9;background:rgba(34,211,238,.07);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;"><i data-lucide="sparkles" style="width:14px;height:14px"></i> SSW Intelligence</span>
+                            <h1 style="margin:22px 0 18px;color:white;font-size:clamp(38px,6vw,68px);font-weight:900;letter-spacing:-.055em;line-height:1.02">Entenda seu site.<br><span style="color:#22d3ee">Saiba o próximo passo.</span></h1>
+                            <p style="max-width:560px;margin:0;color:#a7b4c8;font-size:17px;line-height:1.75">Transformamos sinais técnicos e de experiência em um diagnóstico claro para ajudar você a melhorar seu produto digital.</p>
+                            <button onclick="nav('home')" style="display:inline-flex;align-items:center;gap:10px;margin-top:28px;padding:13px 18px;border:0;border-radius:10px;background:#22d3ee;color:#06111c;font-weight:800;cursor:pointer">Começar uma análise <i data-lucide="arrow-up-right" style="width:17px;height:17px"></i></button>
                         </div>
-                        <div class="text-reveal delay-300" style="display:flex;flex-direction:column;gap:10px;min-width:210px;">
-                            <button onclick="nav('home')" style="padding:14px 28px;border-radius:9px;background:#22d3ee;color:#ffffff;font-size:14px;font-weight:800;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 4px 20px rgba(34,211,238,0.3);">Começar Auditoria</button>
+                        <div aria-label="Resumo visual do processo de análise" style="position:relative;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:linear-gradient(145deg,rgba(20,32,51,.94),rgba(9,15,26,.9));box-shadow:0 28px 80px rgba(0,0,0,.35);">
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 2px 18px;border-bottom:1px solid rgba(255,255,255,.08)"><div style="display:flex;gap:6px"><i style="width:8px;height:8px;border-radius:50%;background:#fb7185"></i><i style="width:8px;height:8px;border-radius:50%;background:#fbbf24"></i><i style="width:8px;height:8px;border-radius:50%;background:#34d399"></i></div><span style="color:#718198;font-size:11px">VISÃO DO DIAGNÓSTICO</span></div>
+                            <div style="display:grid;grid-template-columns:92px 1fr;gap:18px;align-items:center;padding:24px 4px">
+                                <div style="width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#22d3ee 0 76%,rgba(255,255,255,.08) 76% 100%);position:relative"><div style="width:70px;height:70px;border-radius:50%;background:#101a2b;display:grid;place-items:center;color:white;font-size:20px;font-weight:800">IA</div></div>
+                                <div><span style="color:#34d399;font-size:11px;font-weight:800;letter-spacing:.1em">ANÁLISE ORGANIZADA</span><h3 style="margin:7px 0;color:#f8fafc;font-size:17px">Do sinal à ação</h3><p style="margin:0;color:#93a4bb;font-size:12px;line-height:1.6">Desempenho, experiência e recomendações reunidos em uma leitura prática.</p></div>
+                            </div>
+                            <div style="display:grid;gap:9px">
+                                <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;background:rgba(255,255,255,.04)"><i data-lucide="gauge" style="width:16px;color:#22d3ee"></i><span style="flex:1;color:#cbd5e1;font-size:12px">Performance e SEO</span><span style="color:#64748b;font-size:11px">TÉCNICO</span></div>
+                                <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;background:rgba(255,255,255,.04)"><i data-lucide="users-round" style="width:16px;color:#a78bfa"></i><span style="flex:1;color:#cbd5e1;font-size:12px">Perspectivas de uso</span><span style="color:#64748b;font-size:11px">EXPERIÊNCIA</span></div>
+                                <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;background:rgba(255,255,255,.04)"><i data-lucide="list-checks" style="width:16px;color:#34d399"></i><span style="flex:1;color:#cbd5e1;font-size:12px">Próximas melhorias</span><span style="color:#64748b;font-size:11px">AÇÃO</span></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
+                <section style="max-width:1120px;margin:auto;padding:76px 24px 30px">
+                    <div style="max-width:690px;margin-bottom:30px"><span style="color:#22d3ee;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase">Como ajudamos</span><h2 style="margin:10px 0;color:white;font-size:clamp(28px,4vw,40px);letter-spacing:-.04em">Uma leitura completa, sem perder o foco.</h2><p style="margin:0;color:#94a3b8;line-height:1.7">A SSW combina auditoria web e análise com IA para revelar o que está funcionando, onde há atrito e o que merece atenção primeiro.</p></div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+                        <article style="padding:22px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:linear-gradient(145deg,rgba(34,211,238,.08),rgba(255,255,255,.02))"><div style="width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(34,211,238,.2);border-radius:12px;background:rgba(34,211,238,.1);color:#22d3ee"><i data-lucide="activity"></i></div><h3 style="margin:18px 0 8px;color:white;font-size:16px">Diagnóstico técnico</h3><p style="margin:0;color:#94a3b8;font-size:13px;line-height:1.7">Performance, Core Web Vitals, SEO e pontos que afetam a qualidade do site.</p></article>
+                        <article style="padding:22px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:linear-gradient(145deg,rgba(167,139,250,.09),rgba(255,255,255,.02))"><div style="width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(167,139,250,.2);border-radius:12px;background:rgba(167,139,250,.1);color:#a78bfa"><i data-lucide="scan-eye"></i></div><h3 style="margin:18px 0 8px;color:white;font-size:16px">Perspectiva de uso</h3><p style="margin:0;color:#94a3b8;font-size:13px;line-height:1.7">Personas simuladas ajudam a explorar clareza, confiança e possíveis barreiras.</p></article>
+                        <article style="padding:22px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:linear-gradient(145deg,rgba(52,211,153,.08),rgba(255,255,255,.02))"><div style="width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(52,211,153,.2);border-radius:12px;background:rgba(52,211,153,.1);color:#34d399"><i data-lucide="list-todo"></i></div><h3 style="margin:18px 0 8px;color:white;font-size:16px">Plano de ação</h3><p style="margin:0;color:#94a3b8;font-size:13px;line-height:1.7">Recomendações priorizadas para orientar o que corrigir ou investigar.</p></article>
+                    </div>
+                </section>
+
+                <section style="max-width:1120px;margin:0 auto;padding:48px 24px 80px;display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.72fr);gap:18px">
+                    <div style="padding:clamp(24px,4vw,38px);border:1px solid rgba(34,211,238,.15);border-radius:18px;background:radial-gradient(ellipse at 0 0,rgba(34,211,238,.1),transparent 55%),#0b1220"><span style="color:#22d3ee;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase">Nossa ideia central</span><h2 style="margin:14px 0;color:white;font-size:clamp(23px,3vw,32px);line-height:1.3;letter-spacing:-.03em">Dados melhores ajudam a tomar decisões melhores para pessoas reais.</h2><p style="margin:0;color:#94a3b8;font-size:14px;line-height:1.7">Tecnologia a serviço de experiências digitais mais claras, rápidas e confiáveis.</p></div>
+                    <div style="padding:26px;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.025)"><div style="width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,#22d3ee,#818cf8);color:#07111c;font-weight:900">GC</div><p style="margin:18px 0 3px;color:white;font-weight:800">Guilherme Cruz da Silva</p><p style="margin:0 0 18px;color:#22d3ee;font-size:12px">Fundador · Produto e tecnologia</p><div style="display:flex;flex-wrap:wrap;gap:7px"><span style="padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.06);color:#aab7ca;font-size:11px">Experiência digital</span><span style="padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.06);color:#aab7ca;font-size:11px">IA aplicada</span></div></div>
+                </section>
+                <section style="padding:34px 24px;background:linear-gradient(100deg,rgba(34,211,238,.1),rgba(99,102,241,.08));border-top:1px solid rgba(255,255,255,.08)"><div style="max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap"><div><span style="color:#67e8f9;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase">Pronto para começar?</span><h2 style="margin:8px 0 0;color:white;font-size:clamp(22px,3vw,30px)">Descubra o próximo passo para o seu site.</h2></div><button onclick="nav('home')" style="display:inline-flex;align-items:center;gap:9px;padding:13px 17px;border:0;border-radius:10px;background:#22d3ee;color:#06111c;font-weight:800;cursor:pointer">Iniciar análise <i data-lucide="arrow-right" style="width:16px"></i></button></div></section>
             </div>
 
             <div id="view-terms" class="hidden max-w-4xl mx-auto space-y-7 animate-fade-in-up">
